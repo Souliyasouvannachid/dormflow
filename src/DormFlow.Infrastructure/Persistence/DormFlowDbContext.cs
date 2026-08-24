@@ -66,6 +66,15 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>การมอบหมายผู้ใช้ให้ดูแลหอพัก</summary>
     public DbSet<UserDormitory> UserDormitories => Set<UserDormitory>();
 
+    /// <summary>ผู้เช่าทั้งหมดในระบบ</summary>
+    public DbSet<Tenant> Tenants => Set<Tenant>();
+
+    /// <summary>การจองห้องพักทั้งหมดในระบบ</summary>
+    public DbSet<Reservation> Reservations => Set<Reservation>();
+
+    /// <summary>สัญญาเช่าทั้งหมดในระบบ</summary>
+    public DbSet<Contract> Contracts => Set<Contract>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

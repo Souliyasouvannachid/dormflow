@@ -122,6 +122,25 @@ public static class PermissionCodes
         public const string Update = "tenants.update";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับการจองห้องพัก
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Reservations ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// </remarks>
+    public static class Reservations
+    {
+        /// <summary>ดูรายการจอง</summary>
+        public const string View = "reservations.view";
+
+        /// <summary>สร้างการจองใหม่</summary>
+        public const string Create = "reservations.create";
+
+        /// <summary>ยกเลิกการจอง</summary>
+        public const string Cancel = "reservations.cancel";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับสัญญาเช่า</summary>
     public static class Contracts
     {
@@ -256,6 +275,10 @@ public static class PermissionCodes
         new(Tenants.View, "ดูข้อมูลผู้เช่า", PermissionModules.Tenants),
         new(Tenants.Create, "สร้างข้อมูลผู้เช่า", PermissionModules.Tenants),
         new(Tenants.Update, "แก้ไขข้อมูลผู้เช่า", PermissionModules.Tenants),
+
+        new(Reservations.View, "ดูรายการจอง", PermissionModules.Reservations),
+        new(Reservations.Create, "สร้างการจองใหม่", PermissionModules.Reservations),
+        new(Reservations.Cancel, "ยกเลิกการจอง", PermissionModules.Reservations),
 
         new(Contracts.View, "ดูสัญญาเช่า", PermissionModules.Contracts),
         new(Contracts.Create, "สร้างสัญญาเช่า", PermissionModules.Contracts),

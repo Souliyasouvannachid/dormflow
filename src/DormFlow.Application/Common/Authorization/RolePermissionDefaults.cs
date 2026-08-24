@@ -60,6 +60,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Tenants.Create,
                 PermissionCodes.Tenants.Update,
 
+                PermissionCodes.Reservations.View,
+                PermissionCodes.Reservations.Create,
+                PermissionCodes.Reservations.Cancel,
+
                 PermissionCodes.Contracts.View,
                 PermissionCodes.Contracts.Create,
                 PermissionCodes.Contracts.Activate,
@@ -119,6 +123,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Tenants.Create,
                 PermissionCodes.Tenants.Update,
 
+                PermissionCodes.Reservations.View,
+                PermissionCodes.Reservations.Create,
+                PermissionCodes.Reservations.Cancel,
+
                 PermissionCodes.Contracts.View,
                 PermissionCodes.Contracts.Create,
                 PermissionCodes.Contracts.Activate,
@@ -149,6 +157,7 @@ public static class RolePermissionDefaults
                 PermissionCodes.Buildings.View,
                 PermissionCodes.Rooms.View,
                 PermissionCodes.Tenants.View,
+                PermissionCodes.Reservations.View,
                 PermissionCodes.Contracts.View,
                 PermissionCodes.MeterReadings.View,
 
@@ -180,6 +189,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Tenants.View,
                 PermissionCodes.Tenants.Create,
                 PermissionCodes.Tenants.Update,
+
+                PermissionCodes.Reservations.View,
+                PermissionCodes.Reservations.Create,
+                PermissionCodes.Reservations.Cancel,
 
                 PermissionCodes.Contracts.View,
 

@@ -3,11 +3,14 @@
 ระบบบริหารจัดการหอพักและอพาร์ตเมนต์แบบหลายองค์กร (Multi-Organization SaaS)
 สร้างด้วย ASP.NET Core Web API บน .NET 10 ตามแนวทาง **Modular Monolith + Clean Architecture**
 
-> สถานะปัจจุบัน: **Phase 1 เสร็จสมบูรณ์ (ขั้นตอนที่ 1-3)**
-> ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
+> สถานะปัจจุบัน: **Phase 1 เสร็จสมบูรณ์** และเริ่ม **Phase 2 แล้ว (สาย Contracts)**
+> Phase 1 ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
-> Assignment, Roles/Permissions และ Audit Logs ตามที่ระบุไว้ใน Phase 1 ทั้งหมด
+> Assignment, Roles/Permissions และ Audit Logs
+> Phase 2 เพิ่ม Tenants, Reservations และ Contracts (รวมเช็คอิน/เช็คเอาท์) แล้ว
+> ส่วนที่เหลือของ Phase 2 (Billing, Invoices, Payments ฯลฯ) ยังไม่ได้เริ่ม
 > ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
+> และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
 
 ---
 
@@ -26,6 +29,7 @@
 - [Entity Framework Core และ Migration](#entity-framework-core-และ-migration)
 - [ข้อตกลงในการเขียนโค้ด](#ข้อตกลงในการเขียนโค้ด)
 - [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
+- [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
 
 ---
 
@@ -270,6 +274,12 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `POST` | `/api/v1/roles/{id}/permissions` | `roles.manage` | กำหนดสิทธิ์ให้บทบาท (แทนที่สิทธิ์เดิมทั้งหมด) |
 | `GET` | `/api/v1/permissions` | `roles.manage` | รายการสิทธิ์ทั้งหมดของระบบ |
 | `GET` | `/api/v1/audit-logs` | `audit-logs.view` | ประวัติเหตุการณ์ของระบบ เรียงล่าสุดก่อนเป็นค่าเริ่มต้น |
+| `GET`/`POST`/`PUT`/`PATCH .../status` | `/api/v1/tenants` | `tenants.*` | จัดการข้อมูลผู้เช่า (ไม่มี DELETE ตามที่สเปกไม่ได้ระบุสิทธิ์ลบไว้) |
+| `GET`/`POST` | `/api/v1/reservations` | `reservations.*` | จองห้องพัก (ห้องเปลี่ยนเป็น Reserved ทันที) |
+| `POST` | `/api/v1/reservations/{id}/cancel` | `reservations.cancel` | ยกเลิกการจอง ห้องกลับเป็น Available ถ้ายังไม่ถูกใช้ทางอื่น |
+| `GET`/`POST` | `/api/v1/contracts` | `contracts.*` | สร้างสัญญาเช่า (ผ่านการจองหรือทำสัญญาตรงก็ได้) |
+| `POST` | `/api/v1/contracts/{id}/activate` | `contracts.activate` | เปิดใช้งานสัญญา = เช็คอิน ห้องเปลี่ยนเป็น Occupied |
+| `POST` | `/api/v1/contracts/{id}/terminate` | `contracts.terminate` | สิ้นสุดสัญญา = เช็คเอาท์ ห้องเปลี่ยนเป็น Cleaning |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -387,7 +397,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 33 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร (Owner เห็นหอพักองค์กรอื่นไม่ได้และสร้างข้ามองค์กรไม่ได้), CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log ถูกบันทึกจริงและค้นหาเจอผ่าน Endpoint |
+| `DormFlow.IntegrationTests` | 37 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -558,13 +568,59 @@ Rate Limiting, API Versioning, `ICurrentUser`, Forwarded Headers และ Archi
 
 ### ยังไม่ทำ
 
-Endpoint ยืนยันรหัส Two-Factor Authentication (โครงสร้างรองรับแล้ว แต่ยังไม่มี UI/Endpoint รับรหัส) ·
-โมดูลของ Phase 2 ทั้งหมด (Reservations, Contracts, CheckIns/Outs, Meters, Billing, Invoices,
-Payments, Receipts, Deposits, Expenses, Maintenance, Parcels, Visitors, Parking, Announcements,
-Notifications, Reports, Settings)
+Endpoint ยืนยันรหัส Two-Factor Authentication (โครงสร้างรองรับแล้ว แต่ยังไม่มี UI/Endpoint รับรหัส)
 
 Integration Test ของโมดูลใหม่ในขั้นตอนที่ 3 ครบแล้วเช่นกัน (ดูตารางด้านบน) รวมถึงกรณีที่พบบั๊กจริง
 ระหว่างพัฒนา: `RoleRepository.SetPermissionsAsync` เปิดธุรกรรมเองตรง ๆ ด้วย `BeginTransactionAsync`
 ซึ่งใช้ร่วมกับ `EnableRetryOnFailure` ของ Npgsql ไม่ได้ (Retrying Execution Strategy ไม่รองรับธุรกรรม
 ที่ผู้เรียกเปิดเอง) ต้องครอบด้วย `Database.CreateExecutionStrategy().ExecuteAsync(...)` แทน
 Integration Test เป็นตัวจับบั๊กนี้ได้ตั้งแต่รอบแรกที่รันกับ PostgreSQL จริง
+
+---
+
+## Phase 2 — โมดูลสาย Contracts
+
+เอกสารต้นฉบับระบุรายละเอียด Entity/Endpoint/กฎ Validation ของ Phase 1 ไว้ครบ
+แต่สำหรับ Phase 2 ระบุไว้เพียงชื่อโมดูล (Reservations, Contracts, CheckIns, CheckOuts, Meters,
+Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance, Parcels, Visitors,
+Parking, Announcements, Notifications, Reports, Settings) โดยไม่มีรายละเอียดด้านธุรกิจ
+เริ่มจากสาย **Tenants → Reservations → Contracts** ก่อน เพราะ Billing/Invoices/Payments ทั้งหมด
+ต้องพึ่งพาว่ามีสัญญาเช่าที่ Active อยู่แล้วเป็นพื้นฐาน
+
+### ทำแล้ว
+
+| # | รายการ | ที่อยู่ |
+| --- | --- | --- |
+| 1 | Tenants CRUD (ระดับองค์กร ไม่ผูกกับหอพักใดหอพักหนึ่งถาวร ไม่มี Endpoint ลบ) | `src/DormFlow.Application/Features/Tenants/` |
+| 2 | Reservations — จองห้อง (ห้องเปลี่ยนเป็น Reserved ทันที) และยกเลิกการจอง | `src/DormFlow.Application/Features/Reservations/` |
+| 3 | Contracts — สร้าง (ผ่านการจองหรือทำสัญญาตรง), เปิดใช้งาน (เช็คอิน), สิ้นสุด (เช็คเอาท์) | `src/DormFlow.Application/Features/Contracts/` |
+| 4 | สิทธิ์ `reservations.view/create/cancel` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 5 | Migration `AddLeasingModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 6 | Integration Test วงจรชีวิตการเช่าเต็มสาย + กรณีปฏิเสธ (ห้องไม่ว่าง, ผู้เช่าบัญชีดำ) | `tests/DormFlow.IntegrationTests/Endpoints/LeasingLifecycleEndpointTests.cs` |
+
+### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
+
+เอกสารต้นฉบับไม่ได้ระบุกฎธุรกิจของโมดูลเหล่านี้ไว้ จึงใช้สมมติฐานที่สมเหตุสมผลต่อไปนี้
+**ควรทบทวนก่อนใช้งานจริง**:
+
+- **ไม่มี Entity แยกสำหรับ CheckIn/CheckOut** — รวมเป็นการกระทำบนสัญญาแทน
+  (`POST /contracts/{id}/activate` = เช็คอิน, `POST /contracts/{id}/terminate` = เช็คเอาท์)
+  ถ้าต้องการบันทึกรายละเอียดการตรวจสภาพห้องหรือรูปถ่ายตอนเข้า-ออก ต้องแยกเป็น Entity ใหม่ภายหลัง
+- **สถานะห้องเปลี่ยนอัตโนมัติตามวงจรชีวิต**: จอง/ทำสัญญา (Draft) → `Reserved`,
+  เปิดใช้งานสัญญา (เช็คอิน) → `Occupied`, สิ้นสุดสัญญา (เช็คเอาท์) → `Cleaning`
+  (เจ้าหน้าที่ต้องเปลี่ยนเป็น `Available` เองผ่าน Endpoint ของห้องหลังทำความสะอาดเสร็จ)
+- **เลขที่สัญญา** สุ่มเป็นรูปแบบ `CT-{yyyyMMdd}-{6 อักขระสุ่ม}` ไม่ใช้เลขรันต่อเนื่อง
+  เพราะยังไม่มีข้อกำหนดเรื่องรูปแบบเลขที่สัญญาที่ต้องอ้างอิงระบบบัญชีภายนอก
+- **ผู้เช่าที่ถูกขึ้นบัญชีดำ (`Blacklisted`)** จองห้องหรือทำสัญญาใหม่ไม่ได้ แต่สัญญาเดิมที่ Active อยู่แล้วไม่ถูกยกเลิกอัตโนมัติ
+- **ห้องหนึ่งห้องมีสัญญาที่ยังไม่สิ้นสุด (Draft หรือ Active) ได้ครั้งละหนึ่งฉบับเท่านั้น**
+- **ค่าเช่า/ค่ามัดจำของสัญญาคัดลอกมาจากห้องตอนทำสัญญา** ไม่เปลี่ยนตามค่าเช่าห้องที่แก้ไขในภายหลัง
+- **การจองมีอายุจำกัด** (`HoldDays`, ค่าเริ่มต้น 3 วัน สูงสุด 30 วัน) แต่ยังไม่มี Background Job
+  ที่คอยหมดอายุการจองอัตโนมัติเมื่อครบกำหนด (Hangfire/Quartz.NET ที่ระบุไว้ในเทคสแตกยังไม่ได้ติดตั้ง)
+  ต้องยกเลิกด้วยมือผ่าน `POST /reservations/{id}/cancel` ไปก่อน
+
+### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
+
+Meters, MeterReadings, Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance,
+Parcels, Visitors, Parking, Announcements, Notifications, Reports, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
+และต้องการรายละเอียดกฎธุรกิจเพิ่มเติม (เช่น สูตรคำนวณค่าน้ำ-ไฟจากมิเตอร์, รอบบิล, การอนุมัติการชำระเงิน,
+เงื่อนไขการคืนเงินมัดจำ) ก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

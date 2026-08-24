@@ -24,6 +24,9 @@ public static class PermissionModules
     /// <summary>ผู้เช่า</summary>
     public const string Tenants = "Tenants";
 
+    /// <summary>การจองห้องพัก</summary>
+    public const string Reservations = "Reservations";
+
     /// <summary>สัญญาเช่า</summary>
     public const string Contracts = "Contracts";
 
