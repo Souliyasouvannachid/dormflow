@@ -42,6 +42,9 @@ public static class PermissionModules
     /// <summary>เงินมัดจำ</summary>
     public const string Deposits = "Deposits";
 
+    /// <summary>ใบเสร็จรับเงิน</summary>
+    public const string Receipts = "Receipts";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 
