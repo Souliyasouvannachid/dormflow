@@ -8,8 +8,11 @@
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions และ Audit Logs
 > Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
-> Invoices, Payments และ Maintenance (งานแจ้งซ่อมบำรุง) แล้ว
+> Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง) และ Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ) แล้ว
 > ส่วนที่เหลือของ Phase 2 (Receipts, Deposits, Parcels, Visitors ฯลฯ) ยังไม่ได้เริ่ม
+> ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
+> ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
+> [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
 > ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
 > และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
 
@@ -291,6 +294,10 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET`/`POST` | `/api/v1/maintenance-requests` | `maintenance.view` / `maintenance.update-status` | แจ้งซ่อมบำรุง (สร้างใช้สิทธิ์เดียวกับการเปลี่ยนสถานะ ไม่มีสิทธิ์ "create" แยก) |
 | `POST` | `/api/v1/maintenance-requests/{id}/assign` | `maintenance.assign` | มอบหมาย/มอบหมายซ้ำช่างซ่อมบำรุง ห้องเปลี่ยนเป็น Maintenance ถ้ายังว่างอยู่ |
 | `PATCH` | `/api/v1/maintenance-requests/{id}/status` | `maintenance.update-status` | เปลี่ยนสถานะตามลำดับที่กำหนด (ห้ามตั้งเป็น Assigned ตรง ๆ) ปิดงานแล้วห้องกลับเป็นว่างถ้าไม่มีงานอื่นค้าง |
+| `GET` | `/api/v1/reports/revenue` | `reports.view` | สรุปยอดออกบิล/เก็บเงินได้/ค้างชำระในช่วงเวลาที่ระบุ |
+| `GET` | `/api/v1/reports/revenue/export` | `reports.export` | ส่งออกรายงานสรุปรายได้เป็นไฟล์ CSV |
+| `GET` | `/api/v1/reports/outstanding-invoices` | `reports.view` | รายการใบแจ้งหนี้ค้างชำระแบบแบ่งหน้า พร้อมยอดคงเหลือและจำนวนวันเกินกำหนด |
+| `GET` | `/api/v1/reports/outstanding-invoices/export` | `reports.export` | ส่งออกรายงานใบแจ้งหนี้ค้างชำระเป็นไฟล์ CSV (สูงสุด 5,000 แถว) |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -408,8 +415,9 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 57 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
-ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว |
+| `DormFlow.IntegrationTests` | 61 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
+รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -646,6 +654,9 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 16 | เพิ่ม `HasRoleForDormitoryAsync` ให้ `IUserAdministrationRepository` (ตรวจว่าเป็นช่างของหอพักนี้จริง) | `src/DormFlow.Infrastructure/Identity/UserAdministrationRepository.cs` |
 | 17 | Migration `AddMaintenanceModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 18 | Integration Test วงจรชีวิตงานซ่อมบำรุงเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/MaintenanceEndpointTests.cs` |
+| 19 | Reports — สรุปรายได้ (View/Export) และใบแจ้งหนี้ค้างชำระ (View/Export) เป็น CSV | `src/DormFlow.Application/Features/Reports/` |
+| 20 | แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของ Owner ใน List Endpoint 10 โมดูล (พบระหว่างพัฒนา Reports) | `src/DormFlow.Application/Common/Authorization/TenantScope.cs` |
+| 21 | Integration Test รายงานรายได้/ใบแจ้งหนี้ค้างชำระ + Regression Test การกันข้อมูลข้ามองค์กร | `tests/DormFlow.IntegrationTests/Endpoints/{Reports,CrossOrganizationIsolation}EndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -713,10 +724,19 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 - **`RoomService.ChangeStatusAsync` (Endpoint ทั่วไปของห้อง) ไม่มีการตรวจลำดับสถานะใด ๆ** ผู้ใช้ที่มีสิทธิ์
   `rooms.change-status` จึงยังเปลี่ยนสถานะห้องที่มีงานซ่อมค้างอยู่กลับเป็น `Available` เองได้โดยตรง
   การเปลี่ยนสถานะอัตโนมัติของโมดูลนี้เป็นเพียงการช่วยเหลือ ไม่ใช่ข้อบังคับระดับฐานข้อมูล — ยอมรับได้ในขอบเขตนี้
+- **Reports เลือกทำแค่ 2 รายงานก่อน** (สรุปรายได้ และใบแจ้งหนี้ค้างชำระ) เพราะเป็นสองรายงานที่ต่อยอดจากข้อมูล
+  Invoice/Payment ที่มีอยู่แล้วได้ทันทีโดยไม่ต้องออกแบบ Entity ใหม่ — ยังไม่มีรายงานสรุปการเข้าพัก (Occupancy)
+  เพราะซ้ำซ้อนกับ `GET /rooms/summary` ที่มีอยู่แล้ว (คนละสิทธิ์กัน คือ `rooms.view` ไม่ใช่ `reports.view`)
+  และยังไม่มีรายงานสรุปงานซ่อมบำรุงหรือรายงานอื่น ๆ
+- **สถานะ `Overdue` ของใบแจ้งหนี้ยังไม่เคยถูกตั้งค่าอัตโนมัติที่ไหนเลย** (ตามที่บันทึกไว้ในหัวข้อ Billing ด้านบน)
+  รายงานทั้งสองจึงคำนวณ "เกินกำหนด" สดจากการเทียบ `DueDate` กับวันที่ปัจจุบันตอนเรียก แทนที่จะอ่านจาก
+  `Invoice.Status == Overdue` โดยตรง
+- **ส่งออก CSV จำกัดไม่เกิน 5,000 แถวต่อคำขอ** (`ReportRepository.MaxExportRows`) ป้องกันการดึงข้อมูลจำนวนมาก
+  เกินไปในคำขอเดียว ถ้าต้องการมากกว่านั้นต้องกรองด้วย `dormitoryId`/ช่วงเวลาให้แคบลง หรือแบ่งส่งออกหลายรอบ
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
 Receipts, Deposits, Expenses,
-Parcels, Visitors, Parking, Announcements, Notifications, Reports, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
+Parcels, Visitors, Parking, Announcements, Notifications, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติม (เช่น สูตรคำนวณค่าน้ำ-ไฟจากมิเตอร์, รอบบิล, การอนุมัติการชำระเงิน,
 เงื่อนไขการคืนเงินมัดจำ) ก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

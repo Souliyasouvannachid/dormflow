@@ -12,6 +12,7 @@ using DormFlow.Application.Features.Maintenance;
 using DormFlow.Application.Features.MeterReadings;
 using DormFlow.Application.Features.Payments;
 using DormFlow.Application.Features.Permissions;
+using DormFlow.Application.Features.Reports;
 using DormFlow.Application.Features.Roles;
 using DormFlow.Application.Features.Reservations;
 using DormFlow.Application.Features.RoomTypes;
@@ -63,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAuditLogQueryService, AuditLogQueryService>();
+        services.AddScoped<IReportService, ReportService>();
 
         return services;
     }
