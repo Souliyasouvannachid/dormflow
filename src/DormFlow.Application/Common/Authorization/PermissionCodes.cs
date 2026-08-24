@@ -199,6 +199,25 @@ public static class PermissionCodes
         public const string Refund = "payments.refund";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับเงินมัดจำ
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Deposits ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// </remarks>
+    public static class Deposits
+    {
+        /// <summary>ดูรายการเงินมัดจำ</summary>
+        public const string View = "deposits.view";
+
+        /// <summary>บันทึกการรับเงินมัดจำ</summary>
+        public const string Collect = "deposits.collect";
+
+        /// <summary>คืนเงินมัดจำ</summary>
+        public const string Refund = "deposits.refund";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -297,6 +316,10 @@ public static class PermissionCodes
         new(Payments.Create, "บันทึกการชำระเงิน", PermissionModules.Payments),
         new(Payments.Approve, "อนุมัติการชำระเงิน", PermissionModules.Payments),
         new(Payments.Refund, "คืนเงิน", PermissionModules.Payments),
+
+        new(Deposits.View, "ดูรายการเงินมัดจำ", PermissionModules.Deposits),
+        new(Deposits.Collect, "บันทึกการรับเงินมัดจำ", PermissionModules.Deposits),
+        new(Deposits.Refund, "คืนเงินมัดจำ", PermissionModules.Deposits),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

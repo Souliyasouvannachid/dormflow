@@ -39,6 +39,9 @@ public static class PermissionModules
     /// <summary>การชำระเงิน</summary>
     public const string Payments = "Payments";
 
+    /// <summary>เงินมัดจำ</summary>
+    public const string Deposits = "Deposits";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 

@@ -82,6 +82,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Payments.Approve,
                 PermissionCodes.Payments.Refund,
 
+                PermissionCodes.Deposits.View,
+                PermissionCodes.Deposits.Collect,
+                PermissionCodes.Deposits.Refund,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -142,6 +146,9 @@ public static class RolePermissionDefaults
                 PermissionCodes.Payments.View,
                 PermissionCodes.Payments.Create,
 
+                PermissionCodes.Deposits.View,
+                PermissionCodes.Deposits.Collect,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -170,6 +177,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Payments.Create,
                 PermissionCodes.Payments.Approve,
                 PermissionCodes.Payments.Refund,
+
+                PermissionCodes.Deposits.View,
+                PermissionCodes.Deposits.Collect,
+                PermissionCodes.Deposits.Refund,
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
@@ -201,6 +212,7 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Invoices.View,
                 PermissionCodes.Payments.View,
+                PermissionCodes.Deposits.View,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,
