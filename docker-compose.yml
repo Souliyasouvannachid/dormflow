@@ -45,6 +45,18 @@ services:
       RateLimiting__Enabled: ${RateLimiting__Enabled:-true}
       RateLimiting__PermitLimit: ${RateLimiting__PermitLimit:-100}
       RateLimiting__WindowSeconds: ${RateLimiting__WindowSeconds:-60}
+      # กุญแจสำหรับเซ็น JWT ต้องกำหนดเองเสมอ ไม่มีค่าเริ่มต้น เพราะ appsettings.json ตั้งใจเว้นว่างไว้
+      Jwt__SigningKey: ${Jwt__SigningKey:?ต้องกำหนด Jwt__SigningKey ในไฟล์ .env}
+      Jwt__Issuer: ${Jwt__Issuer:-DormFlow}
+      Jwt__Audience: ${Jwt__Audience:-DormFlow.Client}
+      # ปรับสคีมาฐานข้อมูลอัตโนมัติตอนสตาร์ต เปิดไว้เพื่อความสะดวกตอนรันครั้งแรก
+      # ปิดค่านี้ (false) แล้วรัน dotnet ef database update แยกต่างหากก่อน deploy เมื่อรันหลายอินสแตนซ์พร้อมกัน
+      Database__AutoMigrate: ${Database__AutoMigrate:-false}
+      # ข้อมูลผู้ดูแลระบบเริ่มต้น ไม่บังคับ ถ้าไม่กำหนดจะข้ามการสร้างบัญชีนี้
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+      SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME:-}
+      SEED_ADMIN_LAST_NAME: ${SEED_ADMIN_LAST_NAME:-}
     ports:
       - "${API_HTTP_PORT:-8080}:8080"
     volumes:

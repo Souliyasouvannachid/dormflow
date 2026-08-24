@@ -8,7 +8,7 @@ WORKDIR /source
 
 # คัดลอกเฉพาะไฟล์ที่กำหนดเวอร์ชันแพ็กเกจก่อน
 # เพื่อให้ layer cache ของ restore ถูกใช้ซ้ำได้เมื่อโค้ดเปลี่ยนแต่รายการแพ็กเกจไม่เปลี่ยน
-COPY Directory.Build.props Directory.Packages.props global.json ./
+COPY Directory.Build.props Directory.Packages.props global.json .editorconfig ./
 COPY src/Directory.Build.props src/
 COPY src/DormFlow.Domain/DormFlow.Domain.csproj src/DormFlow.Domain/
 COPY src/DormFlow.Contracts/DormFlow.Contracts.csproj src/DormFlow.Contracts/
