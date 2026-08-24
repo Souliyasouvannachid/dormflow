@@ -111,6 +111,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>การแจ้งเตือนทั้งหมดในระบบ</summary>
     public DbSet<Notification> Notifications => Set<Notification>();
 
+    /// <summary>ค่าตั้งทั้งหมดในระบบ</summary>
+    public DbSet<Setting> Settings => Set<Setting>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

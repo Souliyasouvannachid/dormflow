@@ -3,16 +3,18 @@
 ระบบบริหารจัดการหอพักและอพาร์ตเมนต์แบบหลายองค์กร (Multi-Organization SaaS)
 สร้างด้วย ASP.NET Core Web API บน .NET 10 ตามแนวทาง **Modular Monolith + Clean Architecture**
 
-> สถานะปัจจุบัน: **Phase 1 เสร็จสมบูรณ์** และเริ่ม **Phase 2 แล้ว (สาย Contracts)**
+> สถานะปัจจุบัน: **Phase 1 เสร็จสมบูรณ์** และ **Phase 2 เสร็จสมบูรณ์**
 > Phase 1 ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions และ Audit Logs
-> Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
+> Phase 2 ครบทั้ง Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
 > Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง), Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ),
 > Deposits (เงินมัดจำ), Receipts (ใบเสร็จรับเงิน), Expenses (ค่าใช้จ่ายในการดำเนินงาน),
-> Parcels (พัสดุ), Visitors (ผู้มาเยือน), Parking (ที่จอดรถ), Announcements (ประกาศ) และ
-> Notifications (การแจ้งเตือน) แล้ว
-> ส่วนที่เหลือของ Phase 2 (Settings) ยังไม่ได้เริ่ม
+> Parcels (พัสดุ), Visitors (ผู้มาเยือน), Parking (ที่จอดรถ), Announcements (ประกาศ),
+> Notifications (การแจ้งเตือน) และ Settings (ค่าตั้งขององค์กร)
+> โมดูลของ Phase 2 ที่ไม่มีรายละเอียดกฎธุรกิจในเอกสารต้นฉบับ (ทุกโมดูลตั้งแต่ Deposits เป็นต้นไป)
+> ถูกออกแบบด้วยสมมติฐานที่สมเหตุสมผลและมีเหตุผลกำกับไว้ในหัวข้อ
+> [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts) **ควรทบทวนกับเจ้าของระบบก่อนใช้งานจริง**
 > ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
 > ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
 > [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
@@ -317,6 +319,7 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET` | `/api/v1/notifications` | ต้องเข้าสู่ระบบ | ดูการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ เหมือน `/auth/me`) |
 | `POST` | `/api/v1/notifications/{id}/read` | ต้องเข้าสู่ระบบ | ทำเครื่องหมายว่าอ่านการแจ้งเตือนของตนเองแล้ว |
 | `POST` | `/api/v1/notifications` | `notifications.send` | ส่งการแจ้งเตือนถึงผู้ใช้หนึ่งคนในองค์กรเดียวกัน |
+| `GET`/`PUT .../{key}`/`DELETE .../{key}` | `/api/v1/settings` | `settings.manage` | จัดการค่าตั้งขององค์กรแบบ Key/Value อิสระ (สร้าง/แก้ไขผ่าน `PUT` เดียวกัน) |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -434,7 +437,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 95 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+| `DormFlow.IntegrationTests` | 100 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
 ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
 รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน),
 วงจรชีวิตเงินมัดจำ (รับเงิน→สิ้นสุดสัญญา→คืนเต็ม/บางส่วน/ริบทั้งหมด, ห้ามรับซ้ำ, ห้ามคืนก่อนสัญญาสิ้นสุด,
@@ -445,7 +448,8 @@ dotnet run --project tests/DormFlow.UnitTests
 ห้ามจดทะเบียนซ้อนทะเบียนรถเดียวกัน, จดทะเบียนซ้ำได้หลังรายการเดิมสิ้นสุดแล้ว), วงจรชีวิตประกาศ
 (สร้าง (ร่าง)→เผยแพร่→เก็บเข้าคลัง, ห้ามเผยแพร่ซ้ำ, ห้ามเก็บเข้าคลังก่อนเผยแพร่), การแจ้งเตือน
 (ส่งถึงผู้ใช้→ปรากฏในรายการของผู้รับ, ทำเครื่องหมายอ่านแล้วของตนเอง, ห้ามอ่านแทนผู้อื่น,
-ห้ามส่งข้ามองค์กร) |
+ห้ามส่งข้ามองค์กร), ค่าตั้งขององค์กร (สร้างใหม่, แก้ไขค่าเดิมไม่สร้างซ้ำ, ลบแล้วอ่านต่อได้ 404,
+สร้างคีย์เดิมซ้ำได้หลังลบ, แยกข้อมูลตามองค์กร) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -659,6 +663,10 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 เพราะ Billing ทั้งหมดต้องพึ่งพาว่ามีสัญญาเช่าที่ Active และมีค่ามิเตอร์ของรอบบิลนั้นอยู่แล้วเป็นพื้นฐาน
 ตามด้วย **Maintenance** เพราะเป็นโมดูลเดียวที่เหลือใน Phase 2 ที่มีสิทธิ์ (`maintenance.*`) และบทบาท
 `Technician` กำหนดไว้แล้วตั้งแต่ Phase 1 ต่างจากโมดูลอื่นที่เหลือซึ่งไม่มีสิทธิ์ใด ๆ ถูกกำหนดไว้เลย
+จากนั้นสร้าง Reports, Deposits, Receipts, Expenses, Parcels, Visitors, Parking, Announcements และ
+Notifications ตามลำดับด้วยสมมติฐานที่สมเหตุสมผล (ดูหัวข้อด้านล่าง) และปิดท้าย Phase 2 ด้วย **Settings**
+ซึ่งมีสัญญาณเดียวกับ Maintenance คือสิทธิ์ `settings.manage` และการมอบสิทธิ์นี้ให้ Owner
+ถูกกำหนดไว้แล้วตั้งแต่ Phase 1 (ในหมวด Administration) เพียงแต่ยังไม่มี Entity/Endpoint จริงมารองรับ
 
 ### ทำแล้ว
 
@@ -717,6 +725,9 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 51 | Notifications — ส่งถึงผู้ใช้หนึ่งคน, ดู/ทำเครื่องหมายอ่านการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ) | `src/DormFlow.Application/Features/Notifications/` |
 | 52 | Migration `AddNotificationsModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 53 | Integration Test วงจรชีวิตการแจ้งเตือน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/NotificationsEndpointTests.cs` |
+| 54 | Settings — ค่าตั้งขององค์กรแบบ Key/Value อิสระ (GET/PUT upsert/DELETE) ใช้สิทธิ์ `settings.manage` เดิมของ Phase 1 | `src/DormFlow.Application/Features/Settings/` |
+| 55 | Migration `AddSettingsModule` (unique index บน `organization_id`+`key` กรองด้วย `is_deleted = false`) | `src/DormFlow.Infrastructure/Migrations/` |
+| 56 | Integration Test การจัดการค่าตั้ง + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/SettingsEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -865,7 +876,27 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
   ของโมดูลอื่นต้องออกแบบเพิ่มภายหลัง (เช่น Domain Event หรือ Background Job)
 - **ผู้รับเป็น User ของระบบ (พนักงาน/ผู้ดูแล) เท่านั้น ไม่ใช่ Tenant** เพราะบทบาท Tenant ยังไม่มี Endpoint
   หรือกลไกยืนยันตัวตนสำหรับพอร์ทัลผู้เช่าแยกต่างหากในขอบเขตนี้ (ดูหัวข้อ Tenants ด้านบน)
+- **Settings เก็บเป็นคู่ Key/Value อิสระต่อองค์กร** (`Setting.Key`/`Setting.Value` เป็นข้อความอิสระ ไม่ใช่
+  คอลัมน์ตายตัวทีละค่าตั้ง) เพราะเอกสารต้นฉบับไม่ได้ระบุรายการค่าตั้งที่ต้องมีไว้เลย มีเพียงสิทธิ์
+  `settings.manage` ที่กำหนดไว้แล้วตั้งแต่ Phase 1 การเก็บแบบอิสระทำให้เพิ่มค่าตั้งใหม่ในอนาคตได้โดยไม่ต้อง
+  Migration ทุกครั้ง แลกกับการไม่มี Type Safety หรือ Validation เฉพาะของแต่ละค่าตั้ง (ฝั่ง Client ต้องรู้เอง
+  ว่าคีย์ไหนควรมีรูปแบบค่าอย่างไร) — ไม่ทับซ้อนกับค่าตั้งที่มีโครงสร้างชัดเจนอยู่แล้วอย่างค่าตั้งบิลของ
+  `Dormitory` (`BillingDay`, `PaymentDueDay`, `LateFeeType/Amount`, `WaterRatePerUnit`/`ElectricityRatePerUnit`)
+- **Settings เป็นระดับองค์กรเท่านั้น ไม่ใช่ระดับหอพัก** (`Setting` สืบทอดจาก `BaseEntity` ไม่ใช่ `TenantEntity`
+  เหมือน `Tenant`) เพราะสิทธิ์ `settings.manage` เดิมของ Phase 1 อยู่ในหมวด Administration ระดับองค์กร
+  ไม่มีสัญญาณว่าต้องแยกค่าตั้งรายหอพัก ถ้าต้องการค่าตั้งเฉพาะหอพักในอนาคต ควรเพิ่มฟิลด์ที่ `Dormitory`
+  โดยตรงเหมือนค่าตั้งบิลที่มีอยู่แล้ว ไม่ใช่ขยายโมดูลนี้
+- **สร้างและแก้ไขใช้ `PUT` เดียวกัน (Upsert) แทนที่จะแยก `POST`/`PUT`** เพราะคีย์เป็นตัวระบุตัวตนของค่าตั้ง
+  อยู่แล้ว (ไม่มี ID แยกที่ต้องสร้างก่อนถึงจะแก้ไขได้) — เรียก `PUT` ซ้ำด้วยคีย์เดิมกี่ครั้งก็ได้ผลลัพธ์เดิมเสมอ
+  (Idempotent) ตรงกับความหมายของ HTTP `PUT` มากกว่า `POST`
+- **Unique Index บน `(organization_id, key)` กรองด้วย `is_deleted = false`** (ไม่ใช่ Unique Index เฉย ๆ)
+  ตามรูปแบบเดียวกับทุก Unique Index ของ Entity ที่ใช้ Soft Delete ในระบบ (เช่น `Deposit.ContractId`,
+  `Receipt.PaymentId`) เพื่อให้สร้างค่าตั้งคีย์เดิมซ้ำได้หลังจากลบรายการเดิมไปแล้ว — ถ้าลืมใส่ Filter
+  จะลบไม่ได้จริงเพราะแถวเดิมยังอยู่ในฐานข้อมูล (Soft Delete) และชนกับ Unique Index ทันทีที่สร้างใหม่
 
-### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
+### ยังไม่ทำ
 
-Settings — ยังไม่ได้เริ่ม และต้องการรายละเอียดกฎธุรกิจเพิ่มเติมก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง
+ไม่มีส่วนใดของ Phase 2 เหลือค้างอยู่ — ทุกโมดูลที่ระบุชื่อไว้ในเอกสารต้นฉบับถูกสร้างแล้วครบถ้วน
+รายการที่ยังไม่ทำในระบบทั้งหมดคือ Endpoint ยืนยันรหัส Two-Factor Authentication ของ Phase 1
+(ดูหัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)) และการทบทวนสมมติฐานทางธุรกิจทั้งหมดของ
+Phase 2 กับเจ้าของระบบจริงก่อนใช้งานจริง (ดูรายการทั้งหมดในหัวข้อด้านบน)
