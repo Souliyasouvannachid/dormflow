@@ -6,10 +6,12 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Application.Features.Floors;
 
 /// <summary>ตัวกรองสำหรับดึงรายการชั้นแบบแบ่งหน้า</summary>
+/// <param name="OrganizationId">จำกัดผลลัพธ์ให้เห็นเฉพาะชั้นขององค์กรนี้ เป็น null เฉพาะ SuperAdmin เท่านั้น</param>
 /// <param name="BuildingId">กรองเฉพาะชั้นของอาคารที่ระบุ เป็น null เมื่อไม่จำกัด</param>
 /// <param name="Status">กรองเฉพาะชั้นที่มีสถานะตรงกัน เป็น null เมื่อไม่จำกัด</param>
 /// <param name="RestrictToDormitoryIds">จำกัดผลลัพธ์ให้เห็นเฉพาะชั้นของหอพักในรายการนี้ เป็น null เมื่อไม่จำกัด</param>
 public sealed record FloorListFilter(
+    Guid? OrganizationId,
     Guid? BuildingId,
     FloorStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);

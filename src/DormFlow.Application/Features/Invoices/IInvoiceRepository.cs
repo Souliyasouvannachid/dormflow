@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Invoices;
 
 /// <summary>ตัวกรองสำหรับดึงรายการใบแจ้งหนี้แบบแบ่งหน้า</summary>
 public sealed record InvoiceListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? ContractId,
     InvoiceStatus? Status,

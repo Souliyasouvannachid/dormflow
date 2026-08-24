@@ -40,6 +40,7 @@ public sealed class BuildingService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "name");
 
         BuildingListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             ParseStatusOrNull(request.Status),
             TenantScope.GetDormitoryRestrictionForListing(_currentUser));

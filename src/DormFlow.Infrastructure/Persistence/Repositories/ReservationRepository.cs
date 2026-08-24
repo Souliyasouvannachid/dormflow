@@ -33,6 +33,11 @@ public sealed class ReservationRepository(DormFlowDbContext dbContext) : IReserv
 
         IQueryable<Reservation> reservations = _dbContext.Reservations.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            reservations = reservations.Where(reservation => reservation.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             reservations = reservations.Where(reservation => reservation.DormitoryId == filter.DormitoryId.Value);

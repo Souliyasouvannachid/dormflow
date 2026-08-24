@@ -43,6 +43,7 @@ public sealed class MeterReadingService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "periodMonth");
 
         MeterReadingListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.RoomId,
             ParseMeterTypeOrNull(request.MeterType),

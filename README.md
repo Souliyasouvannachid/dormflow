@@ -408,7 +408,8 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 54 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง) |
+| `DormFlow.IntegrationTests` | 57 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -573,9 +574,32 @@ Rate Limiting, API Versioning, `ICurrentUser`, Forwarded Headers และ Archi
 - อ่าน/แก้ไข/ลบข้อมูลที่มีอยู่: ถ้าองค์กรของข้อมูลไม่ตรงกับผู้ใช้ ตอบ 404 แทน 403 เพื่อไม่ให้เดาได้ว่า
   มีข้อมูลนั้นอยู่จริงในองค์กรอื่น (`TenantScope.EnsureOrganizationAccess` / `EnsureDormitoryAccess`)
 - List Endpoint: SuperAdmin และ Owner เห็นได้ทุกหอพักในองค์กรของตน ส่วนบทบาทอื่น (DormManager, Staff ฯลฯ)
-  เห็นเฉพาะหอพักที่ตนถูกมอบหมาย (`TenantScope.GetDormitoryRestrictionForListing`)
+  เห็นเฉพาะหอพักที่ตนถูกมอบหมาย (`TenantScope.GetDormitoryRestrictionForListing`) **และ**
+  ทุก List Endpoint ต้องเรียก `TenantScope.GetOrganizationRestrictionForListing` คู่กันเสมอเพื่อกรอง
+  ด้วย `OrganizationId` ด้วย (ดูหัวข้อ [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint))
 - Building ต้องอยู่ใน Dormitory ที่ระบุ, Floor ต้องอยู่ใน Building เดียวกับห้อง,
   RoomType ต้องอยู่ใน Dormitory เดียวกับอาคารที่เลือก — ตรวจก่อนบันทึกทุกครั้งที่ Application layer
+
+### แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร (Owner) ใน List Endpoint
+
+**พบระหว่างพัฒนาโมดูล Reports ของ Phase 2 (2026-08-24) และแก้ไขทันทีก่อนทำงานต่อ:**
+`TenantScope.GetDormitoryRestrictionForListing` คืนค่า `null` ให้ผู้ใช้บทบาท Owner โดยมีเจตนาว่า
+"ไม่ต้องจำกัดหอพัก เพราะ Owner เห็นได้ทุกหอพักในองค์กรของตนอยู่แล้ว" แต่ Repository ของโมดูลที่แยกข้อมูล
+ตามหอพัก (Buildings, Floors, RoomTypes, Rooms, Reservations, Contracts, MeterReadings, Invoices,
+Payments, MaintenanceRequests — รวม 10 โมดูล ทั้งจาก Phase 1 และ Phase 2) ไม่มีการกรองด้วย `OrganizationId`
+เพิ่มเติมเลย ผลคือ Owner ที่เรียก List Endpoint โดยไม่ระบุ `dormitoryId` (เช่น `GET /api/v1/rooms`,
+`GET /api/v1/invoices`) จะเห็นข้อมูลของ**ทุกองค์กรในระบบ** ไม่ใช่แค่ขององค์กรตนเอง — รวมถึงข้อมูลการเงิน
+และข้อมูลส่วนบุคคลของลูกค้ารายอื่นบนแพลตฟอร์ม SaaS แบบหลายองค์กรนี้ (การอ่านทีละรายการด้วย `GET /{id}`
+ไม่ได้รับผลกระทบ เพราะ `TenantScope.EnsureDormitoryAccess` ตรวจ `OrganizationId` ควบคู่กับหอพักอยู่แล้ว
+บทบาทอื่นที่ไม่ใช่ SuperAdmin/Owner ก็ไม่ได้รับผลกระทบเช่นกัน เพราะ `DormitoryIds` ของบทบาทเหล่านั้น
+ถูกจำกัดอยู่ในองค์กรตนเองอยู่แล้วโดยธรรมชาติจากการมอบหมายหอพัก)
+
+แก้ไขด้วยการเพิ่มเมธอด `TenantScope.GetOrganizationRestrictionForListing(currentUser)` (คืนค่า `null`
+เฉพาะ SuperAdmin เท่านั้น) แล้วเพิ่มฟิลด์ `OrganizationId` ให้ `*ListFilter` ของทั้ง 10 โมดูล พร้อมเพิ่มเงื่อนไข
+กรองใน Repository ทุกตัว — เรียกคู่กับ `GetDormitoryRestrictionForListing` เสมอในทุก Use Case ที่ดึงรายการ
+ข้อมูลที่แยกตามหอพัก มี Regression Test ยืนยันแล้วที่
+`tests/DormFlow.IntegrationTests/Endpoints/CrossOrganizationIsolationEndpointTests.cs` (ครอบคลุมทั้ง
+โมดูล Phase 1 อย่าง Rooms และโมดูล Phase 2 อย่าง Invoices/MaintenanceRequests)
 
 ### ยังไม่ทำ
 

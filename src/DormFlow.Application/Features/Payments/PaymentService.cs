@@ -48,6 +48,7 @@ public sealed class PaymentService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "createdAt");
 
         PaymentListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.InvoiceId,
             ParseStatusOrNull(request.Status),

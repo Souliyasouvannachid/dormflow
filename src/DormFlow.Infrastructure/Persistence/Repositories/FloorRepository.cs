@@ -38,6 +38,11 @@ public sealed class FloorRepository(DormFlowDbContext dbContext) : IFloorReposit
 
         IQueryable<Floor> floors = _dbContext.Floors.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            floors = floors.Where(floor => floor.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.BuildingId.HasValue)
         {
             floors = floors.Where(floor => floor.BuildingId == filter.BuildingId.Value);

@@ -56,6 +56,7 @@ public sealed class RoomService(
         ArgumentNullException.ThrowIfNull(request);
 
         RoomSummaryFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.BuildingId,
             TenantScope.GetDormitoryRestrictionForListing(_currentUser));
@@ -257,6 +258,7 @@ public sealed class RoomService(
         RoomStatus? status = forceAvailableOnly ? RoomStatus.Available : ParseStatusOrNull(request.Status);
 
         RoomListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.BuildingId,
             request.FloorId,

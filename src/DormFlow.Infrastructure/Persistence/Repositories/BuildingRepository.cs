@@ -38,6 +38,11 @@ public sealed class BuildingRepository(DormFlowDbContext dbContext) : IBuildingR
 
         IQueryable<Building> buildings = _dbContext.Buildings.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            buildings = buildings.Where(building => building.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             buildings = buildings.Where(building => building.DormitoryId == filter.DormitoryId.Value);

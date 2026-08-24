@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Maintenance;
 
 /// <summary>ตัวกรองสำหรับดึงรายการงานแจ้งซ่อมบำรุงแบบแบ่งหน้า</summary>
 public sealed record MaintenanceRequestListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? RoomId,
     MaintenanceStatus? Status,

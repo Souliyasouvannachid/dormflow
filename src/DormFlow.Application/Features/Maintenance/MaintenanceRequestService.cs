@@ -52,6 +52,7 @@ public sealed class MaintenanceRequestService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "createdAt");
 
         MaintenanceRequestListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.RoomId,
             ParseStatusOrNull(request.Status),

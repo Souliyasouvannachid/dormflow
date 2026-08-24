@@ -43,6 +43,11 @@ public sealed class ContractRepository(DormFlowDbContext dbContext) : IContractR
 
         IQueryable<Contract> contracts = _dbContext.Contracts.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            contracts = contracts.Where(contract => contract.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             contracts = contracts.Where(contract => contract.DormitoryId == filter.DormitoryId.Value);

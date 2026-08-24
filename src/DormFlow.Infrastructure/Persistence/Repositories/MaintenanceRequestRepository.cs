@@ -45,6 +45,11 @@ public sealed class MaintenanceRequestRepository(DormFlowDbContext dbContext) : 
 
         IQueryable<MaintenanceRequest> requests = _dbContext.MaintenanceRequests.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            requests = requests.Where(request => request.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             requests = requests.Where(request => request.DormitoryId == filter.DormitoryId.Value);

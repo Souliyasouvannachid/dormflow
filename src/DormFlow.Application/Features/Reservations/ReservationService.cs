@@ -43,6 +43,7 @@ public sealed class ReservationService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "createdAt");
 
         ReservationListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.RoomId,
             request.TenantId,

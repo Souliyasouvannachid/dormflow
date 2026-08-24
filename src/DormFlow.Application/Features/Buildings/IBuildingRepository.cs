@@ -6,10 +6,12 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Application.Features.Buildings;
 
 /// <summary>ตัวกรองสำหรับดึงรายการอาคารแบบแบ่งหน้า</summary>
+/// <param name="OrganizationId">จำกัดผลลัพธ์ให้เห็นเฉพาะอาคารขององค์กรนี้ เป็น null เฉพาะ SuperAdmin เท่านั้น</param>
 /// <param name="DormitoryId">กรองเฉพาะอาคารของหอพักที่ระบุ เป็น null เมื่อไม่จำกัด</param>
 /// <param name="Status">กรองเฉพาะอาคารที่มีสถานะตรงกัน เป็น null เมื่อไม่จำกัด</param>
 /// <param name="RestrictToDormitoryIds">จำกัดผลลัพธ์ให้เห็นเฉพาะอาคารของหอพักในรายการนี้ เป็น null เมื่อไม่จำกัด</param>
 public sealed record BuildingListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     BuildingStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);

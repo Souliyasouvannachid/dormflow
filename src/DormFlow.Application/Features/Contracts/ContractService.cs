@@ -59,6 +59,7 @@ public sealed class ContractService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "createdAt");
 
         ContractListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.RoomId,
             request.TenantId,

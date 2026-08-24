@@ -51,6 +51,7 @@ public sealed class InvoiceService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "periodMonth");
 
         InvoiceListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.DormitoryId,
             request.ContractId,
             ParseStatusOrNull(request.Status),

@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Contracts;
 
 /// <summary>ตัวกรองสำหรับดึงรายการสัญญาเช่าแบบแบ่งหน้า</summary>
 public sealed record ContractListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? RoomId,
     Guid? TenantId,

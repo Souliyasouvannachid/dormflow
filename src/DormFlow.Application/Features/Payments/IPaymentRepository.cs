@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Payments;
 
 /// <summary>ตัวกรองสำหรับดึงรายการชำระเงินแบบแบ่งหน้า</summary>
 public sealed record PaymentListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? InvoiceId,
     PaymentStatus? Status,

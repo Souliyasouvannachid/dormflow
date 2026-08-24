@@ -110,4 +110,22 @@ public static class TenantScope
 
         return currentUser.DormitoryIds;
     }
+
+    /// <summary>
+    /// องค์กรที่ต้องจำกัดผลลัพธ์ของ List Endpoint ไว้ให้เห็นเฉพาะข้อมูลขององค์กรนั้น
+    /// </summary>
+    /// <remarks>
+    /// สำคัญ: ต้องเรียกใช้คู่กับ <see cref="GetDormitoryRestrictionForListing"/> เสมอในทุก Use Case ที่ดึงรายการ
+    /// ข้อมูลที่แยกตามหอพัก (Entity ที่มี DormitoryId) เพราะ <see cref="GetDormitoryRestrictionForListing"/>
+    /// คืนค่า null ให้ Owner (หมายถึง "ไม่จำกัดหอพัก เห็นได้ทุกหอพักในองค์กรของตน") แต่ไม่ได้ครอบคลุมขอบเขตองค์กรด้วยตัวเอง
+    /// ถ้า Repository ไม่กรองด้วยค่าที่คืนจากเมธอดนี้ต่อ Owner จะเห็นข้อมูลของทุกองค์กรในระบบโดยไม่ตั้งใจ
+    /// คืนค่า null เฉพาะ SuperAdmin เท่านั้น (ไม่จำกัดองค์กร เห็นได้ทั้งระบบ)
+    /// </remarks>
+    /// <param name="currentUser">ผู้ใช้ปัจจุบัน</param>
+    public static Guid? GetOrganizationRestrictionForListing(ICurrentUser currentUser)
+    {
+        ArgumentNullException.ThrowIfNull(currentUser);
+
+        return currentUser.IsSuperAdmin ? null : currentUser.OrganizationId;
+    }
 }

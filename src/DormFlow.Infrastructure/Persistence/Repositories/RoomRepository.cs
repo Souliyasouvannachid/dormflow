@@ -58,6 +58,11 @@ public sealed class RoomRepository(DormFlowDbContext dbContext) : IRoomRepositor
 
         IQueryable<Room> rooms = _dbContext.Rooms.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            rooms = rooms.Where(room => room.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             rooms = rooms.Where(room => room.DormitoryId == filter.DormitoryId.Value);
@@ -105,6 +110,11 @@ public sealed class RoomRepository(DormFlowDbContext dbContext) : IRoomRepositor
 
     private static IQueryable<Room> ApplyFilter(IQueryable<Room> rooms, RoomListFilter filter)
     {
+        if (filter.OrganizationId.HasValue)
+        {
+            rooms = rooms.Where(room => room.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             rooms = rooms.Where(room => room.DormitoryId == filter.DormitoryId.Value);

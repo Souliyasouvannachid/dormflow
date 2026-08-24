@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Rooms;
 
 /// <summary>ตัวกรองสำหรับดึงรายการห้องพักแบบแบ่งหน้า</summary>
 public sealed record RoomListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? BuildingId,
     Guid? FloorId,
@@ -16,6 +17,7 @@ public sealed record RoomListFilter(
 
 /// <summary>ตัวกรองสำหรับสรุปจำนวนห้องแยกตามสถานะ</summary>
 public sealed record RoomSummaryFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? BuildingId,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);

@@ -26,6 +26,11 @@ public sealed class PaymentRepository(DormFlowDbContext dbContext) : IPaymentRep
 
         IQueryable<Payment> payments = _dbContext.Payments.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            payments = payments.Where(payment => payment.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             payments = payments.Where(payment => payment.DormitoryId == filter.DormitoryId.Value);

@@ -38,6 +38,11 @@ public sealed class RoomTypeRepository(DormFlowDbContext dbContext) : IRoomTypeR
 
         IQueryable<RoomType> roomTypes = _dbContext.RoomTypes.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            roomTypes = roomTypes.Where(roomType => roomType.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             roomTypes = roomTypes.Where(roomType => roomType.DormitoryId == filter.DormitoryId.Value);

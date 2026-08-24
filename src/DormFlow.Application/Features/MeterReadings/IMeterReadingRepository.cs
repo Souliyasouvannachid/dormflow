@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.MeterReadings;
 
 /// <summary>ตัวกรองสำหรับดึงรายการค่ามิเตอร์แบบแบ่งหน้า</summary>
 public sealed record MeterReadingListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? RoomId,
     MeterType? MeterType,

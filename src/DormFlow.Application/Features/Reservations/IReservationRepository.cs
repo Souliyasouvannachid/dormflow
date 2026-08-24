@@ -7,6 +7,7 @@ namespace DormFlow.Application.Features.Reservations;
 
 /// <summary>ตัวกรองสำหรับดึงรายการจองแบบแบ่งหน้า</summary>
 public sealed record ReservationListFilter(
+    Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? RoomId,
     Guid? TenantId,

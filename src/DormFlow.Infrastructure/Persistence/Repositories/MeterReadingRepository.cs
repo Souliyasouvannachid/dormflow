@@ -64,6 +64,11 @@ public sealed class MeterReadingRepository(DormFlowDbContext dbContext) : IMeter
 
         IQueryable<MeterReading> readings = _dbContext.MeterReadings.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            readings = readings.Where(reading => reading.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             readings = readings.Where(reading => reading.DormitoryId == filter.DormitoryId.Value);

@@ -44,6 +44,11 @@ public sealed class InvoiceRepository(DormFlowDbContext dbContext) : IInvoiceRep
 
         IQueryable<Invoice> invoices = _dbContext.Invoices.AsNoTracking();
 
+        if (filter.OrganizationId.HasValue)
+        {
+            invoices = invoices.Where(invoice => invoice.OrganizationId == filter.OrganizationId.Value);
+        }
+
         if (filter.DormitoryId.HasValue)
         {
             invoices = invoices.Where(invoice => invoice.DormitoryId == filter.DormitoryId.Value);

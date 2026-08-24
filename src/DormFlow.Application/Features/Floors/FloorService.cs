@@ -40,6 +40,7 @@ public sealed class FloorService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "floorNumber");
 
         FloorListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
             request.BuildingId,
             ParseStatusOrNull(request.Status),
             TenantScope.GetDormitoryRestrictionForListing(_currentUser));
