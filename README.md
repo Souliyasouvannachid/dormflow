@@ -7,8 +7,8 @@
 > Phase 1 ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions และ Audit Logs
-> Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์) และ Meter Readings แล้ว
-> ส่วนที่เหลือของ Phase 2 (Billing, Invoices, Payments ฯลฯ) ยังไม่ได้เริ่ม
+> Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
+> Invoices และ Payments แล้ว ส่วนที่เหลือของ Phase 2 (Receipts, Deposits, Maintenance ฯลฯ) ยังไม่ได้เริ่ม
 > ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
 > และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
 
@@ -281,6 +281,12 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `POST` | `/api/v1/contracts/{id}/activate` | `contracts.activate` | เปิดใช้งานสัญญา = เช็คอิน ห้องเปลี่ยนเป็น Occupied |
 | `POST` | `/api/v1/contracts/{id}/terminate` | `contracts.terminate` | สิ้นสุดสัญญา = เช็คเอาท์ ห้องเปลี่ยนเป็น Cleaning |
 | `GET`/`POST` | `/api/v1/meter-readings` | `meter-readings.*` | จดค่ามิเตอร์น้ำ/ไฟรายเดือน (ไม่มี UPDATE/DELETE เป็นบันทึกเชิงประวัติ) |
+| `GET`/`POST` | `/api/v1/invoices` | `invoices.*` | สร้างใบแจ้งหนี้ในสถานะร่าง คำนวณค่าน้ำ-ไฟจากค่ามิเตอร์อัตโนมัติ |
+| `POST` | `/api/v1/invoices/{id}/issue` | `invoices.issue` | ออกใบแจ้งหนี้ให้ผู้เช่า (Draft → Issued) |
+| `POST` | `/api/v1/invoices/{id}/cancel` | `invoices.cancel` | ยกเลิกใบแจ้งหนี้ (ทำได้เฉพาะที่ยังไม่มีการชำระเงินเข้ามา) |
+| `GET`/`POST` | `/api/v1/payments` | `payments.*` | บันทึกรายการชำระเงินในสถานะรอยืนยัน ยังไม่มีผลต่อยอดใบแจ้งหนี้ |
+| `POST` | `/api/v1/payments/{id}/confirm` | `payments.approve` | ยืนยันรายการชำระเงิน นำยอดไปหักใบแจ้งหนี้และปรับสถานะ |
+| `POST` | `/api/v1/payments/{id}/refund` | `payments.refund` | คืนเงิน (เฉพาะรายการที่ยืนยันแล้ว) ยอดถูกหักออกจากใบแจ้งหนี้คืน |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -398,7 +404,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 41 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน) |
+| `DormFlow.IntegrationTests` | 46 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -601,6 +607,11 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 7 | Meter Readings — จดค่ามิเตอร์น้ำ/ไฟรายเดือน ดึงค่าครั้งก่อนหน้ามาต่ออัตโนมัติ (View/Create เท่านั้น) | `src/DormFlow.Application/Features/MeterReadings/` |
 | 8 | Migration `AddMeterReadings` | `src/DormFlow.Infrastructure/Migrations/` |
 | 9 | Integration Test การจดค่ามิเตอร์ (ค่าเริ่มต้น, ต่อเนื่องข้ามเดือน, กันจดซ้ำ, กันค่าย้อนหลัง) | `tests/DormFlow.IntegrationTests/Endpoints/MeterReadingsEndpointTests.cs` |
+| 10 | เพิ่ม `WaterRatePerUnit`/`ElectricityRatePerUnit` ให้ Dormitory (ต่อจากฟิลด์ Billing เดิมของ Phase 1) | `src/DormFlow.Domain/Entities/Dormitory.cs` |
+| 11 | Invoices — สร้างจากสัญญา+ค่ามิเตอร์ (Draft), ออกให้ผู้เช่า (Issued), ยกเลิก | `src/DormFlow.Application/Features/Invoices/` |
+| 12 | Payments — บันทึก (Pending), ยืนยัน (Confirmed → หักยอดบิล), คืนเงิน (Refunded → คืนยอด) | `src/DormFlow.Application/Features/Payments/` |
+| 13 | Migration `AddBillingModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 14 | Integration Test วงจรชีวิตการออกบิลเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/BillingLifecycleEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -626,12 +637,34 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
   ทะเบียนมิเตอร์แยกเป็นของตัวเอง ถ้าห้องเปลี่ยนมิเตอร์จริง (มิเตอร์เสีย/เปลี่ยนใหม่) ต้องจดค่าเริ่มต้นใหม่เอง
   ระบบไม่รองรับการรีเซ็ตค่ามิเตอร์กลับไปต่ำกว่าค่าครั้งก่อนหน้า
 - **ค่ามิเตอร์เป็นบันทึกเชิงประวัติที่แก้ไข/ลบไม่ได้** จดผิดต้องจดรายการใหม่ของเดือนถัดไปแก้ไขแทน
-- **อัตราค่าน้ำ/ค่าไฟต่อหน่วยยังไม่ถูกกำหนดไว้ที่ไหน** เพราะเป็นส่วนของการออกใบแจ้งหนี้ (Invoices)
-  ซึ่งยังไม่เริ่มสร้าง จะออกแบบตอนสร้างโมดูล Billing/Invoices ต่อไป
+- **อัตราค่าน้ำ/ค่าไฟต่อหน่วยเก็บไว้ที่ระดับหอพัก** (`Dormitory.WaterRatePerUnit`/`ElectricityRatePerUnit`)
+  ต่อจากฟิลด์ตั้งค่าบิลเดิมของ Phase 1 (`BillingDay`, `PaymentDueDay`, `LateFeeType/Amount`)
+  เพราะเป็นค่าที่ควรเท่ากันทั้งหอพัก ไม่ใช่รายห้อง — ถ้าบางหอพักต้องการอัตราต่างกันตามประเภทห้อง
+  ต้องย้ายไปเก็บที่ `RoomType` แทนในภายหลัง
+- **ไม่มี Entity แยกสำหรับ "รายการ" ในใบแจ้งหนี้ (Invoice Line Item)** — ค่าเช่า/ค่าน้ำ/ค่าไฟ/ค่าปรับ
+  เก็บเป็นฟิลด์ตรง ๆ บน `Invoice` เพราะจำนวนประเภทค่าใช้จ่ายคงที่ในขอบเขตนี้ ถ้าต้องรองรับค่าใช้จ่ายอื่น
+  ที่ไม่รู้จำนวนล่วงหน้า (เช่น ค่าปรับจากผู้เช่าทำของเสียหาย) ต้องแยกเป็นตาราง Line Item ในภายหลัง
+- **ใบแจ้งหนี้ออกได้เฉพาะจากสัญญาที่ Active เท่านั้น** และออกได้เดือนละหนึ่งฉบับต่อสัญญา
+  ค่าน้ำ/ค่าไฟคำนวณจากค่ามิเตอร์ของห้องในเดือนนั้น ถ้ายังไม่มีค่ามิเตอร์ของเดือนนั้นจะคิดเป็น 0
+  (ไม่บังคับต้องจดมิเตอร์ก่อนออกบิลเสมอไป เพราะบางหอพักอาจรวมค่าน้ำ-ไฟในค่าเช่าอยู่แล้ว)
+- **วันครบกำหนดชำระคำนวณจาก `Dormitory.PaymentDueDay`** โดยหาวันที่ตรงกับเลขวันนั้นที่อยู่ *หลัง*
+  วันออกบิลที่ใกล้ที่สุด (ถ้าเลขวันครบกำหนดผ่านไปแล้วในเดือนที่ออกบิล จะเลื่อนไปเดือนถัดไป)
+  และไม่มีการคำนวณค่าปรับชำระล่าช้า (`LateFeeAmount`) อัตโนมัติเมื่อเกินกำหนด เพราะต้องมี Background Job
+  ที่ยังไม่ได้ติดตั้ง (เช่นเดียวกับช่องโหว่ HoldDays ของ Reservations) — สถานะ `Overdue` นิยามไว้ในระบบ
+  แต่ยังไม่มีจุดใดตั้งค่าอัตโนมัติ
+- **การชำระเงินต้องผ่านการยืนยันก่อนจึงมีผลกับยอดบิล** (`Pending` → `Confirmed`) แยกสิทธิ์บันทึก
+  (`payments.create`) ออกจากสิทธิ์ยืนยัน (`payments.approve`) ตามที่ Phase 1 กำหนดสิทธิ์ไว้แล้ว
+  เพื่อให้มีจุดตรวจสอบก่อนเงินเข้าระบบจริง โดยเฉพาะกรณีโอน/QR ที่ต้องเทียบกับใบนำฝากธนาคาร
+  ไม่มีสถานะ "ปฏิเสธ" แยกต่างหาก (ไม่มีสิทธิ์ `payments.reject` ในเอกสารต้นฉบับ) รายการที่บันทึกผิดปล่อยเป็น
+  `Pending` ค้างไว้ได้โดยไม่กระทบยอดบิล
+- **ยืนยันยอดชำระเกินยอดคงเหลือของบิลไม่ได้** ป้องกัน Overpayment แต่ยังไม่รองรับ "เครดิตคงเหลือ"
+  ย้ายไปใช้กับบิลเดือนถัดไป (ต้องคืนเงินส่วนเกินเป็นรายการแยก หรือออกแบบเพิ่มภายหลัง)
+- **ยกเลิกใบแจ้งหนี้ได้เฉพาะที่ยังไม่มีการชำระเงินเข้ามา** (`PaidAmount == 0`) ถ้ามีการชำระแล้วต้องคืนเงิน
+  รายการที่ยืนยันไว้ก่อน จึงจะยกเลิกบิลได้
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance,
+Receipts, Deposits, Expenses, Maintenance,
 Parcels, Visitors, Parking, Announcements, Notifications, Reports, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติม (เช่น สูตรคำนวณค่าน้ำ-ไฟจากมิเตอร์, รอบบิล, การอนุมัติการชำระเงิน,
 เงื่อนไขการคืนเงินมัดจำ) ก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

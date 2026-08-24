@@ -34,6 +34,12 @@ public sealed class CreateDormitoryRequestValidator : AbstractValidator<CreateDo
 
         RuleFor(request => request.LateFeeAmount)
             .GreaterThanOrEqualTo(0).WithMessage("ค่าปรับชำระล่าช้าต้องไม่ติดลบ");
+
+        RuleFor(request => request.WaterRatePerUnit)
+            .GreaterThanOrEqualTo(0).WithMessage("อัตราค่าน้ำต่อหน่วยต้องไม่ติดลบ");
+
+        RuleFor(request => request.ElectricityRatePerUnit)
+            .GreaterThanOrEqualTo(0).WithMessage("อัตราค่าไฟต่อหน่วยต้องไม่ติดลบ");
     }
 }
 
@@ -67,5 +73,11 @@ public sealed class UpdateDormitoryRequestValidator : AbstractValidator<UpdateDo
 
         RuleFor(request => request.LateFeeAmount)
             .GreaterThanOrEqualTo(0).WithMessage("ค่าปรับชำระล่าช้าต้องไม่ติดลบ");
+
+        RuleFor(request => request.WaterRatePerUnit)
+            .GreaterThanOrEqualTo(0).WithMessage("อัตราค่าน้ำต่อหน่วยต้องไม่ติดลบ");
+
+        RuleFor(request => request.ElectricityRatePerUnit)
+            .GreaterThanOrEqualTo(0).WithMessage("อัตราค่าไฟต่อหน่วยต้องไม่ติดลบ");
     }
 }

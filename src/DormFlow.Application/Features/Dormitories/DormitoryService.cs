@@ -97,6 +97,8 @@ public sealed class DormitoryService(
             PaymentDueDay = request.PaymentDueDay,
             LateFeeType = Enum.Parse<LateFeeType>(request.LateFeeType, ignoreCase: true),
             LateFeeAmount = request.LateFeeAmount,
+            WaterRatePerUnit = request.WaterRatePerUnit,
+            ElectricityRatePerUnit = request.ElectricityRatePerUnit,
         };
 
         await _repository.AddAsync(dormitory, cancellationToken);
@@ -145,6 +147,8 @@ public sealed class DormitoryService(
         dormitory.PaymentDueDay = request.PaymentDueDay;
         dormitory.LateFeeType = Enum.Parse<LateFeeType>(request.LateFeeType, ignoreCase: true);
         dormitory.LateFeeAmount = request.LateFeeAmount;
+        dormitory.WaterRatePerUnit = request.WaterRatePerUnit;
+        dormitory.ElectricityRatePerUnit = request.ElectricityRatePerUnit;
 
         await _repository.SaveChangesAsync(cancellationToken);
 
@@ -240,6 +244,8 @@ public sealed class DormitoryService(
         PaymentDueDay = dormitory.PaymentDueDay,
         LateFeeType = dormitory.LateFeeType.ToString(),
         LateFeeAmount = dormitory.LateFeeAmount,
+        WaterRatePerUnit = dormitory.WaterRatePerUnit,
+        ElectricityRatePerUnit = dormitory.ElectricityRatePerUnit,
         Status = dormitory.Status.ToString(),
         CreatedAt = dormitory.CreatedAt,
         UpdatedAt = dormitory.UpdatedAt,

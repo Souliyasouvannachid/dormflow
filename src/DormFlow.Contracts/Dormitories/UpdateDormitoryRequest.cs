@@ -51,4 +51,10 @@ public class UpdateDormitoryRequest
 
     /// <summary>จำนวนค่าปรับชำระล่าช้า</summary>
     public decimal LateFeeAmount { get; set; }
+
+    /// <summary>อัตราค่าน้ำต่อหน่วย ใช้คำนวณค่าน้ำในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    public decimal WaterRatePerUnit { get; set; }
+
+    /// <summary>อัตราค่าไฟต่อหน่วย ใช้คำนวณค่าไฟในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    public decimal ElectricityRatePerUnit { get; set; }
 }

@@ -64,6 +64,12 @@ public class Dormitory : BaseEntity
     /// <summary>จำนวนค่าปรับชำระล่าช้า ตามรูปแบบที่กำหนดใน <see cref="LateFeeType"/></summary>
     public decimal LateFeeAmount { get; set; }
 
+    /// <summary>อัตราค่าน้ำต่อหน่วย ใช้คำนวณค่าน้ำในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    public decimal WaterRatePerUnit { get; set; }
+
+    /// <summary>อัตราค่าไฟต่อหน่วย ใช้คำนวณค่าไฟในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    public decimal ElectricityRatePerUnit { get; set; }
+
     /// <summary>สถานะของหอพัก</summary>
     public DormitoryStatus Status { get; set; } = DormitoryStatus.Active;
 }

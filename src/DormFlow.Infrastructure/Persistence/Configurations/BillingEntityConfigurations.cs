@@ -31,3 +31,68 @@ public sealed class MeterReadingConfiguration : IEntityTypeConfiguration<MeterRe
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
+
+/// <summary>ตั้งค่าตารางใบแจ้งหนี้</summary>
+public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
+{
+    /// <inheritdoc />
+    public void Configure(EntityTypeBuilder<Invoice> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.ToTable("invoices");
+
+        builder.Property(invoice => invoice.DormitoryId).IsRequired();
+        builder.Property(invoice => invoice.InvoiceNumber).HasMaxLength(50).IsRequired();
+        builder.Property(invoice => invoice.PeriodMonth).IsRequired();
+        builder.Property(invoice => invoice.IssueDate).IsRequired();
+        builder.Property(invoice => invoice.DueDate).IsRequired();
+        builder.Property(invoice => invoice.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        builder.Property(invoice => invoice.Notes).HasMaxLength(1000);
+
+        // เลขที่ใบแจ้งหนี้ไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        builder.HasIndex(invoice => new { invoice.OrganizationId, invoice.InvoiceNumber })
+            .IsUnique()
+            .HasFilter("is_deleted = false");
+
+        // สัญญาเช่าหนึ่งฉบับออกบิลของเดือนเดียวกันได้เพียงครั้งเดียว
+        builder.HasIndex(invoice => new { invoice.ContractId, invoice.PeriodMonth })
+            .IsUnique()
+            .HasFilter("is_deleted = false");
+
+        builder.HasIndex(invoice => invoice.Status);
+
+        builder.HasOne<Contract>()
+            .WithMany()
+            .HasForeignKey(invoice => invoice.ContractId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}
+
+/// <summary>ตั้งค่าตารางการชำระเงิน</summary>
+public sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
+{
+    /// <inheritdoc />
+    public void Configure(EntityTypeBuilder<Payment> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.ToTable("payments");
+
+        builder.Property(payment => payment.DormitoryId).IsRequired();
+        builder.Property(payment => payment.PaymentDate).IsRequired();
+        builder.Property(payment => payment.Method).HasConversion<string>().HasMaxLength(20).IsRequired();
+        builder.Property(payment => payment.ReferenceNumber).HasMaxLength(100);
+        builder.Property(payment => payment.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        builder.Property(payment => payment.RefundReason).HasMaxLength(500);
+        builder.Property(payment => payment.Notes).HasMaxLength(1000);
+
+        builder.HasIndex(payment => payment.InvoiceId);
+        builder.HasIndex(payment => payment.Status);
+
+        builder.HasOne<Invoice>()
+            .WithMany()
+            .HasForeignKey(payment => payment.InvoiceId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}

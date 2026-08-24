@@ -57,6 +57,12 @@ public class DormitoryResponse
     /// <summary>จำนวนค่าปรับชำระล่าช้า</summary>
     public decimal LateFeeAmount { get; init; }
 
+    /// <summary>อัตราค่าน้ำต่อหน่วย</summary>
+    public decimal WaterRatePerUnit { get; init; }
+
+    /// <summary>อัตราค่าไฟต่อหน่วย</summary>
+    public decimal ElectricityRatePerUnit { get; init; }
+
     /// <summary>สถานะของหอพัก</summary>
     public string Status { get; init; } = string.Empty;
 
