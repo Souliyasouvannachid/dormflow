@@ -22,6 +22,7 @@ using DormFlow.Application.Features.Reservations;
 using DormFlow.Application.Features.RoomTypes;
 using DormFlow.Application.Features.Rooms;
 using DormFlow.Application.Features.Tenants;
+using DormFlow.Application.Features.Visitors;
 using DormFlow.Application.Features.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,6 +68,7 @@ public static class DependencyInjection
         services.AddScoped<IReceiptService, ReceiptService>();
         services.AddScoped<IExpenseService, ExpenseService>();
         services.AddScoped<IParcelService, ParcelService>();
+        services.AddScoped<IVisitorService, VisitorService>();
         services.AddScoped<IMaintenanceRequestService, MaintenanceRequestService>();
         services.AddScoped<IUserManagementService, UserManagementService>();
         services.AddScoped<IRoleService, RoleService>();

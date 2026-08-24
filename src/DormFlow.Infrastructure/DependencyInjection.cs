@@ -22,6 +22,7 @@ using DormFlow.Application.Features.Reservations;
 using DormFlow.Application.Features.RoomTypes;
 using DormFlow.Application.Features.Rooms;
 using DormFlow.Application.Features.Tenants;
+using DormFlow.Application.Features.Visitors;
 using DormFlow.Application.Features.Users;
 using DormFlow.Infrastructure.Authentication;
 using DormFlow.Infrastructure.Identity;
@@ -127,6 +128,7 @@ public static class DependencyInjection
         services.AddScoped<IReceiptRepository, ReceiptRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<IParcelRepository, ParcelRepository>();
+        services.AddScoped<IVisitorRepository, VisitorRepository>();
         services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();

@@ -99,6 +99,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>พัสดุทั้งหมดในระบบ</summary>
     public DbSet<Parcel> Parcels => Set<Parcel>();
 
+    /// <summary>ผู้มาเยือนทั้งหมดในระบบ</summary>
+    public DbSet<Visitor> Visitors => Set<Visitor>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

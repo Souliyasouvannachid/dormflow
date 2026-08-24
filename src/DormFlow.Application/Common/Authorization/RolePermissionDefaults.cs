@@ -96,6 +96,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Parcels.Log,
                 PermissionCodes.Parcels.Pickup,
 
+                PermissionCodes.Visitors.View,
+                PermissionCodes.Visitors.CheckIn,
+                PermissionCodes.Visitors.CheckOut,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -168,6 +172,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Parcels.View,
                 PermissionCodes.Parcels.Log,
                 PermissionCodes.Parcels.Pickup,
+
+                PermissionCodes.Visitors.View,
+                PermissionCodes.Visitors.CheckIn,
+                PermissionCodes.Visitors.CheckOut,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
@@ -244,6 +252,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Parcels.View,
                 PermissionCodes.Parcels.Log,
                 PermissionCodes.Parcels.Pickup,
+
+                PermissionCodes.Visitors.View,
+                PermissionCodes.Visitors.CheckIn,
+                PermissionCodes.Visitors.CheckOut,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,

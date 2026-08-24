@@ -2266,6 +2266,124 @@ namespace DormFlow.Infrastructure.Migrations
                     b.ToTable("user_dormitories", (string)null);
                 });
 
+            modelBuilder.Entity("DormFlow.Domain.Entities.Visitor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CheckInAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_in_at");
+
+                    b.Property<DateTimeOffset?>("CheckOutAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("check_out_at");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<Guid>("DormitoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("dormitory_id");
+
+                    b.Property<string>("IdNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("id_number");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<string>("Purpose")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("purpose");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("room_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("VisitorName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("visitor_name");
+
+                    b.Property<string>("VisitorPhone")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("visitor_phone");
+
+                    b.HasKey("Id")
+                        .HasName("pk_visitors");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("ix_visitors_is_deleted");
+
+                    b.HasIndex("RoomId")
+                        .HasDatabaseName("ix_visitors_room_id");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_visitors_status");
+
+                    b.HasIndex("TenantId")
+                        .HasDatabaseName("ix_visitors_tenant_id");
+
+                    b.HasIndex("OrganizationId", "DormitoryId")
+                        .HasDatabaseName("ix_visitors_organization_id_dormitory_id");
+
+                    b.ToTable("visitors", (string)null);
+                });
+
             modelBuilder.Entity("DormFlow.Infrastructure.Identity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2849,6 +2967,22 @@ namespace DormFlow.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_dormitories_users_user_id");
+                });
+
+            modelBuilder.Entity("DormFlow.Domain.Entities.Visitor", b =>
+                {
+                    b.HasOne("DormFlow.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_visitors_rooms_room_id");
+
+                    b.HasOne("DormFlow.Domain.Entities.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_visitors_tenants_tenant_id");
                 });
 
             modelBuilder.Entity("DormFlow.Infrastructure.Identity.ApplicationUser", b =>

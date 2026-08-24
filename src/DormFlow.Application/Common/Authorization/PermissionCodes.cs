@@ -269,6 +269,25 @@ public static class PermissionCodes
         public const string Pickup = "parcels.pickup";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับผู้มาเยือน
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Visitors ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// </remarks>
+    public static class Visitors
+    {
+        /// <summary>ดูรายการผู้มาเยือน</summary>
+        public const string View = "visitors.view";
+
+        /// <summary>บันทึกการเข้าของผู้มาเยือน</summary>
+        public const string CheckIn = "visitors.checkin";
+
+        /// <summary>บันทึกการออกของผู้มาเยือน</summary>
+        public const string CheckOut = "visitors.checkout";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -381,6 +400,10 @@ public static class PermissionCodes
         new(Parcels.View, "ดูรายการพัสดุ", PermissionModules.Parcels),
         new(Parcels.Log, "บันทึกพัสดุที่มาถึง", PermissionModules.Parcels),
         new(Parcels.Pickup, "บันทึกการรับพัสดุ", PermissionModules.Parcels),
+
+        new(Visitors.View, "ดูรายการผู้มาเยือน", PermissionModules.Visitors),
+        new(Visitors.CheckIn, "บันทึกการเข้าของผู้มาเยือน", PermissionModules.Visitors),
+        new(Visitors.CheckOut, "บันทึกการออกของผู้มาเยือน", PermissionModules.Visitors),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

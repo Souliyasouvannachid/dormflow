@@ -51,6 +51,9 @@ public static class PermissionModules
     /// <summary>พัสดุ/ไปรษณีย์ของผู้เช่า</summary>
     public const string Parcels = "Parcels";
 
+    /// <summary>ผู้มาเยือน</summary>
+    public const string Visitors = "Visitors";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 
