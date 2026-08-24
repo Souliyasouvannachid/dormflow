@@ -63,6 +63,9 @@ public static class PermissionModules
     /// <summary>ประกาศ</summary>
     public const string Announcements = "Announcements";
 
+    /// <summary>การแจ้งเตือน</summary>
+    public const string Notifications = "Notifications";
+
     /// <summary>รายงาน</summary>
     public const string Reports = "Reports";
 

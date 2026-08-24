@@ -328,6 +328,20 @@ public static class PermissionCodes
         public const string Publish = "announcements.publish";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับการแจ้งเตือน
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Notifications ของ Phase 2
+    /// มีเฉพาะสิทธิ์ส่งเท่านั้น เพราะการดูและทำเครื่องหมายอ่านแล้วของการแจ้งเตือนตนเองเปิดให้ผู้ใช้ที่เข้าสู่ระบบ
+    /// ทุกคนทำได้เสมอ (เหมือน `GET /auth/me`) ไม่ผูกกับสิทธิ์ใด เพราะเป็นข้อมูลของตนเองโดยตรง
+    /// </remarks>
+    public static class Notifications
+    {
+        /// <summary>ส่งการแจ้งเตือนถึงผู้ใช้</summary>
+        public const string Send = "notifications.send";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -452,6 +466,8 @@ public static class PermissionCodes
         new(Announcements.View, "ดูรายการประกาศ", PermissionModules.Announcements),
         new(Announcements.Create, "สร้างประกาศใหม่", PermissionModules.Announcements),
         new(Announcements.Publish, "เผยแพร่หรือเก็บประกาศเข้าคลัง", PermissionModules.Announcements),
+
+        new(Notifications.Send, "ส่งการแจ้งเตือนถึงผู้ใช้", PermissionModules.Notifications),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

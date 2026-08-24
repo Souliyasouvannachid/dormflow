@@ -112,6 +112,8 @@ public static class RolePermissionDefaults
                 PermissionCodes.Announcements.Create,
                 PermissionCodes.Announcements.Publish,
 
+                PermissionCodes.Notifications.Send,
+
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
 
@@ -196,6 +198,8 @@ public static class RolePermissionDefaults
                 PermissionCodes.Announcements.View,
                 PermissionCodes.Announcements.Create,
                 PermissionCodes.Announcements.Publish,
+
+                PermissionCodes.Notifications.Send,
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,

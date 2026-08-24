@@ -108,6 +108,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>ประกาศทั้งหมดในระบบ</summary>
     public DbSet<Announcement> Announcements => Set<Announcement>();
 
+    /// <summary>การแจ้งเตือนทั้งหมดในระบบ</summary>
+    public DbSet<Notification> Notifications => Set<Notification>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

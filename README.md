@@ -10,8 +10,9 @@
 > Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
 > Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง), Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ),
 > Deposits (เงินมัดจำ), Receipts (ใบเสร็จรับเงิน), Expenses (ค่าใช้จ่ายในการดำเนินงาน),
-> Parcels (พัสดุ), Visitors (ผู้มาเยือน), Parking (ที่จอดรถ) และ Announcements (ประกาศ) แล้ว
-> ส่วนที่เหลือของ Phase 2 (Notifications, Settings) ยังไม่ได้เริ่ม
+> Parcels (พัสดุ), Visitors (ผู้มาเยือน), Parking (ที่จอดรถ), Announcements (ประกาศ) และ
+> Notifications (การแจ้งเตือน) แล้ว
+> ส่วนที่เหลือของ Phase 2 (Settings) ยังไม่ได้เริ่ม
 > ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
 > ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
 > [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
@@ -313,6 +314,9 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET`/`POST` | `/api/v1/announcements` | `announcements.view` / `announcements.create` | สร้างประกาศ (สถานะร่างเสมอ) |
 | `POST` | `/api/v1/announcements/{id}/publish` | `announcements.publish` | เผยแพร่ประกาศ (ทำได้เฉพาะประกาศที่ยังเป็นร่าง) |
 | `POST` | `/api/v1/announcements/{id}/archive` | `announcements.publish` | เก็บประกาศเข้าคลัง (ทำได้เฉพาะประกาศที่เผยแพร่แล้ว) |
+| `GET` | `/api/v1/notifications` | ต้องเข้าสู่ระบบ | ดูการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ เหมือน `/auth/me`) |
+| `POST` | `/api/v1/notifications/{id}/read` | ต้องเข้าสู่ระบบ | ทำเครื่องหมายว่าอ่านการแจ้งเตือนของตนเองแล้ว |
+| `POST` | `/api/v1/notifications` | `notifications.send` | ส่งการแจ้งเตือนถึงผู้ใช้หนึ่งคนในองค์กรเดียวกัน |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -430,7 +434,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 91 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+| `DormFlow.IntegrationTests` | 95 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
 ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
 รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน),
 วงจรชีวิตเงินมัดจำ (รับเงิน→สิ้นสุดสัญญา→คืนเต็ม/บางส่วน/ริบทั้งหมด, ห้ามรับซ้ำ, ห้ามคืนก่อนสัญญาสิ้นสุด,
@@ -439,7 +443,9 @@ dotnet run --project tests/DormFlow.UnitTests
 (กรองตามหมวดหมู่และช่วงวันที่, ปฏิเสธหมวดหมู่ที่ไม่ถูกต้อง), วงจรชีวิตพัสดุ (บันทึกรับ→รับพัสดุ,
 ห้ามรับซ้ำ), วงจรชีวิตผู้มาเยือน (เข้า→ออก, ห้ามออกซ้ำ), วงจรชีวิตการจดทะเบียนที่จอดรถ (จดทะเบียน→สิ้นสุด,
 ห้ามจดทะเบียนซ้อนทะเบียนรถเดียวกัน, จดทะเบียนซ้ำได้หลังรายการเดิมสิ้นสุดแล้ว), วงจรชีวิตประกาศ
-(สร้าง (ร่าง)→เผยแพร่→เก็บเข้าคลัง, ห้ามเผยแพร่ซ้ำ, ห้ามเก็บเข้าคลังก่อนเผยแพร่) |
+(สร้าง (ร่าง)→เผยแพร่→เก็บเข้าคลัง, ห้ามเผยแพร่ซ้ำ, ห้ามเก็บเข้าคลังก่อนเผยแพร่), การแจ้งเตือน
+(ส่งถึงผู้ใช้→ปรากฏในรายการของผู้รับ, ทำเครื่องหมายอ่านแล้วของตนเอง, ห้ามอ่านแทนผู้อื่น,
+ห้ามส่งข้ามองค์กร) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -707,6 +713,10 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 47 | Announcements — สร้างประกาศ (Draft), เผยแพร่ (Published), เก็บเข้าคลัง (Archived) | `src/DormFlow.Application/Features/Announcements/` |
 | 48 | Migration `AddAnnouncementsModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 49 | Integration Test วงจรชีวิตประกาศ + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/AnnouncementsEndpointTests.cs` |
+| 50 | สิทธิ์ `notifications.send` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 51 | Notifications — ส่งถึงผู้ใช้หนึ่งคน, ดู/ทำเครื่องหมายอ่านการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ) | `src/DormFlow.Application/Features/Notifications/` |
+| 52 | Migration `AddNotificationsModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 53 | Integration Test วงจรชีวิตการแจ้งเตือน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/NotificationsEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -841,8 +851,21 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 - **สิทธิ์ `announcements.*` มอบให้ Owner/DormManager เต็มรูปแบบ แต่ Staff ได้แค่ View** ต่างจาก
   Parcels/Visitors/Parking ที่ให้ Staff เต็มรูปแบบ เพราะประกาศเป็นการสื่อสารอย่างเป็นทางการจากฝ่ายบริหาร
   ไม่ใช่งานบันทึกประจำวันหน้าเคาน์เตอร์ — Accountant/Technician ไม่มีสิทธิ์เลยเพราะไม่เกี่ยวข้องกับงานทั้งสองบทบาทนี้
+- **Notification ไม่สืบทอดจาก `TenantEntity`** ต่างจากทุกโมดูลก่อนหน้าของ Phase 2 เพราะผูกกับผู้ใช้ผู้รับ
+  โดยตรง (`RecipientUserId`) ไม่ใช่ข้อมูลที่ต้องกรองด้วยหอพักแบบ List Endpoint ทั่วไป — ใช้แนวทางเดียวกับ
+  `AuditLog` ที่ไม่ใช้ `TenantScope` เพราะไม่ใช่ทรัพยากรที่ผู้ใช้หลายคนแชร์เห็นร่วมกันตามขอบเขตองค์กร/หอพัก
+- **การดูและทำเครื่องหมายอ่านแล้วของการแจ้งเตือนตนเองเปิดให้ผู้ใช้ที่เข้าสู่ระบบทุกคนทำได้เสมอ** ไม่ผูกกับ
+  สิทธิ์ใด (`[Authorize]` เฉย ๆ เหมือน `GET /auth/me`) เพราะเป็นข้อมูลของตนเองโดยตรง ไม่ใช่ข้อมูลที่ต้องเช็ค
+  บทบาท — มีเพียงสิทธิ์ `notifications.send` สิทธิ์เดียวที่คุมว่าใครส่งการแจ้งเตือนถึงคนอื่นได้ (Owner/DormManager)
+- **ส่งการแจ้งเตือนได้เฉพาะถึงผู้ใช้ในองค์กรเดียวกันเท่านั้น** (ยกเว้น SuperAdmin ส่งข้ามองค์กรได้) ตรวจจาก
+  `OrganizationId` ของผู้รับเทียบกับผู้ส่ง ถ้าไม่ตรงกันตอบ 404 เพื่อไม่ให้เดาได้ว่ามีผู้ใช้รหัสนั้นอยู่จริงใน
+  องค์กรอื่น ตามหลักการเดียวกับ `TenantScope.EnsureOrganizationAccess`
+- **ไม่มีการแจ้งเตือนอัตโนมัติจากเหตุการณ์อื่นในระบบ** (เช่น ออกใบแจ้งหนี้แล้วแจ้งเตือนผู้เช่า, งานซ่อมเสร็จแล้ว
+  แจ้งเตือนผู้แจ้ง) — โมดูลนี้เป็นเพียงกลไกส่ง/รับการแจ้งเตือนด้วยมือเท่านั้น การเชื่อมต่ออัตโนมัติกับเหตุการณ์
+  ของโมดูลอื่นต้องออกแบบเพิ่มภายหลัง (เช่น Domain Event หรือ Background Job)
+- **ผู้รับเป็น User ของระบบ (พนักงาน/ผู้ดูแล) เท่านั้น ไม่ใช่ Tenant** เพราะบทบาท Tenant ยังไม่มี Endpoint
+  หรือกลไกยืนยันตัวตนสำหรับพอร์ทัลผู้เช่าแยกต่างหากในขอบเขตนี้ (ดูหัวข้อ Tenants ด้านบน)
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Notifications, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
-และต้องการรายละเอียดกฎธุรกิจเพิ่มเติมก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง
+Settings — ยังไม่ได้เริ่ม และต้องการรายละเอียดกฎธุรกิจเพิ่มเติมก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง
