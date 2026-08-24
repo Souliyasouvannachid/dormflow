@@ -60,6 +60,9 @@ public static class PermissionModules
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 
+    /// <summary>ประกาศ</summary>
+    public const string Announcements = "Announcements";
+
     /// <summary>รายงาน</summary>
     public const string Reports = "Reports";
 

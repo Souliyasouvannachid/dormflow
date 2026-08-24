@@ -108,6 +108,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
 
+                PermissionCodes.Announcements.View,
+                PermissionCodes.Announcements.Create,
+                PermissionCodes.Announcements.Publish,
+
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
 
@@ -188,6 +192,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
+
+                PermissionCodes.Announcements.View,
+                PermissionCodes.Announcements.Create,
+                PermissionCodes.Announcements.Publish,
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
@@ -271,6 +279,8 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,
+
+                PermissionCodes.Announcements.View,
             ],
 
             // ช่างซ่อมบำรุงเห็นเฉพาะข้อมูลที่จำเป็นต่อการเข้าไปทำงานในห้อง

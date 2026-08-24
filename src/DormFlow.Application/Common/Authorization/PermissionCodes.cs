@@ -307,6 +307,27 @@ public static class PermissionCodes
         public const string Release = "parking.release";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับประกาศ
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Announcements ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// สิทธิ์ Publish ครอบคลุมทั้งการเผยแพร่และการเก็บเข้าคลัง (ไม่แยกสิทธิ์ Archive ต่างหาก)
+    /// เพราะทั้งสองเป็นการเปลี่ยนสถานะที่ทำโดยผู้มีอำนาจเผยแพร่ประกาศกลุ่มเดียวกันเสมอ
+    /// </remarks>
+    public static class Announcements
+    {
+        /// <summary>ดูรายการประกาศ</summary>
+        public const string View = "announcements.view";
+
+        /// <summary>สร้างประกาศใหม่</summary>
+        public const string Create = "announcements.create";
+
+        /// <summary>เผยแพร่หรือเก็บประกาศเข้าคลัง</summary>
+        public const string Publish = "announcements.publish";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -427,6 +448,10 @@ public static class PermissionCodes
         new(Parking.View, "ดูรายการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
         new(Parking.Register, "จดทะเบียนที่จอดรถใหม่", PermissionModules.Parking),
         new(Parking.Release, "สิ้นสุดการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
+
+        new(Announcements.View, "ดูรายการประกาศ", PermissionModules.Announcements),
+        new(Announcements.Create, "สร้างประกาศใหม่", PermissionModules.Announcements),
+        new(Announcements.Publish, "เผยแพร่หรือเก็บประกาศเข้าคลัง", PermissionModules.Announcements),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

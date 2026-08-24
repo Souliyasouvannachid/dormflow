@@ -1,5 +1,6 @@
 using System.Reflection;
 using DormFlow.Application.Common.Abstractions;
+using DormFlow.Application.Features.Announcements;
 using DormFlow.Application.Features.AuditLogs;
 using DormFlow.Application.Features.Authentication;
 using DormFlow.Application.Features.Buildings;
@@ -77,6 +78,7 @@ public static class DependencyInjection
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAuditLogQueryService, AuditLogQueryService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IAnnouncementService, AnnouncementService>();
 
         return services;
     }

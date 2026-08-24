@@ -1,5 +1,6 @@
 using System.Reflection;
 using DormFlow.Application.Common.Abstractions;
+using DormFlow.Application.Features.Announcements;
 using DormFlow.Application.Features.AuditLogs;
 using DormFlow.Application.Features.Authentication.Validators;
 using DormFlow.Application.Features.Buildings;
@@ -133,6 +134,7 @@ public static class DependencyInjection
         services.AddScoped<IParkingRegistrationRepository, ParkingRegistrationRepository>();
         services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<DatabaseSeeder>();
