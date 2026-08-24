@@ -45,6 +45,9 @@ public static class PermissionModules
     /// <summary>ใบเสร็จรับเงิน</summary>
     public const string Receipts = "Receipts";
 
+    /// <summary>ค่าใช้จ่ายในการดำเนินงาน</summary>
+    public const string Expenses = "Expenses";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 

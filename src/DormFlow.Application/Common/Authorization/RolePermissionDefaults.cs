@@ -89,6 +89,9 @@ public static class RolePermissionDefaults
                 PermissionCodes.Receipts.View,
                 PermissionCodes.Receipts.Issue,
 
+                PermissionCodes.Expenses.View,
+                PermissionCodes.Expenses.Create,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -155,6 +158,9 @@ public static class RolePermissionDefaults
                 PermissionCodes.Receipts.View,
                 PermissionCodes.Receipts.Issue,
 
+                PermissionCodes.Expenses.View,
+                PermissionCodes.Expenses.Create,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -190,6 +196,9 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Receipts.View,
                 PermissionCodes.Receipts.Issue,
+
+                PermissionCodes.Expenses.View,
+                PermissionCodes.Expenses.Create,
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,

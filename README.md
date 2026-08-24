@@ -9,8 +9,8 @@
 > Assignment, Roles/Permissions และ Audit Logs
 > Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
 > Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง), Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ),
-> Deposits (เงินมัดจำ) และ Receipts (ใบเสร็จรับเงิน) แล้ว
-> ส่วนที่เหลือของ Phase 2 (Expenses, Parcels, Visitors, Parking ฯลฯ) ยังไม่ได้เริ่ม
+> Deposits (เงินมัดจำ), Receipts (ใบเสร็จรับเงิน) และ Expenses (ค่าใช้จ่ายในการดำเนินงาน) แล้ว
+> ส่วนที่เหลือของ Phase 2 (Parcels, Visitors, Parking, Announcements, Notifications, Settings) ยังไม่ได้เริ่ม
 > ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
 > ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
 > [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
@@ -302,6 +302,7 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET`/`POST` | `/api/v1/deposits` | `deposits.view` / `deposits.collect` | รับเงินมัดจำ (สัญญาหนึ่งฉบับรับได้ครั้งเดียว ต้องยังไม่สิ้นสุดสัญญา) |
 | `POST` | `/api/v1/deposits/{id}/refund` | `deposits.refund` | คืนเงินมัดจำ (เต็ม/บางส่วน/ริบทั้งหมด) ทำได้เฉพาะสัญญาที่สิ้นสุดแล้ว และคืนได้ครั้งเดียวต่อรายการ |
 | `GET`/`POST` | `/api/v1/receipts` | `receipts.view` / `receipts.issue` | ออกใบเสร็จรับเงิน (เฉพาะรายการชำระเงินที่ยืนยันแล้ว รายการละครั้งเดียว) |
+| `GET`/`POST` | `/api/v1/expenses` | `expenses.view` / `expenses.create` | บันทึกค่าใช้จ่ายในการดำเนินงาน (ค่าน้ำ-ไฟส่วนกลาง, ซ่อมบำรุง, เงินเดือน ฯลฯ) |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -419,12 +420,13 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 73 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+| `DormFlow.IntegrationTests` | 76 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
 ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
 รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน),
 วงจรชีวิตเงินมัดจำ (รับเงิน→สิ้นสุดสัญญา→คืนเต็ม/บางส่วน/ริบทั้งหมด, ห้ามรับซ้ำ, ห้ามคืนก่อนสัญญาสิ้นสุด,
 ห้ามคืนเกินยอด, บังคับระบุเหตุผลเมื่อคืนไม่เต็ม, ห้ามคืนซ้ำ), การออกใบเสร็จรับเงิน (เฉพาะรายการชำระเงิน
-ที่ยืนยันแล้ว, ห้ามออกซ้ำ, ห้ามออกให้รายการที่ยังไม่ยืนยันหรือถูกคืนเงินไปแล้ว) |
+ที่ยืนยันแล้ว, ห้ามออกซ้ำ, ห้ามออกให้รายการที่ยังไม่ยืนยันหรือถูกคืนเงินไปแล้ว), การบันทึกค่าใช้จ่าย
+(กรองตามหมวดหมู่และช่วงวันที่, ปฏิเสธหมวดหมู่ที่ไม่ถูกต้อง) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -672,6 +674,10 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 27 | Receipts — ออกใบเสร็จรับเงินจากรายการชำระเงินที่ยืนยันแล้ว (ไม่มี Endpoint แก้ไข/ลบ) | `src/DormFlow.Application/Features/Receipts/` |
 | 28 | Migration `AddReceiptsModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 29 | Integration Test การออกใบเสร็จรับเงิน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/ReceiptsEndpointTests.cs` |
+| 30 | สิทธิ์ `expenses.view/create` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 31 | Expenses — บันทึกค่าใช้จ่ายในการดำเนินงาน แยกจากฝั่งรายรับโดยสิ้นเชิง | `src/DormFlow.Application/Features/Expenses/` |
+| 32 | Migration `AddExpensesModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 33 | Integration Test การบันทึกและค้นหาค่าใช้จ่าย | `tests/DormFlow.IntegrationTests/Endpoints/ExpensesEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -763,9 +769,16 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 - **จำนวนเงินในใบเสร็จคัดลอกจาก `Payment.Amount` ตอนออกใบเสร็จ (Snapshot)** ไม่ใช่การอ้างอิงสด เพื่อให้เอกสาร
   ที่ออกไปแล้วคงที่ตลอดไปแม้ข้อมูลต้นทางจะถูกแก้ไขภายหลัง — เหมือนหลักการเดียวกับที่ `Contract.MonthlyRent`
   คัดลอกจาก `Room.MonthlyRent` ตอนทำสัญญา
+- **Expenses เป็นสมุดบันทึกฝั่งรายจ่ายล้วน ๆ ไม่มีสถานะหรือ Workflow อนุมัติ** ต่างจาก Invoices/Payments
+  ที่เป็นฝั่งรายรับซึ่งมี Draft/Issued/Confirmed ให้ตรวจสอบ เพราะยังไม่มีข้อกำหนดเรื่องการอนุมัติค่าใช้จ่าย
+  จากเอกสารต้นฉบับ — ถ้าต้องการ Workflow อนุมัติภายหลัง (เช่น ต้องผ่าน Owner ก่อนบันทึกจริง) ต้องออกแบบเพิ่ม
+- **หมวดหมู่ค่าใช้จ่ายกำหนดเป็น Enum ตายตัว 6 ค่า** (Utilities, Maintenance, Salaries, Supplies, Marketing,
+  Other) แทนที่จะให้ผู้ใช้กำหนดหมวดหมู่เองแบบอิสระ เพื่อให้จัดกลุ่ม/ทำรายงานสรุปได้ง่ายในอนาคต — ถ้าไม่พอ
+  ต้องเพิ่มค่าใหม่ใน Enum (ไม่ใช่ตารางหมวดหมู่แยกต่างหาก เพราะมองว่าจำนวนหมวดหมู่คงที่ไม่บ่อยเปลี่ยน)
+- **ไม่มีสิทธิ์ `expenses.*` ให้ Staff/Technician** เพราะมองว่าเป็นข้อมูลการเงินภายในที่ไม่จำเป็นต้องให้
+  พนักงานหน้าเคาน์เตอร์เข้าถึง ต่างจาก Payments ที่ Staff ยังมีสิทธิ์ View ได้ (เพราะเกี่ยวข้องกับผู้เช่าโดยตรง)
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Expenses,
 Parcels, Visitors, Parking, Announcements, Notifications, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติมก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

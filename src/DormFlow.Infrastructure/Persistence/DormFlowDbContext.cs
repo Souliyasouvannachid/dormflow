@@ -93,6 +93,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>ใบเสร็จรับเงินทั้งหมดในระบบ</summary>
     public DbSet<Receipt> Receipts => Set<Receipt>();
 
+    /// <summary>ค่าใช้จ่ายทั้งหมดในระบบ</summary>
+    public DbSet<Expense> Expenses => Set<Expense>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {
