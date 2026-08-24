@@ -1,0 +1,24 @@
+<Project>
+
+  <!-- สืบทอดค่าจาก Directory.Build.props ที่ root -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <!-- .NET 10 SDK เลิกรองรับ VSTest แล้ว ต้องรัน dotnet test ผ่าน Microsoft Testing Platform -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- โปรเจกต์เทสต์ไม่เปิด TreatWarningsAsErrors -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!--
+      CA1707 อนุญาตชื่อเทสต์ที่มีขีดล่าง
+      CA2007 ไม่ต้อง ConfigureAwait ในเทสต์
+      CA1861 อนุญาตอาร์เรย์ค่าคงที่ในอาร์กิวเมนต์ของเทสต์
+      CA1859 เทสต์เรียกผ่าน interface โดยตั้งใจ เพราะสิ่งที่ทดสอบคือสัญญาของ interface ไม่ใช่คลาสที่ implement
+    -->
+    <NoWarn>$(NoWarn);CA1707;CA2007;CA1861;CA1859</NoWarn>
+  </PropertyGroup>
+
+</Project>

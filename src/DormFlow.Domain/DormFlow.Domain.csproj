@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DormFlow.Domain</RootNamespace>
+    <AssemblyName>DormFlow.Domain</AssemblyName>
+    <Description>Domain layer - Entity, Enum, Value Object, Domain Event, Business Rule (ไม่มี Dependency ไปยัง Infrastructure หรือ API)</Description>
+  </PropertyGroup>
+
+  <!-- Domain ต้องไม่อ้างอิงโปรเจกต์อื่นหรือแพ็กเกจ Infrastructure ใด ๆ -->
+
+</Project>

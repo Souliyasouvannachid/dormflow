@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DormFlow.Contracts</RootNamespace>
+    <AssemblyName>DormFlow.Contracts</AssemblyName>
+    <Description>Shared API Contract - Request Model, Response Model (ใช้ร่วมกันระหว่าง API และ Client)</Description>
+  </PropertyGroup>
+
+  <!-- Contracts ต้องเป็น POCO ล้วน ไม่อ้างอิง Layer อื่น -->
+
+</Project>

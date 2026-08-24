@@ -1,0 +1,44 @@
+## .NET
+bin/
+obj/
+out/
+publish/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+artifacts/
+TestResults/
+BenchmarkDotNet.Artifacts/
+project.lock.json
+project.fragment.lock.json
+*.nupkg
+*.snupkg
+
+## IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+## ระบบปฏิบัติการ
+.DS_Store
+Thumbs.db
+
+## Log ของ Serilog
+logs/
+*.log
+
+## ไฟล์ลับ ห้าม commit เด็ดขาด
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.Local.json
+*.pfx
+*.p12
+*.key
+secrets.json

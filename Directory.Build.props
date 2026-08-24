@@ -1,0 +1,51 @@
+<Project>
+
+  <!--
+    Directory.Build.props (root)
+    ตั้งค่าที่ใช้ร่วมกันทุกโปรเจกต์ใน Solution
+    โปรเจกต์ใน src/ และ tests/ มี Directory.Build.props ของตัวเองที่ Import ไฟล์นี้ต่ออีกชั้น
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Analyzer -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <!--
+      CS1591 = Missing XML comment for publicly visible type or member
+      เปิด GenerateDocumentationFile ไว้เพื่อให้ OpenAPI ดึง XML Comments ได้
+      แต่ไม่บังคับให้ทุก member ต้องมี doc comment (ไม่งั้น build จะพังจากไฟล์ที่ยังไม่ได้เขียนคำอธิบาย)
+    -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Build reproducibility -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Central Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Product>DormFlow</Product>
+    <Company>DormFlow</Company>
+    <Authors>DormFlow Team</Authors>
+    <Copyright>Copyright © DormFlow</Copyright>
+  </PropertyGroup>
+
+</Project>

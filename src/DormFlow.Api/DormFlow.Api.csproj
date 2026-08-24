@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <RootNamespace>DormFlow.Api</RootNamespace>
+    <AssemblyName>DormFlow.Api</AssemblyName>
+    <Description>Presentation layer - Controller, Middleware, Authentication, Authorization, OpenAPI</Description>
+    <UserSecretsId>dormflow-api-2f0b6a1c-9d3e-4a75-8c21-0f5b7d9e4a13</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <!--
+      AV0029 แนะนำให้ลงทะเบียน OpenAPI ผ่าน AddApiVersioning().AddOpenApi() เท่านั้น
+      แต่ source generator ของ .NET 10 ที่ดึง XML Comments เข้าเอกสาร ทำงานด้วยการ intercept
+      การเรียก services.AddOpenApi(...) ในโค้ดของเราโดยตรง ถ้าลบการเรียกนั้นออก เอกสารจะไม่มีคำอธิบายจาก XML Comments
+      จึงเรียกทั้งสองแบบและปิดคำเตือนนี้ไว้
+    -->
+    <NoWarn>$(NoWarn);AV0029</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DormFlow.Infrastructure\DormFlow.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
+    <PackageReference Include="Asp.Versioning.OpenApi" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Settings.Configuration" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Enrichers.Environment" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DormFlow.IntegrationTests" />
+  </ItemGroup>
+
+</Project>

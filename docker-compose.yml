@@ -1,0 +1,71 @@
+name: dormflow
+
+services:
+  dormflow-postgres:
+    image: postgres:17-alpine
+    container_name: dormflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dormflow}
+      POSTGRES_USER: ${POSTGRES_USER:-dormflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?ต้องกำหนด POSTGRES_PASSWORD ในไฟล์ .env}
+      # เร่งการเทียบข้อความและกำหนดโลแคลให้คงที่ทุกเครื่อง
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - dormflow-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # ระบุ -d และ -U ให้ครบ ไม่งั้น pg_isready จะรายงานว่าพร้อมทั้งที่ฐานข้อมูลยังสร้างไม่เสร็จ
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dormflow} -d ${POSTGRES_DB:-dormflow}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - dormflow-network
+
+  dormflow-api:
+    image: dormflow-api:latest
+    container_name: dormflow-api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: src/DormFlow.Api/Dockerfile
+    depends_on:
+      dormflow-postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_HTTP_PORTS: "8080"
+      # TLS ถูกจัดการโดย reverse proxy ที่อยู่หน้าคอนเทนเนอร์
+      Https__EnableRedirection: "false"
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?ต้องกำหนด Connection String ในไฟล์ .env}
+      Cors__AllowedOrigins__0: ${Cors__AllowedOrigins__0:-http://localhost:3000}
+      RateLimiting__Enabled: ${RateLimiting__Enabled:-true}
+      RateLimiting__PermitLimit: ${RateLimiting__PermitLimit:-100}
+      RateLimiting__WindowSeconds: ${RateLimiting__WindowSeconds:-60}
+    ports:
+      - "${API_HTTP_PORT:-8080}:8080"
+    volumes:
+      - dormflow-api-logs:/app/logs
+    healthcheck:
+      # เรียก endpoint live เท่านั้น เพื่อไม่ให้คอนเทนเนอร์ถูกรีสตาร์ตเพียงเพราะฐานข้อมูลล่มชั่วคราว
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health/live || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - dormflow-network
+
+volumes:
+  dormflow-postgres-data:
+    name: dormflow-postgres-data
+  dormflow-api-logs:
+    name: dormflow-api-logs
+
+networks:
+  dormflow-network:
+    name: dormflow-network
+    driver: bridge

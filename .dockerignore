@@ -1,0 +1,33 @@
+# โฟลเดอร์ผลลัพธ์การ build
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/TestResults/
+**/logs/
+
+# ไฟล์ของ IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# ไฟล์ลับและค่าตั้งเฉพาะเครื่อง
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/*.pfx
+**/*.key
+
+# เอกสารและไฟล์ที่ไม่จำเป็นต่อการ build
+*.md
+!README.md
+docker-compose*.yml
+Dockerfile*

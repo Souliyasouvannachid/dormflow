@@ -1,0 +1,16 @@
+<Project>
+
+  <!-- สืบทอดค่าจาก Directory.Build.props ที่ root -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <!--
+      เปิด TreatWarningsAsErrors เฉพาะโค้ด Production เท่านั้น
+      โปรเจกต์เทสต์ไม่เปิด เพราะ analyzer ของ test framework มักเตือนในกรณีที่ยอมรับได้
+    -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors></WarningsNotAsErrors>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>
