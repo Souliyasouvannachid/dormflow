@@ -288,6 +288,25 @@ public static class PermissionCodes
         public const string CheckOut = "visitors.checkout";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับการจดทะเบียนที่จอดรถ
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Parking ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// </remarks>
+    public static class Parking
+    {
+        /// <summary>ดูรายการจดทะเบียนที่จอดรถ</summary>
+        public const string View = "parking.view";
+
+        /// <summary>จดทะเบียนที่จอดรถใหม่</summary>
+        public const string Register = "parking.register";
+
+        /// <summary>สิ้นสุดการจดทะเบียนที่จอดรถ</summary>
+        public const string Release = "parking.release";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -404,6 +423,10 @@ public static class PermissionCodes
         new(Visitors.View, "ดูรายการผู้มาเยือน", PermissionModules.Visitors),
         new(Visitors.CheckIn, "บันทึกการเข้าของผู้มาเยือน", PermissionModules.Visitors),
         new(Visitors.CheckOut, "บันทึกการออกของผู้มาเยือน", PermissionModules.Visitors),
+
+        new(Parking.View, "ดูรายการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
+        new(Parking.Register, "จดทะเบียนที่จอดรถใหม่", PermissionModules.Parking),
+        new(Parking.Release, "สิ้นสุดการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

@@ -54,6 +54,9 @@ public static class PermissionModules
     /// <summary>ผู้มาเยือน</summary>
     public const string Visitors = "Visitors";
 
+    /// <summary>การจดทะเบียนที่จอดรถ</summary>
+    public const string Parking = "Parking";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 

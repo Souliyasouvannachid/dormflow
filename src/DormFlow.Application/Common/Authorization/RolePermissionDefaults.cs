@@ -100,6 +100,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Visitors.CheckIn,
                 PermissionCodes.Visitors.CheckOut,
 
+                PermissionCodes.Parking.View,
+                PermissionCodes.Parking.Register,
+                PermissionCodes.Parking.Release,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -176,6 +180,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Visitors.View,
                 PermissionCodes.Visitors.CheckIn,
                 PermissionCodes.Visitors.CheckOut,
+
+                PermissionCodes.Parking.View,
+                PermissionCodes.Parking.Register,
+                PermissionCodes.Parking.Release,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
@@ -256,6 +264,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Visitors.View,
                 PermissionCodes.Visitors.CheckIn,
                 PermissionCodes.Visitors.CheckOut,
+
+                PermissionCodes.Parking.View,
+                PermissionCodes.Parking.Register,
+                PermissionCodes.Parking.Release,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,

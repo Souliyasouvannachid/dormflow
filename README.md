@@ -10,8 +10,8 @@
 > Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
 > Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง), Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ),
 > Deposits (เงินมัดจำ), Receipts (ใบเสร็จรับเงิน), Expenses (ค่าใช้จ่ายในการดำเนินงาน),
-> Parcels (พัสดุ) และ Visitors (ผู้มาเยือน) แล้ว
-> ส่วนที่เหลือของ Phase 2 (Parking, Announcements, Notifications, Settings) ยังไม่ได้เริ่ม
+> Parcels (พัสดุ), Visitors (ผู้มาเยือน) และ Parking (ที่จอดรถ) แล้ว
+> ส่วนที่เหลือของ Phase 2 (Announcements, Notifications, Settings) ยังไม่ได้เริ่ม
 > ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
 > ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
 > [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
@@ -308,6 +308,8 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `POST` | `/api/v1/parcels/{id}/pickup` | `parcels.pickup` | บันทึกการรับพัสดุ (ทำได้เฉพาะพัสดุที่ยังไม่ถูกรับ) |
 | `GET`/`POST` | `/api/v1/visitors` | `visitors.view` / `visitors.checkin` | บันทึกการเข้าของผู้มาเยือน |
 | `POST` | `/api/v1/visitors/{id}/checkout` | `visitors.checkout` | บันทึกการออกของผู้มาเยือน (ทำได้เฉพาะที่ยังไม่ออก) |
+| `GET`/`POST` | `/api/v1/parking` | `parking.view` / `parking.register` | จดทะเบียนที่จอดรถ (ทะเบียนรถเดียวกันซ้อนกันไม่ได้ขณะยังไม่สิ้นสุด) |
+| `POST` | `/api/v1/parking/{id}/release` | `parking.release` | สิ้นสุดการจดทะเบียนที่จอดรถ |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -425,14 +427,15 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 82 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
+| `DormFlow.IntegrationTests` | 86 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
 ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
 รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน),
 วงจรชีวิตเงินมัดจำ (รับเงิน→สิ้นสุดสัญญา→คืนเต็ม/บางส่วน/ริบทั้งหมด, ห้ามรับซ้ำ, ห้ามคืนก่อนสัญญาสิ้นสุด,
 ห้ามคืนเกินยอด, บังคับระบุเหตุผลเมื่อคืนไม่เต็ม, ห้ามคืนซ้ำ), การออกใบเสร็จรับเงิน (เฉพาะรายการชำระเงิน
 ที่ยืนยันแล้ว, ห้ามออกซ้ำ, ห้ามออกให้รายการที่ยังไม่ยืนยันหรือถูกคืนเงินไปแล้ว), การบันทึกค่าใช้จ่าย
 (กรองตามหมวดหมู่และช่วงวันที่, ปฏิเสธหมวดหมู่ที่ไม่ถูกต้อง), วงจรชีวิตพัสดุ (บันทึกรับ→รับพัสดุ,
-ห้ามรับซ้ำ), วงจรชีวิตผู้มาเยือน (เข้า→ออก, ห้ามออกซ้ำ) |
+ห้ามรับซ้ำ), วงจรชีวิตผู้มาเยือน (เข้า→ออก, ห้ามออกซ้ำ), วงจรชีวิตการจดทะเบียนที่จอดรถ (จดทะเบียน→สิ้นสุด,
+ห้ามจดทะเบียนซ้อนทะเบียนรถเดียวกัน, จดทะเบียนซ้ำได้หลังรายการเดิมสิ้นสุดแล้ว) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -692,6 +695,10 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 39 | Visitors — บันทึกการเข้า (CheckedIn), บันทึกการออก (CheckedOut) | `src/DormFlow.Application/Features/Visitors/` |
 | 40 | Migration `AddVisitorsModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 41 | Integration Test วงจรชีวิตผู้มาเยือน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/VisitorsEndpointTests.cs` |
+| 42 | สิทธิ์ `parking.view/register/release` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 43 | Parking — จดทะเบียนที่จอดรถ (Active), สิ้นสุดการจดทะเบียน (Ended) | `src/DormFlow.Application/Features/Parking/` |
+| 44 | Migration `AddParkingModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 45 | Integration Test วงจรชีวิตการจดทะเบียนที่จอดรถ + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/ParkingEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -805,8 +812,16 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 - **เก็บเลขบัตรประจำตัวประชาชนของผู้มาเยือนได้ (`IdNumber`) เป็นทางเลือก** สำหรับหอพักที่ต้องการบันทึก
   เพื่อความปลอดภัยตามระเบียบภายใน แต่ไม่บังคับ เพราะเอกสารต้นฉบับไม่ได้กำหนดข้อบังคับด้านนี้ไว้
   (ควรพิจารณาเรื่องการเก็บรักษาข้อมูลส่วนบุคคลตาม PDPA ก่อนใช้งานจริงถ้าเปิดใช้ฟิลด์นี้)
+- **Parking ต้องระบุผู้เช่าเสมอ (`TenantId` บังคับ) ต่างจาก Parcels/Visitors ที่ผู้เช่าเป็นทางเลือก**
+  เพราะรถหนึ่งคันต้องมีเจ้าของที่ระบุตัวตนได้เสมอในทางปฏิบัติ ไม่เหมือนพัสดุ/ผู้มาเยือนที่อาจยังไม่ทราบ
+  แน่ชัดตอนบันทึกครั้งแรก — ห้องยังคงเก็บไว้เพื่อขอบเขตองค์กร/หอพักเช่นเดิม
+- **ไม่มี Entity แม่ของ "ช่องจอดรถ" แยกต่างหาก** (`ParkingSpotLabel` เป็นข้อความอิสระ ไม่ผูกกับระบบจัดการ
+  ช่องจอดที่มีจำนวนจำกัดหรือการจองล่วงหน้า) เพราะไม่มีข้อกำหนดเรื่องนี้จากเอกสารต้นฉบับ ถ้าต้องการจัดการ
+  ช่องจอดอย่างเป็นระบบ (เช่น จำกัดจำนวนช่อง, ป้องกันชนกัน) ต้องออกแบบเพิ่มภายหลัง
+- **ป้องกันเฉพาะทะเบียนรถเดียวกันมีการจดทะเบียนที่ยัง Active ซ้อนกันสองรายการ** ไม่ได้ป้องกันผู้เช่าคนเดียวกัน
+  จดทะเบียนรถหลายคันพร้อมกัน (อาจมีรถมากกว่าหนึ่งคันจริง ๆ) และไม่ได้จำกัดจำนวนคันต่อห้อง/ต่อผู้เช่า
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Parking, Announcements, Notifications, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
+Announcements, Notifications, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติมก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

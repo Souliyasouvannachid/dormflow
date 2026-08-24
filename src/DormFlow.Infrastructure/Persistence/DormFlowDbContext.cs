@@ -102,6 +102,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>ผู้มาเยือนทั้งหมดในระบบ</summary>
     public DbSet<Visitor> Visitors => Set<Visitor>();
 
+    /// <summary>การจดทะเบียนที่จอดรถทั้งหมดในระบบ</summary>
+    public DbSet<ParkingRegistration> ParkingRegistrations => Set<ParkingRegistration>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {
