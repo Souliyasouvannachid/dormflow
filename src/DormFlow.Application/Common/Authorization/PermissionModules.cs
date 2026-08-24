@@ -48,6 +48,9 @@ public static class PermissionModules
     /// <summary>ค่าใช้จ่ายในการดำเนินงาน</summary>
     public const string Expenses = "Expenses";
 
+    /// <summary>พัสดุ/ไปรษณีย์ของผู้เช่า</summary>
+    public const string Parcels = "Parcels";
+
     /// <summary>งานซ่อมบำรุง</summary>
     public const string Maintenance = "Maintenance";
 

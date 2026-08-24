@@ -1235,6 +1235,123 @@ namespace DormFlow.Infrastructure.Migrations
                     b.ToTable("organizations", (string)null);
                 });
 
+            modelBuilder.Entity("DormFlow.Domain.Entities.Parcel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CourierName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("courier_name");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<Guid>("DormitoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("dormitory_id");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<DateTimeOffset?>("PickedUpAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("picked_up_at");
+
+                    b.Property<string>("PickedUpByName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("picked_up_by_name");
+
+                    b.Property<DateTimeOffset>("ReceivedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("received_at");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("room_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("TrackingNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("tracking_number");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_parcels");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("ix_parcels_is_deleted");
+
+                    b.HasIndex("RoomId")
+                        .HasDatabaseName("ix_parcels_room_id");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_parcels_status");
+
+                    b.HasIndex("TenantId")
+                        .HasDatabaseName("ix_parcels_tenant_id");
+
+                    b.HasIndex("OrganizationId", "DormitoryId")
+                        .HasDatabaseName("ix_parcels_organization_id_dormitory_id");
+
+                    b.ToTable("parcels", (string)null);
+                });
+
             modelBuilder.Entity("DormFlow.Domain.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2583,6 +2700,22 @@ namespace DormFlow.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_meter_readings_rooms_room_id");
+                });
+
+            modelBuilder.Entity("DormFlow.Domain.Entities.Parcel", b =>
+                {
+                    b.HasOne("DormFlow.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_parcels_rooms_room_id");
+
+                    b.HasOne("DormFlow.Domain.Entities.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_parcels_tenants_tenant_id");
                 });
 
             modelBuilder.Entity("DormFlow.Domain.Entities.Payment", b =>

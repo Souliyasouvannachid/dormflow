@@ -250,6 +250,25 @@ public static class PermissionCodes
         public const string Create = "expenses.create";
     }
 
+    /// <summary>
+    /// สิทธิ์เกี่ยวกับพัสดุ/ไปรษณีย์ของผู้เช่า
+    /// </summary>
+    /// <remarks>
+    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Parcels ของ Phase 2
+    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// </remarks>
+    public static class Parcels
+    {
+        /// <summary>ดูรายการพัสดุ</summary>
+        public const string View = "parcels.view";
+
+        /// <summary>บันทึกพัสดุที่มาถึง</summary>
+        public const string Log = "parcels.log";
+
+        /// <summary>บันทึกการรับพัสดุ</summary>
+        public const string Pickup = "parcels.pickup";
+    }
+
     /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
     public static class Maintenance
     {
@@ -358,6 +377,10 @@ public static class PermissionCodes
 
         new(Expenses.View, "ดูรายการค่าใช้จ่าย", PermissionModules.Expenses),
         new(Expenses.Create, "บันทึกค่าใช้จ่าย", PermissionModules.Expenses),
+
+        new(Parcels.View, "ดูรายการพัสดุ", PermissionModules.Parcels),
+        new(Parcels.Log, "บันทึกพัสดุที่มาถึง", PermissionModules.Parcels),
+        new(Parcels.Pickup, "บันทึกการรับพัสดุ", PermissionModules.Parcels),
 
         new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
         new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),

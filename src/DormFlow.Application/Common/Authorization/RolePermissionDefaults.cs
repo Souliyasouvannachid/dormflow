@@ -92,6 +92,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Expenses.View,
                 PermissionCodes.Expenses.Create,
 
+                PermissionCodes.Parcels.View,
+                PermissionCodes.Parcels.Log,
+                PermissionCodes.Parcels.Pickup,
+
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
                 PermissionCodes.Maintenance.UpdateStatus,
@@ -160,6 +164,10 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Expenses.View,
                 PermissionCodes.Expenses.Create,
+
+                PermissionCodes.Parcels.View,
+                PermissionCodes.Parcels.Log,
+                PermissionCodes.Parcels.Pickup,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.Assign,
@@ -232,6 +240,10 @@ public static class RolePermissionDefaults
                 PermissionCodes.Payments.View,
                 PermissionCodes.Deposits.View,
                 PermissionCodes.Receipts.View,
+
+                PermissionCodes.Parcels.View,
+                PermissionCodes.Parcels.Log,
+                PermissionCodes.Parcels.Pickup,
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,
