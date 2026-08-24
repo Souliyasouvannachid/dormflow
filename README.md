@@ -8,7 +8,8 @@
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions และ Audit Logs
 > Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
-> Invoices และ Payments แล้ว ส่วนที่เหลือของ Phase 2 (Receipts, Deposits, Maintenance ฯลฯ) ยังไม่ได้เริ่ม
+> Invoices, Payments และ Maintenance (งานแจ้งซ่อมบำรุง) แล้ว
+> ส่วนที่เหลือของ Phase 2 (Receipts, Deposits, Parcels, Visitors ฯลฯ) ยังไม่ได้เริ่ม
 > ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
 > และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
 
@@ -287,6 +288,9 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET`/`POST` | `/api/v1/payments` | `payments.*` | บันทึกรายการชำระเงินในสถานะรอยืนยัน ยังไม่มีผลต่อยอดใบแจ้งหนี้ |
 | `POST` | `/api/v1/payments/{id}/confirm` | `payments.approve` | ยืนยันรายการชำระเงิน นำยอดไปหักใบแจ้งหนี้และปรับสถานะ |
 | `POST` | `/api/v1/payments/{id}/refund` | `payments.refund` | คืนเงิน (เฉพาะรายการที่ยืนยันแล้ว) ยอดถูกหักออกจากใบแจ้งหนี้คืน |
+| `GET`/`POST` | `/api/v1/maintenance-requests` | `maintenance.view` / `maintenance.update-status` | แจ้งซ่อมบำรุง (สร้างใช้สิทธิ์เดียวกับการเปลี่ยนสถานะ ไม่มีสิทธิ์ "create" แยก) |
+| `POST` | `/api/v1/maintenance-requests/{id}/assign` | `maintenance.assign` | มอบหมาย/มอบหมายซ้ำช่างซ่อมบำรุง ห้องเปลี่ยนเป็น Maintenance ถ้ายังว่างอยู่ |
+| `PATCH` | `/api/v1/maintenance-requests/{id}/status` | `maintenance.update-status` | เปลี่ยนสถานะตามลำดับที่กำหนด (ห้ามตั้งเป็น Assigned ตรง ๆ) ปิดงานแล้วห้องกลับเป็นว่างถ้าไม่มีงานอื่นค้าง |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -404,7 +408,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 46 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ) |
+| `DormFlow.IntegrationTests` | 54 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -591,8 +595,10 @@ Integration Test เป็นตัวจับบั๊กนี้ได้ต
 แต่สำหรับ Phase 2 ระบุไว้เพียงชื่อโมดูล (Reservations, Contracts, CheckIns, CheckOuts, Meters,
 Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance, Parcels, Visitors,
 Parking, Announcements, Notifications, Reports, Settings) โดยไม่มีรายละเอียดด้านธุรกิจ
-เริ่มจากสาย **Tenants → Reservations → Contracts → Meter Readings** ก่อน เพราะ Billing/Invoices/Payments
-ทั้งหมดต้องพึ่งพาว่ามีสัญญาเช่าที่ Active และมีค่ามิเตอร์ของรอบบิลนั้นอยู่แล้วเป็นพื้นฐาน
+เริ่มจากสาย **Tenants → Reservations → Contracts → Meter Readings → Billing/Invoices/Payments** ก่อน
+เพราะ Billing ทั้งหมดต้องพึ่งพาว่ามีสัญญาเช่าที่ Active และมีค่ามิเตอร์ของรอบบิลนั้นอยู่แล้วเป็นพื้นฐาน
+ตามด้วย **Maintenance** เพราะเป็นโมดูลเดียวที่เหลือใน Phase 2 ที่มีสิทธิ์ (`maintenance.*`) และบทบาท
+`Technician` กำหนดไว้แล้วตั้งแต่ Phase 1 ต่างจากโมดูลอื่นที่เหลือซึ่งไม่มีสิทธิ์ใด ๆ ถูกกำหนดไว้เลย
 
 ### ทำแล้ว
 
@@ -612,6 +618,10 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 12 | Payments — บันทึก (Pending), ยืนยัน (Confirmed → หักยอดบิล), คืนเงิน (Refunded → คืนยอด) | `src/DormFlow.Application/Features/Payments/` |
 | 13 | Migration `AddBillingModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 14 | Integration Test วงจรชีวิตการออกบิลเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/BillingLifecycleEndpointTests.cs` |
+| 15 | Maintenance — แจ้งซ่อม, มอบหมาย/มอบหมายซ้ำช่าง, เปลี่ยนสถานะตามลำดับที่กำหนด | `src/DormFlow.Application/Features/Maintenance/` |
+| 16 | เพิ่ม `HasRoleForDormitoryAsync` ให้ `IUserAdministrationRepository` (ตรวจว่าเป็นช่างของหอพักนี้จริง) | `src/DormFlow.Infrastructure/Identity/UserAdministrationRepository.cs` |
+| 17 | Migration `AddMaintenanceModule` | `src/DormFlow.Infrastructure/Migrations/` |
+| 18 | Integration Test วงจรชีวิตงานซ่อมบำรุงเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/MaintenanceEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -661,10 +671,28 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
   ย้ายไปใช้กับบิลเดือนถัดไป (ต้องคืนเงินส่วนเกินเป็นรายการแยก หรือออกแบบเพิ่มภายหลัง)
 - **ยกเลิกใบแจ้งหนี้ได้เฉพาะที่ยังไม่มีการชำระเงินเข้ามา** (`PaidAmount == 0`) ถ้ามีการชำระแล้วต้องคืนเงิน
   รายการที่ยืนยันไว้ก่อน จึงจะยกเลิกบิลได้
+- **ไม่มีสิทธิ์ "สร้างงานแจ้งซ่อม" แยกต่างหาก** สิทธิ์เดิมของ Phase 1 มีแค่ `maintenance.view/assign/update-status`
+  จึงตีความว่าการแจ้งซ่อมคือการตั้งสถานะเริ่มต้น (`Reported`) ใช้สิทธิ์ `maintenance.update-status` เดียวกัน
+  ทำให้ Staff และ Technician (ที่ไม่มีสิทธิ์ `assign`) แจ้งซ่อมเองได้ ตรงกับที่ RolePermissionDefaults
+  มอบสิทธิ์นี้ให้ทั้งสองบทบาท — ผู้เช่ายังแจ้งซ่อมเองไม่ได้ (บทบาท Tenant ไม่มีสิทธิ์ในโมดูลนี้เลย เหมือนทุกโมดูลอื่น)
+- **การมอบหมายช่าง (`POST /assign`) แยกจากการเปลี่ยนสถานะทั่วไป (`PATCH /status`) โดยตั้งใจ**
+  เพราะต้องตรวจสอบว่าผู้ใช้ที่ระบุมีบทบาท `Technician` และได้รับมอบหมายให้ดูแลหอพักนั้นจริง (ผ่าน `UserDormitory`)
+  ก่อนบันทึก — `PATCH /status` ปฏิเสธการตั้งสถานะเป็น `Assigned` โดยตรงเสมอ
+- **อนุญาตให้มอบหมายซ้ำ (เปลี่ยนช่างคนใหม่) ได้ตราบใดที่งานยังไม่ปิด** (`Reported`/`Assigned`/`InProgress`)
+  ไม่จำกัดแค่ตอนสร้างงานครั้งแรก เพราะงานจริงมักต้องสลับช่างเมื่อคนเดิมติดงานอื่น
+- **ลำดับการเปลี่ยนสถานะที่อนุญาตกำหนดตายตัว**: `Reported→Cancelled`, `Assigned→InProgress|Cancelled`,
+  `InProgress→Completed|Cancelled` เท่านั้น ข้ามขั้นตอน (เช่น `Reported→Completed`) ไม่ได้
+- **สถานะห้องเปลี่ยนอัตโนมัติเช่นเดียวกับโมดูล Reservations/Contracts**: มอบหมายช่างครั้งแรกให้ห้องที่ว่างอยู่
+  (`Available`) → เปลี่ยนเป็น `Maintenance`; ปิดงาน (`Completed`/`Cancelled`) แล้วห้องจะกลับเป็น `Available`
+  ก็ต่อเมื่อไม่มีงานแจ้งซ่อมอื่นค้างอยู่ในห้องเดียวกัน — ห้องที่ไม่ได้อยู่ในสถานะ `Available`/`Maintenance`
+  ตอนนั้น (เช่น `Occupied`) จะไม่ถูกแตะต้องเลย เพราะห้องมีผู้เช่าอยู่แล้วไม่จำเป็นต้องกันไม่ให้จองซ้ำ
+- **`RoomService.ChangeStatusAsync` (Endpoint ทั่วไปของห้อง) ไม่มีการตรวจลำดับสถานะใด ๆ** ผู้ใช้ที่มีสิทธิ์
+  `rooms.change-status` จึงยังเปลี่ยนสถานะห้องที่มีงานซ่อมค้างอยู่กลับเป็น `Available` เองได้โดยตรง
+  การเปลี่ยนสถานะอัตโนมัติของโมดูลนี้เป็นเพียงการช่วยเหลือ ไม่ใช่ข้อบังคับระดับฐานข้อมูล — ยอมรับได้ในขอบเขตนี้
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Receipts, Deposits, Expenses, Maintenance,
+Receipts, Deposits, Expenses,
 Parcels, Visitors, Parking, Announcements, Notifications, Reports, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติม (เช่น สูตรคำนวณค่าน้ำ-ไฟจากมิเตอร์, รอบบิล, การอนุมัติการชำระเงิน,
 เงื่อนไขการคืนเงินมัดจำ) ก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

@@ -279,6 +279,29 @@ public sealed class UserAdministrationRepository(
         };
     }
 
+    /// <inheritdoc />
+    public async Task<bool> HasRoleForDormitoryAsync(
+        Guid userId,
+        string roleName,
+        Guid organizationId,
+        Guid dormitoryId,
+        CancellationToken cancellationToken = default)
+    {
+        ApplicationUser? user = await _dbContext.Users.AsNoTracking()
+            .FirstOrDefaultAsync(
+                candidate => candidate.Id == userId && candidate.OrganizationId == organizationId,
+                cancellationToken);
+
+        if (user is null || !await _userManager.IsInRoleAsync(user, roleName))
+        {
+            return false;
+        }
+
+        return await _dbContext.UserDormitories.AnyAsync(
+            assignment => assignment.UserId == userId && assignment.DormitoryId == dormitoryId,
+            cancellationToken);
+    }
+
     private static IQueryable<ApplicationUser> ApplySort(IQueryable<ApplicationUser> users, PagedQuery query)
         => query.SortBy?.ToLowerInvariant() switch
         {

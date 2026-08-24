@@ -719,6 +719,120 @@ namespace DormFlow.Infrastructure.Migrations
                     b.ToTable("invoices", (string)null);
                 });
 
+            modelBuilder.Entity("DormFlow.Domain.Entities.MaintenanceRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("AssignedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("assigned_at");
+
+                    b.Property<Guid?>("AssignedTechnicianId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("assigned_technician_id");
+
+                    b.Property<DateTimeOffset?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
+
+                    b.Property<Guid>("DormitoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("dormitory_id");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("priority");
+
+                    b.Property<string>("ResolutionNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("resolution_notes");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("room_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_maintenance_requests");
+
+                    b.HasIndex("AssignedTechnicianId")
+                        .HasDatabaseName("ix_maintenance_requests_assigned_technician_id");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("ix_maintenance_requests_is_deleted");
+
+                    b.HasIndex("RoomId")
+                        .HasDatabaseName("ix_maintenance_requests_room_id");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("ix_maintenance_requests_status");
+
+                    b.HasIndex("OrganizationId", "DormitoryId")
+                        .HasDatabaseName("ix_maintenance_requests_organization_id_dormitory_id");
+
+                    b.ToTable("maintenance_requests", (string)null);
+                });
+
             modelBuilder.Entity("DormFlow.Domain.Entities.MeterReading", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2133,6 +2247,22 @@ namespace DormFlow.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_invoices_contracts_contract_id");
+                });
+
+            modelBuilder.Entity("DormFlow.Domain.Entities.MaintenanceRequest", b =>
+                {
+                    b.HasOne("DormFlow.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("AssignedTechnicianId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_maintenance_requests_users_assigned_technician_id");
+
+                    b.HasOne("DormFlow.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_maintenance_requests_rooms_room_id");
                 });
 
             modelBuilder.Entity("DormFlow.Domain.Entities.MeterReading", b =>

@@ -84,6 +84,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>รายการชำระเงินทั้งหมดในระบบ</summary>
     public DbSet<Payment> Payments => Set<Payment>();
 
+    /// <summary>งานแจ้งซ่อมบำรุงทั้งหมดในระบบ</summary>
+    public DbSet<MaintenanceRequest> MaintenanceRequests => Set<MaintenanceRequest>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

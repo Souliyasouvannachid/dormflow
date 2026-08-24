@@ -8,6 +8,7 @@ using DormFlow.Application.Features.Organizations;
 using DormFlow.Application.Features.Dormitories;
 using DormFlow.Application.Features.Floors;
 using DormFlow.Application.Features.Invoices;
+using DormFlow.Application.Features.Maintenance;
 using DormFlow.Application.Features.MeterReadings;
 using DormFlow.Application.Features.Payments;
 using DormFlow.Application.Features.Permissions;
@@ -117,6 +118,7 @@ public static class DependencyInjection
         services.AddScoped<IMeterReadingRepository, MeterReadingRepository>();
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<DatabaseSeeder>();

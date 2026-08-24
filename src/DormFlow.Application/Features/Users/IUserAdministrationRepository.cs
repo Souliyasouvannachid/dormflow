@@ -105,4 +105,15 @@ public interface IUserAdministrationRepository
         Guid userId,
         Guid dormitoryId,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ตรวจว่าผู้ใช้ที่ระบุสังกัดองค์กรนี้ มีบทบาทที่กำหนด และได้รับมอบหมายให้ดูแลหอพักที่ระบุหรือไม่
+    /// ใช้ตรวจสอบก่อนมอบหมายงาน เช่น การมอบหมายช่างซ่อมบำรุงให้ดูแลงานซ่อมในหอพักหนึ่ง ๆ
+    /// </summary>
+    Task<bool> HasRoleForDormitoryAsync(
+        Guid userId,
+        string roleName,
+        Guid organizationId,
+        Guid dormitoryId,
+        CancellationToken cancellationToken = default);
 }
