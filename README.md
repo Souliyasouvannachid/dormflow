@@ -7,7 +7,7 @@
 > Phase 1 ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions และ Audit Logs
-> Phase 2 เพิ่ม Tenants, Reservations และ Contracts (รวมเช็คอิน/เช็คเอาท์) แล้ว
+> Phase 2 เพิ่ม Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์) และ Meter Readings แล้ว
 > ส่วนที่เหลือของ Phase 2 (Billing, Invoices, Payments ฯลฯ) ยังไม่ได้เริ่ม
 > ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
 > และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
@@ -280,6 +280,7 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 | `GET`/`POST` | `/api/v1/contracts` | `contracts.*` | สร้างสัญญาเช่า (ผ่านการจองหรือทำสัญญาตรงก็ได้) |
 | `POST` | `/api/v1/contracts/{id}/activate` | `contracts.activate` | เปิดใช้งานสัญญา = เช็คอิน ห้องเปลี่ยนเป็น Occupied |
 | `POST` | `/api/v1/contracts/{id}/terminate` | `contracts.terminate` | สิ้นสุดสัญญา = เช็คเอาท์ ห้องเปลี่ยนเป็น Cleaning |
+| `GET`/`POST` | `/api/v1/meter-readings` | `meter-readings.*` | จดค่ามิเตอร์น้ำ/ไฟรายเดือน (ไม่มี UPDATE/DELETE เป็นบันทึกเชิงประวัติ) |
 
 ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
 และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
@@ -397,7 +398,7 @@ dotnet run --project tests/DormFlow.UnitTests
 | --- | --- | --- |
 | `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
 | `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 37 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ |
+| `DormFlow.IntegrationTests` | 41 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน) |
 
 Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
 เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
@@ -584,8 +585,8 @@ Integration Test เป็นตัวจับบั๊กนี้ได้ต
 แต่สำหรับ Phase 2 ระบุไว้เพียงชื่อโมดูล (Reservations, Contracts, CheckIns, CheckOuts, Meters,
 Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance, Parcels, Visitors,
 Parking, Announcements, Notifications, Reports, Settings) โดยไม่มีรายละเอียดด้านธุรกิจ
-เริ่มจากสาย **Tenants → Reservations → Contracts** ก่อน เพราะ Billing/Invoices/Payments ทั้งหมด
-ต้องพึ่งพาว่ามีสัญญาเช่าที่ Active อยู่แล้วเป็นพื้นฐาน
+เริ่มจากสาย **Tenants → Reservations → Contracts → Meter Readings** ก่อน เพราะ Billing/Invoices/Payments
+ทั้งหมดต้องพึ่งพาว่ามีสัญญาเช่าที่ Active และมีค่ามิเตอร์ของรอบบิลนั้นอยู่แล้วเป็นพื้นฐาน
 
 ### ทำแล้ว
 
@@ -597,6 +598,9 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 | 4 | สิทธิ์ `reservations.view/create/cancel` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
 | 5 | Migration `AddLeasingModule` | `src/DormFlow.Infrastructure/Migrations/` |
 | 6 | Integration Test วงจรชีวิตการเช่าเต็มสาย + กรณีปฏิเสธ (ห้องไม่ว่าง, ผู้เช่าบัญชีดำ) | `tests/DormFlow.IntegrationTests/Endpoints/LeasingLifecycleEndpointTests.cs` |
+| 7 | Meter Readings — จดค่ามิเตอร์น้ำ/ไฟรายเดือน ดึงค่าครั้งก่อนหน้ามาต่ออัตโนมัติ (View/Create เท่านั้น) | `src/DormFlow.Application/Features/MeterReadings/` |
+| 8 | Migration `AddMeterReadings` | `src/DormFlow.Infrastructure/Migrations/` |
+| 9 | Integration Test การจดค่ามิเตอร์ (ค่าเริ่มต้น, ต่อเนื่องข้ามเดือน, กันจดซ้ำ, กันค่าย้อนหลัง) | `tests/DormFlow.IntegrationTests/Endpoints/MeterReadingsEndpointTests.cs` |
 
 ### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
 
@@ -617,10 +621,17 @@ Parking, Announcements, Notifications, Reports, Settings) โดยไม่ม�
 - **การจองมีอายุจำกัด** (`HoldDays`, ค่าเริ่มต้น 3 วัน สูงสุด 30 วัน) แต่ยังไม่มี Background Job
   ที่คอยหมดอายุการจองอัตโนมัติเมื่อครบกำหนด (Hangfire/Quartz.NET ที่ระบุไว้ในเทคสแตกยังไม่ได้ติดตั้ง)
   ต้องยกเลิกด้วยมือผ่าน `POST /reservations/{id}/cancel` ไปก่อน
+- **ไม่มี Entity แม่ของ "มิเตอร์" แยกต่างหาก** — `MeterReading` ผูกกับห้อง+ประเภทมิเตอร์+เดือนตรง ๆ
+  เพราะสิทธิ์ที่มีอยู่เดิม (`meter-readings.view/create` เท่านั้น ไม่มี CRUD มิเตอร์) บ่งบอกว่าไม่ได้ตั้งใจให้มี
+  ทะเบียนมิเตอร์แยกเป็นของตัวเอง ถ้าห้องเปลี่ยนมิเตอร์จริง (มิเตอร์เสีย/เปลี่ยนใหม่) ต้องจดค่าเริ่มต้นใหม่เอง
+  ระบบไม่รองรับการรีเซ็ตค่ามิเตอร์กลับไปต่ำกว่าค่าครั้งก่อนหน้า
+- **ค่ามิเตอร์เป็นบันทึกเชิงประวัติที่แก้ไข/ลบไม่ได้** จดผิดต้องจดรายการใหม่ของเดือนถัดไปแก้ไขแทน
+- **อัตราค่าน้ำ/ค่าไฟต่อหน่วยยังไม่ถูกกำหนดไว้ที่ไหน** เพราะเป็นส่วนของการออกใบแจ้งหนี้ (Invoices)
+  ซึ่งยังไม่เริ่มสร้าง จะออกแบบตอนสร้างโมดูล Billing/Invoices ต่อไป
 
 ### ยังไม่ทำ (ส่วนที่เหลือของ Phase 2)
 
-Meters, MeterReadings, Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance,
+Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance,
 Parcels, Visitors, Parking, Announcements, Notifications, Reports, Settings — ทั้งหมดนี้ยังไม่ได้เริ่ม
 และต้องการรายละเอียดกฎธุรกิจเพิ่มเติม (เช่น สูตรคำนวณค่าน้ำ-ไฟจากมิเตอร์, รอบบิล, การอนุมัติการชำระเงิน,
 เงื่อนไขการคืนเงินมัดจำ) ก่อนเริ่มออกแบบ Entity ให้ตรงกับความต้องการจริง

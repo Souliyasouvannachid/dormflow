@@ -7,6 +7,7 @@ using DormFlow.Application.Features.Contracts;
 using DormFlow.Application.Features.Organizations;
 using DormFlow.Application.Features.Dormitories;
 using DormFlow.Application.Features.Floors;
+using DormFlow.Application.Features.MeterReadings;
 using DormFlow.Application.Features.Permissions;
 using DormFlow.Application.Features.Roles;
 using DormFlow.Application.Features.Reservations;
@@ -51,6 +52,7 @@ public static class DependencyInjection
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IReservationService, ReservationService>();
         services.AddScoped<IContractService, ContractService>();
+        services.AddScoped<IMeterReadingService, MeterReadingService>();
         services.AddScoped<IUserManagementService, UserManagementService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IPermissionService, PermissionService>();

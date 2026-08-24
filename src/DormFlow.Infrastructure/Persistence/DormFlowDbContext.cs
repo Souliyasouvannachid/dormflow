@@ -75,6 +75,9 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>สัญญาเช่าทั้งหมดในระบบ</summary>
     public DbSet<Contract> Contracts => Set<Contract>();
 
+    /// <summary>ค่ามิเตอร์ทั้งหมดในระบบ</summary>
+    public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

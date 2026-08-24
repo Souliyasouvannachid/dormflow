@@ -572,6 +572,110 @@ namespace DormFlow.Infrastructure.Migrations
                     b.ToTable("floors", (string)null);
                 });
 
+            modelBuilder.Entity("DormFlow.Domain.Entities.MeterReading", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<decimal>("CurrentReading")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("current_reading");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<Guid>("DormitoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("dormitory_id");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
+
+                    b.Property<string>("MeterType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("meter_type");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<DateOnly>("PeriodMonth")
+                        .HasColumnType("date")
+                        .HasColumnName("period_month");
+
+                    b.Property<decimal>("PreviousReading")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("previous_reading");
+
+                    b.Property<DateOnly>("ReadingDate")
+                        .HasColumnType("date")
+                        .HasColumnName("reading_date");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("room_id");
+
+                    b.Property<decimal>("UnitsUsed")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("units_used");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_meter_readings");
+
+                    b.HasIndex("IsDeleted")
+                        .HasDatabaseName("ix_meter_readings_is_deleted");
+
+                    b.HasIndex("OrganizationId", "DormitoryId")
+                        .HasDatabaseName("ix_meter_readings_organization_id_dormitory_id");
+
+                    b.HasIndex("RoomId", "MeterType", "PeriodMonth")
+                        .IsUnique()
+                        .HasDatabaseName("ix_meter_readings_room_id_meter_type_period_month")
+                        .HasFilter("is_deleted = false");
+
+                    b.ToTable("meter_readings", (string)null);
+                });
+
             modelBuilder.Entity("DormFlow.Domain.Entities.Organization", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1757,6 +1861,16 @@ namespace DormFlow.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_floors_buildings_building_id");
+                });
+
+            modelBuilder.Entity("DormFlow.Domain.Entities.MeterReading", b =>
+                {
+                    b.HasOne("DormFlow.Domain.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_meter_readings_rooms_room_id");
                 });
 
             modelBuilder.Entity("DormFlow.Domain.Entities.RefreshToken", b =>
