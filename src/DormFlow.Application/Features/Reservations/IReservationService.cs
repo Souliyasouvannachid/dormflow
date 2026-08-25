@@ -21,4 +21,11 @@ public interface IReservationService
 
     /// <summary>ยกเลิกการจอง ห้องจะถูกปล่อยว่างคืนถ้ายังอยู่ในสถานะถูกจองจากรายการนี้</summary>
     Task<ReservationResponse> CancelAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// หมดอายุการจองที่ยังเป็น Pending แต่เลยเวลากันห้อง (ExpiresAt) แล้วทั้งหมด ห้องจะถูกปล่อยว่างคืนถ้ายังอยู่
+    /// ในสถานะถูกจองจากรายการนั้น เรียกโดย Background Job เป็นระยะ ทำงานข้ามทุกองค์กร ไม่มีการตรวจสิทธิ์ผู้ใช้
+    /// </summary>
+    /// <returns>จำนวนรายการที่ถูกหมดอายุในการเรียกครั้งนี้</returns>
+    Task<int> ExpirePastDueReservationsAsync(CancellationToken cancellationToken = default);
 }

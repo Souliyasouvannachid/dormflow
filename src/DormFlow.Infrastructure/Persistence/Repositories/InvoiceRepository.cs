@@ -2,6 +2,7 @@ using DormFlow.Application.Common.Pagination;
 using DormFlow.Application.Features.Invoices;
 using DormFlow.Contracts.Common;
 using DormFlow.Domain.Entities;
+using DormFlow.Domain.Enums;
 using DormFlow.Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,6 +85,16 @@ public sealed class InvoiceRepository(DormFlowDbContext dbContext) : IInvoiceRep
 
         return invoices.ToPagedResultAsync(query, cancellationToken);
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Invoice>> GetOverdueCandidatesAsync(
+        DateOnly asOfDate,
+        CancellationToken cancellationToken = default)
+        => await _dbContext.Invoices
+            .Where(invoice =>
+                (invoice.Status == InvoiceStatus.Issued || invoice.Status == InvoiceStatus.PartiallyPaid)
+                && invoice.DueDate < asOfDate)
+            .ToListAsync(cancellationToken);
 
     /// <inheritdoc />
     public Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)

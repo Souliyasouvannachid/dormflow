@@ -200,6 +200,64 @@ public sealed class InvoiceService(
         return ToResponse(invoice);
     }
 
+    /// <inheritdoc />
+    public async Task<int> MarkOverdueInvoicesAsync(CancellationToken cancellationToken = default)
+    {
+        DateOnly today = DateOnly.FromDateTime(_dateTimeProvider.UtcNow.UtcDateTime);
+
+        IReadOnlyList<Invoice> overdueCandidates = await _repository.GetOverdueCandidatesAsync(today, cancellationToken);
+
+        foreach (Invoice invoice in overdueCandidates)
+        {
+            Dormitory? dormitory = invoice.DormitoryId.HasValue
+                ? await _dormitoryRepository.GetByIdAsync(invoice.DormitoryId.Value, cancellationToken)
+                : null;
+
+            decimal lateFee = CalculateLateFee(invoice, dormitory);
+
+            invoice.LateFeeAmount += lateFee;
+            invoice.TotalAmount += lateFee;
+            invoice.Status = InvoiceStatus.Overdue;
+
+            await _auditLogWriter.WriteAsync(
+                AuditAction.ChangeStatus,
+                AuditEntityName,
+                invoice.Id.ToString(),
+                organizationId: invoice.OrganizationId,
+                newValues: $$"""{"status":"{{InvoiceStatus.Overdue}}","lateFeeAmount":{{lateFee}}}""",
+                cancellationToken: cancellationToken);
+        }
+
+        if (overdueCandidates.Count > 0)
+        {
+            await _repository.SaveChangesAsync(cancellationToken);
+        }
+
+        return overdueCandidates.Count;
+    }
+
+    /// <summary>
+    /// คำนวณค่าปรับชำระล่าช้าตอนใบแจ้งหนี้เปลี่ยนเป็น Overdue
+    /// แบบร้อยละคิดจากยอดคงเหลือ (TotalAmount - PaidAmount) ณ เวลานั้น ไม่ใช่ยอดเต็มของบิล
+    /// เพื่อไม่ให้ลงโทษซ้ำกับยอดที่ชำระไปแล้วบางส่วน
+    /// </summary>
+    private static decimal CalculateLateFee(Invoice invoice, Dormitory? dormitory)
+    {
+        if (dormitory is null)
+        {
+            return 0;
+        }
+
+        return dormitory.LateFeeType switch
+        {
+            LateFeeType.Fixed => dormitory.LateFeeAmount,
+            LateFeeType.Percentage => Math.Round(
+                (invoice.TotalAmount - invoice.PaidAmount) * dormitory.LateFeeAmount / 100m,
+                2),
+            _ => 0,
+        };
+    }
+
     private async Task<decimal> CalculateUtilityAmountAsync(
         Guid roomId,
         MeterType meterType,

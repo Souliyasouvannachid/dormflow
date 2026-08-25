@@ -170,6 +170,42 @@ public sealed class ReservationService(
         return ToResponse(reservation);
     }
 
+    /// <inheritdoc />
+    public async Task<int> ExpirePastDueReservationsAsync(CancellationToken cancellationToken = default)
+    {
+        DateTimeOffset now = _dateTimeProvider.UtcNow;
+
+        IReadOnlyList<Reservation> expiredReservations = await _repository.GetExpiredPendingAsync(now, cancellationToken);
+
+        foreach (Reservation reservation in expiredReservations)
+        {
+            reservation.Status = ReservationStatus.Expired;
+
+            // ปล่อยห้องคืนเฉพาะเมื่อยังอยู่ในสถานะถูกจองอยู่ ถ้าถูกเปลี่ยนสถานะไปทางอื่นแล้วจะไม่แตะต้อง
+            // เหมือนกับตรรกะเดียวกันใน CancelAsync
+            Room? room = await _roomRepository.GetByIdAsync(reservation.RoomId, cancellationToken);
+            if (room is not null && room.Status == RoomStatus.Reserved)
+            {
+                room.Status = RoomStatus.Available;
+            }
+
+            await _auditLogWriter.WriteAsync(
+                AuditAction.ChangeStatus,
+                AuditEntityName,
+                reservation.Id.ToString(),
+                organizationId: reservation.OrganizationId,
+                newValues: $$"""{"status":"{{ReservationStatus.Expired}}"}""",
+                cancellationToken: cancellationToken);
+        }
+
+        if (expiredReservations.Count > 0)
+        {
+            await _repository.SaveChangesAsync(cancellationToken);
+        }
+
+        return expiredReservations.Count;
+    }
+
     private async Task<Reservation> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Reservation reservation = await _repository.GetByIdAsync(id, cancellationToken)

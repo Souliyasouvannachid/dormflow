@@ -70,6 +70,14 @@ public sealed class ReservationRepository(DormFlowDbContext dbContext) : IReserv
     }
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<Reservation>> GetExpiredPendingAsync(
+        DateTimeOffset asOf,
+        CancellationToken cancellationToken = default)
+        => await _dbContext.Reservations
+            .Where(reservation => reservation.Status == ReservationStatus.Pending && reservation.ExpiresAt <= asOf)
+            .ToListAsync(cancellationToken);
+
+    /// <inheritdoc />
     public Task AddAsync(Reservation reservation, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(reservation);

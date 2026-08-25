@@ -26,4 +26,12 @@ public interface IInvoiceService
 
     /// <summary>ยกเลิกใบแจ้งหนี้ ทำได้เฉพาะเมื่อยังไม่มีการชำระเงินเข้ามา</summary>
     Task<InvoiceResponse> CancelAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ทำเครื่องหมายใบแจ้งหนี้ที่เลยวันครบกำหนดชำระแล้ว (Issued/PartiallyPaid ที่ DueDate ผ่านไปแล้ว) ให้เป็น
+    /// Overdue พร้อมคำนวณค่าปรับชำระล่าช้าตามค่าตั้งของหอพักครั้งเดียวตอนเปลี่ยนสถานะ เรียกโดย Background Job
+    /// เป็นระยะ ทำงานข้ามทุกองค์กร ไม่มีการตรวจสิทธิ์ผู้ใช้
+    /// </summary>
+    /// <returns>จำนวนรายการที่ถูกทำเครื่องหมายเกินกำหนดในการเรียกครั้งนี้</returns>
+    Task<int> MarkOverdueInvoicesAsync(CancellationToken cancellationToken = default);
 }

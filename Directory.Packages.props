@@ -54,6 +54,17 @@
     <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
   </ItemGroup>
 
+  <ItemGroup Label="Background Jobs">
+    <!-- ใช้ PostgreSQL เดียวกับฐานข้อมูลหลักเป็น Job Storage ไม่ต้องเพิ่ม Redis หรือบริการแยก -->
+    <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.24" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.1" />
+    <!--
+      Hangfire.Core ดึง Newtonsoft.Json 11.0.1 มาแบบ transitive ซึ่งมีช่องโหว่ความรุนแรงสูงที่ทราบแล้ว
+      (GHSA-5crp-9r3c-p9vr) ต้องปักเวอร์ชันที่แก้ไขแล้วตรงนี้เพื่อบังคับให้ Dependency Graph ทั้งหมดใช้เวอร์ชันนี้แทน
+    -->
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
   <ItemGroup Label="Testing">
     <PackageVersion Include="xunit.v3" Version="4.0.0" />
     <!--

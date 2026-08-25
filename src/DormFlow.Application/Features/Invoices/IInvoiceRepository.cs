@@ -38,6 +38,16 @@ public interface IInvoiceRepository
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// ดึงรายการใบแจ้งหนี้ที่ยังไม่ถูกทำเครื่องหมายว่าเกินกำหนด (Issued/PartiallyPaid)
+    /// แต่วันครบกำหนดชำระผ่านไปแล้วก่อนวันที่ระบุ
+    /// คืน Entity แบบติดตามการเปลี่ยนแปลง (ไม่ใช่ AsNoTracking) เพราะเรียกใช้เพื่อแก้ไขสถานะต่อทันที
+    /// ใช้โดย Background Job เท่านั้น ไม่ผ่านการกรองตามองค์กร/หอพัก เพราะทำงานข้ามทั้งระบบ
+    /// </summary>
+    Task<IReadOnlyList<Invoice>> GetOverdueCandidatesAsync(
+        DateOnly asOfDate,
+        CancellationToken cancellationToken = default);
+
     /// <summary>เพิ่มใบแจ้งหนี้ใหม่</summary>
     Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default);
 

@@ -32,6 +32,15 @@ public interface IReservationRepository
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// ดึงรายการจองที่ยังเป็น Pending แต่หมดอายุการกันห้องแล้ว (ExpiresAt ผ่านไปแล้ว ณ เวลาที่ระบุ)
+    /// คืน Entity แบบติดตามการเปลี่ยนแปลง (ไม่ใช่ AsNoTracking) เพราะเรียกใช้เพื่อแก้ไขสถานะต่อทันที
+    /// ใช้โดย Background Job เท่านั้น ไม่ผ่านการกรองตามองค์กร/หอพัก เพราะทำงานข้ามทั้งระบบ
+    /// </summary>
+    Task<IReadOnlyList<Reservation>> GetExpiredPendingAsync(
+        DateTimeOffset asOf,
+        CancellationToken cancellationToken = default);
+
     /// <summary>เพิ่มการจองใหม่</summary>
     Task AddAsync(Reservation reservation, CancellationToken cancellationToken = default);
 

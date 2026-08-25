@@ -1,5 +1,7 @@
 using System.Reflection;
 using DormFlow.Application.Common.Abstractions;
+using Hangfire;
+using Hangfire.PostgreSql;
 using DormFlow.Application.Features.Announcements;
 using DormFlow.Application.Features.AuditLogs;
 using DormFlow.Application.Features.Authentication.Validators;
@@ -39,6 +41,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace DormFlow.Infrastructure;
 
@@ -62,17 +65,21 @@ public static class DependencyInjection
     /// เมื่อไม่พบ Connection String ชื่อ DefaultConnection
     /// ระบบเลือกที่จะหยุดทำงานทันทีแทนที่จะไปพังตอนมีคำขอเข้ามาแล้ว
     /// </exception>
+    /// <param name="environment">สภาพแวดล้อมโฮสต์ของแอปพลิเคชัน ใช้เพื่อข้าม Background Job ในสภาพแวดล้อม Testing</param>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(environment);
 
         services.AddPersistence(configuration);
         services.AddDormFlowIdentity();
         services.AddTokenServices(configuration);
         services.AddSupportingServices(configuration);
+        services.AddBackgroundJobStorage(configuration, environment);
 
         return services;
     }
@@ -219,6 +226,44 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// ลงทะเบียนที่เก็บข้อมูลของ Background Job (Hangfire) บน PostgreSQL ตัวเดียวกับฐานข้อมูลหลัก
+    /// </summary>
+    /// <remarks>
+    /// ลงทะเบียนเฉพาะ Storage เท่านั้น ไม่รวม Server/Dashboard/การตั้งเวลา Recurring Job
+    /// ซึ่งเป็นเรื่องของ Runtime/Hosting และอยู่ที่ชั้น Api แทน (ดู BackgroundJobConfiguration)
+    /// เพื่อให้แยกส่วน "ลงทะเบียนบริการ" กับ "สั่งให้ทำงานจริง" ออกจากกันชัดเจน เหมือนกับ AddPersistence/DatabaseInitializer
+    /// ข้ามการลงทะเบียนทั้งหมดในสภาพแวดล้อม Testing หรือเมื่อปิดผ่านค่าตั้ง BackgroundJobs:Enabled เพราะ
+    /// Hangfire.PostgreSql ติดตั้ง Schema ของตัวเองทันทีตอนเรียก UsePostgreSqlStorage (ไม่ใช่ตอนเริ่ม Server)
+    /// ถ้าปล่อยให้ทำงานคู่ขนานกับ dbContext.Database.EnsureCreatedAsync() ของ Integration Test
+    /// EF Core จะเข้าใจผิดว่าฐานข้อมูลมีตารางอยู่แล้วและข้ามการสร้างตารางของแอปพลิเคชันทั้งหมด (พบเป็นบั๊กจริงระหว่างพัฒนา)
+    /// </remarks>
+    private static IServiceCollection AddBackgroundJobStorage(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment)
+    {
+        services.AddOptions<BackgroundJobOptions>()
+            .Bind(configuration.GetSection(BackgroundJobOptions.SectionName))
+            .ValidateOnStart();
+
+        if (environment.IsEnvironment("Testing")
+            || !configuration.GetValue("BackgroundJobs:Enabled", defaultValue: true))
+        {
+            return services;
+        }
+
+        string connectionString = ResolveConnectionString(configuration);
+
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
 
         return services;
     }

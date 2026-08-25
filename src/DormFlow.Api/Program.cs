@@ -26,11 +26,13 @@ try
 
     // ชั้น Application และ Infrastructure
     builder.Services.AddApplication();
-    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
     builder.Services.AddDormFlowHealthChecks();
 
     builder.Services.AddDormFlowAuthentication(builder.Configuration);
+
+    builder.Services.AddDormFlowBackgroundJobs(builder.Configuration, builder.Environment);
 
     // รับค่า IP และ scheme จริงเมื่อรันหลัง reverse proxy หรือ ingress
     builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -69,6 +71,7 @@ try
     app.MapControllers();
     app.MapDormFlowHealthChecks();
     app.UseDormFlowOpenApi();
+    app.UseDormFlowBackgroundJobs();
 
     // ข้ามการปรับสคีมาและ Seed อัตโนมัติในสภาพแวดล้อม Testing
     // เพราะ Integration Test เตรียมฐานข้อมูลของตัวเองผ่าน DormFlowApiFactory อยู่แล้ว
