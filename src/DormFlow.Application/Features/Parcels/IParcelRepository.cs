@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Parcels;
 
-/// <summary>ตัวกรองสำหรับดึงรายการพัสดุแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງ parcels</summary>
 public sealed record ParcelListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -13,21 +13,24 @@ public sealed record ParcelListFilter(
     ParcelStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลพัสดุในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນ parcel ໃນຖານຂໍ້ມູນ</summary>
 public interface IParcelRepository
 {
-    /// <summary>อ่านพัสดุจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານ parcel ຈາກລະຫັດອ້າງອີງ</summary>
     Task<Parcel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการพัสดุแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງ parcels ທີ່ມີ paginated ໂດຍອີງໃສ່ການກັ່ນຕອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Parcel>> GetPagedAsync(
         ParcelListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มพัสดุใหม่</summary>
+    /// <summary>ນັບ parcel ຕາມຕົວກອງໂດຍບໍ່ດຶງລາຍການ</summary>
+    Task<int> CountAsync(ParcelListFilter filter, CancellationToken cancellationToken = default);
+
+    /// <summary>ເພີ່ມ parcel ໃຝ່</summary>
     Task AddAsync(Parcel parcel, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

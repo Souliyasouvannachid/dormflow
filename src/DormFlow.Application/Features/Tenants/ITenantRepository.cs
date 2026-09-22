@@ -5,31 +5,31 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Tenants;
 
-/// <summary>ตัวกรองสำหรับดึงรายการผู้เช่าแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຜູ້ເຊົ່າ</summary>
 public sealed record TenantListFilter(Guid? OrganizationId, TenantStatus? Status);
 
-/// <summary>เข้าถึงข้อมูลผู้เช่าในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຜູ້ເຊົ່າໃນຖານຂໍ້ມູນ</summary>
 public interface ITenantRepository
 {
-    /// <summary>อ่านผู้เช่าจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຜູ້ເຊົ່າຈາກລະຫັດອ້າງອີງ</summary>
     Task<Tenant?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีผู้เช่าที่ใช้เลขบัตรประชาชนนี้อยู่แล้วในองค์กรเดียวกันหรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າມີຜູ້ເຊົ່າທີ່ໃຊ້ເລກບັດປະຈຳຕົວນີ້ຢູ່ໃນອົງກອນດຽວກັນຫຼືບໍ່</summary>
     Task<bool> ExistsByNationalIdAsync(
         Guid organizationId,
         string nationalId,
         Guid? excludeTenantId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการผู้เช่าแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ເຊົ່າແບບ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<Tenant>> GetPagedAsync(
         TenantListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มผู้เช่าใหม่</summary>
+    /// <summary>ເພີ່ມຜູ້ເຊົ່າໃໝ່</summary>
     Task AddAsync(Tenant tenant, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -3,7 +3,7 @@ using DormFlow.Application.Common.Abstractions;
 namespace DormFlow.Infrastructure.Services;
 
 /// <summary>
-/// แหล่งเวลาจริงของระบบ คืนค่าเป็น UTC เสมอเพื่อให้เก็บลง timestamptz ได้ตรงกันทุกเครื่อง
+/// ແຫຼ່ງເວລາທີ່ແທ້ຈິງຂອງລະບົບຖືກສົ່ງຄືນ UTC ສະເຝີເຮັດໃຫ້ມັນລົງ timestamptz ສາມາດຈັບຄູ່ທຸກອຸປະກອນ
 /// </summary>
 public sealed class SystemDateTimeProvider : IDateTimeProvider
 {

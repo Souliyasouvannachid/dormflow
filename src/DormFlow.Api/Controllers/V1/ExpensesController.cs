@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการค่าใช้จ่ายในการดำเนินงาน</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/expenses")]
@@ -17,7 +17,7 @@ public sealed class ExpensesController(IExpenseService expenseService) : Control
 {
     private readonly IExpenseService _expenseService = expenseService;
 
-    /// <summary>ดึงรายการค่าใช้จ่ายแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຈ່າຍທີ່ເປັນ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Expenses.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ExpenseResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class ExpensesController(IExpenseService expenseService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลค่าใช้จ่ายหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຄ່າໃຊ້ຈ່າຍຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Expenses.View)]
     [ProducesResponseType(typeof(ApiResponse<ExpenseResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class ExpensesController(IExpenseService expenseService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกค่าใช้จ่ายใหม่</summary>
+    /// <summary>ບັນທຶກຄ່າໃຊ້ຈ່າຍໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Expenses.Create)]
     [ProducesResponseType(typeof(ApiResponse<ExpenseResponse>), StatusCodes.Status200OK)]

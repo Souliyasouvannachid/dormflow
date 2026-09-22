@@ -1,17 +1,17 @@
 namespace DormFlow.Contracts.Permissions;
 
-/// <summary>ข้อมูลสิทธิ์การใช้งานหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນໃບອະນຸຍາດຜຶ່ງ</summary>
 public class PermissionResponse
 {
-    /// <summary>รหัสสิทธิ์ ใช้อ้างอิงตอนกำหนดสิทธิ์ให้บทบาท</summary>
+    /// <summary>ລະຫັດການອະນຸຍາດຖືກນໍາໃຊ້ເປັນເອກະສານອ້າງອີງໃນເວລາມອບຝາຍການອະນຸຍາດໃຫ້ກັບບົດບາດ</summary>
     public string Code { get; init; } = string.Empty;
 
-    /// <summary>ชื่อสิทธิ์สำหรับแสดงผล</summary>
+    /// <summary>ສະແດງຊື່ການອະນຸຍາດ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>โมดูลที่สิทธิ์นี้สังกัด</summary>
+    /// <summary>ໂມດູນທີ່ສິດອະນຸຍາດນີ້ເປັນຂອງ</summary>
     public string Module { get; init; } = string.Empty;
 }

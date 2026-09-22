@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลใบเสร็จรับเงินบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນໃບຮັບເງິນຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ReceiptRepository(DormFlowDbContext dbContext) : IReceiptRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

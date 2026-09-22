@@ -1,14 +1,14 @@
 namespace DormFlow.Contracts.Reports;
 
-/// <summary>พารามิเตอร์ของรายงานสรุปรายได้</summary>
+/// <summary>ຕົວກໍານົດການຂອງບົດລາຍງານສະຫຼຸບລາຍຮັບ</summary>
 public class RevenueReportRequest
 {
-    /// <summary>กรองเฉพาะหอพักที่ระบุ เป็น null เมื่อต้องการทุกหอพักที่ผู้เรียกเข้าถึงได้</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫໍພັກທີ່ລະບຸເປັນ null ເມື່ອເຈົ້າຕ້ອງການທຸກຫໍພັກທີ່ຜູ້ໂທມີການເຂົ້າເຖິງ</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>เดือนเริ่มต้นของช่วงที่ต้องการสรุป (นับจาก PeriodMonth ของใบแจ้งหนี้)</summary>
+    /// <summary>ເດືອນເລີ່ມຕົ້ນຂອງໄລຍະເວລາທີ່ຈະສະຫຼຸບ (ນັບຈາກ PeriodMonth ຂອງໃບເກັບເງິນ)</summary>
     public DateOnly PeriodFrom { get; set; }
 
-    /// <summary>เดือนสิ้นสุดของช่วงที่ต้องการสรุป</summary>
+    /// <summary>ເດືອນສຸດທ້າຍຂອງໄລຍະເວລາທີ່ຈະສະຫຼຸບ</summary>
     public DateOnly PeriodTo { get; set; }
 }

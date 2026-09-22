@@ -6,29 +6,29 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace DormFlow.Infrastructure.Persistence.Extensions;
 
 /// <summary>
-/// ข้อตกลงการแม็ปโมเดลที่ใช้กับทุก Entity ของ DormFlow
+/// ສົນທິສັນຍາສ້າງແບບຈໍາລອງທີ່ໃຊ້ໄດ້ກັບທຸກຄົນ Entity ຂອງ DormFlow
 /// </summary>
 /// <remarks>
-/// รวมไว้ที่เดียวแทนการเขียนซ้ำในทุก EntityTypeConfiguration
-/// ทำให้ Entity ที่เพิ่มเข้ามาภายหลังได้ Soft Delete Filter, Audit Column
-/// และ Optimistic Concurrency ไปโดยอัตโนมัติ
+/// ລວມເຂົ້າໄປໃນບ່ອນດຽວແທນທີ່ຈະຂຽນຄືນທຸກສິ່ງທຸກຢ່າງ EntityTypeConfiguration
+/// ເຮັດ Entity ທີ່ສາມາດເພີ່ມໄດ້ໃນພາຍຫຼັງ Soft Delete Filter, Audit Column
+/// ແລະ Optimistic Concurrency ໄປອັດຕະໂນມັດ
 /// </remarks>
 public static class ModelBuilderExtensions
 {
-    /// <summary>ชื่อคอลัมน์ระบบของ PostgreSQL ที่ใช้ทำ Optimistic Concurrency</summary>
+    /// <summary>ຊື່ຖັນລະບົບຂອງ PostgreSQL ໃຊ້ເພື່ອເຮັດໃຫ້ Optimistic Concurrency</summary>
     private const string XminColumnName = "xmin";
 
-    /// <summary>ความละเอียดมาตรฐานของค่าที่เป็นจำนวนเงิน</summary>
+    /// <summary>ການແກ້ໄຂມາດຕະຖານຂອງມູນຄ່າເງິນຕາ</summary>
     private const int MoneyPrecision = 18;
 
-    /// <summary>จำนวนทศนิยมมาตรฐานของค่าที่เป็นจำนวนเงิน</summary>
+    /// <summary>ຈຳນວນທົດສະນິຍົມມາດຕະຖານຂອງຄ່າເງິນ</summary>
     private const int MoneyScale = 2;
 
     /// <summary>
-    /// ใส่ข้อตกลงการแม็ปทั้งหมดของ DormFlow ให้กับโมเดล
-    /// ต้องเรียกหลังจาก ApplyConfigurationsFromAssembly เสมอ
+    /// ປ້ອນສົນທິສັນຍາການສ້າງແຜນທີ່ທັງໝົດຂອງ DormFlow ກັບຕົວແບບ
+    /// ຕ້ອງໂທຫາຫຼັງ ApplyConfigurationsFromAssembly ສະເໝີ
     /// </summary>
-    /// <param name="modelBuilder">ตัวสร้างโมเดลของ EF Core</param>
+    /// <param name="modelBuilder">ຕົວສ້າງຕົວແບບ EF Core</param>
     public static void ApplyDormFlowConventions(this ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -37,8 +37,8 @@ public static class ModelBuilderExtensions
         {
             ApplyDecimalPrecision(entityType);
 
-            // ตรวจจากการมี property ชื่อ Version แทนการตรวจคลาสฐาน
-            // เพื่อให้ Entity ของ Identity ที่ใช้ ConcurrencyStamp อยู่แล้วถูกข้ามไปเอง
+            // ກວດເບິ່ງຈາກການມີ property ຊື່ Version ແທນທີ່ຈະກວດເບິ່ງຊັ້ນພື້ນຖານ
+            // ດັ່ງນັ້ນ Entity ຂອງ Identity ໃຊ້ ConcurrencyStamp ຖືກຂ້າມແລ້ວ
             ApplyConcurrencyToken(entityType);
 
             if (entityType.ClrType.IsAssignableTo(typeof(ISoftDeletable)))
@@ -55,8 +55,8 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// แม็ป property Version เข้ากับคอลัมน์ระบบ xmin ของ PostgreSQL
-    /// PostgreSQL อัปเดตค่านี้ให้เองทุกครั้งที่แถวถูกแก้ไข จึงไม่ต้องจัดการเวอร์ชันเอง
+    /// ແຜນທີ່ property Version ເຂົ້າໄປໃນຖັນລະບົບ xmin ຂອງ PostgreSQL
+    /// PostgreSQL ມັນອັບເດດຄ່ານີ້ດ້ວຍຕົນເອງທຸກຄັ້ງທີ່ມີການດັດແກ້ແຖວ. ສະນັ້ນທ່ານບໍ່ ຈຳ ເປັນຕ້ອງຈັດການສະບັບດ້ວຍຕົນເອງ
     /// </summary>
     private static void ApplyConcurrencyToken(IMutableEntityType entityType)
     {
@@ -72,10 +72,10 @@ public static class ModelBuilderExtensions
         version.IsConcurrencyToken = true;
     }
 
-    /// <summary>กรองแถวที่ถูก Soft Delete ออกจากทุก Query โดยอัตโนมัติ</summary>
+    /// <summary>ກັ່ນຕອງແຖວທີ່ຖືກຕ້ອງ Soft Delete ອອກຈາກທຸກໆ Query ອັດຕະໂນມັດ</summary>
     private static void ApplySoftDeleteQueryFilter(ModelBuilder modelBuilder, Type clrType)
     {
-        // สร้างนิพจน์ entity => !entity.IsDeleted แบบ dynamic เพราะรู้ชนิดตอน runtime เท่านั้น
+        // ສ້າງການສະແດງອອກ entity => !entity.IsDeleted ຕົວແບບ dynamic ເພາະວ່າຂ້ອຍຮູ້ຈັກປະເພດຂອງຕອນ runtime ເທົ່ານັ້ນ
         ParameterExpression parameter = Expression.Parameter(clrType, "entity");
         MemberExpression isDeleted = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
         UnaryExpression notDeleted = Expression.Not(isDeleted);
@@ -84,7 +84,7 @@ public static class ModelBuilderExtensions
     }
 
     /// <summary>
-    /// สร้าง index บน is_deleted เพราะทุก Query ถูกกรองด้วยคอลัมน์นี้เสมอจาก Global Query Filter
+    /// ສ້າງ index ສຸດ is_deleted ເນື່ອງຈາກວ່າທຸກໆ Query ສະເຝີການກັ່ນຕອງໂດຍຖັນນີ້ຈາກ Global Query Filter
     /// </summary>
     private static void ApplySoftDeleteIndex(IMutableEntityType entityType)
     {
@@ -97,7 +97,7 @@ public static class ModelBuilderExtensions
         entityType.AddIndex(isDeleted);
     }
 
-    /// <summary>สร้าง composite index สำหรับการกรองข้อมูลตามองค์กรและหอพัก</summary>
+    /// <summary>ສ້າງ composite index ສໍາລັບການກັ່ນຕອງຂໍ້ມູນໂດຍອົງກອນແລະຫໍພັກ</summary>
     private static void ApplyTenantIndexes(IMutableEntityType entityType)
     {
         IMutableProperty? organizationId = entityType.FindProperty(nameof(ITenantScoped.OrganizationId));
@@ -125,7 +125,7 @@ public static class ModelBuilderExtensions
         }
     }
 
-    /// <summary>กำหนดความละเอียดของ decimal ทุกตัวเป็น numeric(18,2) เพื่อไม่ให้ค่าเงินถูกปัดทิ้ง</summary>
+    /// <summary>ກໍານົດຄວາມລະອຽດຂອງ decimal ທັງຝົດຂອງພວກເຂົາແມ່ນ numeric(18,2) ເພື່ອປ້ອງກັນບໍ່ໃຫ້ມູນຄ່າຂອງສະກຸນເງິນຖືກປະຕິເສດ</summary>
     private static void ApplyDecimalPrecision(IMutableEntityType entityType)
     {
         foreach (IMutableProperty property in entityType.GetProperties())

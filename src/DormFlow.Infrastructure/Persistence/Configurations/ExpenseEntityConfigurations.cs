@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางค่าใช้จ่าย</summary>
+/// <summary>ກໍານົດຕາຕະລາງຄ່າໃຊ້ຈ່າຍ</summary>
 public sealed class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
 {
     /// <inheritdoc />

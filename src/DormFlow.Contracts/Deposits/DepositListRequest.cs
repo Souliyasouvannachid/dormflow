@@ -2,15 +2,15 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Deposits;
 
-/// <summary>พารามิเตอร์การค้นหารายการเงินมัดจำ</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາບັນຊີເງິນຝາກ</summary>
 public class DepositListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการของสัญญาเช่าที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງການເຊົ່າທີ່ລະບຸໄວ້</summary>
     public Guid? ContractId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການທີ່ມີສະຖານະກົງກັບອັນທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

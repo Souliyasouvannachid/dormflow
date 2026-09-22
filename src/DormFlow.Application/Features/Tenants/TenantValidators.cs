@@ -1,60 +1,65 @@
+using DormFlow.Application.Common.Abstractions;
 using DormFlow.Contracts.Tenants;
 using FluentValidation;
 
 namespace DormFlow.Application.Features.Tenants;
 
-/// <summary>ตรวจสอบคำขอสร้างข้อมูลผู้เช่าใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງຂໍ້ມູນຜູ້ເຊົ່າໃຝ່</summary>
 public sealed class CreateTenantRequestValidator : AbstractValidator<CreateTenantRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
-    public CreateTenantRequestValidator()
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
+    public CreateTenantRequestValidator(IDateTimeProvider dateTimeProvider)
     {
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+
         RuleFor(request => request.FirstName)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อ")
-            .MaximumLength(100).WithMessage("ชื่อต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່")
+            .MaximumLength(100).WithMessage("ຊື່ຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("กรุณาระบุนามสกุล")
-            .MaximumLength(100).WithMessage("นามสกุลต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸນາມສະກຸນ")
+            .MaximumLength(100).WithMessage("ນາມສະກຸນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Email)
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ")
             .When(request => !string.IsNullOrWhiteSpace(request.Email));
 
         RuleFor(request => request.NationalId)
-            .MaximumLength(20).WithMessage("เลขบัตรประจำตัวต้องยาวไม่เกิน 20 ตัวอักษร");
+            .MaximumLength(20).WithMessage("ເລກບັດປະຈຳຕົວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 20 ໂຕອັກສອນ");
 
         RuleFor(request => request.DateOfBirth!.Value)
-            .LessThan(DateOnly.FromDateTime(DateTime.UtcNow))
-            .WithMessage("วันเดือนปีเกิดต้องไม่ใช่วันที่ในอนาคต")
+            .LessThan(_ => DateOnly.FromDateTime(dateTimeProvider.UtcNow.UtcDateTime))
+            .WithMessage("ວັນເດືອນປີເກີດຕ້ອງບໍ່ແມ່ນວັນທີໃນອະນາຄົດ")
             .When(request => request.DateOfBirth.HasValue);
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลผู้เช่า</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ</summary>
 public sealed class UpdateTenantRequestValidator : AbstractValidator<UpdateTenantRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
-    public UpdateTenantRequestValidator()
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
+    public UpdateTenantRequestValidator(IDateTimeProvider dateTimeProvider)
     {
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+
         RuleFor(request => request.FirstName)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อ")
-            .MaximumLength(100).WithMessage("ชื่อต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່")
+            .MaximumLength(100).WithMessage("ຊື່ຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("กรุณาระบุนามสกุล")
-            .MaximumLength(100).WithMessage("นามสกุลต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸນາມສະກຸນ")
+            .MaximumLength(100).WithMessage("ນາມສະກຸນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Email)
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ")
             .When(request => !string.IsNullOrWhiteSpace(request.Email));
 
         RuleFor(request => request.NationalId)
-            .MaximumLength(20).WithMessage("เลขบัตรประจำตัวต้องยาวไม่เกิน 20 ตัวอักษร");
+            .MaximumLength(20).WithMessage("ເລກບັດປະຈຳຕົວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 20 ໂຕອັກສອນ");
 
         RuleFor(request => request.DateOfBirth!.Value)
-            .LessThan(DateOnly.FromDateTime(DateTime.UtcNow))
-            .WithMessage("วันเดือนปีเกิดต้องไม่ใช่วันที่ในอนาคต")
+            .LessThan(_ => DateOnly.FromDateTime(dateTimeProvider.UtcNow.UtcDateTime))
+            .WithMessage("ວັນເດືອນປີເກີດຕ້ອງບໍ່ແມ່ນວັນທີໃນອະນາຄົດ")
             .When(request => request.DateOfBirth.HasValue);
     }
 }

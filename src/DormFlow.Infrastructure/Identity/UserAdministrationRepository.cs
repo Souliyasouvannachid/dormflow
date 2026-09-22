@@ -8,10 +8,12 @@ using DormFlow.Infrastructure.Persistence;
 using DormFlow.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
 
 namespace DormFlow.Infrastructure.Identity;
 
-/// <summary>เข้าถึงและจัดการบัญชีผู้ใช้บน ASP.NET Core Identity สำหรับหน้าจอดูแลผู้ใช้งาน</summary>
+/// <summary>ເຂົ້າເຖິງ ແລະຈັດການບັນຊີຜູ້ໃຊ້ຢູ່ ASP.NET Core Identity ສໍາລັບຜ້າຈໍການດູແລຜູ້ໃຊ້</summary>
 public sealed class UserAdministrationRepository(
     UserManager<ApplicationUser> userManager,
     RoleManager<ApplicationRole> roleManager,
@@ -86,11 +88,7 @@ public sealed class UserAdministrationRepository(
 
         List<ApplicationUser> pageOfUsers = await users.ApplyPaging(query).ToListAsync(cancellationToken);
 
-        List<UserSecurityProfile> profiles = [];
-        foreach (ApplicationUser user in pageOfUsers)
-        {
-            profiles.Add(await BuildProfileAsync(user, cancellationToken));
-        }
+        List<UserSecurityProfile> profiles = await BuildProfilesAsync(pageOfUsers, cancellationToken);
 
         return PagedResult.Create((IReadOnlyList<UserSecurityProfile>)profiles, query.Page, query.PageSize, totalItems);
     }
@@ -121,7 +119,7 @@ public sealed class UserAdministrationRepository(
 
         return result.Succeeded
             ? UserCreationResult.Success(user.Id)
-            : UserCreationResult.Failed([.. result.Errors.Select(error => error.Description)]);
+            : UserCreationResult.Failed([.. result.Errors.Select(IdentityErrorTranslator.Translate)]);
     }
 
     /// <inheritdoc />
@@ -181,16 +179,35 @@ public sealed class UserAdministrationRepository(
             }
         }
 
-        IList<string> currentRoles = await _userManager.GetRolesAsync(user);
+        bool succeeded = false;
+        IExecutionStrategy executionStrategy = _dbContext.Database.CreateExecutionStrategy();
 
-        IdentityResult removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
-        if (!removeResult.Succeeded)
+        await executionStrategy.ExecuteAsync(async () =>
         {
-            return false;
-        }
+            await using IDbContextTransaction transaction =
+                await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        IdentityResult addResult = await _userManager.AddToRolesAsync(user, roleNames);
-        return addResult.Succeeded;
+            IList<string> currentRoles = await _userManager.GetRolesAsync(user);
+
+            IdentityResult removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return;
+            }
+
+            IdentityResult addResult = await _userManager.AddToRolesAsync(user, roleNames);
+            if (!addResult.Succeeded)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return;
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+            succeeded = true;
+        });
+
+        return succeeded;
     }
 
     /// <inheritdoc />
@@ -213,7 +230,7 @@ public sealed class UserAdministrationRepository(
 
         if (isPrimary)
         {
-            // มีหอพักหลักได้เพียงแห่งเดียวต่อผู้ใช้หนึ่งคน ยกเลิกหอพักหลักเดิมก่อนตั้งใหม่
+            // ມີພຽງແຕ່ຜຶ່ງຫໍພັກຕົ້ນຕໍຕໍ່ຜູ້ໃຊ້. ຍົກເລີກຫໍພັກຫຼັກເດີມກ່ອນຕັ້ງໃໝ່
             await _dbContext.UserDormitories
                 .Where(assignment => assignment.UserId == userId && assignment.IsPrimary)
                 .ExecuteUpdateAsync(
@@ -221,17 +238,31 @@ public sealed class UserAdministrationRepository(
                     cancellationToken);
         }
 
-        _dbContext.UserDormitories.Add(new UserDormitory
+        UserDormitory assignment = new()
         {
             UserId = userId,
             DormitoryId = dormitoryId,
             IsPrimary = isPrimary,
             AssignedAt = assignedAt,
             AssignedBy = assignedBy,
-        });
+        };
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        return true;
+        _dbContext.UserDormitories.Add(assignment);
+
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+        catch (DbUpdateException exception)
+            when (exception.InnerException is PostgresException postgresException
+                && postgresException.SqlState == PostgresErrorCodes.UniqueViolation
+                && postgresException.ConstraintName is
+                    "ix_user_dormitories_user_id_dormitory_id"
+                    or "ix_user_dormitories_one_primary_per_user")
+        {
+            return false;
+        }
     }
 
     /// <inheritdoc />
@@ -261,6 +292,59 @@ public sealed class UserAdministrationRepository(
                 assignment.AssignedAt))
             .ToArrayAsync(cancellationToken);
 
+        return BuildProfile(user, roles, assignments);
+    }
+
+    private async Task<List<UserSecurityProfile>> BuildProfilesAsync(
+        List<ApplicationUser> users,
+        CancellationToken cancellationToken)
+    {
+        if (users.Count == 0)
+        {
+            return [];
+        }
+
+        Guid[] userIds = [.. users.Select(user => user.Id)];
+
+        Dictionary<Guid, string[]> rolesByUser = (await (
+            from userRole in _dbContext.UserRoles.AsNoTracking()
+            join role in _dbContext.Roles.AsNoTracking() on userRole.RoleId equals role.Id
+            where userIds.Contains(userRole.UserId) && role.Name != null
+            select new { userRole.UserId, RoleName = role.Name }
+        ).ToListAsync(cancellationToken))
+            .GroupBy(item => item.UserId)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(item => item.RoleName!).OrderBy(name => name).ToArray());
+
+        Dictionary<Guid, UserDormitoryAssignmentInfo[]> assignmentsByUser = (await _dbContext.UserDormitories
+            .AsNoTracking()
+            .Where(assignment => userIds.Contains(assignment.UserId))
+            .Select(assignment => new
+            {
+                assignment.UserId,
+                Info = new UserDormitoryAssignmentInfo(
+                    assignment.DormitoryId,
+                    assignment.IsPrimary,
+                    assignment.AssignedAt),
+            })
+            .ToListAsync(cancellationToken))
+            .GroupBy(item => item.UserId)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(item => item.Info).ToArray());
+
+        return [.. users.Select(user => BuildProfile(
+            user,
+            rolesByUser.GetValueOrDefault(user.Id) ?? [],
+            assignmentsByUser.GetValueOrDefault(user.Id) ?? []))];
+    }
+
+    private static UserSecurityProfile BuildProfile(
+        ApplicationUser user,
+        IEnumerable<string> roles,
+        IReadOnlyList<UserDormitoryAssignmentInfo> assignments)
+    {
         return new UserSecurityProfile
         {
             UserId = user.Id,

@@ -1,26 +1,26 @@
 namespace DormFlow.Contracts.Rooms;
 
-/// <summary>ผลสรุปจำนวนห้องแยกตามสถานะ</summary>
+/// <summary>ສະຫຼຸບຂອງຈໍານວນຫ້ອງທີ່ແຍກຕາມສະຖານະ</summary>
 public class RoomSummaryResponse
 {
-    /// <summary>จำนวนห้องทั้งหมดที่ตรงเงื่อนไข</summary>
+    /// <summary>ຈຳນວນຫ້ອງທັງໝົດທີ່ຕອບສະໜອງເງື່ອນໄຂ</summary>
     public int TotalRooms { get; init; }
 
-    /// <summary>จำนวนห้องที่ว่าง พร้อมให้เช่า</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ໃຫ້ເຊົ່າ</summary>
     public int Available { get; init; }
 
-    /// <summary>จำนวนห้องที่ถูกจองไว้แล้ว</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ຈອງໄວ້ແລ້ວ</summary>
     public int Reserved { get; init; }
 
-    /// <summary>จำนวนห้องที่มีผู้เช่าอยู่</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ຜູ້ເຊົ່າຄອບຄອງ</summary>
     public int Occupied { get; init; }
 
-    /// <summary>จำนวนห้องที่อยู่ระหว่างทำความสะอาด</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ກຳລັງຖືກອະນາໄມ</summary>
     public int Cleaning { get; init; }
 
-    /// <summary>จำนวนห้องที่อยู่ระหว่างซ่อมบำรุง</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ກຳລັງຢູ່ໃນການບຳລຸງຮັກສາ</summary>
     public int Maintenance { get; init; }
 
-    /// <summary>จำนวนห้องที่ปิดใช้งาน</summary>
+    /// <summary>ຈຳນວນຫ້ອງທີ່ຖືກປິດການນຳໃຊ້</summary>
     public int Inactive { get; init; }
 }

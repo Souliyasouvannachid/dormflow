@@ -2,15 +2,15 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Dormitories;
 
-/// <summary>พารามิเตอร์การค้นหารายการหอพัก</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍຊື່ຫໍພັກ</summary>
 public class DormitoryListRequest : PagedQueryRequest
 {
     /// <summary>
-    /// กรองเฉพาะหอพักขององค์กรที่ระบุ มีผลเฉพาะเมื่อผู้เรียกเป็น SuperAdmin
-    /// ผู้ใช้อื่นเห็นได้เฉพาะหอพักในองค์กรของตนเองเสมอไม่ว่าจะระบุค่านี้หรือไม่
+    /// ການກັ່ນຕອງພຽງແຕ່ຫໍພັກຂອງອົງກອນທີ່ລະບຸ. ມີປະສິດພາບພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin
+    /// ມີພຽງແຕ່ຫໍພັກໃນອົງກອນຂອງພວກເຂົາເທົ່ານັ້ນທີ່ເຫັນໄດ້ໂດຍຜູ້ໃຊ້ອື່ນບໍ່ວ່າຈະເປັນຄ່ານີ້ລະບຸໄວ້ຫຼືບໍ່
     /// </summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>กรองเฉพาะหอพักที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫໍພັກທີ່ມີສະຖານະທີ່ກົງກັນ</summary>
     public string? Status { get; set; }
 }

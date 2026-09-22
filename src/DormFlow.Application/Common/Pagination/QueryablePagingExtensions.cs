@@ -3,14 +3,14 @@ using DormFlow.Contracts.Common;
 namespace DormFlow.Application.Common.Pagination;
 
 /// <summary>
-/// ส่วนขยายของ <see cref="IQueryable{T}"/> สำหรับการแบ่งหน้า
+/// ການຂະຫຍາຍຂອງ <see cref="IQueryable{T}"/> ສໍາລັບ pagination
 /// </summary>
 public static class QueryablePagingExtensions
 {
-    /// <summary>ใส่เงื่อนไข Skip และ Take ตามพารามิเตอร์การแบ่งหน้า</summary>
-    /// <typeparam name="TSource">ชนิดของข้อมูลใน Query</typeparam>
-    /// <param name="source">Query ต้นทาง</param>
-    /// <param name="query">พารามิเตอร์การแบ่งหน้าที่ปรับค่าแล้ว</param>
+    /// <summary>ໃສ່ເງື່ອນໄຂ Skip ແລະ Take ອີງຕາມຕົວກໍານົດການ pagination</summary>
+    /// <typeparam name="TSource">ປະເພດຂອງຂໍ້ມູນໃນ Query</typeparam>
+    /// <param name="source">Query ຕົ້ນກໍາເນີດ</param>
+    /// <param name="query">ປັບຕົວກໍານົດການ pagination</param>
     public static IQueryable<TSource> ApplyPaging<TSource>(this IQueryable<TSource> source, PagedQuery query)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -18,12 +18,12 @@ public static class QueryablePagingExtensions
         return source.Skip(query.Skip).Take(query.Take);
     }
 
-    /// <summary>เรียงลำดับตามทิศทางที่ระบุ</summary>
-    /// <typeparam name="TSource">ชนิดของข้อมูลใน Query</typeparam>
-    /// <typeparam name="TKey">ชนิดของคีย์ที่ใช้เรียง</typeparam>
-    /// <param name="source">Query ต้นทาง</param>
-    /// <param name="keySelector">นิพจน์เลือกคีย์ที่ใช้เรียง</param>
-    /// <param name="direction">ทิศทางการเรียงลำดับ</param>
+    /// <summary>ຮຽງລໍາດັບໃນທິດທາງທີ່ກໍານົດໄວ້</summary>
+    /// <typeparam name="TSource">ປະເພດຂອງຂໍ້ມູນໃນ Query</typeparam>
+    /// <typeparam name="TKey">ປະເພດຂອງກະແຈຈັດຮຽງທີ່ໃຊ້</typeparam>
+    /// <param name="source">Query ຕົ້ນກໍາເນີດ</param>
+    /// <param name="keySelector">ການຄັດເລືອກການສະແດງອອກທີ່ສໍາຄັນ</param>
+    /// <param name="direction">ທິດທາງການຈັດຮຽງ</param>
     public static IOrderedQueryable<TSource> OrderByDirection<TSource, TKey>(
         this IQueryable<TSource> source,
         System.Linq.Expressions.Expression<Func<TSource, TKey>> keySelector,
@@ -36,12 +36,12 @@ public static class QueryablePagingExtensions
             : source.OrderBy(keySelector);
     }
 
-    /// <summary>เรียงลำดับต่อจากคีย์ก่อนหน้าตามทิศทางที่ระบุ</summary>
-    /// <typeparam name="TSource">ชนิดของข้อมูลใน Query</typeparam>
-    /// <typeparam name="TKey">ชนิดของคีย์ที่ใช้เรียง</typeparam>
-    /// <param name="source">Query ที่เรียงลำดับแล้ว</param>
-    /// <param name="keySelector">นิพจน์เลือกคีย์ที่ใช้เรียง</param>
-    /// <param name="direction">ทิศทางการเรียงลำดับ</param>
+    /// <summary>ການຈັດຮຽງສືບຕໍ່ຈາກຄີທີ່ຜ່ານມາໃນທິດທາງທີ່ກໍານົດໄວ້</summary>
+    /// <typeparam name="TSource">ປະເພດຂອງຂໍ້ມູນໃນ Query</typeparam>
+    /// <typeparam name="TKey">ປະເພດຂອງກະແຈຈັດຮຽງທີ່ໃຊ້</typeparam>
+    /// <param name="source">Query ຈັດຮຽງ</param>
+    /// <param name="keySelector">ການຄັດເລືອກການສະແດງອອກທີ່ສໍາຄັນ</param>
+    /// <param name="direction">ທິດທາງການຈັດຮຽງ</param>
     public static IOrderedQueryable<TSource> ThenByDirection<TSource, TKey>(
         this IOrderedQueryable<TSource> source,
         System.Linq.Expressions.Expression<Func<TSource, TKey>> keySelector,

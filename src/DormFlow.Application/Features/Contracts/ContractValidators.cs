@@ -3,42 +3,42 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Contracts;
 
-/// <summary>ตรวจสอบคำขอสร้างสัญญาเช่าใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງສັນຍາເຊົ່າໃຝ່</summary>
 public sealed class CreateContractRequestValidator : AbstractValidator<CreateContractRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateContractRequestValidator()
     {
         RuleFor(request => request.RoomId)
-            .NotEmpty().WithMessage("กรุณาระบุห้องที่จะทำสัญญา");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫ້ອງທີ່ຈະເຮັດສັນຍາ");
 
         RuleFor(request => request.TenantId)
-            .NotEmpty().WithMessage("กรุณาระบุผู้เช่าตามสัญญา");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຜູ້ເຊົ່າຕາມສັນຍາ");
 
         RuleFor(request => request.EndDate)
             .GreaterThan(request => request.StartDate)
-            .WithMessage("วันที่สิ้นสุดสัญญาต้องอยู่หลังวันที่เริ่มสัญญา");
+            .WithMessage("ວັນທີສິ້ນສຸດສັນຍາຕ້ອງຢູ່ຫຼັງວັນທີເລີ່ມສັນຍາ");
 
         RuleFor(request => request.MonthlyRent)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าเช่ารายเดือนต้องไม่ติดลบ")
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າເຊົ່າລາຍເດືອນຕ້ອງບໍ່ຕິດລົບ")
             .When(request => request.MonthlyRent.HasValue);
 
         RuleFor(request => request.DepositAmount)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่ามัดจำต้องไม่ติดลบ")
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າມັດຈຳຕ້ອງບໍ່ຕິດລົບ")
             .When(request => request.DepositAmount.HasValue);
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอสิ้นสุดสัญญาเช่า</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍໃຫ້ສິ້ນສຸດສັນຍາເຊົ່າ</summary>
 public sealed class TerminateContractRequestValidator : AbstractValidator<TerminateContractRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public TerminateContractRequestValidator()
     {
         RuleFor(request => request.Reason)
-            .MaximumLength(500).WithMessage("สาเหตุต้องยาวไม่เกิน 500 ตัวอักษร");
+            .MaximumLength(500).WithMessage("ສາເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 500 ໂຕອັກສອນ");
     }
 }

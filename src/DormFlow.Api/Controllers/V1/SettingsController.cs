@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการค่าตั้งขององค์กร</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງການຕັ້ງຄ່າອົງກອນ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/settings")]
@@ -17,7 +17,7 @@ public sealed class SettingsController(ISettingService settingService) : Control
 {
     private readonly ISettingService _settingService = settingService;
 
-    /// <summary>ดึงรายการค่าตั้งแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງການຕັ້ງຄ່າ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Administration.ManageSettings)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<SettingResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class SettingsController(ISettingService settingService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านค่าตั้งจากคีย์</summary>
+    /// <summary>ອ່ານການຕັ້ງຄ່າຈາກຄີ</summary>
     [HttpGet("{key}")]
     [RequirePermission(PermissionCodes.Administration.ManageSettings)]
     [ProducesResponseType(typeof(ApiResponse<SettingResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class SettingsController(ISettingService settingService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างหรือแก้ไขค่าตั้งตามคีย์ที่ระบุ</summary>
+    /// <summary>ສ້າງ ຫຼືແກ້ໄຂການຕັ້ງຄ່າໂດຍອີງໃສ່ລະຫັດທີ່ລະບຸ</summary>
     [HttpPut("{key}")]
     [RequirePermission(PermissionCodes.Administration.ManageSettings)]
     [ProducesResponseType(typeof(ApiResponse<SettingResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class SettingsController(ISettingService settingService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบค่าตั้งตามคีย์ที่ระบุ</summary>
+    /// <summary>ລຶບການຕັ້ງຄ່າໂດຍອີງໃສ່ລະຫັດທີ່ລະບຸ</summary>
     [HttpDelete("{key}")]
     [RequirePermission(PermissionCodes.Administration.ManageSettings)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

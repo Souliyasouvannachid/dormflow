@@ -1,41 +1,41 @@
 namespace DormFlow.Contracts.Reservations;
 
-/// <summary>ข้อมูลการจองห้องพักหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນການຈອງຜຶ່ງ</summary>
 public class ReservationResponse
 {
-    /// <summary>รหัสอ้างอิงของการจอง</summary>
+    /// <summary>ລະຫັດອ້າງອີງການຈອງ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องที่ถูกจอง</summary>
+    /// <summary>ຫ້ອງສະຫງວນ</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>ผู้เช่าที่จอง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ຈອງແລ້ວ</summary>
     public Guid TenantId { get; init; }
 
-    /// <summary>วันที่ทำการจอง</summary>
+    /// <summary>ວັນທີຈອງ</summary>
     public DateTimeOffset ReservationDate { get; init; }
 
-    /// <summary>วันที่คาดว่าจะเข้าพัก</summary>
+    /// <summary>ວັນທີທີ່ຄາດວ່າຈະຢູ່</summary>
     public DateOnly MoveInDate { get; init; }
 
-    /// <summary>เวลาที่การกันห้องจะหมดอายุ</summary>
+    /// <summary>ໃນເວລາທີ່ຕັນຫ້ອງຈະຝົດອາຍຸ</summary>
     public DateTimeOffset ExpiresAt { get; init; }
 
-    /// <summary>ค่าจองห้อง</summary>
+    /// <summary>ຄ່າຈອງຫ້ອງ</summary>
     public decimal ReservationFee { get; init; }
 
-    /// <summary>สถานะของการจอง</summary>
+    /// <summary>ສະຖານະການຈອງ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

@@ -16,10 +16,10 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบทั้งสายของลำดับชั้นทรัพย์สินผ่าน HTTP จริง
+/// ທົດສອບລະບົບຕ່ອງໂສ້ທັງໝົດຂອງການຈັດລໍາດັບຊັບສິນຜ່ານ HTTP ຄວາມຈິງ
 /// Organization -> Dormitory -> Building -> Floor -> RoomType -> Room
-/// เพราะการสร้างห้องพักหนึ่งห้องต้องพึ่งพาข้อมูลที่ถูกต้องของทุกชั้นก่อนหน้า
-/// จึงครอบคลุมทั้ง 6 โมดูลในการเดินเรื่องเดียวกัน
+/// ເນື່ອງຈາກວ່າການສ້າງຫ້ອງຜຶ່ງແມ່ນຂຶ້ນກັບຂໍ້ມູນທີ່ຖືກຕ້ອງຂອງຊັ້ນທີ່ຜ່ານມາທັງຝົດ
+/// ດັ່ງນັ້ນກວມເອົາທັງສອງ 6 ໂມດູນໃນເລື່ອງດຽວກັນ
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
@@ -27,7 +27,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task SuperAdmin_ต้องสร้างและอ่านข้อมูลได้ตลอดทั้งสายจนถึงห้องพัก()
+    public async Task SuperAdmin_ຕ້ອງສາມາດສ້າງແລະອ່ານຂໍ້ມູນໄດ້ຕະຫຼອດແຖວທັງໝົດໄປຫາຫ້ອງຮັບແຂກ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -85,7 +85,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task สร้างห้องด้วยชั้นที่ไม่ได้อยู่ในอาคารเดียวกัน_ต้องได้_400()
+    public async Task ສ້າງຫ້ອງທີ່ມີຊັ້ນທີ່ບໍ່ຢູ່ໃນອາຄານດຽວກັນ_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -116,7 +116,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task สร้างหอพักด้วยรหัสซ้ำในองค์กรเดียวกัน_ต้องได้_409()
+    public async Task ສ້າງຫໍພັກທີ່ມີIDຊໍ້າກັນຢູ່ໃນອົງກອນດຽວກັນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -131,7 +131,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormitory.Code,
-                Name = "หอพักซ้ำรหัส",
+                Name = "ລະຫັດຊ້ຳຂອງຫໍພັກ",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -142,7 +142,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Owner_ต้องเข้าถึงข้อมูลหอพักขององค์กรอื่นไม่ได้()
+    public async Task Owner_ຕ້ອງບໍ່ສາມາດເຂົ້າເຖິງຂໍ້ມູນຫໍພັກຈາກອົງກອນອື່ນ()
     {
         using HttpClient superAdminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -161,12 +161,12 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             new Uri($"/api/v1/dormitories/{dormitoryOfOrganizationA.Id}", UriKind.Relative),
             TestContext.Current.CancellationToken);
 
-        // ตอบ 404 แทน 403 เพื่อไม่ให้ Owner ขององค์กร B เดาได้ว่ามีหอพักนี้อยู่จริงในองค์กร A
+        // ຄໍາຕອບ 404 ແທນ 403 ໃນຄໍາສັ່ງທີ່ຈະບໍ່ Owner ຂອງອົງກອນ B ມັນສາມາດສົມມຸດໄດ້ວ່າຫໍພັກນີ້ຕົວຈິງແລ້ວມີຢູ່ໃນອົງກອນ A
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
-    public async Task Owner_ต้องสร้างหอพักได้เฉพาะในองค์กรของตนเองเท่านั้น()
+    public async Task Owner_ຫໍພັກສາມາດສ້າງໄດ້ພາຍໃນອົງກອນຂອງຕົນເອງເທົ່ານັ້ນ()
     {
         using HttpClient superAdminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -180,14 +180,14 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             DormFlowRoles.Owner,
             ownOrganization.Id);
 
-        // ระบุ organizationId ขององค์กรอื่นมาในคำขอ แต่ Owner ต้องถูกบังคับให้สร้างในองค์กรของตนเองเสมอ
+        // ລະບຸ organizationId ຂອງອົງກອນອື່ນໆໃນການຮ້ອງຂໍ, ແຕ່ Owner ຕ້ອງຖືກບັງຄັບໃຫ້ສ້າງຢູ່ໃນອົງກອນຂອງຕົນເອງສະເໝີ
         using HttpResponseMessage response = await ownerClient.PostAsJsonAsync(
             new Uri("/api/v1/dormitories", UriKind.Relative),
             new CreateDormitoryRequest
             {
                 OrganizationId = otherOrganization.Id,
                 Code = $"D{Guid.NewGuid():N}",
-                Name = "หอพักของ Owner",
+                Name = "ຫໍພັກຂອງ Owner",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -208,7 +208,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = code, Name = $"องค์กรทดสอบ {code}" },
+            new CreateOrganizationRequest { Code = code, Name = $"ອົງກອນການທົດສອບ {code}" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -229,7 +229,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organizationId,
                 Code = code,
-                Name = $"หอพักทดสอบ {code}",
+                Name = $"ຫໍພັກການທົດສອບ {code}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -254,7 +254,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitoryId,
                 Code = code,
-                Name = $"อาคารทดสอบ {code}",
+                Name = $"ຕຶກທົດສອບ {code}",
                 TotalFloors = 3,
             },
             TestContext.Current.CancellationToken);
@@ -271,7 +271,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = buildingId, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = buildingId, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -292,7 +292,7 @@ public class PropertyHierarchyEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitoryId,
                 Code = code,
-                Name = $"ประเภทห้องทดสอบ {code}",
+                Name = $"ປະເພດຫ້ອງທົດລອງ {code}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

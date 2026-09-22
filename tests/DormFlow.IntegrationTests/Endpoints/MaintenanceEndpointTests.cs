@@ -18,8 +18,8 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบวงจรชีวิตของงานแจ้งซ่อมบำรุงผ่าน HTTP จริง
-/// Report -> Assign (ห้องเปลี่ยนเป็น Maintenance) -> InProgress -> Complete (ห้องกลับเป็น Available)
+/// ທົດສອບວົງຈອນຊີວິດຂອງການແຈ້ງເຕືອນການບໍາລຸງຮັກຜ່ານ HTTP ຄວາມຈິງ
+/// Report -> Assign (ຫ້ອງປ່ຽນເປັນ Maintenance) -> InProgress -> Complete (ຫ້ອງຫັນເຂົ້າໄປໃນ Available)
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class MaintenanceEndpointTests(DormFlowApiFactory factory)
@@ -27,7 +27,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task แจ้งซ่อม_มอบหมายช่าง_ดำเนินการ_แล้วปิดงาน_ต้องทำงานครบวงจร()
+    public async Task ລາຍງານການສ້ອມແປງ_ແຕ່ງຕັ້ງນັກວິຊາການ_ດໍາເນີນການ_ຫຼັງຈາກນັ້ນປິດການເຮັດວຽກ_ຕ້ອງເຮັດວຽກຢູ່ໃນວົງເຕັມ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -65,7 +65,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task มอบหมายผู้ใช้ที่ไม่มีบทบาทช่างซ่อมบำรุง_ต้องได้_400()
+    public async Task ມອບໝາຍໃຫ້ຜູ້ໃຊ້ທີ່ບໍ່ມີບົດບາດຊ່າງສ້ອມແປງ_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -91,7 +91,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task มอบหมายช่างที่ไม่ได้ดูแลหอพักนี้_ต้องได้_400()
+    public async Task ແຕ່ງຕັ້ງນັກວິຊາການທີ່ບໍ່ຮັບຜິດຊອບໃນຫໍພັກນີ້_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -100,7 +100,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
         (OrganizationResponse organization, _, RoomResponse room) = await CreatePropertyHierarchyAsync(client);
         MaintenanceRequestResponse request = await ReportIssueAsync(client, room.Id);
 
-        // ช่างสังกัดองค์กรเดียวกัน แต่ไม่เคยได้รับมอบหมายให้ดูแลหอพักใดเลย
+        // ຊ່າງທີ່ຂຶ້ນກັບອົງກອນດຽວກັນ ແຕ່ລາວບໍ່ເຄີຍຖືກມອບໝາຍໃຫ້ເບິ່ງແຍງຫໍພັກໃດໆ
         string technicianEmail = await TestUserFactory.CreateAsync(_factory, DormFlowRoles.Technician, organization.Id);
         using HttpResponseMessage listResponse = await client.GetAsync(
             new Uri($"/api/v1/users?search={Uri.EscapeDataString(technicianEmail)}", UriKind.Relative),
@@ -118,7 +118,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เปลี่ยนสถานะเป็น_Assigned_ผ่าน_endpoint_ทั่วไปโดยตรง_ต้องถูกปฏิเสธ()
+    public async Task ປ່ຽນສະຖານະເປັນ_Assigned_ຜ່ານ_endpoint_ໂດຍກົງ_ຕ້ອງໄດ້ຮັບການປະຕິເສດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -136,7 +136,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เปลี่ยนสถานะข้ามขั้นตอนที่ไม่อนุญาต_ต้องได้_409()
+    public async Task ບໍ່ອະນຸຍາດໃຫ້ປ່ຽນສະຖານະຂ້າມຂັ້ນຕອນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -154,7 +154,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ห้องมีงานซ่อมสองรายการ_ปิดรายการแรกห้องต้องยังซ่อมอยู่_ปิดรายการที่สองห้องจึงว่าง()
+    public async Task ຫ້ອງມີສອງວຽກງານສ້ອມແປງ_ປິດລາຍການທໍາອິດຫ້ອງຍັງຕ້ອງໄດ້ຮັບການສ້ອມແປງ_ປິດລາຍການທີສອງດັ່ງນັ້ນຫ້ອງແມ່ນບໍ່ເສຍຄ່າ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -181,7 +181,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task มอบหมายซ้ำระหว่างสถานะ_Assigned_ต้องเปลี่ยนช่างได้โดยสถานะไม่เปลี่ยน()
+    public async Task ມອບໝາຍຄືນໃໝ່ລະຫວ່າງລັດ_Assigned_ນັກວິຊາການຕ້ອງໄດ້ຮັບການປ່ຽນແປງໂດຍບໍ່ມີການປ່ຽນສະຖານະ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -202,7 +202,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task งานซ่อมของห้องที่มีผู้เช่าอยู่_ไม่ต้องเปลี่ยนสถานะห้อง()
+    public async Task ວຽກງານສ້ອມແປງຂອງຫ້ອງທີ່ຄອບຄອງໂດຍຜູ້ເຊົ່າ_ບໍ່ຈໍາເປັນຕ້ອງປ່ຽນສະຖານະຫ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -234,8 +234,8 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
             new CreateMaintenanceRequestRequest
             {
                 RoomId = roomId,
-                Title = "ก๊อกน้ำรั่ว",
-                Description = "น้ำหยดตลอดเวลา",
+                Title = "faucet ຮົ່ວ",
+                Description = "ນ້ໍາ drips ຕະຫຼອດເວລາ",
                 Priority = "High",
             },
             TestContext.Current.CancellationToken);
@@ -295,8 +295,8 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
                 OrganizationId = organizationId,
                 Email = email,
                 Password = "Test-Passw0rd1",
-                FirstName = "ช่าง",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ຊ່າງ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
             },
             TestContext.Current.CancellationToken);
         createResponse.EnsureSuccessStatusCode();
@@ -325,7 +325,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -337,7 +337,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -349,14 +349,14 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -368,7 +368,7 @@ public class MaintenanceEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

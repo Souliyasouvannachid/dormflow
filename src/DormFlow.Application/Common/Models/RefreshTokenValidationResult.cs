@@ -1,48 +1,48 @@
 namespace DormFlow.Application.Common.Models;
 
-/// <summary>สถานะผลการตรวจสอบ Refresh Token</summary>
+/// <summary>ສະຖານະຜົນການກວດກາ Refresh Token</summary>
 public enum RefreshTokenValidationStatus
 {
-    /// <summary>ใช้ต่ออายุได้</summary>
+    /// <summary>ສາມາດນໍາໃຊ້ສໍາລັບການຕໍ່ອາຍຸ</summary>
     Valid = 1,
 
-    /// <summary>ไม่พบโทเคนนี้ในระบบ</summary>
+    /// <summary>ໂທເຄັນນີ້ບໍ່ພົບຢູ່ໃນລະບົບ</summary>
     NotFound = 2,
 
-    /// <summary>โทเคนหมดอายุแล้ว</summary>
+    /// <summary>ໂທເຄັນໝົດອາຍຸແລ້ວ</summary>
     Expired = 3,
 
-    /// <summary>โทเคนถูกเพิกถอนไปแล้ว เช่น ผู้ใช้ออกจากระบบ</summary>
+    /// <summary>token ໄດ້ຖືກຖອນຄືນ, i.e. ຜູ້ໃຊ້ໄດ້ອອກຈາກລະບົບ</summary>
     Revoked = 4,
 
     /// <summary>
-    /// ตรวจพบการนำโทเคนที่ถูกหมุนไปแล้วกลับมาใช้ซ้ำ
-    /// ระบบจะเพิกถอนโทเคนทั้งหมดของผู้ใช้รายนั้นทันที
+    /// ກວດສອບການນໍາໃຊ້ໃຝ່ຂອງ tokens ທີ່ໄດ້ຖືກ spun ແລ້ວ
+    /// ໂທເຄັນທັງໝົດສຳລັບຜູ້ໃຊ້ນັ້ນຈະຖືກຖອນຄືນທັນທີ
     /// </summary>
     ReuseDetected = 5,
 
-    /// <summary>บัญชีของเจ้าของโทเคนถูกปิดใช้งานไปแล้ว</summary>
+    /// <summary>ບັນຊີເຈົ້າຂອງໂທເຄັນຖືກປິດການນຳໃຊ້ແລ້ວ</summary>
     AccountDisabled = 6,
 }
 
-/// <summary>ผลการตรวจสอบ Refresh Token</summary>
-/// <param name="Status">สถานะผลลัพธ์</param>
-/// <param name="TokenId">รหัสของแถวโทเคน มีค่าเฉพาะเมื่อพบโทเคนในระบบ</param>
-/// <param name="UserId">เจ้าของโทเคน มีค่าเฉพาะเมื่อพบโทเคนในระบบ</param>
+/// <summary>ຜົນການກວດກາ Refresh Token</summary>
+/// <param name="Status">ສະຖານະຜົນໄດ້ຮັບ</param>
+/// <param name="TokenId">ລະຫັດຂອງແຖວ token ມັນມີມູນຄ່າພຽງແຕ່ເມື່ອ token ຖືກພົບເຫັນຢູ່ໃນລະບົບ</param>
+/// <param name="UserId">ເຈົ້າຂອງ token ມີມູນຄ່າພຽງແຕ່ເມື່ອ token ພົບເຫັນຢູ່ໃນລະບົບ</param>
 public sealed record RefreshTokenValidationResult(
     RefreshTokenValidationStatus Status,
     Guid? TokenId = null,
     Guid? UserId = null)
 {
-    /// <summary>สร้างผลลัพธ์ที่ใช้ต่ออายุได้</summary>
-    /// <param name="tokenId">รหัสของแถวโทเคน</param>
-    /// <param name="userId">เจ้าของโทเคน</param>
+    /// <summary>ສ້າງຜົນໄດ້ຮັບໃຝ່</summary>
+    /// <param name="tokenId">ລະຫັດຂອງແຖວໂທເຄັນ</param>
+    /// <param name="userId">ເຈົ້າຂອງໂທເຄັນ</param>
     public static RefreshTokenValidationResult Valid(Guid tokenId, Guid userId)
         => new(RefreshTokenValidationStatus.Valid, tokenId, userId);
 
-    /// <summary>สร้างผลลัพธ์ที่ใช้ต่ออายุไม่ได้</summary>
-    /// <param name="status">สาเหตุที่ใช้ไม่ได้</param>
-    /// <param name="userId">เจ้าของโทเคน ถ้าทราบ</param>
+    /// <summary>ສ້າງຜົນໄດ້ຮັບທີ່ບໍ່ສາມາດຂະຫຍາຍໄດ້</summary>
+    /// <param name="status">ເຫດຜົນໃຊ້ບໍ່ໄດ້</param>
+    /// <param name="userId">ເຈົ້າຂອງໂທເຄັນ, ຖ້າຮູ້ຈັກ</param>
     public static RefreshTokenValidationResult Invalid(
         RefreshTokenValidationStatus status,
         Guid? userId = null)

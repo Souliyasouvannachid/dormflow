@@ -1,44 +1,44 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลผู้ใช้ที่เข้าสู่ระบบอยู่</summary>
+/// <summary>ຂໍ້ມູນຜູ້ໃຊ້ເຂົ້າສູ່ລະບົບໃນປັດຈຸບັນ</summary>
 public class CurrentUserResponse
 {
-    /// <summary>รหัสผู้ใช้</summary>
+    /// <summary>ID ຜູ້ໃຊ້</summary>
     public Guid Id { get; init; }
 
-    /// <summary>อีเมล</summary>
+    /// <summary>ອີເມວ</summary>
     public string Email { get; init; } = string.Empty;
 
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public string FirstName { get; init; } = string.Empty;
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public string LastName { get; init; } = string.Empty;
 
-    /// <summary>ชื่อเต็มสำหรับแสดงผล</summary>
+    /// <summary>ຊື່ເຕັມສໍາລັບການສະແດງ</summary>
     public string FullName => $"{FirstName} {LastName}".Trim();
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; init; }
 
-    /// <summary>ที่อยู่ของรูปโปรไฟล์</summary>
+    /// <summary>ທີ່ຢູ່ຮູບໂປຣໄຟລ໌</summary>
     public string? ProfileImage { get; init; }
 
-    /// <summary>องค์กรที่สังกัด เป็น null สำหรับผู้ดูแลระบบที่ไม่ผูกกับองค์กรใด</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງແມ່ນ null ສໍາລັບຜູ້ບໍລິຫານທີ່ບໍ່ຕິດກັບອົງກອນໃດໆ</summary>
     public Guid? OrganizationId { get; init; }
 
-    /// <summary>สถานะของบัญชี</summary>
+    /// <summary>ສະຖານະບັນຊີ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่เข้าสู่ระบบครั้งล่าสุด</summary>
+    /// <summary>ເຂົ້າສູ່ລະບົບຄັ້ງສຸດທ້າຍ</summary>
     public DateTimeOffset? LastLoginAt { get; init; }
 
-    /// <summary>บทบาทของผู้ใช้</summary>
+    /// <summary>ບົດບາດຂອງຜູ້ໃຊ້</summary>
     public IReadOnlyList<string> Roles { get; init; } = [];
 
-    /// <summary>รหัสสิทธิ์ที่ผู้ใช้มี</summary>
+    /// <summary>ລະຫັດສິດພິເສດທີ່ຜູ້ໃຊ້ມີ</summary>
     public IReadOnlyList<string> Permissions { get; init; } = [];
 
-    /// <summary>หอพักที่ผู้ใช้ได้รับมอบหมาย</summary>
+    /// <summary>ຫໍພັກທີ່ຜູ້ໃຊ້ຖືກມອບຝາຍ</summary>
     public IReadOnlyList<Guid> DormitoryIds { get; init; } = [];
 }

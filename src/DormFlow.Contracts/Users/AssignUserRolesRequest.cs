@@ -1,9 +1,9 @@
 namespace DormFlow.Contracts.Users;
 
-/// <summary>คำขอกำหนดบทบาทให้ผู้ใช้</summary>
-/// <remarks>รายการบทบาทที่ส่งมาจะแทนที่บทบาทเดิมของผู้ใช้ทั้งหมด ไม่ใช่การเพิ่มเติม</remarks>
+/// <summary>ການຮ້ອງຂໍການມອບຝາຍບົດບາດຂອງຜູ້ໃຊ້</summary>
+/// <remarks>ລາຍຊື່ບົດບາດທີ່ສົ່ງມາແທນບົດບາດຕົ້ນສະບັບທັງໝົດຂອງຜູ້ໃຊ້. ມັນບໍ່ແມ່ນການເພີ່ມເຕີມ</remarks>
 public class AssignUserRolesRequest
 {
-    /// <summary>รายชื่อบทบาทที่ต้องการกำหนดให้ผู้ใช้</summary>
+    /// <summary>ລາຍຊື່ບົດບາດທີ່ທ່ານຕ້ອງການມອບໝາຍໃຫ້ຜູ້ໃຊ້</summary>
     public IReadOnlyList<string> Roles { get; set; } = [];
 }

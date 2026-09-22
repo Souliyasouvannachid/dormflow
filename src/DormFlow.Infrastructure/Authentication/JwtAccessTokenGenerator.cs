@@ -11,13 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 namespace DormFlow.Infrastructure.Authentication;
 
 /// <summary>
-/// ออก Access Token แบบ JWT ลงลายเซ็นด้วย HMAC-SHA256
+/// ອອກ Access Token ຕົວແບບ JWT ເຊັນມັນຄືກັນ HMAC-SHA256
 /// </summary>
 /// <remarks>
-/// โทเคนบรรจุบทบาทและรหัสสิทธิ์ไว้ทั้งหมด เพื่อให้การตรวจสิทธิ์แต่ละคำขอไม่ต้องยิงฐานข้อมูล
-/// ผลข้างเคียงคือการถอนสิทธิ์จะมีผลจริงเมื่อโทเคนใบปัจจุบันหมดอายุ
-/// ซึ่งนานที่สุดคือ <see cref="JwtOptions.AccessTokenMinutes"/> นาที
-/// SuperAdmin ไม่ใส่รหัสสิทธิ์ลงในโทเคนเพราะผ่านการตรวจจากบทบาทอยู่แล้ว และช่วยให้โทเคนไม่ใหญ่เกินจำเป็น
+/// ໂທເຄັນປະກອບມີທຸກບົດບາດ ແລະລະຫັດສິດພິເສດ. ເພື່ອໃຫ້ແຕ່ລະຄໍາຮ້ອງຂໍຖືກຮັບຮອງໂດຍບໍ່ຈໍາເປັນຕ້ອງໄຟໄຝ້ຖານຂໍ້ມູນ
+/// ຜົນຂ້າງຄຽງແມ່ນວ່າການຖອນຄືນຈະມີຜົນເມື່ອ token ໃນປັດຈຸບັນຝົດອາຍຸ
+/// ເຊິ່ງແມ່ນຍາວທີ່ສຸດ <see cref="JwtOptions.AccessTokenMinutes"/> ນາທີ
+/// SuperAdmin ຢ່າໃສ່ລະຫັດການອະນຸຍາດເຂົ້າໄປໃນ token ເພາະວ່າມັນຖືກກວດສອບແລ້ວໂດຍບົດບາດ. ແລະມັນຮັກສາ token ບໍ່ໃຫ້ໃຫຍ່ເກີນໄປ
 /// </remarks>
 public sealed class JwtAccessTokenGenerator(
     IOptions<JwtOptions> jwtOptions,

@@ -8,19 +8,19 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace DormFlow.Api.Configuration;
 
 /// <summary>
-/// ตั้งค่า Rate Limiting แบบ Fixed Window
+/// ຕັ້ງຄ່າ Rate Limiting ຕົວແບບ Fixed Window
 /// </summary>
 /// <remarks>
-/// แบ่งโควตาตามผู้ใช้เมื่อยืนยันตัวตนแล้ว และตามหมายเลข IP เมื่อยังไม่ได้ยืนยันตัวตน
-/// เพื่อไม่ให้ผู้ใช้รายเดียวกินโควตารวมของทั้งระบบ
+/// ໂຄຕ້າໄດ້ຖືກແບ່ງອອກລະຫວ່າງຜູ້ໃຊ້ເມື່ອພວກເຂົາໄດ້ຮັບການຢັ້ງຢືນ. ແລະໂດຍຕົວເລກ IP ເມື່ອເຈົ້າຍັງບໍ່ໄດ້ຢືນຢັນຕົວຕົນຂອງເຈົ້າເທື່ອ
+/// ນີ້ແມ່ນເພື່ອປ້ອງກັນບໍ່ໃຫ້ຜູ້ໃຊ້ດຽວຈາກການກິນເຖິງໂຄຕ້າທັງຝົດຂອງລະບົບທັງຝົດ
 /// </remarks>
 public static class RateLimitingConfiguration
 {
     private static readonly JsonSerializerOptions SerializerOptions = DormFlowJsonSerializerOptions.Default;
 
-    /// <summary>ลงทะเบียน Rate Limiter กลางของระบบ</summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
+    /// <summary>ລົງທະບຽນ Rate Limiter ກາງຂອງລະບົບ</summary>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddDormFlowRateLimiting(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -47,7 +47,7 @@ public static class RateLimitingConfiguration
                     return RateLimitPartition.GetNoLimiter("disabled");
                 }
 
-                // Health check ต้องเรียกได้เสมอ ไม่งั้น orchestrator จะเข้าใจผิดว่าระบบล่ม
+                // Health check ທ່ານສະເຝີສາມາດໂທຫາ, ຖ້າບໍ່ດັ່ງນັ້ນ orchestrator ມັນຈະຖືກເຂົ້າໃຈຜິດວ່າລະບົບຫຼຸດລົງ
                 if (context.Request.Path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase))
                 {
                     return RateLimitPartition.GetNoLimiter("health");

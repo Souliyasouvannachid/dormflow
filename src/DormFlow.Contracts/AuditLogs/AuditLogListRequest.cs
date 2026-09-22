@@ -2,30 +2,30 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.AuditLogs;
 
-/// <summary>พารามิเตอร์การค้นหารายการ Audit Log</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການ Audit Log</summary>
 public class AuditLogListRequest : PagedQueryRequest
 {
     /// <summary>
-    /// กรองเฉพาะเหตุการณ์ขององค์กรที่ระบุ มีผลเฉพาะเมื่อผู้เรียกเป็น SuperAdmin
-    /// ผู้ใช้อื่นเห็นได้เฉพาะเหตุการณ์ในองค์กรของตนเองเสมอไม่ว่าจะระบุค่านี้หรือไม่
+    /// ການກັ່ນຕອງພຽງແຕ່ເຫດການຂອງອົງກອນທີ່ລະບຸ. ມີປະສິດພາບພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin
+    /// ເຫດການໃນອົງກອນຂອງຕົນເອງແມ່ນເຫັນໄດ້ໂດຍຜູ້ໃຊ້ອື່ນສະເໝີວ່າຄ່ານີ້ຖືກລະບຸຫຼືບໍ່
     /// </summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ของหอพักที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການສຳລັບຫໍພັກທີ່ລະບຸໄວ້ເທົ່ານັ້ນ</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ที่ผู้ใช้รายนี้เป็นผู้กระทำ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການທີ່ລິເລີ່ມໂດຍຜູ້ໃຊ້ນີ້</summary>
     public Guid? UserId { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ประเภทที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການຂອງປະເພດທີ່ລະບຸ</summary>
     public string? Action { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ที่เกี่ยวข้องกับ Entity ชื่อนี้</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການທີ່ກ່ຽວຂ້ອງກັບ Entity ຊື່ນີ້</summary>
     public string? EntityName { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ที่เกิดตั้งแต่เวลานี้เป็นต้นไป</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການທີ່ເກີດຂຶ້ນຕັ້ງແຕ່ເວລານີ້ເປັນຕົ້ນໄປ</summary>
     public DateTimeOffset? From { get; set; }
 
-    /// <summary>กรองเฉพาะเหตุการณ์ที่เกิดก่อนหรือเท่ากับเวลานี้</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະເຫດການທີ່ເກີດຂຶ້ນກ່ອນ ຫຼືເທົ່າກັບເວລານີ້</summary>
     public DateTimeOffset? To { get; set; }
 }

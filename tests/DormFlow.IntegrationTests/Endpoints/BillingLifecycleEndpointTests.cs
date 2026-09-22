@@ -20,8 +20,8 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบวงจรชีวิตการออกบิลและรับชำระเงินผ่าน HTTP จริง
-/// MeterReading -> Invoice (สร้าง/ออกให้ผู้เช่า) -> Payment (บันทึก/ยืนยัน/คืนเงิน)
+/// ທົດສອບວົງຈອນຊີວິດການຮຽກເກັບເງິນ ແລະການຈ່າຍເງິນຜ່ານ HTTP ຄວາມຈິງ
+/// MeterReading -> Invoice (ສ້າງ/ອອກໃຫ້ຜູ້ເຊົ່າ) -> Payment (ບັນທຶກ/ຢືນຢັນ/ເງິນຄືນ)
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
@@ -29,7 +29,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task ออกบิลจากค่ามิเตอร์_ชำระครบ_ต้องเปลี่ยนสถานะเป็นชำระแล้ว()
+    public async Task ອອກໃບບິນຄ່າຈາກຄ່າແມັດ_ຈ່າຍເຕັມ_ສະຖານະການຕ້ອງຖືກປ່ຽນເປັນການຈ່າຍເງິນ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -82,7 +82,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<PaymentResponse>>(TestContext.Current.CancellationToken))!.Data!;
         payment.Status.Should().Be("Pending");
 
-        // ก่อนยืนยัน ยอดใบแจ้งหนี้ต้องยังไม่เปลี่ยน
+        // ກ່ອນທີ່ຈະຢືນຢັນ, ຈໍານວນໃບເກັບເງິນຕ້ອງບໍ່ມີການປ່ຽນແປງ
         (await GetInvoiceAsync(client, invoice.Id)).Status.Should().Be("Issued");
 
         using HttpResponseMessage confirmResponse = await client.PostAsync(
@@ -102,7 +102,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ชำระบางส่วนแล้วคืนเงิน_ยอดใบแจ้งหนี้ต้องกลับเป็นเดิม()
+    public async Task ການຈ່າຍເງິນບາງສ່ວນແລະການຄືນເງິນ_ຈຳນວນໃບແຈ້ງໜີ້ຕ້ອງກັບຄືນສູ່ຕົ້ນສະບັບ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -131,14 +131,14 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage refundResponse = await client.PostAsJsonAsync(
             new Uri($"/api/v1/payments/{payment.Id}/refund", UriKind.Relative),
-            new RefundPaymentRequest { Reason = "ชำระผิดยอด" },
+            new RefundPaymentRequest { Reason = "ຈ່າຍເງິນຜິດ" },
             TestContext.Current.CancellationToken);
         refundResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
         PaymentResponse refundedPayment = (await refundResponse.Content
             .ReadFromJsonAsync<ApiResponse<PaymentResponse>>(TestContext.Current.CancellationToken))!.Data!;
         refundedPayment.Status.Should().Be("Refunded");
-        refundedPayment.RefundReason.Should().Be("ชำระผิดยอด");
+        refundedPayment.RefundReason.Should().Be("ຈ່າຍເງິນຜິດ");
 
         InvoiceResponse invoiceAfterRefund = await GetInvoiceAsync(client, invoice.Id);
         invoiceAfterRefund.Status.Should().Be("Issued");
@@ -148,7 +148,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ออกบิลซ้ำเดือนเดียวกันของสัญญาเดิม_ต้องได้_409()
+    public async Task ເຮັດການເອີ້ນເກັບເງິນຄືນສໍາລັບເດືອນດຽວກັນຂອງສັນຍາຕົ້ນສະບັບ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -168,7 +168,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ยกเลิกใบแจ้งหนี้ที่มีการชำระเงินแล้ว_ต้องได้_409()
+    public async Task ຍົກເລີກໃບແຈ້ງໜີ້ທີ່ຈ່າຍເງິນແລ້ວ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -198,7 +198,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ยืนยันยอดชำระเกินยอดคงเหลือ_ต้องได้_409()
+    public async Task ຢືນຢັນຈຳນວນການຈ່າຍເງິນເກີນຍອດຄົງເຫຼືອ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -277,7 +277,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -289,7 +289,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -303,14 +303,14 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -322,7 +322,7 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -352,8 +352,8 @@ public class BillingLifecycleEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

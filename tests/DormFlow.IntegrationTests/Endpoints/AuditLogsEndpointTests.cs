@@ -10,14 +10,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการอ่าน Audit Log ผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບການອ່ານ Audit Log ຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class AuditLogsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task การสร้างองค์กร_ต้องถูกบันทึกลง_Audit_Log_และค้นหาเจอผ่าน_Endpoint()
+    public async Task ການສ້າງອົງກອນ_ຕ້ອງໄດ້ຮັບການບັນທຶກໄວ້_Audit_Log_ແລະຊອກຫາມັນໂດຍຜ່ານ_Endpoint()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -27,7 +27,7 @@ public class AuditLogsEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = code, Name = $"องค์กรทดสอบ {code}" },
+            new CreateOrganizationRequest { Code = code, Name = $"ອົງກອນການທົດສອບ {code}" },
             TestContext.Current.CancellationToken);
 
         ApiResponse<OrganizationResponse>? createdBody = await createResponse.Content
@@ -50,7 +50,7 @@ public class AuditLogsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ผู้ใช้ที่ไม่มีสิทธิ์_audit_logs_view_ต้องได้_403()
+    public async Task ຜູ້ໃຊ້ທີ່ບໍ່ມີສິດພິເສດ_audit_logs_view_ຕ້ອງໄດ້ຮັບ_403()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,

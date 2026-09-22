@@ -3,28 +3,28 @@ using DormFlow.Application.Common.Abstractions;
 namespace DormFlow.Application.Common.Authorization;
 
 /// <summary>
-/// สิทธิ์เริ่มต้นของแต่ละบทบาท ใช้ตอน Seed ข้อมูล
+/// ການອະນຸຍາດເລີ່ມຕົ້ນສໍາລັບແຕ່ລະບົດບາດ, ການນໍາໃຊ້ພາກສ່ວນ Seed ຂໍ້ມູນ
 /// </summary>
 /// <remarks>
-/// เป็นเพียงค่าตั้งต้นเท่านั้น ผู้ดูแลระบบปรับสิทธิ์ของแต่ละบทบาทได้ภายหลัง
-/// ระบบจะไม่เขียนทับสิทธิ์ที่ถูกแก้ไขไปแล้วในการ Seed รอบถัดไป
+/// ມັນເປັນພຽງແຕ່ຄ່າເລີ່ມຕົ້ນ. ຜູ້ຈັດການສາມາດປັບການອະນຸຍາດສໍາລັບແຕ່ລະບົດບາດຕໍ່ມາ
+/// ການອະນຸຍາດທີ່ຖືກແກ້ໄຂຈະບໍ່ຖືກຂຽນທັບໃນ Seed ຮອບຕໍ່ໄປ
 /// </remarks>
 public static class RolePermissionDefaults
 {
     /// <summary>
-    /// สิทธิ์เริ่มต้นของทุกบทบาท
+    /// ການອະນຸຍາດເລີ່ມຕົ້ນສໍາລັບທຸກບົດບາດ
     /// </summary>
     /// <remarks>
-    /// SuperAdmin ได้รับทุกสิทธิ์เพื่อความครบถ้วนของข้อมูล
-    /// แต่ในทางปฏิบัติการตรวจสิทธิ์จะผ่านทันทีจากบทบาทอยู่แล้ว
+    /// SuperAdmin ໄດ້ຮັບສິດທັງຝົດສໍາລັບຄວາມສົມບູນຂອງຂໍ້ມູນ
+    /// ແຕ່ໃນທາງປະຕິບັດ, ການກວດສອບຄວາມຖືກຕ້ອງຈະຖືກຜ່ານທັນທີຈາກບົດບາດທີ່ມີຢູ່ແລ້ວ
     /// </remarks>
     public static IReadOnlyDictionary<string, IReadOnlyList<string>> ByRole { get; } =
         new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
         {
             [DormFlowRoles.SuperAdmin] = [.. PermissionCodes.AllCodes],
 
-            // เจ้าของกิจการดูแลได้ทุกอย่างในองค์กรของตน
-            // แต่ไม่มีสิทธิ์สร้างหรือลบองค์กร ซึ่งเป็นงานระดับผู้ดูแลระบบ
+            // ເຈົ້າຂອງທຸລະກິດສາມາດເບິ່ງແຍງທຸກຢ່າງໃນອົງກອນຂອງພວກເຂົາ
+            // ແຕ່ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ສ້າງຫຼືລຶບອົງກອນ. ເຊິ່ງເປັນວຽກລະດັບຜູ້ບໍລິຫານ
             [DormFlowRoles.Owner] =
             [
                 PermissionCodes.Organizations.View,
@@ -121,10 +121,12 @@ public static class RolePermissionDefaults
                 PermissionCodes.Administration.ManageRoles,
                 PermissionCodes.Administration.ManageSettings,
                 PermissionCodes.Administration.ViewAuditLogs,
+
+                PermissionCodes.Dashboard.View,
             ],
 
-            // ผู้จัดการหอพักดูแลงานประจำวันได้ทั้งหมด
-            // แต่ไม่มีสิทธิ์แก้โครงสร้างองค์กร จัดการผู้ใช้ หรือคืนเงิน
+            // ຜູ້ຈັດການຫໍພັກສາມາດດູແລວຽກງານປະຈໍາວັນທັງຝົດ
+            // ແຕ່ທ່ານບໍ່ມີການອະນຸຍາດໃຫ້ແກ້ໄຂໂຄງສ້າງອົງກອນ, ການຄຸ້ມຄອງຜູ້ໃຊ້, ຫຼືການສົ່ງເງິນຄືນ
             [DormFlowRoles.DormManager] =
             [
                 PermissionCodes.Dormitories.View,
@@ -203,9 +205,11 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
+
+                PermissionCodes.Dashboard.View,
             ],
 
-            // ฝ่ายบัญชีดูแลเรื่องเงินทั้งหมด และดูข้อมูลอื่นได้เท่าที่จำเป็นต่อการออกเอกสาร
+            // ພະແນກບັນຊີເບິ່ງແຍງທຸກເລື່ອງການເງິນ. ແລະເບິ່ງຂໍ້ມູນອື່ນໆຕາມຄວາມຈໍາເປັນສໍາລັບການອອກເອກະສານ
             [DormFlowRoles.Accountant] =
             [
                 PermissionCodes.Dormitories.View,
@@ -238,9 +242,11 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Reports.View,
                 PermissionCodes.Reports.Export,
+
+                PermissionCodes.Dashboard.View,
             ],
 
-            // เจ้าหน้าที่ทั่วไปทำงานหน้าเคาน์เตอร์ ดูข้อมูลได้ และบันทึกงานประจำวันได้บางส่วน
+            // ພະນັກງານທົ່ວໄປເຮັດວຽກຢູ່ຕໍ່ໜ້າເຄົາເຕີ, ສາມາດເບິ່ງຂໍ້ມູນ ແລະ ສາມາດບັນທຶກບາງວຽກປະຈໍາວັນໄດ້
             [DormFlowRoles.Staff] =
             [
                 PermissionCodes.Dormitories.View,
@@ -285,9 +291,11 @@ public static class RolePermissionDefaults
                 PermissionCodes.Maintenance.UpdateStatus,
 
                 PermissionCodes.Announcements.View,
+
+                PermissionCodes.Dashboard.View,
             ],
 
-            // ช่างซ่อมบำรุงเห็นเฉพาะข้อมูลที่จำเป็นต่อการเข้าไปทำงานในห้อง
+            // ນັກວິຊາການບໍາລຸງຮັກສາເຫັນພຽງແຕ່ຂໍ້ມູນທີ່ພວກເຂົາຕ້ອງການເພື່ອເຮັດວຽກຢູ່ໃນຫ້ອງ
             [DormFlowRoles.Technician] =
             [
                 PermissionCodes.Dormitories.View,
@@ -297,15 +305,17 @@ public static class RolePermissionDefaults
 
                 PermissionCodes.Maintenance.View,
                 PermissionCodes.Maintenance.UpdateStatus,
+
+                PermissionCodes.Dashboard.View,
             ],
 
-            // ผู้เช่าไม่มีสิทธิ์ฝั่งผู้ดูแลเลย
-            // ข้อมูลของตนเองจะเข้าถึงผ่าน Endpoint เฉพาะที่ตรวจจากรหัสผู้ใช้โดยตรง
+            // ຜູ້ເຊົ່າບໍ່ມີສິດຄຸ້ມຄອງທັງໝົດ
+            // ຂໍ້ມູນຂອງທ່ານເອງຈະຖືກເຂົ້າເຖິງໂດຍຜ່ານ Endpoint ພຽງແຕ່ຜູ້ທີ່ຖືກກວດສອບໂດຍກົງຈາກ ID ຜູ້ໃຊ້
             [DormFlowRoles.Tenant] = [],
         };
 
-    /// <summary>อ่านสิทธิ์เริ่มต้นของบทบาทที่ระบุ คืนรายการว่างเมื่อไม่พบบทบาทนั้น</summary>
-    /// <param name="roleName">ชื่อบทบาท</param>
+    /// <summary>ອ່ານການອະນຸຍາດເລີ່ມຕົ້ນຂອງບົດບາດທີ່ກໍານົດໄວ້. ສົ່ງຄືນລາຍຊື່ຫວ່າງເປົ່າເມື່ອບໍ່ພົບບົດບາດ</summary>
+    /// <param name="roleName">ຊື່ບົດບາດ</param>
     public static IReadOnlyList<string> ForRole(string roleName)
         => ByRole.TryGetValue(roleName, out IReadOnlyList<string>? permissions) ? permissions : [];
 }

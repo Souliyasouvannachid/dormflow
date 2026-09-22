@@ -1,12 +1,12 @@
 namespace DormFlow.Application.Common.Authorization;
 
 /// <summary>
-/// นิยามของสิทธิ์หนึ่งรายการ ใช้เป็นแหล่งความจริงเดียวสำหรับการ Seed ลงฐานข้อมูล
+/// ຄໍານິຍາມຂອງຜຶ່ງສິດນໍາໃຊ້ມັນເປັນແຫຼ່ງດຽວຂອງຄວາມຈິງສໍາລັບ Seed ໃສ່ຖານຂໍ້ມູນ
 /// </summary>
-/// <param name="Code">รหัสสิทธิ์ที่ใช้ตรวจในโค้ดและใน Claim</param>
-/// <param name="Name">ชื่อสำหรับแสดงผล</param>
-/// <param name="Module">โมดูลที่สิทธิ์นี้สังกัด</param>
-/// <param name="Description">คำอธิบายเพิ่มเติม</param>
+/// <param name="Code">ລະຫັດການອະນຸຍາດທີ່ໃຊ້ໃນການກວດສອບລະຫັດແລະໃນ Claim</param>
+/// <param name="Name">ສະແດງຊື່</param>
+/// <param name="Module">ໂມດູນທີ່ສິດອະນຸຍາດນີ້ເປັນຂອງ</param>
+/// <param name="Description">ຄໍາອະທິບາຍເພີ່ມເຕີມ</param>
 public sealed record PermissionDefinition(
     string Code,
     string Name,

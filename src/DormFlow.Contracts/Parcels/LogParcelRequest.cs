@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Parcels;
 
-/// <summary>คำขอบันทึกพัสดุที่มาถึง</summary>
+/// <summary>ການຮ້ອງຂໍເພື່ອບັນທຶກການ parcel ທີ່ມາເຖິງ</summary>
 public class LogParcelRequest
 {
-    /// <summary>ห้องที่พัสดุนี้ส่งถึง</summary>
+    /// <summary>ຫ້ອງຊຸດນີ້ແມ່ນສົ່ງໃຫ້</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่พัสดุนี้ส่งถึง เป็น null เมื่อยังไม่ยืนยันว่าเป็นของใครในห้อง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ parcel ນີ້ຖືກຈັດສົ່ງແມ່ນ null ໃນເວລາທີ່ຍັງບໍ່ໄດ້ຮັບການຢືນຢັນວ່າໃຜເປັນຂອງຫ້ອງການ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>บริษัทขนส่ง</summary>
+    /// <summary>ບໍລິສັດຂົນສົ່ງ</summary>
     public string? CourierName { get; set; }
 
-    /// <summary>เลขพัสดุ</summary>
+    /// <summary>ໝາຍເລກເຄື່ອງໝາຍ</summary>
     public string? TrackingNumber { get; set; }
 
-    /// <summary>คำอธิบายพัสดุเพิ่มเติม</summary>
+    /// <summary>ລາຍລະອຽດການພັດທະນາເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

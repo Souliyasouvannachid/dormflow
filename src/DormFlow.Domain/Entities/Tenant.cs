@@ -4,48 +4,48 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// ผู้เช่าคนหนึ่ง
+/// ຜູ້ເຊົ່າຄົນໜຶ່ງ
 /// </summary>
 /// <remarks>
-/// สืบทอดจาก <see cref="BaseEntity"/> ไม่ใช่ <see cref="TenantEntity"/>
-/// เพราะผู้เช่าไม่ได้ผูกกับหอพักใดหอพักหนึ่งถาวร ในช่วงเวลาต่างกันอาจมีสัญญาเช่าคนละหอพักในองค์กรเดียวกันได้
-/// ความสัมพันธ์กับหอพักที่กำลังพักอยู่ดูได้จาก <see cref="Contract"/> ที่ยัง Active เท่านั้น
+/// ສືບທອດມາຈາກ <see cref="BaseEntity"/> ບໍ່ <see cref="TenantEntity"/>
+/// ເນື່ອງຈາກວ່າຜູ້ເຊົ່າບໍ່ໄດ້ຜູກມັດຢ່າງຖາວອນກັບຫໍພັກໃດນຶ່ງ. ໃນເວລາທີ່ແຕກຕ່າງກັນມັນເປັນໄປໄດ້ທີ່ຈະເຊົ່າຫໍພັກທີ່ແຕກຕ່າງກັນໃນອົງກອນດຽວກັນ
+/// ຄວາມສຳພັນກັບຫໍພັກທີ່ເຈົ້າພັກຢູ່ສາມາດເຫັນໄດ້ຈາກ <see cref="Contract"/> ຍັງ Active ເທົ່ານັ້ນ
 /// </remarks>
 public class Tenant : BaseEntity
 {
-    /// <summary>องค์กรที่ผู้เช่ารายนี้สังกัด</summary>
+    /// <summary>ອົງກອນທີ່ຜູ້ເຊົ່ານີ້ຂຶ້ນກັບ</summary>
     public Guid OrganizationId { get; set; }
 
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public required string FirstName { get; set; }
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public required string LastName { get; set; }
 
-    /// <summary>อีเมล</summary>
+    /// <summary>ອີເມວ</summary>
     public string? Email { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; set; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทาง</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນ</summary>
     public string? NationalId { get; set; }
 
-    /// <summary>วันเดือนปีเกิด</summary>
+    /// <summary>ວັນເດືອນປີເກີດ</summary>
     public DateOnly? DateOfBirth { get; set; }
 
-    /// <summary>ที่อยู่ตามทะเบียนบ้าน</summary>
+    /// <summary>ທີ່ຢູ່ ຕາມທະບຽນເຮືອນ</summary>
     public string? Address { get; set; }
 
-    /// <summary>ชื่อผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ຊື່ຂອງຜູ້ຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactName { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactPhone { get; set; }
 
-    /// <summary>สถานะของผู้เช่า</summary>
+    /// <summary>ສະຖານະຜູ້ເຊົ່າ</summary>
     public TenantStatus Status { get; set; } = TenantStatus.Active;
 
-    /// <summary>ชื่อเต็มสำหรับแสดงผล</summary>
+    /// <summary>ຊື່ເຕັມສໍາລັບການສະແດງ</summary>
     public string FullName => $"{FirstName} {LastName}".Trim();
 }

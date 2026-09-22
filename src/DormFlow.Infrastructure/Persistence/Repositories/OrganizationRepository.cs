@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลองค์กรบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນກ່ຽວກັບບໍລິສັດ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class OrganizationRepository(DormFlowDbContext dbContext) : IOrganizationRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

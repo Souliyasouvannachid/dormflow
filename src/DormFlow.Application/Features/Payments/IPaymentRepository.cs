@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Payments;
 
-/// <summary>ตัวกรองสำหรับดึงรายการชำระเงินแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງຂໍ້ມູນການຈ່າຍເງິນແບບ paginated</summary>
 public sealed record PaymentListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -13,21 +13,24 @@ public sealed record PaymentListFilter(
     PaymentStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลการชำระเงินในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຈ່າຍເງິນໃນຖານຂໍ້ມູນ</summary>
 public interface IPaymentRepository
 {
-    /// <summary>อ่านรายการชำระเงินจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານລາຍການການຈ່າຍເງິນຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Payment?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการชำระเงินแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຈ່າຍ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<Payment>> GetPagedAsync(
         PaymentListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มรายการชำระเงินใหม่</summary>
+    /// <summary>ນັບລາຍການຊຳລະຕາມຕົວກອງໂດຍບໍ່ດຶງລາຍການ</summary>
+    Task<int> CountAsync(PaymentListFilter filter, CancellationToken cancellationToken = default);
+
+    /// <summary>ເພີ່ມລາຍການການຈ່າຍເງິນໃໝ່</summary>
     Task AddAsync(Payment payment, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล รวมถึงยอดใบแจ้งหนี้ที่ถูกแก้ไขในธุรกรรมเดียวกัน</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ. ລວມທັງຈໍານວນໃບເກັບເງິນທີ່ຖືກແກ້ໄຂໃນທຸລະກໍາດຽວກັນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Expenses;
 
-/// <summary>Use Case ทั้งหมดของโมดูลค่าใช้จ่าย</summary>
+/// <summary>Use Case ຄ່າໃຊ້ຈ່າຍຂອງໂມດູນທັງຝົດ</summary>
 public sealed class ExpenseService(
     IExpenseRepository repository,
     IDormitoryRepository dormitoryRepository,
@@ -67,9 +67,9 @@ public sealed class ExpenseService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Dormitory dormitory = await _dormitoryRepository.GetByIdAsync(request.DormitoryId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบหอพักที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
-        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ไม่พบหอพักที่ระบุ");
+        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         Expense expense = new()
         {
@@ -99,13 +99,13 @@ public sealed class ExpenseService(
     private async Task<Expense> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Expense expense = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลค่าใช้จ่ายที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຄ່າໃຊ້ຈ່າຍທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             expense.OrganizationId,
             expense.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลค่าใช้จ่ายที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຄ່າໃຊ້ຈ່າຍທີ່ຕ້ອງການ");
 
         return expense;
     }

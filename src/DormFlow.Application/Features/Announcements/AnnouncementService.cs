@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Announcements;
 
-/// <summary>Use Case ทั้งหมดของโมดูลประกาศ</summary>
+/// <summary>Use Case ໂມດູນການປະກາດທັງໝົດ</summary>
 public sealed class AnnouncementService(
     IAnnouncementRepository repository,
     IDormitoryRepository dormitoryRepository,
@@ -67,9 +67,9 @@ public sealed class AnnouncementService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Dormitory dormitory = await _dormitoryRepository.GetByIdAsync(request.DormitoryId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบหอพักที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
-        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ไม่พบหอพักที่ระบุ");
+        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         Announcement announcement = new()
         {
@@ -101,7 +101,7 @@ public sealed class AnnouncementService(
 
         if (announcement.Status != AnnouncementStatus.Draft)
         {
-            throw new ConflictException("เผยแพร่ได้เฉพาะประกาศที่ยังเป็นร่างเท่านั้น");
+            throw new ConflictException("ເຜີຍແຜ່ໄດ້ສະເພາະປະກາດທີ່ຍັງເປັນສະບັບຮ່າງເທົ່ານັ້ນ");
         }
 
         announcement.Status = AnnouncementStatus.Published;
@@ -127,7 +127,7 @@ public sealed class AnnouncementService(
 
         if (announcement.Status != AnnouncementStatus.Published)
         {
-            throw new ConflictException("เก็บเข้าคลังได้เฉพาะประกาศที่เผยแพร่แล้วเท่านั้น");
+            throw new ConflictException("ເກັບເຂົ້າຄັງໄດ້ສະເພາະປະກາດທີ່ເຜີຍແຜ່ແລ້ວເທົ່ານັ້ນ");
         }
 
         announcement.Status = AnnouncementStatus.Archived;
@@ -148,13 +148,13 @@ public sealed class AnnouncementService(
     private async Task<Announcement> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Announcement announcement = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบประกาศที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບປະກາດທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             announcement.OrganizationId,
             announcement.DormitoryId.GetValueOrDefault(),
-            "ไม่พบประกาศที่ต้องการ");
+            "ບໍ່ພົບປະກາດທີ່ຕ້ອງການ");
 
         return announcement;
     }

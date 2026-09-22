@@ -1,11 +1,11 @@
 namespace DormFlow.Contracts.Roles;
 
-/// <summary>คำขอสร้างบทบาทใหม่</summary>
+/// <summary>ຮຽກຮ້ອງໃຫ້ສ້າງບົດບາດໃຝ່</summary>
 public class CreateRoleRequest
 {
-    /// <summary>ชื่อบทบาท ไม่ซ้ำกันทั้งระบบ</summary>
+    /// <summary>ຊື່ບົດບາດແມ່ນເປັນເອກະລັກໃນທົ່ວລະບົບ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>คำอธิบายบทบาท</summary>
+    /// <summary>ລາຍລະອຽດບົດບາດ</summary>
     public string? Description { get; set; }
 }

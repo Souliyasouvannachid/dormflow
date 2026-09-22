@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการบทบาทและสิทธิ์ของบทบาท</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງບົດບາດແລະການອະນຸຍາດບົດບາດ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/roles")]
@@ -18,7 +18,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
 {
     private readonly IRoleService _roleService = roleService;
 
-    /// <summary>ดึงรายการบทบาทแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ບົດບາດໜ້າວຽກ</summary>
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<RoleResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<PagedResult<RoleResponse>>>> GetList(
@@ -29,7 +29,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลบทบาทหนึ่งบทบาท</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບບົດບາດຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<RoleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -39,7 +39,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างบทบาทใหม่</summary>
+    /// <summary>ສ້າງບົດບາດໃຝ່</summary>
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<RoleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -52,7 +52,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลบทบาท</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນບົດບາດ</summary>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<RoleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -67,7 +67,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>ลบบทบาท</summary>
+    /// <summary>ລຶບບົດບາດ</summary>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -78,7 +78,7 @@ public sealed class RolesController(IRoleService roleService) : ControllerBase
         return Ok(ApiResponse.Ok(ApiMessages.Deleted));
     }
 
-    /// <summary>กำหนดสิทธิ์ให้บทบาท แทนที่สิทธิ์เดิมทั้งหมด</summary>
+    /// <summary>ມອບສິດໃຫ້ໜ້າທີ່ແທນສິດຕົ້ນສະບັບທັງໝົດ</summary>
     [HttpPost("{id:guid}/permissions")]
     [ProducesResponseType(typeof(ApiResponse<RoleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]

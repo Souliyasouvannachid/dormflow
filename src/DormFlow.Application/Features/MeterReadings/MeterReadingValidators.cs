@@ -1,30 +1,33 @@
 using DormFlow.Contracts.MeterReadings;
+using DormFlow.Application.Common.Abstractions;
 using DormFlow.Domain.Enums;
 using FluentValidation;
 
 namespace DormFlow.Application.Features.MeterReadings;
 
-/// <summary>ตรวจสอบคำขอบันทึกค่ามิเตอร์</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍເພື່ອບັນທຶກຄ່າແມັດ</summary>
 public sealed class CreateMeterReadingRequestValidator : AbstractValidator<CreateMeterReadingRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
-    public CreateMeterReadingRequestValidator()
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
+    public CreateMeterReadingRequestValidator(IDateTimeProvider dateTimeProvider)
     {
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+
         RuleFor(request => request.RoomId)
-            .NotEmpty().WithMessage("กรุณาระบุห้องที่จดค่ามิเตอร์");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫ້ອງທີ່ຈະຈົດຄ່າມິເຕີ");
 
         RuleFor(request => request.MeterType)
             .Must(value => Enum.TryParse<MeterType>(value, ignoreCase: true, out _))
-            .WithMessage("ประเภทมิเตอร์ไม่ถูกต้อง ต้องเป็น Water หรือ Electricity");
+            .WithMessage("ປະເພດມິເຕີບໍ່ຖືກຕ້ອງ ຕ້ອງເປັນ Water ຫຼື Electricity");
 
         RuleFor(request => request.ReadingDate)
-            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
-            .WithMessage("วันที่จดมิเตอร์ต้องไม่ใช่วันที่ในอนาคต");
+            .LessThanOrEqualTo(_ => DateOnly.FromDateTime(dateTimeProvider.UtcNow.UtcDateTime))
+            .WithMessage("ວັນທີຈົດມິເຕີຕ້ອງບໍ່ແມ່ນວັນທີໃນອະນາຄົດ");
 
         RuleFor(request => request.CurrentReading)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่ามิเตอร์ต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າມິເຕີຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

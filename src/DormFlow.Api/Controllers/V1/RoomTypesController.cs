@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการประเภทห้อง</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງປະເພດຫ້ອງ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/room-types")]
@@ -18,7 +18,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
 {
     private readonly IRoomTypeService _roomTypeService = roomTypeService;
 
-    /// <summary>ดึงรายการประเภทห้องแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງປະເພດຫ້ອງ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.RoomTypes.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<RoomTypeResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลประเภทห้องหนึ่งแบบ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບປະເພດຫ້ອງຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.RoomTypes.View)]
     [ProducesResponseType(typeof(ApiResponse<RoomTypeResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างประเภทห้องใหม่</summary>
+    /// <summary>ສ້າງປະເພດຫ້ອງໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.RoomTypes.Create)]
     [ProducesResponseType(typeof(ApiResponse<RoomTypeResponse>), StatusCodes.Status200OK)]
@@ -58,7 +58,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลประเภทห้อง</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນປະເພດຫ້ອງ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.RoomTypes.Update)]
     [ProducesResponseType(typeof(ApiResponse<RoomTypeResponse>), StatusCodes.Status200OK)]
@@ -74,7 +74,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะประเภทห้อง</summary>
+    /// <summary>ປ່ຽນສະຖານະປະເພດຫ້ອງ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.RoomTypes.Update)]
     [ProducesResponseType(typeof(ApiResponse<RoomTypeResponse>), StatusCodes.Status200OK)]
@@ -93,7 +93,7 @@ public sealed class RoomTypesController(IRoomTypeService roomTypeService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบประเภทห้อง</summary>
+    /// <summary>ລຶບປະເພດຫ້ອງ</summary>
     [HttpDelete("{id:guid}")]
     [RequirePermission(PermissionCodes.RoomTypes.Delete)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

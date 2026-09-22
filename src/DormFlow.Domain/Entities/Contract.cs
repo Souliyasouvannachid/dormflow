@@ -4,54 +4,54 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// สัญญาเช่าห้องพักหนึ่งฉบับ
+/// ສັນຍາເຊົ່າຜຶ່ງຫ້ອງ
 /// </summary>
 /// <remarks>
-/// ระบบยังไม่มี Entity แยกสำหรับ CheckIn/CheckOut ในขั้นตอนนี้
-/// เพราะเอกสารต้นฉบับไม่ได้ระบุรายละเอียดของสองโมดูลนี้ไว้ (ต่างจาก Phase 1 ที่ระบุไว้ครบ)
-/// จึงรวมเป็นการกระทำบนสัญญาแทน: เปิดใช้งานสัญญา (<see cref="ContractStatus.Active"/>) คือจุดที่เช็คอิน
-/// และสิ้นสุดสัญญา (<see cref="ContractStatus.Terminated"/>) คือจุดที่เช็คเอาท์
-/// หากภายหลังต้องการบันทึกรายละเอียดการตรวจสภาพห้องหรือรูปถ่ายตอนเข้า-ออก
-/// ค่อยแยกเป็น Entity ของตัวเองในภายหลังได้โดยไม่กระทบโครงสร้างนี้
+/// ລະບົບຍັງບໍ່ທັນມີ Entity ແຍກຕ່າງຫາກສໍາລັບ CheckIn/CheckOut ໃນຂັ້ນຕອນນີ້
+/// ເນື່ອງຈາກວ່າເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸລາຍລະອຽດຂອງສອງໂມດູນນີ້ (ແຕກຕ່າງຈາກ Phase 1 ລະບຸໄວ້ຢ່າງຄົບຖ້ວນ)
+/// ດັ່ງນັ້ນ, ມັນໄດ້ຖືກລວມເຂົ້າເປັນການກະທໍາໂດຍອີງໃສ່ສັນຍາແທນ: ເປີດໃຊ້ສັນຍາ (<see cref="ContractStatus.Active"/>) ແມ່ນຈຸດເຊັກອິນ
+/// ແລະສິ້ນສຸດສັນຍາ (<see cref="ContractStatus.Terminated"/>) ແມ່ນຈຸດເຊັກເອົາ
+/// ຖ້າຫາກວ່າທ່ານຕ້ອງການທີ່ຈະບັນທຶກລາຍລະອຽດຂອງການກວດກາຫ້ອງຫຼືຮູບພາບຕາມການເຂົ້າ-ອອກ
+/// ຄ່ອຍໆແຍກອອກເປັນ Entity ຂອງຕົນເອງຕໍ່ມາໂດຍບໍ່ມີຜົນກະທົບຕໍ່ໂຄງສ້າງນີ້
 /// </remarks>
 public class Contract : TenantEntity
 {
-    /// <summary>ห้องที่ทำสัญญา</summary>
+    /// <summary>ຫ້ອງສັນຍາ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าตามสัญญา</summary>
+    /// <summary>ຜູ້ເຊົ່າຕາມສັນຍາ</summary>
     public Guid TenantId { get; set; }
 
-    /// <summary>การจองที่นำมาทำสัญญานี้ เป็น null เมื่อทำสัญญาโดยไม่ผ่านการจองล่วงหน้า</summary>
+    /// <summary>ການຈອງທີ່ເຂົ້າມາໃນສັນຍານີ້ແມ່ນ null ໃນເວລາທີ່ເຮັດສັນຍາໂດຍບໍ່ມີການເຮັດການຈອງລ່ວງຜ້າ</summary>
     public Guid? ReservationId { get; set; }
 
-    /// <summary>เลขที่สัญญา ไม่ซ้ำกันภายในองค์กรเดียวกัน</summary>
+    /// <summary>ໝາຍເລກສັນຍາແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ</summary>
     public required string ContractNumber { get; set; }
 
-    /// <summary>วันที่เริ่มสัญญา</summary>
+    /// <summary>ວັນທີເລີ່ມຕົ້ນຂອງສັນຍາ</summary>
     public DateOnly StartDate { get; set; }
 
-    /// <summary>วันที่สิ้นสุดสัญญาตามกำหนด</summary>
+    /// <summary>ກຳນົດວັນທີສິ້ນສຸດສັນຍາ</summary>
     public DateOnly EndDate { get; set; }
 
-    /// <summary>ค่าเช่ารายเดือนตามสัญญานี้ คัดลอกมาจากห้องตอนทำสัญญา ไม่เปลี่ยนตามค่าเช่าห้องในภายหลัง</summary>
+    /// <summary>ການເຊົ່າລາຍເດືອນຕາມສັນຍາສະບັບນີ້ ສຳເນົາມາຈາກຫ້ອງເມື່ອເຮັດສັນຍາ. ມັນບໍ່ປ່ຽນແປງຕາມຄ່າເຊົ່າຫ້ອງຕໍ່ມາ</summary>
     public decimal MonthlyRent { get; set; }
 
-    /// <summary>ค่ามัดจำตามสัญญานี้</summary>
+    /// <summary>ຝາກເງິນຕາມສັນຍານີ້</summary>
     public decimal DepositAmount { get; set; }
 
-    /// <summary>สถานะของสัญญา</summary>
+    /// <summary>ສະຖານະສັນຍາ</summary>
     public ContractStatus Status { get; set; } = ContractStatus.Draft;
 
-    /// <summary>เวลาที่เปิดใช้งานสัญญา (เช็คอิน) เป็น null เมื่อยังเป็นร่าง</summary>
+    /// <summary>ເວລາເປີດໃຊ້ສັນຍາ (ເຊັກອິນ) ແມ່ນ null ໃນເວລາທີ່ມັນຍັງເປັນຮ່າງກາຍ</summary>
     public DateTimeOffset? SignedAt { get; set; }
 
-    /// <summary>เวลาที่สิ้นสุดสัญญา (เช็คเอาท์) เป็น null เมื่อยังไม่สิ้นสุด</summary>
+    /// <summary>ເວລາສິ້ນສຸດສັນຍາ (ກວດເບິ່ງ) ແມ່ນ null ໃນເວລາທີ່ມັນຍັງບໍ່ຝົດ</summary>
     public DateTimeOffset? TerminatedAt { get; set; }
 
-    /// <summary>สาเหตุที่สิ้นสุดสัญญาก่อนกำหนดหรือครบกำหนด</summary>
+    /// <summary>ເຫດຜົນຂອງການຍົກເລີກສັນຍາກ່ອນໄວອັນຄວນ ຫຼືເມື່ອຄົບກຳນົດ</summary>
     public string? TerminationReason { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

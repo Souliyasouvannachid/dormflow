@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Leases;
 
-/// <summary>คำขอสิ้นสุดสัญญาเช่า (เช็คเอาท์)</summary>
+/// <summary>ຄໍາຮ້ອງສະຝັກສໍາລັບການຍົກເລີກສັນຍາການເຊົ່າ (ກວດເບິ່ງ)</summary>
 public class TerminateContractRequest
 {
-    /// <summary>สาเหตุที่สิ้นสุดสัญญา</summary>
+    /// <summary>ເຫດຜົນສໍາລັບການຍົກເລີກສັນຍາ</summary>
     public string? Reason { get; set; }
 }

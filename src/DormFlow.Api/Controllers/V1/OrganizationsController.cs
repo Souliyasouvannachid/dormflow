@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการองค์กร</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງອົງກອນ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/organizations")]
@@ -18,7 +18,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
 {
     private readonly IOrganizationService _organizationService = organizationService;
 
-    /// <summary>ดึงรายการองค์กรแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງອົງກອນ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Organizations.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<OrganizationResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลองค์กรหนึ่งแห่ง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບອົງກອນຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Organizations.View)]
     [ProducesResponseType(typeof(ApiResponse<OrganizationResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างองค์กรใหม่</summary>
+    /// <summary>ສ້າງອົງກອນໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Organizations.Create)]
     [ProducesResponseType(typeof(ApiResponse<OrganizationResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลองค์กร</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນອົງກອນ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.Organizations.Update)]
     [ProducesResponseType(typeof(ApiResponse<OrganizationResponse>), StatusCodes.Status200OK)]
@@ -73,7 +73,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะองค์กร</summary>
+    /// <summary>ປ່ຽນສະຖານະອົງກອນ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Organizations.Update)]
     [ProducesResponseType(typeof(ApiResponse<OrganizationResponse>), StatusCodes.Status200OK)]
@@ -92,7 +92,7 @@ public sealed class OrganizationsController(IOrganizationService organizationSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบองค์กร</summary>
+    /// <summary>ລຶບອົງກອນ</summary>
     [HttpDelete("{id:guid}")]
     [RequirePermission(PermissionCodes.Organizations.Delete)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

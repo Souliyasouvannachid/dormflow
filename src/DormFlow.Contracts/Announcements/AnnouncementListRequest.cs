@@ -2,12 +2,12 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Announcements;
 
-/// <summary>พารามิเตอร์การค้นหารายการประกาศ</summary>
+/// <summary>ປະກາດຕົວກໍານົດການຊອກຫາ</summary>
 public class AnnouncementListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການທີ່ມີສະຖານະກົງກັບອັນທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

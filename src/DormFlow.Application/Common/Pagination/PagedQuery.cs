@@ -3,14 +3,14 @@ using DormFlow.Contracts.Common;
 namespace DormFlow.Application.Common.Pagination;
 
 /// <summary>
-/// พารามิเตอร์การแบ่งหน้าที่ผ่านการตรวจสอบและปรับค่าให้อยู่ในขอบเขตที่ยอมรับแล้ว
-/// ชั้น Application จะรับเฉพาะชนิดนี้ ไม่รับค่าดิบจาก Query String โดยตรง
+/// ພາລາມິເຕີຜ້າທີ່ກວດສອບແລະດັດແປງພາຍໃນຂອບເຂດຈໍາກັດທີ່ຍອມຮັບໄດ້
+/// ຊັ້ນ Application ຈະຍອມຮັບພຽງແຕ່ປະເພດນີ້. ບໍ່ໄດ້ຮັບຄ່າດິບຈາກ Query String ໂດຍກົງ
 /// </summary>
-/// <param name="Page">หมายเลขหน้า เริ่มที่ 1</param>
-/// <param name="PageSize">จำนวนรายการต่อหน้า อยู่ระหว่าง MinPageSize ถึง MaxPageSize</param>
-/// <param name="Search">คำค้นหาที่ตัดช่องว่างหัวท้ายแล้ว เป็น null เมื่อไม่ได้ระบุ</param>
-/// <param name="SortBy">ชื่อฟิลด์ที่ใช้เรียงลำดับ เป็น null เมื่อไม่ได้ระบุ</param>
-/// <param name="SortDirection">ทิศทางการเรียงลำดับ</param>
+/// <param name="Page">ເລກໜ້າເລີ່ມຕົ້ນທີ່ 1</param>
+/// <param name="PageSize">ຈຳນວນລາຍການຕໍ່ໜ້າແມ່ນຢູ່ລະຫວ່າງ MinPageSize ກັບ MaxPageSize</param>
+/// <param name="Search">ຄຳສັບຊອກຫາທີ່ມີຊ່ອງຫວ່າງອອກແມ່ນ: null ເມື່ອບໍ່ໄດ້ລະບຸ</param>
+/// <param name="SortBy">ຊື່ຂອງພາກສະຜາມທີ່ໃຊ້ໃນການຈັດລຽງແມ່ນ null ເມື່ອບໍ່ໄດ້ລະບຸ</param>
+/// <param name="SortDirection">ທິດທາງການຈັດຮຽງ</param>
 public readonly record struct PagedQuery(
     int Page,
     int PageSize,
@@ -18,12 +18,12 @@ public readonly record struct PagedQuery(
     string? SortBy,
     SortDirection SortDirection)
 {
-    /// <summary>จำนวนรายการที่ต้องข้ามก่อนถึงหน้าที่ต้องการ</summary>
+    /// <summary>ຈໍານວນລາຍການທີ່ຕ້ອງຂ້າມກ່ອນທີ່ຈະໄປເຖິງຜ້າທີ່ຕ້ອງການ</summary>
     public int Skip => (Page - PaginationDefaults.FirstPage) * PageSize;
 
-    /// <summary>จำนวนรายการที่ต้องดึง</summary>
+    /// <summary>ຈໍານວນລາຍການທີ່ຈະເອົາມາ</summary>
     public int Take => PageSize;
 
-    /// <summary>มีคำค้นหาที่ใช้งานได้หรือไม่</summary>
+    /// <summary>ມີຄໍາຄົ້ນຫາທີ່ໃຊ້ໄດ້ບໍ?</summary>
     public bool HasSearch => !string.IsNullOrWhiteSpace(Search);
 }

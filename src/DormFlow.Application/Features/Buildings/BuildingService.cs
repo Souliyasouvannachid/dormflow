@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Buildings;
 
-/// <summary>Use Case ทั้งหมดของโมดูลอาคาร</summary>
+/// <summary>Use Case ໂມດູນການກໍ່ສ້າງທັງຝົດ</summary>
 public sealed class BuildingService(
     IBuildingRepository repository,
     IDormitoryRepository dormitoryRepository,
@@ -70,15 +70,15 @@ public sealed class BuildingService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Dormitory dormitory = await _dormitoryRepository.GetByIdAsync(request.DormitoryId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบหอพักที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
-        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ไม่พบหอพักที่ระบุ");
+        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         string code = request.Code.Trim();
 
         if (await _repository.ExistsByCodeAsync(dormitory.Id, code, null, cancellationToken))
         {
-            throw new ConflictException($"รหัสอาคาร '{code}' ถูกใช้ในหอพักนี้แล้ว");
+            throw new ConflictException($"ລະຫັດອາຄານ '{code}' ຖືກໃຊ້ໃນຫໍພັກນີ້ແລ້ວ");
         }
 
         Building building = new()
@@ -118,7 +118,7 @@ public sealed class BuildingService(
 
         if (await _repository.ExistsByCodeAsync(building.DormitoryId.GetValueOrDefault(), code, building.Id, cancellationToken))
         {
-            throw new ConflictException($"รหัสอาคาร '{code}' ถูกใช้ในหอพักนี้แล้ว");
+            throw new ConflictException($"ລະຫັດອາຄານ '{code}' ຖືກໃຊ້ໃນຫໍພັກນີ້ແລ້ວ");
         }
 
         building.Code = code;
@@ -146,7 +146,7 @@ public sealed class BuildingService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out BuildingStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Building building = await FindAccessibleAsync(id, cancellationToken);
@@ -184,13 +184,13 @@ public sealed class BuildingService(
     private async Task<Building> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Building building = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลอาคารที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນອາຄານທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             building.OrganizationId,
             building.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลอาคารที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນອາຄານທີ່ຕ້ອງການ");
 
         return building;
     }

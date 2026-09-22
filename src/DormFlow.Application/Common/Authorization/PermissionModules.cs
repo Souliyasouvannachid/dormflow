@@ -1,74 +1,77 @@
 namespace DormFlow.Application.Common.Authorization;
 
-/// <summary>ชื่อโมดูลที่ใช้จัดกลุ่มสิทธิ์ในหน้าจอกำหนดสิทธิ์</summary>
+/// <summary>ຊື່ຂອງໂມດູນທີ່ໃຊ້ເພື່ອຈັດກຸ່ມການອະນຸຍາດໃນຜ້າຈໍການອະນຸຍາດ</summary>
 public static class PermissionModules
 {
-    /// <summary>องค์กร</summary>
-    public const string Organizations = "Organizations";
+    /// <summary>ອົງກອນ</summary>
+    public const string Organizations = "ອົງກອນ";
 
-    /// <summary>หอพัก</summary>
-    public const string Dormitories = "Dormitories";
+    /// <summary>ຫໍພັກ</summary>
+    public const string Dormitories = "ຫໍພັກ";
 
-    /// <summary>อาคาร</summary>
-    public const string Buildings = "Buildings";
+    /// <summary>ອາຄານ</summary>
+    public const string Buildings = "ອາຄານ";
 
-    /// <summary>ชั้น</summary>
-    public const string Floors = "Floors";
+    /// <summary>ຊັ້ນ</summary>
+    public const string Floors = "ຊັ້ນ";
 
-    /// <summary>ประเภทห้อง</summary>
-    public const string RoomTypes = "RoomTypes";
+    /// <summary>ປະເພດຫ້ອງ</summary>
+    public const string RoomTypes = "ປະເພດຫ້ອງ";
 
-    /// <summary>ห้องพัก</summary>
-    public const string Rooms = "Rooms";
+    /// <summary>ຫ້ອງ</summary>
+    public const string Rooms = "ຫ້ອງ";
 
-    /// <summary>ผู้เช่า</summary>
-    public const string Tenants = "Tenants";
+    /// <summary>ຜູ້ເຊົ່າ</summary>
+    public const string Tenants = "ຜູ້ເຊົ່າ";
 
-    /// <summary>การจองห้องพัก</summary>
-    public const string Reservations = "Reservations";
+    /// <summary>ການຈອງ</summary>
+    public const string Reservations = "ການຈອງ";
 
-    /// <summary>สัญญาเช่า</summary>
-    public const string Contracts = "Contracts";
+    /// <summary>ສັນຍາເຊົ່າ</summary>
+    public const string Contracts = "ສັນຍາເຊົ່າ";
 
-    /// <summary>การจดมิเตอร์</summary>
-    public const string MeterReadings = "MeterReadings";
+    /// <summary>ການບັນທຶກແມັດ</summary>
+    public const string MeterReadings = "ຄ່າມິເຕີ";
 
-    /// <summary>ใบแจ้งหนี้</summary>
-    public const string Invoices = "Invoices";
+    /// <summary>ໃບເກັບເງິນ</summary>
+    public const string Invoices = "ໃບແຈ້ງໜີ້";
 
-    /// <summary>การชำระเงิน</summary>
-    public const string Payments = "Payments";
+    /// <summary>ການຈ່າຍເງິນ</summary>
+    public const string Payments = "ການຊຳລະ";
 
-    /// <summary>เงินมัดจำ</summary>
-    public const string Deposits = "Deposits";
+    /// <summary>ຝາກ</summary>
+    public const string Deposits = "ເງິນມັດຈຳ";
 
-    /// <summary>ใบเสร็จรับเงิน</summary>
-    public const string Receipts = "Receipts";
+    /// <summary>ໃບຮັບເງິນ</summary>
+    public const string Receipts = "ໃບຮັບເງິນ";
 
-    /// <summary>ค่าใช้จ่ายในการดำเนินงาน</summary>
-    public const string Expenses = "Expenses";
+    /// <summary>ຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ</summary>
+    public const string Expenses = "ຄ່າໃຊ້ຈ່າຍ";
 
-    /// <summary>พัสดุ/ไปรษณีย์ของผู้เช่า</summary>
-    public const string Parcels = "Parcels";
+    /// <summary>ພັດສະດຸ/ຫ້ອງການໄປສະນີຂອງຜູ້ເຊົ່າ</summary>
+    public const string Parcels = "ພັດສະດຸ";
 
-    /// <summary>ผู้มาเยือน</summary>
-    public const string Visitors = "Visitors";
+    /// <summary>ນັກທ່ອງທ່ຽວ</summary>
+    public const string Visitors = "ຜູ້ມາຢ້ຽມຢາມ";
 
-    /// <summary>การจดทะเบียนที่จอดรถ</summary>
-    public const string Parking = "Parking";
+    /// <summary>ການລົງທະບຽນບ່ອນຈອດລົດ</summary>
+    public const string Parking = "ບ່ອນຈອດລົດ";
 
-    /// <summary>งานซ่อมบำรุง</summary>
-    public const string Maintenance = "Maintenance";
+    /// <summary>ວຽກງານບໍາລຸງຮັກສາ</summary>
+    public const string Maintenance = "ງານສ້ອມແປງ";
 
-    /// <summary>ประกาศ</summary>
-    public const string Announcements = "Announcements";
+    /// <summary>ປະກາດ</summary>
+    public const string Announcements = "ປະກາດ";
 
-    /// <summary>การแจ้งเตือน</summary>
-    public const string Notifications = "Notifications";
+    /// <summary>ການແຈ້ງເຕືອນ</summary>
+    public const string Notifications = "ການແຈ້ງເຕືອນ";
 
-    /// <summary>รายงาน</summary>
-    public const string Reports = "Reports";
+    /// <summary>ລາຍງານ</summary>
+    public const string Reports = "ລາຍງານ";
 
-    /// <summary>การดูแลระบบ</summary>
-    public const string Administration = "Administration";
+    /// <summary>ການບໍລິຫານລະບົບ</summary>
+    public const string Administration = "ການບໍລິຫານ";
+
+    /// <summary>ແຜງໜ້າປັດ</summary>
+    public const string Dashboard = "ແຜງໜ້າປັດ";
 }

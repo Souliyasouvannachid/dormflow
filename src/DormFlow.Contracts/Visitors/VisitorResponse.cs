@@ -1,47 +1,47 @@
 namespace DormFlow.Contracts.Visitors;
 
-/// <summary>ข้อมูลการเข้า-ออกของผู้มาเยือนหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນການເຂົ້າ-ແຂກຄົນຜຶ່ງອອກ</summary>
 public class VisitorResponse
 {
-    /// <summary>รหัสอ้างอิงของรายการ</summary>
+    /// <summary>ລະຫັດອ້າງອີງລາຍການ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องที่ผู้มาเยือนมาเยี่ยม</summary>
+    /// <summary>ຫ້ອງທີ່ນັກທ່ອງທ່ຽວມາຢ້ຽມຢາມ</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>ผู้เช่าที่ผู้มาเยือนมาเยี่ยม</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ມາຢ້ຽມຢາມ</summary>
     public Guid? TenantId { get; init; }
 
-    /// <summary>ชื่อผู้มาเยือน</summary>
+    /// <summary>ຊື່ນັກທ່ອງທ່ຽວ</summary>
     public string VisitorName { get; init; } = string.Empty;
 
-    /// <summary>เบอร์โทรศัพท์ผู้มาเยือน</summary>
+    /// <summary>ເບີໂທລະສັບຂອງຜູ້ເຂົ້າຊົມ</summary>
     public string? VisitorPhone { get; init; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทางของผู้มาเยือน</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນຂອງຜູ້ເຂົ້າຊົມ</summary>
     public string? IdNumber { get; init; }
 
-    /// <summary>วัตถุประสงค์การมาเยือน</summary>
+    /// <summary>ຈຸດປະສົງຂອງການຢ້ຽມຢາມ</summary>
     public string? Purpose { get; init; }
 
-    /// <summary>เวลาที่เข้าหอพัก</summary>
+    /// <summary>ເວລາເຂົ້າຫໍພັກ</summary>
     public DateTimeOffset CheckInAt { get; init; }
 
-    /// <summary>สถานะของผู้มาเยือน</summary>
+    /// <summary>ສະຖານະນັກທ່ອງທ່ຽວ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่ออกจากหอพัก</summary>
+    /// <summary>ເວລາອອກຈາກຫໍພັກ</summary>
     public DateTimeOffset? CheckOutAt { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

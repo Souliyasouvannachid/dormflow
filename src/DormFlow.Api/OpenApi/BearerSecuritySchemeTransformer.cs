@@ -4,15 +4,15 @@ using Microsoft.OpenApi;
 namespace DormFlow.Api.OpenApi;
 
 /// <summary>
-/// เพิ่ม JWT Bearer Security Scheme ลงในเอกสาร OpenAPI
+/// ເພີ່ມ JWT Bearer Security Scheme ເຂົ້າໄປໃນເອກະສານ OpenAPI
 /// </summary>
 /// <remarks>
-/// ประกาศไว้ที่ระดับเอกสารครั้งเดียว เพื่อให้ผู้ใช้เอกสารกด Authorize แล้วเรียกได้ทุก Endpoint
-/// Endpoint ที่ไม่ต้องยืนยันตัวตนถูกกำกับด้วย AllowAnonymous ที่ระดับ Endpoint แยกต่างหาก
+/// ປະກາດໃນລະດັບເອກະສານພຽງແຕ່ຄັ້ງດຽວ. ສໍາລັບຜູ້ໃຊ້ເອກະສານທີ່ຈະກົດ Authorize ຫຼັງຈາກນັ້ນ, ທ່ານສາມາດໂທຫາທຸກບ່ອນ Endpoint
+/// Endpoint ທີ່ບໍ່ຮຽກຮ້ອງໃຫ້ມີການຢັ້ງຢືນຕົວຕົນຍັງຖືກຝາຍ AllowAnonymous ໃນລະດັບ Endpoint ແຍກ
 /// </remarks>
 public sealed class BearerSecuritySchemeTransformer : IOpenApiDocumentTransformer
 {
-    /// <summary>ชื่อ Security Scheme ที่ใช้อ้างอิงในเอกสาร</summary>
+    /// <summary>ຊື່ Security Scheme ໃຊ້ເປັນເອກະສານອ້າງອີງໃນເອກະສານ</summary>
     public const string SchemeName = "Bearer";
 
     /// <inheritdoc />
@@ -31,7 +31,7 @@ public sealed class BearerSecuritySchemeTransformer : IOpenApiDocumentTransforme
             Scheme = "bearer",
             BearerFormat = "JWT",
             In = ParameterLocation.Header,
-            Description = "ใส่ Access Token ที่ได้จาก POST /api/v1/auth/login โดยไม่ต้องพิมพ์คำว่า Bearer นำหน้า",
+            Description = "ໃສ່ Access Token ທີ່ໄດ້ຈາກ POST /api/v1/auth/login ໂດຍບໍ່ຕ້ອງພິມຄຳວ່າ Bearer ນຳໜ້າ",
         };
 
         return Task.CompletedTask;

@@ -5,6 +5,7 @@ using DormFlow.Application.Features.AuditLogs;
 using DormFlow.Application.Features.Authentication;
 using DormFlow.Application.Features.Buildings;
 using DormFlow.Application.Features.Contracts;
+using DormFlow.Application.Features.Dashboard;
 using DormFlow.Application.Features.Deposits;
 using DormFlow.Application.Features.Expenses;
 using DormFlow.Application.Features.Organizations;
@@ -34,25 +35,25 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DormFlow.Application;
 
 /// <summary>
-/// จุดลงทะเบียน Dependency Injection ของชั้น Application
+/// ຈຸດລົງທະບຽນ Dependency Injection ຂອງຊັ້ນ Application
 /// </summary>
 public static class DependencyInjection
 {
-    /// <summary>Assembly ของชั้น Application ใช้สแกน Validator และใช้ใน Architecture Test</summary>
+    /// <summary>Assembly ຂອງຊັ້ນ Application ໃຊ້ເພື່ອສະແກນ Validator ແລະໃຊ້ໃນ Architecture Test</summary>
     public static Assembly ApplicationAssembly => typeof(DependencyInjection).Assembly;
 
     /// <summary>
-    /// ลงทะเบียนบริการทั้งหมดของชั้น Application
+    /// ລົງທະບຽນບໍລິການຊັ້ນທັງຝົດ Application
     /// </summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        // สแกนหา Validator ทั้งหมดใน Assembly นี้ Use Case ใหม่ที่เพิ่มภายหลังจะถูกลงทะเบียนอัตโนมัติ
+        // ສະແກນຫາ Validator ທັງຝົດໃນ Assembly ນີ້ Use Case ອັນໃໝ່ທີ່ເພີ່ມໃນພາຍຫຼັງຈະຖືກລົງທະບຽນໂດຍອັດຕະໂນມັດ
         services.AddValidatorsFromAssembly(ApplicationAssembly, includeInternalTypes: true);
 
-        // ใช้ชื่อ Property ตามที่ประกาศจริง แล้วค่อยแปลงเป็น camelCase ตอนสร้าง Response
+        // ໃຊ້ຊື່ Property ດັ່ງທີ່ປະກາດຕົວຈິງແລ້ວປ່ຽນເປັນ camelCase ເມື່ອມັນຖືກສ້າງຂຶ້ນ Response
         ValidatorOptions.Global.DisplayNameResolver = (_, member, _) => member?.Name;
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -83,6 +84,7 @@ public static class DependencyInjection
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<ISettingService, SettingService>();
+        services.AddScoped<IDashboardService, DashboardService>();
 
         return services;
     }

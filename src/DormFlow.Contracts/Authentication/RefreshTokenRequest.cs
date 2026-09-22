@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับขอ Access Token ใบใหม่</summary>
+/// <summary>ຂໍ້ມູນທີ່ຈະຮ້ອງຂໍ Access Token ໃບໃໝ່</summary>
 public class RefreshTokenRequest
 {
-    /// <summary>Refresh Token ที่ได้รับตอนเข้าสู่ระบบหรือจากการต่ออายุครั้งก่อน</summary>
+    /// <summary>Refresh Token ໄດ້ຮັບໃນເວລາທີ່ເຂົ້າສູ່ລະບົບຫຼືຈາກການຕໍ່ອາຍຸທີ່ຜ່ານມາ</summary>
     public string RefreshToken { get; set; } = string.Empty;
 }

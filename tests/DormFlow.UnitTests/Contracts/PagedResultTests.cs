@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Contracts;
 
-/// <summary>ตรวจการคำนวณจำนวนหน้าและธงบอกหน้าถัดไปของผลลัพธ์แบบแบ่งหน้า</summary>
+/// <summary>ກວດເບິ່ງການຄິດໄລ່ການນັບໜ້າ ແລະທຸງໜ້າຕໍ່ໄປສຳລັບຜົນໄດ້ຮັບທີ່ເຮັດເປັນ paginated</summary>
 public class PagedResultTests
 {
     [Theory]
@@ -13,7 +13,7 @@ public class PagedResultTests
     [InlineData(19, 20, 1)]
     [InlineData(0, 20, 0)]
     [InlineData(1, 1, 1)]
-    public void TotalPages_ควรปัดเศษขึ้นเสมอ(long totalItems, int pageSize, int expectedTotalPages)
+    public void TotalPages_ສະເໝີ(long totalItems, int pageSize, int expectedTotalPages)
     {
         PagedResult<int> result = PagedResult.Create<int>([], 1, pageSize, totalItems);
 
@@ -21,7 +21,7 @@ public class PagedResultTests
     }
 
     [Fact]
-    public void หน้าแรก_ต้องไม่มีหน้าก่อนหน้าแต่มีหน้าถัดไป()
+    public void ຜ້າທໍາອິດ_ຈະຕ້ອງບໍ່ມີໜ້າກ່ອນໜ້າແຕ່ຕ້ອງມີໜ້າຕໍ່ໄປ()
     {
         PagedResult<int> result = PagedResult.Create([1, 2, 3], page: 1, pageSize: 20, totalItems: 100);
 
@@ -30,7 +30,7 @@ public class PagedResultTests
     }
 
     [Fact]
-    public void หน้าสุดท้าย_ต้องมีหน้าก่อนหน้าแต่ไม่มีหน้าถัดไป()
+    public void ໜ້າສຸດທ້າຍ_ຕ້ອງມີໜ້າກ່ອນໜ້າແຕ່ບໍ່ແມ່ນໜ້າຕໍ່ໄປ()
     {
         PagedResult<int> result = PagedResult.Create([1, 2, 3], page: 5, pageSize: 20, totalItems: 100);
 
@@ -39,7 +39,7 @@ public class PagedResultTests
     }
 
     [Fact]
-    public void Empty_ต้องไม่มีรายการและไม่มีหน้าถัดไป()
+    public void Empty_ຈະຕ້ອງບໍ່ມີລາຍການແລະບໍ່ມີໜ້າຕໍ່ໄປ()
     {
         PagedResult<string> result = PagedResult.Empty<string>(page: 3, pageSize: 50);
 
@@ -52,7 +52,7 @@ public class PagedResultTests
     }
 
     [Fact]
-    public void Create_ต้องไม่รับรายการที่เป็น_null()
+    public void Create_ຕ້ອງບໍ່ຍອມຮັບລາຍການທີ່ມີ_null()
     {
         Action act = () => PagedResult.Create<int>(null!, 1, 20, 0);
 

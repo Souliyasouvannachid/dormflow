@@ -2,9 +2,9 @@ using DormFlow.Domain.Entities;
 
 namespace DormFlow.Application.Features.Permissions;
 
-/// <summary>เข้าถึงรายการสิทธิ์ทั้งหมดของระบบในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງບັນຊີລາຍຊື່ເຕັມຂອງການອະນຸຍາດລະບົບໃນຖານຂໍ້ມູນ</summary>
 public interface IPermissionRepository
 {
-    /// <summary>ดึงรายการสิทธิ์ทั้งหมด เรียงตามโมดูลแล้วตามรหัสสิทธิ์</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງການອະນຸຍາດທັງຝົດຈັດຮຽງຕາມໂມດູນແລະຫຼັງຈາກນັ້ນໂດຍລະຫັດໃບອະນຸຍາດ</summary>
     Task<IReadOnlyList<Permission>> GetAllAsync(CancellationToken cancellationToken = default);
 }

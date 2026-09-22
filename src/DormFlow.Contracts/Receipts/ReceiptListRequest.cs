@@ -2,12 +2,12 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Receipts;
 
-/// <summary>พารามิเตอร์การค้นหารายการใบเสร็จรับเงิน</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການຮັບ</summary>
 public class ReceiptListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะใบเสร็จของรายการชำระเงินที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງພຽງແຕ່ໃບຮັບເງິນສໍາລັບທຸລະກໍາການຈ່າຍເງິນທີ່ລະບຸ</summary>
     public Guid? PaymentId { get; set; }
 }

@@ -1,38 +1,38 @@
 namespace DormFlow.Domain.Exceptions;
 
 /// <summary>
-/// ข้อผิดพลาดเมื่อมีการละเมิดกฎทางธุรกิจที่ระบุรหัสกำกับได้
-/// เช่น ห้ามมีเลขห้องซ้ำภายในอาคารเดียวกัน
+/// ຄວາມຜິດພາດເມື່ອກົດລະບຽບທຸລະກິດທີ່ຖືກລະຫັດຖືກລະເມີດ
+/// ຕົວຢ່າງ, ຢ່າມີຕົວເລກຫ້ອງຊໍ້າກັນພາຍໃນອາຄານດຽວກັນ
 /// </summary>
 public class BusinessRuleViolationException : DomainException
 {
-    /// <summary>สร้าง Exception พร้อมข้อความเริ่มต้น</summary>
+    /// <summary>ສ້າງ Exception ດ້ວຍຂໍ້ຄວາມເບື້ອງຕົ້ນ</summary>
     public BusinessRuleViolationException()
-        : base("ข้อมูลขัดกับกฎทางธุรกิจ")
+        : base("ຂໍ້ມູນຂັດກັບກົດລະບຽບທຸລະກິດ")
     {
         RuleCode = "business_rule.violated";
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความที่กำหนดเอง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມທີ່ກໍາຜົດເອງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
     public BusinessRuleViolationException(string message)
         : base(message)
     {
         RuleCode = "business_rule.violated";
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความและ Exception ต้นทาง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
-    /// <param name="innerException">Exception ต้นทาง</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມແລະ Exception ຕົ້ນກໍາເນີດ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
+    /// <param name="innerException">Exception ຕົ້ນກໍາເນີດ</param>
     public BusinessRuleViolationException(string message, Exception innerException)
         : base(message, innerException)
     {
         RuleCode = "business_rule.violated";
     }
 
-    /// <summary>สร้าง Exception พร้อมรหัสกฎและข้อความ</summary>
-    /// <param name="ruleCode">รหัสกฎทางธุรกิจ เช่น rooms.duplicate_room_number</param>
-    /// <param name="message">ข้อความอธิบายสาเหตุสำหรับผู้ใช้</param>
+    /// <summary>ສ້າງ Exception ດ້ວຍລະຫັດກົດລະບຽບແລະຂໍ້ຄວາມ</summary>
+    /// <param name="ruleCode">ID ກົດລະບຽບທຸລະກິດ, ເຊັ່ນ: rooms.duplicate_room_number</param>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍເຫດຜົນສໍາລັບຜູ້ໃຊ້</param>
     public BusinessRuleViolationException(string ruleCode, string message)
         : base(message)
     {
@@ -40,6 +40,6 @@ public class BusinessRuleViolationException : DomainException
         RuleCode = ruleCode;
     }
 
-    /// <summary>รหัสกฎทางธุรกิจที่ถูกละเมิด ใช้ให้ Client แยกแยะกรณีผิดพลาดได้</summary>
+    /// <summary>ID ກົດລະບຽບທຸລະກິດທີ່ຖືກລະເມີດແມ່ນຖືກນໍາໃຊ້ເພື່ອ Client ສາມາດຈໍາແນກກໍລະນີຂອງຄວາມຜິດພາດ</summary>
     public string RuleCode { get; }
 }

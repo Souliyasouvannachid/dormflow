@@ -8,14 +8,14 @@ using Xunit;
 
 namespace DormFlow.ArchitectureTests;
 
-/// <summary>ตรวจข้อตกลงการตั้งชื่อที่ทีมใช้ร่วมกัน</summary>
+/// <summary>ກວດເບິ່ງສົນທິສັນຍາການຕັ້ງຊື່ທີ່ແບ່ງປັນໂດຍທີມງານ</summary>
 public class NamingConventionTests
 {
     private static readonly Assembly DomainAssembly = typeof(BaseEntity).Assembly;
     private static readonly Assembly ApplicationAssembly = typeof(ICurrentUser).Assembly;
 
     [Fact]
-    public void Exception_ทุกตัวใน_Domain_ต้องลงท้ายด้วยคำว่า_Exception()
+    public void Exception_ທຸກໆລາຍການໃນ_Domain_ຕ້ອງສິ້ນສຸດດ້ວຍຄໍາ_Exception()
     {
         TestResult result = Types.InAssembly(DomainAssembly)
             .That()
@@ -28,7 +28,7 @@ public class NamingConventionTests
     }
 
     [Fact]
-    public void Exception_ทุกตัวใน_Application_ต้องลงท้ายด้วยคำว่า_Exception()
+    public void Exception_ທຸກໆລາຍການໃນ_Application_ຕ້ອງສິ້ນສຸດດ້ວຍຄໍາ_Exception()
     {
         TestResult result = Types.InAssembly(ApplicationAssembly)
             .That()
@@ -41,7 +41,7 @@ public class NamingConventionTests
     }
 
     [Fact]
-    public void Interface_ทุกตัวใน_Application_ต้องขึ้นต้นด้วยตัว_I()
+    public void Interface_ທຸກໆລາຍການໃນ_Application_ຕ້ອງເລີ່ມຕົ້ນດ້ວຍອັນດຽວ_I()
     {
         TestResult result = Types.InAssembly(ApplicationAssembly)
             .That()
@@ -56,7 +56,7 @@ public class NamingConventionTests
     }
 
     [Fact]
-    public void Entity_ทุกตัวที่สืบทอด_BaseEntity_ต้องอยู่ใน_Domain()
+    public void Entity_ທັງຝົດທີ່ຖືກສືບທອດ_BaseEntity_ຕ້ອງຢູ່ໃນ_Domain()
     {
         TestResult result = Types.InAssembly(DomainAssembly)
             .That()

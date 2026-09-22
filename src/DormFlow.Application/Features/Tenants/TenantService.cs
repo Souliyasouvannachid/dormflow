@@ -11,12 +11,12 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Tenants;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลผู้เช่า
+/// Use Case ໂມດູນຜູ້ເຊົ່າທັງໝົດ
 /// </summary>
 /// <remarks>
-/// มองเห็นได้ระดับองค์กรเท่านั้น ไม่จำกัดตามหอพัก เพราะผู้เช่าไม่ได้ผูกกับหอพักใดหอพักหนึ่งถาวร
-/// (ดูคำอธิบายที่ <see cref="Tenant"/>) และไม่มีคำสั่งลบเพราะสิทธิ์ tenants.delete ไม่มีอยู่ในระบบ
-/// ตามที่ระบุไว้ในเอกสารต้นฉบับ
+/// ເບິ່ງເຫັນໄດ້ໃນລະດັບອົງກອນເທົ່ານັ້ນ ບໍ່ຈໍາກັດໂດຍຫໍພັກ ເພາະວ່າຜູ້ເຊົ່າບໍ່ໄດ້ຜູກມັດກັບຫໍພັກອັນໃດອັນໜຶ່ງຢ່າງຖາວອນ
+/// (ເບິ່ງລາຍລະອຽດຢູ່ <see cref="Tenant"/>) ແລະບໍ່ມີຄໍາສັ່ງລຶບເນື່ອງຈາກສິດ tenants.delete ບໍ່ຢູ່ໃນລະບົບ
+/// ດັ່ງທີ່ໄດ້ກ່າວໄວ້ໃນເອກະສານຕົ້ນສະບັບ
 /// </remarks>
 public sealed class TenantService(
     ITenantRepository repository,
@@ -72,7 +72,7 @@ public sealed class TenantService(
         if (!string.IsNullOrWhiteSpace(request.NationalId)
             && await _repository.ExistsByNationalIdAsync(organizationId, request.NationalId, null, cancellationToken))
         {
-            throw new ConflictException($"เลขบัตรประจำตัว '{request.NationalId}' ถูกใช้ในองค์กรนี้แล้ว");
+            throw new ConflictException($"ເລກບັດປະຈຳຕົວ '{request.NationalId}' ຖືກໃຊ້ໃນອົງກອນນີ້ແລ້ວ");
         }
 
         Tenant tenant = new()
@@ -116,7 +116,7 @@ public sealed class TenantService(
         if (!string.IsNullOrWhiteSpace(request.NationalId)
             && await _repository.ExistsByNationalIdAsync(tenant.OrganizationId, request.NationalId, tenant.Id, cancellationToken))
         {
-            throw new ConflictException($"เลขบัตรประจำตัว '{request.NationalId}' ถูกใช้ในองค์กรนี้แล้ว");
+            throw new ConflictException($"ເລກບັດປະຈຳຕົວ '{request.NationalId}' ຖືກໃຊ້ໃນອົງກອນນີ້ແລ້ວ");
         }
 
         tenant.FirstName = request.FirstName.Trim();
@@ -149,7 +149,7 @@ public sealed class TenantService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out TenantStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Tenant tenant = await FindAccessibleAsync(id, cancellationToken);
@@ -171,9 +171,9 @@ public sealed class TenantService(
     private async Task<Tenant> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Tenant tenant = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ຕ້ອງການ");
 
-        TenantScope.EnsureOrganizationAccess(_currentUser, tenant.OrganizationId, "ไม่พบข้อมูลผู้เช่าที่ต้องการ");
+        TenantScope.EnsureOrganizationAccess(_currentUser, tenant.OrganizationId, "ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ຕ້ອງການ");
 
         return tenant;
     }

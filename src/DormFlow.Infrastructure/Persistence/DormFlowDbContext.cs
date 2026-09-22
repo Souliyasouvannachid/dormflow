@@ -8,110 +8,110 @@ using Microsoft.EntityFrameworkCore;
 namespace DormFlow.Infrastructure.Persistence;
 
 /// <summary>
-/// DbContext หลักของ DormFlow
+/// DbContext ຕົ້ນຕໍຂອງ DormFlow
 /// </summary>
 /// <remarks>
-/// สืบทอดจาก <see cref="IdentityDbContext{TUser, TRole, TKey}"/> เพื่อให้ตารางของ ASP.NET Core Identity
-/// อยู่ในฐานข้อมูลเดียวกับข้อมูลธุรกิจ จึงใช้ธุรกรรมเดียวครอบการสร้างผู้ใช้พร้อมข้อมูลที่เกี่ยวข้องได้
-/// การตั้งค่าแต่ละ Entity อยู่ในคลาส IEntityTypeConfiguration แยกไฟล์ใต้โฟลเดอร์ Configurations
-/// และถูกโหลดอัตโนมัติด้วย ApplyConfigurationsFromAssembly
+/// ສືບທອດມາຈາກ <see cref="IdentityDbContext{TUser, TRole, TKey}"/> ດັ່ງນັ້ນຕາຕະລາງຂອງ ASP.NET Core Identity
+/// ມັນຢູ່ໃນຖານຂໍ້ມູນດຽວກັນກັບຂໍ້ມູນທຸລະກິດ. ດັ່ງນັ້ນ, ການເຮັດທຸລະກໍາດຽວສາມາດຖືກນໍາໃຊ້ເພື່ອກວມເອົາການສ້າງຜູ້ໃຊ້ທີ່ມີຂໍ້ມູນທີ່ກ່ຽວຂ້ອງ
+/// ແຕ່ລະການຕັ້ງຄ່າ Entity ໃນຫ້ອງຮຽນ IEntityTypeConfiguration ແຍກໄຟລ໌ພາຍໃຕ້ໂຟນເດີ Configurations
+/// ແລະຖືກໂຫຼດໂດຍອັດຕະໂນມັດ ApplyConfigurationsFromAssembly
 /// </remarks>
 public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options)
 {
-    /// <summary>Assembly ที่เก็บ Entity Configuration และ Migration ทั้งหมด</summary>
+    /// <summary>Assembly ການເກັບຮັກສາ Entity Configuration ແລະ Migration ທັງໝົດ</summary>
     public static Assembly InfrastructureAssembly => typeof(DormFlowDbContext).Assembly;
 
     /// <summary>
-    /// ชื่อตารางที่ใช้บันทึกประวัติ Migration
+    /// ຊື່ຂອງຕາຕະລາງທີ່ໃຊ້ໃນການບັນທຶກປະຫວັດສາດ Migration
     /// </summary>
     /// <remarks>
-    /// ต้องเป็นค่าเดียวกันทั้งฝั่งลงทะเบียน DI ตอนแอปทำงานจริง (<see cref="DependencyInjection"/>)
-    /// และฝั่ง <see cref="DormFlowDbContextFactory"/> ที่ dotnet ef ใช้ตอน design time
-    /// ถ้าค่าไม่ตรงกัน dotnet ef จะสร้างและบันทึกลงตารางคนละชื่อกับที่แอปมองหาตอนรันจริง
-    /// ทำให้แอปเข้าใจผิดว่ายังไม่มี Migration ใดถูกใช้เลยและพยายามสร้างตารางซ้ำ
+    /// ຕ້ອງເປັນຄ່າດຽວກັນທັງສອງດ້ານທີ່ລົງທະບຽນ DI ເມື່ອ app ເຮັດວຽກຕົວຈິງ (<see cref="DependencyInjection"/>)
+    /// ແລະຝັ່ງ <see cref="DormFlowDbContextFactory"/> ທີ່ dotnet ef ໃຊ້ຕອນ design time
+    /// ຖ້າຄ່າບໍ່ກົງກັນ dotnet ef ມັນຈະຖືກສ້າງແລະບັນທຶກໄວ້ໃນຕາຕະລາງທີ່ມີຊື່ທີ່ແຕກຕ່າງກັນກ່ວາສິ່ງທີ່ app ຊອກຫາໃນເວລາທີ່ມັນດໍາເນີນການຕົວຈິງ
+    /// ເຮັດໃຫ້ແອັບຯເຂົ້າໃຈຜິດວ່າມັນບໍ່ມີເທື່ອ Migration ຖືກນໍາໃຊ້ທັງຝົດແລະຄວາມພະຍາຍາມເພື່ອຊ້ໍາຕາຕະລາງແມ່ນເຮັດ
     /// </remarks>
     public const string MigrationsHistoryTableName = "__ef_migrations_history";
 
-    /// <summary>องค์กรที่ใช้งานระบบ</summary>
+    /// <summary>ອົງກອນທີ່ໃຊ້ລະບົບ</summary>
     public DbSet<Organization> Organizations => Set<Organization>();
 
-    /// <summary>สิทธิ์การใช้งานทั้งหมดของระบบ</summary>
+    /// <summary>ສິດທັງຝົດໃນການນໍາໃຊ້ລະບົບ</summary>
     public DbSet<Permission> Permissions => Set<Permission>();
 
-    /// <summary>ความสัมพันธ์ระหว่างบทบาทกับสิทธิ์</summary>
+    /// <summary>ຄວາມສຳພັນລະຫວ່າງບົດບາດ ແລະ ສິດ</summary>
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
-    /// <summary>Refresh Token ที่ออกให้ผู้ใช้</summary>
+    /// <summary>Refresh Token ອອກໃຫ້ຜູ້ໃຊ້</summary>
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
-    /// <summary>บันทึกเหตุการณ์สำคัญของระบบ</summary>
+    /// <summary>ບັນທຶກເຫດການລະບົບທີ່ສໍາຄັນ</summary>
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
-    /// <summary>หอพักทั้งหมดในระบบ</summary>
+    /// <summary>ຫໍພັກທັງໝົດໃນລະບົບ</summary>
     public DbSet<Dormitory> Dormitories => Set<Dormitory>();
 
-    /// <summary>อาคารทั้งหมดในระบบ</summary>
+    /// <summary>ອາຄານທັງຝົດໃນລະບົບ</summary>
     public DbSet<Building> Buildings => Set<Building>();
 
-    /// <summary>ชั้นของอาคารทั้งหมดในระบบ</summary>
+    /// <summary>ຊັ້ນອາຄານທັງຝົດໃນລະບົບ</summary>
     public DbSet<Floor> Floors => Set<Floor>();
 
-    /// <summary>ประเภทห้องทั้งหมดในระบบ</summary>
+    /// <summary>ທຸກປະເພດຫ້ອງໃນລະບົບ</summary>
     public DbSet<RoomType> RoomTypes => Set<RoomType>();
 
-    /// <summary>ห้องพักทั้งหมดในระบบ</summary>
+    /// <summary>ຫ້ອງທັງຝົດໃນລະບົບ</summary>
     public DbSet<Room> Rooms => Set<Room>();
 
-    /// <summary>การมอบหมายผู้ใช้ให้ดูแลหอพัก</summary>
+    /// <summary>ການມອບຝາຍໃຫ້ຜູ້ໃຊ້ດູແລຫໍພັກ</summary>
     public DbSet<UserDormitory> UserDormitories => Set<UserDormitory>();
 
-    /// <summary>ผู้เช่าทั้งหมดในระบบ</summary>
+    /// <summary>ຜູ້ເຊົ່າທັງໝົດໃນລະບົບ</summary>
     public DbSet<Tenant> Tenants => Set<Tenant>();
 
-    /// <summary>การจองห้องพักทั้งหมดในระบบ</summary>
+    /// <summary>ການຈອງຫ້ອງທັງຝົດໃນລະບົບ</summary>
     public DbSet<Reservation> Reservations => Set<Reservation>();
 
-    /// <summary>สัญญาเช่าทั้งหมดในระบบ</summary>
+    /// <summary>ສັນຍາເຊົ່າທັງໝົດໃນລະບົບ</summary>
     public DbSet<Contract> Contracts => Set<Contract>();
 
-    /// <summary>ค่ามิเตอร์ทั้งหมดในระบบ</summary>
+    /// <summary>ຄ່າແມັດທັງໝົດໃນລະບົບ</summary>
     public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
 
-    /// <summary>ใบแจ้งหนี้ทั้งหมดในระบบ</summary>
+    /// <summary>ໃບແຈ້ງໜີ້ທັງໝົດໃນລະບົບ</summary>
     public DbSet<Invoice> Invoices => Set<Invoice>();
 
-    /// <summary>รายการชำระเงินทั้งหมดในระบบ</summary>
+    /// <summary>ລາຍການການຈ່າຍເງິນທັງໝົດໃນລະບົບ</summary>
     public DbSet<Payment> Payments => Set<Payment>();
 
-    /// <summary>งานแจ้งซ่อมบำรุงทั้งหมดในระบบ</summary>
+    /// <summary>ວຽກງານບໍາລຸງຮັກສາທັງຝົດໃນລະບົບ</summary>
     public DbSet<MaintenanceRequest> MaintenanceRequests => Set<MaintenanceRequest>();
 
-    /// <summary>เงินมัดจำทั้งหมดในระบบ</summary>
+    /// <summary>ເງິນຝາກທັງຝົດໃນລະບົບ</summary>
     public DbSet<Deposit> Deposits => Set<Deposit>();
 
-    /// <summary>ใบเสร็จรับเงินทั้งหมดในระบบ</summary>
+    /// <summary>ໃບຮັບເງິນທັງໝົດໃນລະບົບ</summary>
     public DbSet<Receipt> Receipts => Set<Receipt>();
 
-    /// <summary>ค่าใช้จ่ายทั้งหมดในระบบ</summary>
+    /// <summary>ຄ່າໃຊ້ຈ່າຍທັງຝົດໃນລະບົບ</summary>
     public DbSet<Expense> Expenses => Set<Expense>();
 
-    /// <summary>พัสดุทั้งหมดในระบบ</summary>
+    /// <summary>parcels ທັງຝົດໃນລະບົບ</summary>
     public DbSet<Parcel> Parcels => Set<Parcel>();
 
-    /// <summary>ผู้มาเยือนทั้งหมดในระบบ</summary>
+    /// <summary>ຜູ້ເຂົ້າຊົມທັງຝົດໃນລະບົບ</summary>
     public DbSet<Visitor> Visitors => Set<Visitor>();
 
-    /// <summary>การจดทะเบียนที่จอดรถทั้งหมดในระบบ</summary>
+    /// <summary>ການລົງທະບຽນບ່ອນຈອດລົດທັງຝົດໃນລະບົບ</summary>
     public DbSet<ParkingRegistration> ParkingRegistrations => Set<ParkingRegistration>();
 
-    /// <summary>ประกาศทั้งหมดในระบบ</summary>
+    /// <summary>ປະກາດທັງໝົດໃນລະບົບ</summary>
     public DbSet<Announcement> Announcements => Set<Announcement>();
 
-    /// <summary>การแจ้งเตือนทั้งหมดในระบบ</summary>
+    /// <summary>ການແຈ້ງເຕືອນທັງໝົດໃນລະບົບ</summary>
     public DbSet<Notification> Notifications => Set<Notification>();
 
-    /// <summary>ค่าตั้งทั้งหมดในระบบ</summary>
+    /// <summary>ການຕັ້ງຄ່າທັງຝົດໃນລະບົບ</summary>
     public DbSet<Setting> Settings => Set<Setting>();
 
     /// <inheritdoc />
@@ -123,7 +123,7 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
 
         builder.ApplyConfigurationsFromAssembly(InfrastructureAssembly);
 
-        // ต้องเรียกหลัง ApplyConfigurationsFromAssembly เพื่อให้ข้อตกลงร่วมทับค่าที่ยังไม่ได้กำหนดเอง
+        // ຕ້ອງໂທຫາພາຍຫຼັງ ApplyConfigurationsFromAssembly ເພື່ອອະນຸຍາດໃຫ້ສັນຍາລວມເພື່ອ override ມູນຄ່າທີ່ຍັງບໍ່ທັນໄດ້ປັບແຕ່ງ
         builder.ApplyDormFlowConventions();
     }
 
@@ -134,7 +134,7 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
 
         base.ConfigureConventions(configurationBuilder);
 
-        // จำกัดความยาวเริ่มต้นของ string เพื่อไม่ให้เผลอสร้างคอลัมน์ text ที่ไม่มีขอบเขต
+        // ຈໍາກັດຄວາມຍາວເບື້ອງຕົ້ນຂອງ string ເພື່ອບໍ່ໃຫ້ສ້າງຖັນໂດຍບັງເອີນ text ບໍ່ມີຂອບເຂດ
         configurationBuilder.Properties<string>().HaveMaxLength(256);
     }
 }

@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>ช่องทางการชำระเงิน</summary>
+/// <summary>ຊ່ອງທາງການຈ່າຍເງິນ</summary>
 public enum PaymentMethod
 {
-    /// <summary>เงินสด</summary>
+    /// <summary>ເງິນສົດ</summary>
     Cash = 1,
 
-    /// <summary>โอนผ่านธนาคาร</summary>
+    /// <summary>ໂອນທະນາຄານ</summary>
     BankTransfer = 2,
 
-    /// <summary>สแกน QR Code</summary>
+    /// <summary>ສະແກນ QR Code</summary>
     QrCode = 3,
 
-    /// <summary>ช่องทางอื่น ๆ</summary>
+    /// <summary>ຊ່ອງທາງອື່ນໆ</summary>
     Other = 4,
 }

@@ -1,50 +1,50 @@
 namespace DormFlow.Contracts.Parking;
 
-/// <summary>ข้อมูลการจดทะเบียนที่จอดรถหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public class ParkingRegistrationResponse
 {
-    /// <summary>รหัสอ้างอิงของรายการ</summary>
+    /// <summary>ລະຫັດອ້າງອີງລາຍການ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องของผู้เช่าเจ้าของรถ</summary>
+    /// <summary>ຫ້ອງເຈົ້າຂອງລົດ</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>ผู้เช่าเจ้าของรถ</summary>
+    /// <summary>ເຈົ້າຂອງລົດເຊົ່າ</summary>
     public Guid TenantId { get; init; }
 
-    /// <summary>ทะเบียนรถ</summary>
+    /// <summary>ທະບຽນລົດ</summary>
     public string LicensePlate { get; init; } = string.Empty;
 
-    /// <summary>ประเภทของยานพาหนะ</summary>
+    /// <summary>ປະເພດຍານພາຫະນະ</summary>
     public string VehicleType { get; init; } = string.Empty;
 
-    /// <summary>ยี่ห้อ/รุ่นรถ</summary>
+    /// <summary>ຍີ່ຫໍ້/ຕົວແບບລົດ</summary>
     public string? Brand { get; init; }
 
-    /// <summary>สีรถ</summary>
+    /// <summary>ສີລົດ</summary>
     public string? Color { get; init; }
 
-    /// <summary>ป้ายช่องจอดรถ</summary>
+    /// <summary>ປ້າຍບ່ອນຈອດລົດ</summary>
     public string? ParkingSpotLabel { get; init; }
 
-    /// <summary>สถานะของการจดทะเบียน</summary>
+    /// <summary>ສະຖານະການລົງທະບຽນ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่จดทะเบียน</summary>
+    /// <summary>ເວລາລົງທະບຽນ</summary>
     public DateTimeOffset RegisteredAt { get; init; }
 
-    /// <summary>เวลาที่สิ้นสุดการจดทะเบียน</summary>
+    /// <summary>ເວລາສິ້ນສຸດການລົງທະບຽນ</summary>
     public DateTimeOffset? EndedAt { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

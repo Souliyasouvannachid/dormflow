@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Users;
 
-/// <summary>Use Case ทั้งหมดของโมดูลบริหารจัดการผู้ใช้งาน</summary>
+/// <summary>Use Case ໂມດູນການຄຸ້ມຄອງຜູ້ໃຊ້ທັງຝົດ</summary>
 public sealed class UserManagementService(
     IUserAdministrationRepository repository,
     IDormitoryRepository dormitoryRepository,
@@ -83,7 +83,7 @@ public sealed class UserManagementService(
 
         if (await _repository.ExistsByEmailAsync(email, cancellationToken))
         {
-            throw new ConflictException($"อีเมล '{email}' ถูกใช้ในระบบแล้ว");
+            throw new ConflictException($"ອີເມວ '{email}' ຖືກໃຊ້ໃນລະບົບແລ້ວ");
         }
 
         UserCreationResult result = await _repository.CreateAsync(
@@ -98,11 +98,11 @@ public sealed class UserManagementService(
         if (!result.Succeeded || result.UserId is null)
         {
             throw new ValidationFailedException(
-                result.Errors.Count > 0 ? string.Join(" ", result.Errors) : "สร้างบัญชีผู้ใช้ไม่สำเร็จ");
+                result.Errors.Count > 0 ? string.Join(" ", result.Errors) : "ສ້າງບັນຊີຜູ້ໃຊ້ບໍ່ສຳເລັດ");
         }
 
         UserSecurityProfile profile = await _repository.GetByIdAsync(result.UserId.Value, cancellationToken)
-            ?? throw new InvalidOperationException("สร้างบัญชีผู้ใช้สำเร็จแต่ไม่พบข้อมูลที่เพิ่งสร้าง");
+            ?? throw new InvalidOperationException("ສ້າງບັນຊີຜູ້ໃຊ້ສຳເລັດແຕ່ບໍ່ພົບຂໍ້ມູນທີ່ຫາກໍ່ສ້າງ");
 
         await _auditLogWriter.WriteAsync(
             AuditAction.Create,
@@ -151,7 +151,7 @@ public sealed class UserManagementService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out UserStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         UserSecurityProfile profile = await FindAccessibleAsync(id, cancellationToken);
@@ -183,7 +183,7 @@ public sealed class UserManagementService(
         bool succeeded = await _repository.SetRolesAsync(profile.UserId, request.Roles, cancellationToken);
         if (!succeeded)
         {
-            throw new ValidationFailedException("กำหนดบทบาทไม่สำเร็จ กรุณาตรวจสอบชื่อบทบาทที่ระบุ");
+            throw new ValidationFailedException("ກຳນົດບົດບາດບໍ່ສຳເລັດ ກະລຸນາກວດສອບຊື່ບົດບາດທີ່ລະບຸ");
         }
 
         await _auditLogWriter.WriteAsync(
@@ -209,16 +209,16 @@ public sealed class UserManagementService(
         UserSecurityProfile profile = await FindAccessibleAsync(id, cancellationToken);
 
         Dormitory dormitory = await _dormitoryRepository.GetByIdAsync(request.DormitoryId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบหอพักที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         TenantScope.EnsureOrganizationAccess(
             _currentUser,
             dormitory.OrganizationId,
-            "ไม่พบหอพักที่ระบุ");
+            "ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         if (dormitory.OrganizationId != profile.OrganizationId)
         {
-            throw new ValidationFailedException("ไม่สามารถมอบหมายหอพักต่างองค์กรให้ผู้ใช้รายนี้ได้");
+            throw new ValidationFailedException("ບໍ່ສາມາດມອບໝາຍຫໍພັກຕ່າງອົງກອນໃຫ້ຜູ້ໃຊ້ລາຍນີ້ໄດ້");
         }
 
         bool succeeded = await _repository.AssignDormitoryAsync(
@@ -231,7 +231,7 @@ public sealed class UserManagementService(
 
         if (!succeeded)
         {
-            throw new ConflictException("ผู้ใช้รายนี้ได้รับมอบหมายให้ดูแลหอพักนี้อยู่แล้ว");
+            throw new ConflictException("ຜູ້ໃຊ້ລາຍນີ້ໄດ້ຮັບມອບໝາຍໃຫ້ດູແລຫໍພັກນີ້ຢູ່ແລ້ວ");
         }
 
         await _auditLogWriter.WriteAsync(
@@ -253,7 +253,7 @@ public sealed class UserManagementService(
         bool succeeded = await _repository.RemoveDormitoryAsync(profile.UserId, dormitoryId, cancellationToken);
         if (!succeeded)
         {
-            throw new NotFoundException("ไม่พบการมอบหมายหอพักนี้ให้ผู้ใช้รายดังกล่าว");
+            throw new NotFoundException("ບໍ່ພົບການມອບໝາຍຫໍພັກນີ້ໃຫ້ຜູ້ໃຊ້ລາຍດັ່ງກ່າວ");
         }
 
         await _auditLogWriter.WriteAsync(
@@ -268,19 +268,19 @@ public sealed class UserManagementService(
     private async Task<UserSecurityProfile> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         UserSecurityProfile profile = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้ใช้ที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ໃຊ້ທີ່ຕ້ອງການ");
 
         TenantScope.EnsureOrganizationAccess(
             _currentUser,
             profile.OrganizationId.GetValueOrDefault(),
-            "ไม่พบข้อมูลผู้ใช้ที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຜູ້ໃຊ້ທີ່ຕ້ອງການ");
 
         return profile;
     }
 
     private async Task<UserSecurityProfile> RequireByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new InvalidOperationException($"ไม่พบผู้ใช้ {id} หลังจากบันทึกข้อมูลสำเร็จแล้ว");
+            ?? throw new InvalidOperationException($"ບໍ່ພົບຜູ້ໃຊ້ {id} ຫຼັງຈາກບັນທຶກຂໍ້ມູນສຳເລັດແລ້ວ");
 
     private static UserStatus? ParseStatusOrNull(string? status)
         => !string.IsNullOrWhiteSpace(status) && Enum.TryParse(status, ignoreCase: true, out UserStatus parsed)

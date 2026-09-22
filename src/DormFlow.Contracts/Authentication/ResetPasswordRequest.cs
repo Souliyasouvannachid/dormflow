@@ -1,17 +1,17 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับตั้งรหัสผ่านใหม่</summary>
+/// <summary>ຂໍ້ມູນສໍາລັບການຕັ້ງລະຫັດຜ່ານໃຝ່</summary>
 public class ResetPasswordRequest
 {
-    /// <summary>อีเมลของบัญชี</summary>
+    /// <summary>ອີເມວບັນຊີ</summary>
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>โทเคนที่ได้รับจากอีเมลตั้งรหัสผ่านใหม่</summary>
+    /// <summary>ໂທເຄັນໄດ້ຮັບຈາກອີເມວຣີເຊັດລະຫັດຜ່ານ</summary>
     public string Token { get; set; } = string.Empty;
 
-    /// <summary>รหัสผ่านใหม่</summary>
+    /// <summary>ລະຫັດຜ່ານໃໝ່</summary>
     public string NewPassword { get; set; } = string.Empty;
 
-    /// <summary>ยืนยันรหัสผ่านใหม่</summary>
+    /// <summary>ຢືນຢັນລະຫັດຜ່ານໃໝ່</summary>
     public string ConfirmPassword { get; set; } = string.Empty;
 }

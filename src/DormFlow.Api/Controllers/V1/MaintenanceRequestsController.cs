@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการงานแจ้งซ่อมบำรุง</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງວຽກງານບໍາລຸງຮັກສາ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/maintenance-requests")]
@@ -18,7 +18,7 @@ public sealed class MaintenanceRequestsController(IMaintenanceRequestService mai
 {
     private readonly IMaintenanceRequestService _maintenanceRequestService = maintenanceRequestService;
 
-    /// <summary>ดึงรายการงานแจ้งซ่อมบำรุงแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງການແຈ້ງເຕືອນວຽກງານບໍາລຸງຮັກສາ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Maintenance.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<MaintenanceRequestResponse>>), StatusCodes.Status200OK)]
@@ -31,7 +31,7 @@ public sealed class MaintenanceRequestsController(IMaintenanceRequestService mai
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลงานแจ้งซ่อมบำรุงหนึ่งรายการ</summary>
+    /// <summary>ອ່ານການແຈ້ງການວຽກບໍາລຸງຮັກສາຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Maintenance.View)]
     [ProducesResponseType(typeof(ApiResponse<MaintenanceRequestResponse>), StatusCodes.Status200OK)]
@@ -44,7 +44,7 @@ public sealed class MaintenanceRequestsController(IMaintenanceRequestService mai
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>แจ้งซ่อมบำรุงใหม่</summary>
+    /// <summary>ແຈ້ງການບໍາລຸງຮັກສາໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Maintenance.UpdateStatus)]
     [ProducesResponseType(typeof(ApiResponse<MaintenanceRequestResponse>), StatusCodes.Status200OK)]
@@ -59,7 +59,7 @@ public sealed class MaintenanceRequestsController(IMaintenanceRequestService mai
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>มอบหมาย (หรือมอบหมายซ้ำ) ช่างซ่อมบำรุงให้กับงานนี้</summary>
+    /// <summary>ມອບໝາຍ (ຫຼືມອບໝາຍຄືນໃໝ່) ຊ່າງສ້ອມແປງສຳລັບວຽກນີ້</summary>
     [HttpPost("{id:guid}/assign")]
     [RequirePermission(PermissionCodes.Maintenance.Assign)]
     [ProducesResponseType(typeof(ApiResponse<MaintenanceRequestResponse>), StatusCodes.Status200OK)]
@@ -75,7 +75,7 @@ public sealed class MaintenanceRequestsController(IMaintenanceRequestService mai
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>เปลี่ยนสถานะงานซ่อมบำรุง (ไม่รวมการมอบหมายช่าง ต้องใช้ Endpoint มอบหมายงานแทน)</summary>
+    /// <summary>ປ່ຽນສະຖານະວຽກບໍາລຸງຮັກສາ (ບໍ່ລວມເອົາການມອບໝາຍນັກວິຊາການ. ຕ້ອງການ Endpoint ມອບວຽກແທນ)</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Maintenance.UpdateStatus)]
     [ProducesResponseType(typeof(ApiResponse<MaintenanceRequestResponse>), StatusCodes.Status200OK)]

@@ -1,13 +1,13 @@
 namespace DormFlow.Api.Middleware;
 
-/// <summary>ส่วนขยายสำหรับต่อ Middleware ของ DormFlow เข้ากับไปป์ไลน์</summary>
+/// <summary>ສ່ວນຂະຫຍາຍສໍາລັບການເຊື່ອມຕໍ່ Middleware ຂອງ DormFlow ເຂົ້າໄປໃນທໍ່ນັ້ນ</summary>
 public static class MiddlewareExtensions
 {
     /// <summary>
-    /// เพิ่มตัวดักจับข้อผิดพลาดกลางของระบบ
-    /// ต้องเรียกเป็นตัวแรกของไปป์ไลน์เพื่อให้ครอบคลุม Middleware ที่เหลือทั้งหมด
+    /// ເພີ່ມຕົວຈັບຄວາມຜິດພາດສູນກາງຂອງລະບົບແລ້ວ
+    /// ມັນຕ້ອງຖືກເອີ້ນວ່າທໍາອິດໃນທໍ່ສໍາລັບການຄຸ້ມຄອງ Middleware ສ່ວນທີ່ເຫຼືອທັງຝົດ
     /// </summary>
-    /// <param name="app">ไปป์ไลน์ของแอปพลิเคชัน</param>
+    /// <param name="app">ທໍ່ຄໍາຮ້ອງສະຝັກ</param>
     public static IApplicationBuilder UseGlobalExceptionHandling(this IApplicationBuilder app)
     {
         ArgumentNullException.ThrowIfNull(app);

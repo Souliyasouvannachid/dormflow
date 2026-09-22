@@ -1,32 +1,32 @@
 namespace DormFlow.Contracts.Receipts;
 
-/// <summary>ข้อมูลใบเสร็จรับเงินหนึ่งฉบับ</summary>
+/// <summary>ຂໍ້ມູນໃບຮັບເງິນຜຶ່ງ</summary>
 public class ReceiptResponse
 {
-    /// <summary>รหัสอ้างอิงของใบเสร็จ</summary>
+    /// <summary>ລະຫັດອ້າງອີງໃບຮັບເງິນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>รายการชำระเงินที่ออกใบเสร็จนี้ให้</summary>
+    /// <summary>ບັນຊີລາຍຊື່ການຈ່າຍເງິນທີ່ໃບຮັບເງິນນີ້ອອກ</summary>
     public Guid PaymentId { get; init; }
 
-    /// <summary>เลขที่ใบเสร็จ</summary>
+    /// <summary>ໝາຍເລກໃບຮັບເງິນ</summary>
     public string ReceiptNumber { get; init; } = string.Empty;
 
-    /// <summary>จำนวนเงินตามใบเสร็จ</summary>
+    /// <summary>ຈຳນວນຕາມໃບຮັບ</summary>
     public decimal Amount { get; init; }
 
-    /// <summary>เวลาที่ออกใบเสร็จ</summary>
+    /// <summary>ເວລາອອກໃບຮັບເງິນ</summary>
     public DateTimeOffset IssuedAt { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

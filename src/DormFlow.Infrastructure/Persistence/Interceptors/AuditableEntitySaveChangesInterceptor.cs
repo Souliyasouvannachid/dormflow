@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace DormFlow.Infrastructure.Persistence.Interceptors;
 
 /// <summary>
-/// เติมข้อมูล Audit และแปลงการลบให้เป็น Soft Delete ก่อนบันทึกลงฐานข้อมูล
+/// ຕື່ມຂໍ້ມູນໃສ່ Audit ແລະປ່ຽນການລົບເປັນ Soft Delete ກ່ອນທີ່ຈະບັນທຶກໃສ່ຖານຂໍ້ມູນ
 /// </summary>
 /// <remarks>
-/// ทำงานกับ Entity ทุกตัวที่ประกาศ <see cref="IAuditableEntity"/> หรือ <see cref="ISoftDeletable"/>
-/// ไม่ผูกกับคลาสฐานใดคลาสหนึ่ง จึงครอบคลุม Entity ของ ASP.NET Core Identity ด้วย
-/// การทำที่ระดับ Interceptor ทำให้ไม่มี Use Case ใดลืมเติมค่าเหล่านี้
+/// ເຮັດວຽກກັບ Entity ທຸກໆລາຍການປະກາດ <see cref="IAuditableEntity"/> ຫຼື <see cref="ISoftDeletable"/>
+/// ມັນບໍ່ໄດ້ຖືກຜູກມັດກັບຊັ້ນພື້ນຖານອັນໃດອັນໜຶ່ງ, ສະນັ້ນມັນຈຶ່ງມີຄວາມສົມບູນແບບ Entity ຂອງ ASP.NET Core Identity ຄືກັນ
+/// ເຮັດມັນຢູ່ໃນລະດັບ Interceptor ເຮັດໃຫ້ບໍ່ມີ Use Case ໃຜລືມເພີ່ມຄຸນຄ່າເຫຼົ່ານີ້?
 /// </remarks>
 public sealed class AuditableEntitySaveChangesInterceptor(
     ICurrentUser currentUser,
@@ -89,8 +89,8 @@ public sealed class AuditableEntitySaveChangesInterceptor(
     }
 
     /// <summary>
-    /// เปลี่ยนคำสั่งลบให้เป็นการอัปเดตธง IsDeleted แทน
-    /// จึงไม่มีจุดใดในระบบที่ลบแถวออกจากฐานข้อมูลจริงโดยไม่ตั้งใจ
+    /// ປ່ຽນຄໍາສັ່ງລຶບເພື່ອອັບເດດທຸງ IsDeleted ແທນ
+    /// ດັ່ງນັ້ນບໍ່ມີຈຸດໃດໃນລະບົບທີ່ແຖວຖືກລຶບໂດຍບັງເອີນຈາກຖານຂໍ້ມູນຕົວຈິງ
     /// </summary>
     private static void ConvertToSoftDelete(
         EntityEntry entry,
@@ -110,7 +110,7 @@ public sealed class AuditableEntitySaveChangesInterceptor(
             auditable.UpdatedBy = userId;
         }
 
-        // ป้องกันไม่ให้คอลัมน์อื่นถูกเขียนทับจากค่าที่ค้างอยู่ใน entity ที่ถูกสั่งลบ
+        // ປ້ອງກັນບໍ່ໃຫ້ຖັນອື່ນຖືກຂຽນທັບໂດຍຄ່າທີ່ຍັງເຫຼືອຢູ່ໃນ entity ເຊິ່ງຖືກສັ່ງໃຫ້ລຶບ
         foreach (PropertyEntry property in entry.Properties)
         {
             property.IsModified = property.Metadata.Name switch

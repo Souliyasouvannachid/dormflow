@@ -1,11 +1,11 @@
 namespace DormFlow.Contracts.Users;
 
-/// <summary>คำขอมอบหมายให้ผู้ใช้ดูแลหอพักหนึ่งแห่ง</summary>
+/// <summary>ຮ້ອງຂໍມອບຝາຍໃຫ້ຜູ້ໃຊ້ໃນຫໍພັກ</summary>
 public class AssignUserDormitoryRequest
 {
-    /// <summary>หอพักที่ต้องการมอบหมาย</summary>
+    /// <summary>ຫໍພັກທີ່ຈະມອບຝາຍ</summary>
     public Guid DormitoryId { get; set; }
 
-    /// <summary>ตั้งให้เป็นหอพักหลักของผู้ใช้รายนี้หรือไม่</summary>
+    /// <summary>ຕັ້ງຫໍພັກຂອງຜູ້ໃຊ້ນີ້ເປັນຫໍພັກຫຼັກບໍ?</summary>
     public bool IsPrimary { get; set; }
 }

@@ -15,14 +15,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการบันทึกและรับพัสดุผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບການບັນທຶກແລະການຮັບຊຸດຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ParcelsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task บันทึกพัสดุที่มาถึงใหม่_ต้องได้สถานะ_Received()
+    public async Task ບັນທຶກການມາເຖິງparcelໃຝ່_ຕ້ອງໄດ້ຮັບການສະຖານະ_Received()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -37,7 +37,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
                 RoomId = room.Id,
                 CourierName = "Kerry Express",
                 TrackingNumber = "TH1234567890",
-                Description = "กล่องพัสดุขนาดกลาง",
+                Description = "ກ່ອງບັນຈຸພັນຂະຜາດກາງ",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -51,7 +51,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task รับพัสดุแล้ว_ต้องได้สถานะ_PickedUp()
+    public async Task ໄດ້ຮັບພັດສະດຸ_ຕ້ອງໄດ້ຮັບການສະຖານະ_PickedUp()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -62,7 +62,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri($"/api/v1/parcels/{parcel.Id}/pickup", UriKind.Relative),
-            new PickupParcelRequest { PickedUpByName = "สมชาย ใจดี" },
+            new PickupParcelRequest { PickedUpByName = "ສົມໃຈ ໃຈດີ" },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -71,11 +71,11 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
 
         pickedUp.Status.Should().Be("PickedUp");
         pickedUp.PickedUpAt.Should().NotBeNull();
-        pickedUp.PickedUpByName.Should().Be("สมชาย ใจดี");
+        pickedUp.PickedUpByName.Should().Be("ສົມໃຈ ໃຈດີ");
     }
 
     [Fact]
-    public async Task รับพัสดุที่ถูกรับไปแล้วซ้ำ_ต้องได้_409()
+    public async Task ເອົາຄືນparcelsທີ່ໄດ້ຮັບແລ້ວ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -101,7 +101,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/parcels", UriKind.Relative),
-            new LogParcelRequest { RoomId = roomId, Description = "ทดสอบ" },
+            new LogParcelRequest { RoomId = roomId, Description = "ການທົດສອບ" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -115,7 +115,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -127,7 +127,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -139,14 +139,14 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -158,7 +158,7 @@ public class ParcelsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

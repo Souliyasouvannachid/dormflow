@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางพัสดุ</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງ parcel</summary>
 public sealed class ParcelConfiguration : IEntityTypeConfiguration<Parcel>
 {
     /// <inheritdoc />

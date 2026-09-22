@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DormFlow.Api.Configuration;
 
-/// <summary>ตั้งค่าส่วนกลางของชั้น API เช่น Controller, API Versioning และรูปแบบ Response</summary>
+/// <summary>ກໍານົດລະດັບໂລກ API ເຊັ່ນ Controller, API Versioning ແລະຮູບແບບ Response</summary>
 public static class ApiConfiguration
 {
-    /// <summary>ลงทะเบียนบริการพื้นฐานของชั้น API</summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
+    /// <summary>ລົງທະບຽນສໍາລັບການບໍລິການຊັ້ນພື້ນຖານ API</summary>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddDormFlowApi(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -42,8 +42,8 @@ public static class ApiConfiguration
     }
 
     /// <summary>
-    /// แปลงข้อผิดพลาดจาก Model Binding ให้อยู่ในรูปแบบ ApiResponse เดียวกับข้อผิดพลาดอื่น
-    /// ไม่เช่นนั้น ASP.NET Core จะตอบเป็น ProblemDetails ซึ่งคนละรูปแบบกับที่เหลือทั้งระบบ
+    /// ແປງຄວາມຜິດພາດຈາກ Model Binding ຢູ່ໃນຮູບແບບ ApiResponse ຄືກັນກັບຂໍ້ຜິດພາດອື່ນ
+    /// ຖ້າບໍ່ດັ່ງນັ້ນ ASP.NET Core ຂ້າພະເຈົ້າຈະຕອບເປັນ ProblemDetails ເຊິ່ງແຕກຕ່າງຈາກສ່ວນທີ່ເຫຼືອຂອງລະບົບ
     /// </summary>
     private static void ConfigureInvalidModelStateResponse(IServiceCollection services)
     {
@@ -57,7 +57,7 @@ public static class ApiConfiguration
                         entry => ToCamelCase(entry.Key),
                         entry => entry.Value!.Errors
                             .Select(error => string.IsNullOrWhiteSpace(error.ErrorMessage)
-                                ? "ค่าที่ระบุไม่ถูกต้อง"
+                                ? "ຄ່າທີ່ລະບຸບໍ່ຖືກຕ້ອງ"
                                 : error.ErrorMessage)
                             .ToArray(),
                         StringComparer.Ordinal);

@@ -8,15 +8,15 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-dormflow}
       POSTGRES_USER: ${POSTGRES_USER:-dormflow}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?ต้องกำหนด POSTGRES_PASSWORD ในไฟล์ .env}
-      # เร่งการเทียบข้อความและกำหนดโลแคลให้คงที่ทุกเครื่อง
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?ຕ້ອງໄດ້ຮັບການກໍານົດ POSTGRES_PASSWORD ໃນໄຟລ໌ .env}
+      # ເລັ່ງການຈັບຄູ່ຂໍ້ຄວາມ ແລະຕັ້ງທ້ອງຖິ່ນທີ່ສອດຄ່ອງກັນໃນທຸກອຸປະກອນ
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - dormflow-postgres-data:/var/lib/postgresql/data
     healthcheck:
-      # ระบุ -d และ -U ให้ครบ ไม่งั้น pg_isready จะรายงานว่าพร้อมทั้งที่ฐานข้อมูลยังสร้างไม่เสร็จ
+      # ລະບຸ -d ແລະ -U ເຮັດສໍາເລັດມັນຫຼືອື່ນໆ pg_isready ມັນຈະຖືກລາຍງານວ່າຖານຂໍ້ມູນຍັງບໍ່ທັນໄດ້ຖືກສ້າງຂຶ້ນ
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dormflow} -d ${POSTGRES_DB:-dormflow}"]
       interval: 10s
       timeout: 5s
@@ -38,21 +38,32 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       ASPNETCORE_HTTP_PORTS: "8080"
-      # TLS ถูกจัดการโดย reverse proxy ที่อยู่หน้าคอนเทนเนอร์
+      # TLS ຄຸ້ມຄອງໂດຍ reverse proxy ທີ່ຢູ່ຕໍ່ໜ້າຕູ້ຄອນເທນເນີ
       Https__EnableRedirection: "false"
-      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?ต้องกำหนด Connection String ในไฟล์ .env}
+      ForwardedHeaders__KnownProxies__0: ${ForwardedHeaders__KnownProxies__0:-}
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?ຕ້ອງໄດ້ຮັບການກໍານົດ Connection String ໃນໄຟລ໌ .env}
       Cors__AllowedOrigins__0: ${Cors__AllowedOrigins__0:-http://localhost:3000}
       RateLimiting__Enabled: ${RateLimiting__Enabled:-true}
       RateLimiting__PermitLimit: ${RateLimiting__PermitLimit:-100}
       RateLimiting__WindowSeconds: ${RateLimiting__WindowSeconds:-60}
-      # กุญแจสำหรับเซ็น JWT ต้องกำหนดเองเสมอ ไม่มีค่าเริ่มต้น เพราะ appsettings.json ตั้งใจเว้นว่างไว้
-      Jwt__SigningKey: ${Jwt__SigningKey:?ต้องกำหนด Jwt__SigningKey ในไฟล์ .env}
+      # ທີ່ສໍາຄັນສໍາລັບການລົງນາມ JWT ສະເຝີຕ້ອງປັບແຕ່ງບໍ່ມີຄ່າເລີ່ມຕົ້ນເພາະວ່າ appsettings.json ເຈດຕະນາປະໄວ້ຫວ່າງເປົ່າ
+      Jwt__SigningKey: ${Jwt__SigningKey:?ຕ້ອງໄດ້ຮັບການກໍານົດ Jwt__SigningKey ໃນໄຟລ໌ .env}
       Jwt__Issuer: ${Jwt__Issuer:-DormFlow}
       Jwt__Audience: ${Jwt__Audience:-DormFlow.Client}
-      # ปรับสคีมาฐานข้อมูลอัตโนมัติตอนสตาร์ต เปิดไว้เพื่อความสะดวกตอนรันครั้งแรก
-      # ปิดค่านี้ (false) แล้วรัน dotnet ef database update แยกต่างหากก่อน deploy เมื่อรันหลายอินสแตนซ์พร้อมกัน
+      # ໃຊ້ pickup directory ເປັນຄ່າເລີ່ມຕົ້ນໃນ local development; ຕັ້ງ Email__Provider=Smtp ເມື່ອມີ SMTP ຈິງ
+      Email__Provider: ${Email__Provider:-PickupDirectory}
+      Email__FromAddress: ${Email__FromAddress:-no-reply@dormflow.local}
+      Email__FromName: ${Email__FromName:-DormFlow}
+      Email__PickupDirectory: ${Email__PickupDirectory:-logs/emails}
+      Email__SmtpHost: ${Email__SmtpHost:-}
+      Email__SmtpPort: ${Email__SmtpPort:-587}
+      Email__SmtpUseSsl: ${Email__SmtpUseSsl:-true}
+      Email__SmtpUsername: ${Email__SmtpUsername:-}
+      Email__SmtpPassword: ${Email__SmtpPassword:-}
+      # ປັບລະບົບຖານຂໍ້ມູນໂດຍອັດຕະໂນມັດໃນເວລາເລີ່ມຕົ້ນ. ປະໄວ້ເພື່ອຄວາມສະດວກໃນເວລາແລ່ນຄັ້ງທໍາອິດ
+      # ປິດຄ່ານີ້ (false) ແລ້ວແລ່ນ dotnet ef database update ແຍກກ່ອນ deploy ເມື່ອແລ່ນຫຼາຍຕົວຢ່າງພ້ອມໆກັນ
       Database__AutoMigrate: ${Database__AutoMigrate:-false}
-      # ข้อมูลผู้ดูแลระบบเริ่มต้น ไม่บังคับ ถ้าไม่กำหนดจะข้ามการสร้างบัญชีนี้
+      # ຂໍ້ມູນຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ: ທາງເລືອກ. ຖ້າບໍ່ໄດ້ລະບຸ, ການສ້າງບັນຊີນີ້ຈະຖືກຂ້າມໄປ
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME:-}
@@ -62,7 +73,7 @@ services:
     volumes:
       - dormflow-api-logs:/app/logs
     healthcheck:
-      # เรียก endpoint live เท่านั้น เพื่อไม่ให้คอนเทนเนอร์ถูกรีสตาร์ตเพียงเพราะฐานข้อมูลล่มชั่วคราว
+      # ໂທ endpoint live ພຽງແຕ່ເພື່ອໃຫ້ກ່ອງບັນຈຸບໍ່ໄດ້ຖືກເລີ່ມຕົ້ນໃຝ່ພຽງແຕ່ຍ້ອນວ່າຖານຂໍ້ມູນຖືກປິດຊົ່ວຄາວ
       test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health/live || exit 1"]
       interval: 15s
       timeout: 10s

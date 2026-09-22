@@ -1,32 +1,32 @@
 namespace DormFlow.Application.Common.Abstractions;
 
 /// <summary>
-/// บทบาทผู้ใช้งานทั้งหมดของระบบ
+/// ບົດບາດຜູ້ໃຊ້ທັງຝົດຂອງລະບົບ
 /// </summary>
 public static class DormFlowRoles
 {
-    /// <summary>ผู้ดูแลระบบสูงสุด เข้าถึงข้อมูลได้ทุกองค์กร</summary>
+    /// <summary>ຜູ້ບໍລິຫານລະດັບສູງ ເຂົ້າເຖິງຂໍ້ມູນຈາກທຸກອົງກອນ</summary>
     public const string SuperAdmin = "SuperAdmin";
 
-    /// <summary>เจ้าของกิจการ ดูแลได้ทุกหอพักในองค์กรของตน</summary>
+    /// <summary>ເຈົ້າຂອງທຸລະກິດສາມາດເບິ່ງແຍງທຸກໆຫໍພັກໃນອົງກອນຂອງພວກເຂົາ</summary>
     public const string Owner = "Owner";
 
-    /// <summary>ผู้จัดการหอพัก ดูแลเฉพาะหอพักที่ได้รับมอบหมาย</summary>
+    /// <summary>ຜູ້ຈັດການຫໍພັກດູແລພຽງແຕ່ຫໍພັກທີ່ໄດ້ຮັບມອບຝາຍ</summary>
     public const string DormManager = "DormManager";
 
-    /// <summary>ฝ่ายบัญชี</summary>
+    /// <summary>ພະແນກບັນຊີ</summary>
     public const string Accountant = "Accountant";
 
-    /// <summary>เจ้าหน้าที่ทั่วไป</summary>
+    /// <summary>ນາຍພົນ</summary>
     public const string Staff = "Staff";
 
-    /// <summary>ช่างซ่อมบำรุง</summary>
+    /// <summary>ຊ່າງສ້ອມແປງ</summary>
     public const string Technician = "Technician";
 
-    /// <summary>ผู้เช่า เห็นเฉพาะข้อมูลของตนเอง</summary>
+    /// <summary>ຜູ້ເຊົ່າເຫັນພຽງແຕ່ຂໍ້ມູນຂອງຕົນເອງ</summary>
     public const string Tenant = "Tenant";
 
-    /// <summary>รายชื่อบทบาททั้งหมด ใช้ตอน Seed ข้อมูลเริ่มต้น</summary>
+    /// <summary>ບັນຊີລາຍຊື່ຂອງບົດບາດທັງຝົດ, ໃຊ້ຕອນ Seed ຂໍ້ມູນເລີ່ມຕົ້ນ</summary>
     public static IReadOnlyList<string> All { get; } =
     [
         SuperAdmin,

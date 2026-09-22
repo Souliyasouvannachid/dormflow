@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางประกาศ</summary>
+/// <summary>ຕັ້ງຕາຕະລາງປະກາດ</summary>
 public sealed class AnnouncementConfiguration : IEntityTypeConfiguration<Announcement>
 {
     /// <inheritdoc />

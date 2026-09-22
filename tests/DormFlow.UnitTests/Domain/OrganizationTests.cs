@@ -5,19 +5,19 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Domain;
 
-/// <summary>ตรวจตรรกะสถานะขององค์กร</summary>
+/// <summary>ກວດເບິ່ງເຫດຜົນຂອງລັດຂອງອົງກອນ</summary>
 public class OrganizationTests
 {
     [Theory]
     [InlineData(OrganizationStatus.Active, true)]
     [InlineData(OrganizationStatus.Inactive, false)]
     [InlineData(OrganizationStatus.Suspended, false)]
-    public void CanUsersSignIn_ต้องเป็นจริงเฉพาะสถานะ_Active(OrganizationStatus status, bool expected)
+    public void CanUsersSignIn_ຕ້ອງເປັນຄວາມຈິງພຽງແຕ່ຢູ່ໃນລັດ_Active(OrganizationStatus status, bool expected)
     {
         Organization organization = new()
         {
             Code = "ORG-1",
-            Name = "หอพักทดสอบ",
+            Name = "ຫໍພັກການທົດສອບ",
             Status = status,
         };
 
@@ -25,9 +25,9 @@ public class OrganizationTests
     }
 
     [Fact]
-    public void Organization_ที่สร้างใหม่_ต้องมีสถานะ_Active_เป็นค่าเริ่มต้น()
+    public void Organization_ສ້າງໃໝ່_ຕ້ອງມີສະຖານະ_Active_ເປັນຄ່າເລີ່ມຕົ້ນ()
     {
-        Organization organization = new() { Code = "ORG-2", Name = "หอพักทดสอบ" };
+        Organization organization = new() { Code = "ORG-2", Name = "ຫໍພັກການທົດສອບ" };
 
         organization.Status.Should().Be(OrganizationStatus.Active);
     }

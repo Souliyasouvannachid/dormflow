@@ -1,26 +1,26 @@
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// ความสัมพันธ์ระหว่างบทบาทกับสิทธิ์
+/// ຄວາມສຳພັນລະຫວ່າງບົດບາດ ແລະ ສິດ
 /// </summary>
 /// <remarks>
-/// ใช้ Composite Key ของ RoleId และ PermissionId จึงไม่ต้องมีคอลัมน์ Id
-/// และไม่ใช้ Soft Delete เพราะการถอนสิทธิ์ควรลบแถวออกจริง
+/// ໃຊ້ Composite Key ຂອງ RoleId ແລະ PermissionId ດັ່ງນັ້ນບໍ່ຈໍາເປັນຕ້ອງມີຖັນ Id
+/// ແລະບໍ່ໃຊ້ Soft Delete ເນື່ອງຈາກວ່າການຖອນການອະນຸຍາດຕົວຈິງແລ້ວຄວນລຶບແຖວ
 /// </remarks>
 public class RolePermission
 {
-    /// <summary>บทบาทที่ได้รับสิทธิ์</summary>
+    /// <summary>ບົດບາດສິດພິເສດ</summary>
     public Guid RoleId { get; set; }
 
-    /// <summary>สิทธิ์ที่ถูกมอบให้</summary>
+    /// <summary>ອະນຸຍາດ</summary>
     public Guid PermissionId { get; set; }
 
-    /// <summary>เวลาที่มอบสิทธิ์</summary>
+    /// <summary>ເວລາອະນຸຍາດ</summary>
     public DateTimeOffset GrantedAt { get; set; }
 
-    /// <summary>ผู้มอบสิทธิ์ เป็น null เมื่อมอบโดยระบบตอน Seed</summary>
+    /// <summary>ຜູ້ໃຫ້ທຶນແມ່ນ null ເມື່ອໃຫ້ໂດຍລະບົບບົດ Seed</summary>
     public Guid? GrantedBy { get; set; }
 
-    /// <summary>สิทธิ์ที่อ้างถึง</summary>
+    /// <summary>ສິດອ້າງເຖິງ</summary>
     public Permission? Permission { get; set; }
 }

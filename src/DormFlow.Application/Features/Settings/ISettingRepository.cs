@@ -4,30 +4,30 @@ using DormFlow.Domain.Entities;
 
 namespace DormFlow.Application.Features.Settings;
 
-/// <summary>ตัวกรองสำหรับดึงรายการค่าตั้งแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງການຕັ້ງຄ່າ</summary>
 public sealed record SettingListFilter(Guid OrganizationId);
 
-/// <summary>เข้าถึงข้อมูลค่าตั้งในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຕັ້ງຄ່າໃນຖານຂໍ້ມູນ</summary>
 public interface ISettingRepository
 {
-    /// <summary>อ่านค่าตั้งจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານການຕັ້ງຄ່າຈາກລະຫັດອ້າງອີງ</summary>
     Task<Setting?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านค่าตั้งจากองค์กรและคีย์</summary>
+    /// <summary>ອ່ານການຕັ້ງຄ່າຈາກອົງກອນ ແລະກະແຈ</summary>
     Task<Setting?> GetByKeyAsync(Guid organizationId, string key, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการค่าตั้งแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ການຕັ້ງຄ່າແບບ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<Setting>> GetPagedAsync(
         SettingListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มค่าตั้งใหม่</summary>
+    /// <summary>ເພີ່ມການຕັ້ງຄ່າໃໝ່</summary>
     Task AddAsync(Setting setting, CancellationToken cancellationToken = default);
 
-    /// <summary>ทำเครื่องหมายลบค่าตั้ง ระบบจะแปลงเป็น Soft Delete ให้อัตโนมัติตอนบันทึก</summary>
+    /// <summary>ຝາຍລົບການຕັ້ງຄ່າ ລະບົບຈະປ່ຽນເປັນ Soft Delete ອັດຕະໂນມັດເມື່ອບັນທຶກ</summary>
     void Remove(Setting setting);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

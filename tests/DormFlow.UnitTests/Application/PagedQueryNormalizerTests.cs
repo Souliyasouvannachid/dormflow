@@ -6,8 +6,8 @@ using Xunit;
 namespace DormFlow.UnitTests.Application;
 
 /// <summary>
-/// ตรวจว่าพารามิเตอร์การแบ่งหน้าที่ผู้เรียกส่งมาถูกปรับให้อยู่ในขอบเขตที่ปลอดภัยเสมอ
-/// เพราะค่าอย่าง pageSize=100000 จะดึงข้อมูลทั้งตารางออกมาในคำขอเดียว
+/// ໃຫ້ແນ່ໃຈວ່າຕົວກໍານົດການຈັດສັນທີ່ຜູ້ໂທສົ່ງຖືກປັບສະເຝີພາຍໃນຂອບເຂດຈໍາກັດທີ່ປອດໄພ
+/// ເນື່ອງຈາກວ່າມູນຄ່າ pageSize=100000 ມັນດຶງຕາຕະລາງທັງຝົດໃນຄໍາຮ້ອງຂໍດຽວ
 /// </summary>
 public class PagedQueryNormalizerTests
 {
@@ -15,7 +15,7 @@ public class PagedQueryNormalizerTests
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(-999)]
-    public void หน้าน้อยกว่าหนึ่ง_ต้องถูกปรับเป็นหน้าแรก(int requestedPage)
+    public void ໜ້ອຍກວ່າໜຶ່ງໜ້າ_ຕ້ອງຕັ້ງເປັນຜ້າທໍາອິດ(int requestedPage)
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { Page = requestedPage });
 
@@ -23,7 +23,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void ขนาดหน้าเกินเพดาน_ต้องถูกลดลงมาที่เพดาน()
+    public void ຂະໜາດໃບໜ້າເກີນເພດານ_ຕ້ອງໄດ້ຮັບການຕ່ໍາສຸດເພດານ()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { PageSize = 100_000 });
 
@@ -33,7 +33,7 @@ public class PagedQueryNormalizerTests
     [Theory]
     [InlineData(0)]
     [InlineData(-5)]
-    public void ขนาดหน้าน้อยกว่าหนึ่ง_ต้องกลับไปใช้ค่าเริ่มต้น(int requestedPageSize)
+    public void ຂະໜາດໜ້າໜ້ອຍກວ່າໜຶ່ງ_ຕ້ອງກັບຄືນຫາຄ່າເລີ່ມຕົ້ນ(int requestedPageSize)
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { PageSize = requestedPageSize });
 
@@ -41,7 +41,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void คำค้นหา_ต้องถูกตัดช่องว่างหัวท้าย()
+    public void ຊອກຫາຄໍາ_ຊ່ອງຫວ່າງຫົວແລະຫາງຕ້ອງໄດ້ຮັບການຕັດ()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { Search = "  A101  " });
 
@@ -53,7 +53,7 @@ public class PagedQueryNormalizerTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void คำค้นหาที่ว่าง_ต้องกลายเป็น_null(string? search)
+    public void ຄໍາຄົ້ນຫາຫວ່າງເປົ່າ_ຕ້ອງກາຍເປັນ_null(string? search)
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { Search = search });
 
@@ -62,7 +62,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void ฟิลด์เรียงลำดับที่ไม่อยู่ในรายการอนุญาต_ต้องกลับไปใช้ค่าเริ่มต้น()
+    public void ການຈັດຮຽງຊ່ອງຂໍ້ມູນບໍ່ໄດ້ຢູ່ໃນລາຍການທີ່ອະນຸຍາດ_ຕ້ອງກັບຄືນຫາຄ່າເລີ່ມຕົ້ນ()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(
             new PagedQueryRequest { SortBy = "'; DROP TABLE rooms; --" },
@@ -73,7 +73,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void ฟิลด์เรียงลำดับที่อยู่ในรายการอนุญาต_ต้องคืนค่าตามที่ประกาศไว้()
+    public void ຈັດຮຽງຊ່ອງຂໍ້ມູນລວມຢູ່ໃນລາຍການອະນຸຍາດ_ຕ້ອງສົ່ງຄືນຄ່າຕາມທີ່ປະກາດ()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(
             new PagedQueryRequest { SortBy = "MONTHLYRENT" },
@@ -84,7 +84,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void Skip_และ_Take_ต้องคำนวณจากหน้าที่ปรับค่าแล้ว()
+    public void Skip_ແລະ_Take_ຕ້ອງໄດ້ຮັບການຄິດໄລ່ຈາກຜ້າທີ່ປັບ()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(new PagedQueryRequest { Page = 3, PageSize = 20 });
 
@@ -93,7 +93,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void ทิศทางการเรียงลำดับ_ต้องคงค่าที่ผู้เรียกระบุ()
+    public void ທິດທາງການຈັດຮຽງ_ຄ່າທີ່ລະບຸໄວ້ໂດຍຜູ້ໂທຕ້ອງຖືກຮັກສາໄວ້()
     {
         PagedQuery query = PagedQueryNormalizer.Normalize(
             new PagedQueryRequest { SortDirection = SortDirection.Desc });
@@ -102,7 +102,7 @@ public class PagedQueryNormalizerTests
     }
 
     [Fact]
-    public void Normalize_ต้องไม่รับ_request_ที่เป็น_null()
+    public void Normalize_ບໍ່ຄວນຍອມຮັບ_request_ນັ້ນແມ່ນ_null()
     {
         Action act = () => PagedQueryNormalizer.Normalize(null!);
 

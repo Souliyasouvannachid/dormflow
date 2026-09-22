@@ -3,14 +3,14 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Reports;
 
-/// <summary>ตรวจสอบคำขอรายงานสรุปรายได้</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍຂອງທ່ານສໍາລັບບົດລາຍງານລາຍໄດ້ສະຫຼຸບ</summary>
 public sealed class RevenueReportRequestValidator : AbstractValidator<RevenueReportRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public RevenueReportRequestValidator()
     {
         RuleFor(request => request.PeriodTo)
             .GreaterThanOrEqualTo(request => request.PeriodFrom)
-            .WithMessage("เดือนสิ้นสุดต้องไม่อยู่ก่อนเดือนเริ่มต้น");
+            .WithMessage("ເດືອນສິ້ນສຸດຕ້ອງບໍ່ຢູ່ກ່ອນເດືອນເລີ່ມຕົ້ນ");
     }
 }

@@ -2,27 +2,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DormFlow.Api.Options;
 
-/// <summary>ค่าตั้ง Rate Limiting อ่านจาก configuration section ชื่อ RateLimiting</summary>
+/// <summary>ການຕັ້ງຄ່າ Rate Limiting ອ່ານຈາກ configuration section ຊື່ RateLimiting</summary>
 public sealed class RateLimitingOptions
 {
-    /// <summary>ชื่อ section ใน appsettings</summary>
+    /// <summary>ຊື່ section ໃນ appsettings</summary>
     public const string SectionName = "RateLimiting";
 
-    /// <summary>ชื่อ policy ที่ใช้เป็นค่าเริ่มต้นของทุก Endpoint</summary>
+    /// <summary>ຊື່ policy ທີ່ຖືກນໍາໃຊ້ເປັນຄ່າເລີ່ມຕົ້ນສໍາລັບທຸກຄົນ Endpoint</summary>
     public const string GlobalPolicyName = "dormflow-global";
 
-    /// <summary>เปิดใช้งาน Rate Limiting หรือไม่</summary>
+    /// <summary>ເປີດໃຊ້ Rate Limiting ຫຼືບໍ່</summary>
     public bool Enabled { get; set; } = true;
 
-    /// <summary>จำนวนคำขอสูงสุดต่อหนึ่งช่วงเวลา</summary>
+    /// <summary>ຈໍານວນການຮ້ອງຂໍສູງສຸດຕໍ່ໄລຍະເວລາ</summary>
     [Range(1, 100000)]
     public int PermitLimit { get; set; } = 100;
 
-    /// <summary>ความยาวของช่วงเวลา (วินาที)</summary>
+    /// <summary>ໄລຍະເວລາ (ວິນາທີ)</summary>
     [Range(1, 3600)]
     public int WindowSeconds { get; set; } = 60;
 
-    /// <summary>จำนวนคำขอที่ยอมให้รอคิวเมื่อเกินโควตา</summary>
+    /// <summary>ຈຳນວນການຮ້ອງຂໍທີ່ອະນຸຍາດໃຫ້ຈັດຄິວເມື່ອເກີນໂຄຕ້າ</summary>
     [Range(0, 1000)]
     public int QueueLimit { get; set; }
 }

@@ -3,41 +3,41 @@ using DormFlow.Contracts.Users;
 
 namespace DormFlow.Application.Features.Users;
 
-/// <summary>Use Case ทั้งหมดของโมดูลบริหารจัดการผู้ใช้งาน</summary>
+/// <summary>Use Case ໂມດູນການຄຸ້ມຄອງຜູ້ໃຊ້ທັງຝົດ</summary>
 public interface IUserManagementService
 {
-    /// <summary>ดึงรายการผู้ใช้แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ໃຊ້ທີ່ຕັ້ງໄວ້ແລ້ວ</summary>
     Task<PagedResult<UserResponse>> GetPagedAsync(
         UserListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลผู้ใช้จากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຜູ້ໃຊ້ຈາກລະຫັດອ້າງອີງ</summary>
     Task<UserResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างบัญชีผู้ใช้ใหม่</summary>
+    /// <summary>ສ້າງບັນຊີໃຝ່</summary>
     Task<UserResponse> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>แก้ไขข้อมูลโปรไฟล์ของผู้ใช้</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນໂປຣໄຟລ໌ຜູ້ໃຊ້</summary>
     Task<UserResponse> UpdateAsync(
         Guid id,
         UpdateUserRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนสถานะบัญชีผู้ใช้</summary>
+    /// <summary>ປ່ຽນສະຖານະບັນຊີຜູ້ໃຊ້</summary>
     Task<UserResponse> ChangeStatusAsync(Guid id, string status, CancellationToken cancellationToken = default);
 
-    /// <summary>กำหนดบทบาทให้ผู้ใช้ แทนที่บทบาทเดิมทั้งหมด</summary>
+    /// <summary>ມອບໝາຍໜ້າທີ່ໃຫ້ຜູ້ໃຊ້ແທນໜ້າທີ່ທັງໝົດກ່ອນໜ້ານີ້</summary>
     Task<UserResponse> AssignRolesAsync(
         Guid id,
         AssignUserRolesRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>มอบหมายให้ผู้ใช้ดูแลหอพักหนึ่งแห่ง</summary>
+    /// <summary>ມອບໝາຍໃຫ້ຜູ້ໃຊ້ຈັດການໜຶ່ງຫໍພັກ</summary>
     Task<UserResponse> AssignDormitoryAsync(
         Guid id,
         AssignUserDormitoryRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ถอนการมอบหมายหอพักออกจากผู้ใช้</summary>
+    /// <summary>ເອົາການມອບໝາຍຫໍພັກອອກຈາກຜູ້ໃຊ້</summary>
     Task RemoveDormitoryAsync(Guid id, Guid dormitoryId, CancellationToken cancellationToken = default);
 }

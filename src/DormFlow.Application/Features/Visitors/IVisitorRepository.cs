@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Visitors;
 
-/// <summary>ตัวกรองสำหรับดึงรายการผู้มาเยือนแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຜູ້ມາຢ້ຽມຢາມ</summary>
 public sealed record VisitorListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -13,21 +13,24 @@ public sealed record VisitorListFilter(
     VisitorStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลผู้มาเยือนในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຜູ້ເຂົ້າຊົມໃນຖານຂໍ້ມູນ</summary>
 public interface IVisitorRepository
 {
-    /// <summary>อ่านรายการผู้มาเยือนจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານລາຍຊື່ແຂກຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Visitor?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการผู้มาเยือนแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ເຂົ້າຊົມແບບ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<Visitor>> GetPagedAsync(
         VisitorListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มรายการผู้มาเยือนใหม่</summary>
+    /// <summary>ນັບຜູ້ເຂົ້າຊົມຕາມຕົວກອງໂດຍບໍ່ດຶງລາຍການ</summary>
+    Task<int> CountAsync(VisitorListFilter filter, CancellationToken cancellationToken = default);
+
+    /// <summary>ເພີ່ມລາຍຊື່ແຂກໃໝ່</summary>
     Task AddAsync(Visitor visitor, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

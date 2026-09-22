@@ -8,12 +8,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DormFlow.Api.Configuration;
 
-/// <summary>ตั้งค่าการยืนยันตัวตนด้วย JWT Bearer และการตรวจสิทธิ์แบบไดนามิก</summary>
+/// <summary>ຕັ້ງຄ່າການພິສູດຢືນຢັນເຊັ່ນກັນ JWT Bearer ແລະການຢືນຢັນແບບເຄື່ອນໄຫວ</summary>
 public static class AuthenticationConfiguration
 {
-    /// <summary>ลงทะเบียน JWT Bearer Authentication และ Permission-Based Authorization</summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
+    /// <summary>ລົງທະບຽນ JWT Bearer Authentication ແລະ Permission-Based Authorization</summary>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddDormFlowAuthentication(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -47,8 +47,8 @@ public static class AuthenticationConfiguration
                     ClockSkew = TimeSpan.FromSeconds(jwtOptions.ClockSkewSeconds),
                 };
 
-                // เขียน Response รูปแบบเดียวกับส่วนอื่นของระบบเอง แทนที่จะปล่อยให้ Global Exception Middleware จัดการ
-                // เพราะ JwtBearer เขียน Response ไปแล้วบางส่วนก่อนที่ Middleware กลางจะไปถึง
+                // ຂຽນ Response ຮູບແບບແມ່ນຄືກັນກັບສ່ວນທີ່ເຫຼືອຂອງລະບົບຕົວມັນເອງ. ແທນທີ່ຈະປ່ອຍໃຫ້ Global Exception Middleware ຈັດການ
+                // ເນື່ອງຈາກວ່າ JwtBearer ຂຽນ Response ໄປກ່ອນ Middleware ກາງຈະໄປຮອດ
                 options.Events = new JwtBearerEvents
                 {
                     OnChallenge = context =>

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับดู Audit Log ของระบบ</summary>
+/// <summary>Endpoint ສໍາລັບການເບິ່ງ Audit Log ຂອງລະບົບ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/audit-logs")]
@@ -18,7 +18,7 @@ public sealed class AuditLogsController(IAuditLogQueryService auditLogQueryServi
 {
     private readonly IAuditLogQueryService _auditLogQueryService = auditLogQueryService;
 
-    /// <summary>ดึงรายการ Audit Log แบบแบ่งหน้า เรียงจากเหตุการณ์ล่าสุดไปเก่าสุดเป็นค่าเริ่มต้น</summary>
+    /// <summary>ດຶງເອົາລາຍການ Audit Log Paginated, ຈັດຮຽງຈາກເຫດການຫຼ້າສຸດໄປຫາເກົ່າທີ່ສຸດຕາມຄ່າເລີ່ມຕົ້ນ</summary>
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<AuditLogResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<PagedResult<AuditLogResponse>>>> GetList(

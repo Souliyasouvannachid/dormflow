@@ -4,38 +4,38 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// งานแจ้งซ่อมบำรุงหนึ่งรายการของห้องหนึ่งห้อง
+/// ບົດລາຍງານການບໍາລຸງຮັກສາຜຶ່ງສໍາລັບຫ້ອງຜຶ່ງ
 /// </summary>
 /// <remarks>
-/// ไม่มีฟิลด์ผู้แจ้งแยกต่างหาก เพราะ <see cref="Common.IAuditableEntity.CreatedBy"/> ที่ตั้งค่าอัตโนมัติ
-/// ทุกครั้งที่บันทึกก็บอกได้อยู่แล้วว่าใครเป็นผู้แจ้ง
+/// ບໍ່ມີພາກສະຜາມຂໍ້ມູນຂ່າວສານແຍກຕ່າງຫາກເພາະວ່າ <see cref="Common.IAuditableEntity.CreatedBy"/> ທີ່ຖືກຕັ້ງອັດຕະໂນມັດ
+/// ທຸກໆຄັ້ງທີ່ມັນຖືກບັນທຶກ, ເຈົ້າສາມາດບອກໄດ້ແລ້ວວ່າໃຜເປັນຜູ້ສ້າງບົດລາຍງານ
 /// </remarks>
 public class MaintenanceRequest : TenantEntity
 {
-    /// <summary>ห้องที่แจ้งซ่อม</summary>
+    /// <summary>ລາຍງານຫ້ອງສໍາລັບການສ້ອມແປງ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>หัวข้อของงานซ่อม</summary>
+    /// <summary>ຫົວຂໍ້ຂອງວຽກງານສ້ອມແປງ</summary>
     public required string Title { get; set; }
 
-    /// <summary>รายละเอียดเพิ่มเติมของปัญหา</summary>
+    /// <summary>ລາຍລະອຽດເພີ່ມເຕີມກ່ຽວກັບບັນຫາ</summary>
     public string? Description { get; set; }
 
-    /// <summary>ระดับความสำคัญ</summary>
+    /// <summary>ລະດັບບູລິມະສິດ</summary>
     public MaintenancePriority Priority { get; set; } = MaintenancePriority.Medium;
 
-    /// <summary>สถานะของงานซ่อม</summary>
+    /// <summary>ສະຖານະການສ້ອມແປງ</summary>
     public MaintenanceStatus Status { get; set; } = MaintenanceStatus.Reported;
 
-    /// <summary>ช่างซ่อมบำรุงที่ได้รับมอบหมาย เป็น null เมื่อยังไม่ได้มอบหมาย</summary>
+    /// <summary>ນາຍຊ່າງການບຳລຸງຮັກສາທີ່ຖືກມອບໝາຍແມ່ນ null ໃນເວລາທີ່ມັນບໍ່ໄດ້ຖືກມອບຝາຍ</summary>
     public Guid? AssignedTechnicianId { get; set; }
 
-    /// <summary>เวลาที่มอบหมายช่างล่าสุด</summary>
+    /// <summary>ເວລາຂອງການມອບໝາຍນັກວິຊາການຄັ້ງສຸດທ້າຍ</summary>
     public DateTimeOffset? AssignedAt { get; set; }
 
-    /// <summary>เวลาที่ซ่อมเสร็จ เป็น null เมื่อยังไม่เสร็จ</summary>
+    /// <summary>ເວລາທີ່ການສ້ອມແປງໄດ້ຖືກສໍາເລັດ null ໃນເວລາທີ່ມັນບໍ່ສໍາເລັດ</summary>
     public DateTimeOffset? CompletedAt { get; set; }
 
-    /// <summary>บันทึกผลการซ่อม</summary>
+    /// <summary>ບັນທຶກຜົນການສ້ອມແປງ</summary>
     public string? ResolutionNotes { get; set; }
 }

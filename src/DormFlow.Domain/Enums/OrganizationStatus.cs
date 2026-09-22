@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะขององค์กรที่ใช้งานระบบ</summary>
+/// <summary>ສະຖານະຂອງອົງກອນທີ່ໃຊ້ລະບົບ</summary>
 public enum OrganizationStatus
 {
-    /// <summary>ใช้งานได้ตามปกติ</summary>
+    /// <summary>ສາມາດໃຊ້ໄດ້ຕາມປົກກະຕິ</summary>
     Active = 1,
 
-    /// <summary>ปิดใช้งานชั่วคราวโดยองค์กรเอง</summary>
+    /// <summary>ປິດການໃຊ້ງານຊົ່ວຄາວໂດຍອົງກອນເອງ</summary>
     Inactive = 2,
 
-    /// <summary>ถูกระงับโดยผู้ดูแลระบบ ผู้ใช้ในองค์กรจะเข้าสู่ระบบไม่ได้</summary>
+    /// <summary>ຖືກລະງັບໄວ້ໂດຍຜູ້ບໍລິຫານ ຜູ້ໃຊ້ໃນອົງກອນຂອງເຈົ້າຈະບໍ່ສາມາດເຂົ້າສູ່ລະບົບໄດ້</summary>
     Suspended = 3,
 }

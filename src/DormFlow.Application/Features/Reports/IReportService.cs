@@ -1,27 +1,34 @@
 using DormFlow.Contracts.Common;
+using DormFlow.Contracts.Dashboard;
 using DormFlow.Contracts.Reports;
 
 namespace DormFlow.Application.Features.Reports;
 
-/// <summary>Use Case ทั้งหมดของโมดูลรายงาน</summary>
+/// <summary>Use Case ທັງຝົດຂອງໂມດູນບົດລາຍງານ</summary>
 public interface IReportService
 {
-    /// <summary>สรุปยอดรายได้ในช่วงเวลาที่ระบุ</summary>
+    /// <summary>ສະຫຼຸບລາຍຮັບສໍາລັບໄລຍະເວລາທີ່ກໍານົດໄວ້</summary>
     Task<RevenueReportResponse> GetRevenueSummaryAsync(
         RevenueReportRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ส่งออกรายงานสรุปรายได้เป็นไฟล์ CSV</summary>
+    /// <summary>ດຶງ trend ລາຍຮັບຫຼາຍເດືອນໃນຄຳຮ້ອງຂໍດຽວ</summary>
+    Task<IReadOnlyList<RevenueTrendPointResponse>> GetRevenueTrendAsync(
+        DateOnly periodFrom,
+        DateOnly periodTo,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ສົ່ງອອກບົດລາຍງານສະຫຼຸບລາຍຮັບເພື່ອຍື່ນ CSV</summary>
     Task<byte[]> ExportRevenueSummaryAsync(
         RevenueReportRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการใบแจ้งหนี้ค้างชำระแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ຄ້າງໄວ້</summary>
     Task<PagedResult<OutstandingInvoiceItemResponse>> GetOutstandingInvoicesAsync(
         OutstandingInvoicesReportRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ส่งออกรายงานใบแจ้งหนี้ค้างชำระเป็นไฟล์ CSV</summary>
+    /// <summary>ສົ່ງອອກບົດລາຍງານໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຄາເປັນໄຟລ໌ CSV</summary>
     Task<byte[]> ExportOutstandingInvoicesAsync(
         OutstandingInvoicesReportRequest request,
         CancellationToken cancellationToken = default);

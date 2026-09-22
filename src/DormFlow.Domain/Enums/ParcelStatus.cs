@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของพัสดุ</summary>
+/// <summary>ສະຖານະການຫຸ້ມຫໍ່</summary>
 public enum ParcelStatus
 {
-    /// <summary>รับพัสดุไว้ที่หอพักแล้ว รอผู้เช่ามารับ</summary>
+    /// <summary>ຊຸດໄດ້ຖືກຮັບຢູ່ຫໍພັກ. ລໍຖ້າໃຫ້ຜູ້ເຊົ່າມາຮັບ</summary>
     Received = 1,
 
-    /// <summary>ผู้เช่ารับพัสดุไปแล้ว</summary>
+    /// <summary>ຜູ້ເຊົ່າໄດ້ຮັບຊຸດແລ້ວ</summary>
     PickedUp = 2,
 }

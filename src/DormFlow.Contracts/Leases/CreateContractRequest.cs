@@ -1,32 +1,32 @@
 namespace DormFlow.Contracts.Leases;
 
-/// <summary>คำขอสร้างสัญญาเช่าใหม่</summary>
+/// <summary>ຮ້ອງຂໍສ້າງສັນຍາເຊົ່າໃຝ່</summary>
 public class CreateContractRequest
 {
-    /// <summary>ห้องที่จะทำสัญญา</summary>
+    /// <summary>ຫ້ອງເພື່ອເຮັດສັນຍາ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าตามสัญญา</summary>
+    /// <summary>ຜູ້ເຊົ່າຕາມສັນຍາ</summary>
     public Guid TenantId { get; set; }
 
     /// <summary>
-    /// การจองที่นำมาทำสัญญานี้ เว้นว่างเมื่อทำสัญญาโดยไม่ผ่านการจองล่วงหน้า
-    /// เมื่อระบุ ห้องและผู้เช่าของการจองต้องตรงกับที่ระบุในคำขอนี้
+    /// ການຈອງໄດ້ນໍາເອົາເຂົ້າໃນສັນຍານີ້ຫວ່າງເປົ່າໃນເວລາທີ່ເຮັດສັນຍາໂດຍບໍ່ມີການຈອງລ່ວງຜ້າ
+    /// ເມື່ອລະບຸໄວ້, ຫ້ອງ ແລະຜູ້ເຊົ່າຂອງການຈອງຕ້ອງກົງກັບທີ່ລະບຸໄວ້ໃນຄໍາຮ້ອງຂໍນີ້
     /// </summary>
     public Guid? ReservationId { get; set; }
 
-    /// <summary>วันที่เริ่มสัญญา</summary>
+    /// <summary>ວັນທີເລີ່ມຕົ້ນຂອງສັນຍາ</summary>
     public DateOnly StartDate { get; set; }
 
-    /// <summary>วันที่สิ้นสุดสัญญาตามกำหนด</summary>
+    /// <summary>ກຳນົດວັນທີສິ້ນສຸດສັນຍາ</summary>
     public DateOnly EndDate { get; set; }
 
-    /// <summary>ค่าเช่ารายเดือน เว้นว่างเพื่อใช้ค่าเช่าปัจจุบันของห้องเป็นค่าเริ่มต้น</summary>
+    /// <summary>ເຊົ່າລາຍເດືອນ ປ່ອຍຫວ່າງໄວ້ເພື່ອໃຊ້ຄ່າເຊົ່າຂອງຫ້ອງເປັນຄ່າເລີ່ມຕົ້ນ</summary>
     public decimal? MonthlyRent { get; set; }
 
-    /// <summary>ค่ามัดจำ เว้นว่างเพื่อใช้ค่ามัดจำปัจจุบันของห้องเป็นค่าเริ่มต้น</summary>
+    /// <summary>ເງິນຝາກປະໄວ້ຫວ່າງເປົ່າເພື່ອໃຊ້ເງິນຝາກປະຈຸບັນຂອງຫ້ອງເປັນຄ່າເລີ່ມຕົ້ນ</summary>
     public decimal? DepositAmount { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

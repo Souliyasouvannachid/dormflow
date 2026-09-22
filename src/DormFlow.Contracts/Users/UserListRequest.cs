@@ -2,18 +2,18 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Users;
 
-/// <summary>พารามิเตอร์การค้นหารายการผู้ใช้</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍຊື່ຜູ້ໃຊ້</summary>
 public class UserListRequest : PagedQueryRequest
 {
     /// <summary>
-    /// กรองเฉพาะผู้ใช้ขององค์กรที่ระบุ มีผลเฉพาะเมื่อผู้เรียกเป็น SuperAdmin
-    /// ผู้ใช้อื่นเห็นได้เฉพาะผู้ใช้ในองค์กรของตนเองเสมอไม่ว่าจะระบุค่านี้หรือไม่
+    /// ການກັ່ນຕອງພຽງແຕ່ສໍາລັບຜູ້ໃຊ້ຂອງອົງກອນທີ່ລະບຸ. ມີປະສິດພາບພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin
+    /// ເຫັນໄດ້ສະເໝີຕໍ່ກັບຜູ້ໃຊ້ອື່ນສະເພາະຜູ້ໃຊ້ໃນອົງກອນຂອງຕົນເອງວ່າຄ່ານີ້ຖືກລະບຸຫຼືບໍ່
     /// </summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>กรองเฉพาะผู้ใช้ที่ได้รับมอบหมายให้ดูแลหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງສະເພາະຜູ້ໃຊ້ທີ່ຖືກມອບຝາຍໃຫ້ຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะผู้ใช้ที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຜູ້ໃຊ້ທີ່ສະຖານະກົງກັບທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

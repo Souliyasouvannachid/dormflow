@@ -4,36 +4,36 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// เงินมัดจำของสัญญาเช่าหนึ่งฉบับ
+/// ຝາກໃນສັນຍາເຊົ່າຜຶ່ງ
 /// </summary>
 /// <remarks>
-/// แยกจากโมดูล Payments โดยตั้งใจ เพราะเป็นกระแสเงินคนละก้อนกัน (เงินมัดจำเป็นเงินค้ำประกันที่ต้องคืน
-/// เมื่อสิ้นสุดสัญญา ไม่ใช่รายรับตามรอบบิลเหมือน Invoice/Payment) สัญญาเช่าหนึ่งฉบับมีเงินมัดจำได้เพียงรายการเดียว
-/// การคืนเงินทำได้ครั้งเดียวต่อรายการ (คืนเต็ม/บางส่วน/ริบทั้งหมด) ไม่รองรับการคืนเป็นหลายงวดเหมือน Payment
+/// ແຍກອອກຈາກໂມດູນ Payments ຕັ້ງໃຈເພາະວ່າມັນເປັນກະແສເງິນທີ່ແຕກຕ່າງກັນ (ເງິນຝາກແມ່ນການຄໍ້າປະກັນທີ່ຕ້ອງໄດ້ຮັບການສົ່ງຄືນ
+/// ເມື່ອສັນຍາສິ້ນສຸດລົງ ມັນບໍ່ແມ່ນລາຍຮັບຂອງຮອບບິນດຽວກັນ Invoice/Payment) ສັນຍາເຊົ່າຜຶ່ງມີເງິນຝາກພຽງແຕ່ຜຶ່ງ
+/// ການຄືນເງິນແມ່ນອະນຸຍາດໃຫ້ພຽງແຕ່ຄັ້ງດຽວຕໍ່ການເຮັດທຸລະກໍາ (ເງິນຄືນເຕັມ/ບາງ/ປະຖິ້ມທັງຝົດ) ມັນບໍ່ສະຜັບສະຜູນການກັບຄືນໃນຫຼາຍການຕິດຕັ້ງເຊັ່ນ: Payment
 /// </remarks>
 public class Deposit : TenantEntity
 {
-    /// <summary>สัญญาเช่าที่เงินมัดจำนี้ผูกอยู่</summary>
+    /// <summary>ສັນຍາເຊົ່າທີ່ເງິນຝາກນີ້ຖືກຜູກມັດ</summary>
     public Guid ContractId { get; set; }
 
-    /// <summary>จำนวนเงินมัดจำที่รับไว้</summary>
+    /// <summary>ຈໍານວນເງິນຝາກທີ່ໄດ້ຮັບ</summary>
     public decimal Amount { get; set; }
 
-    /// <summary>สถานะของเงินมัดจำ</summary>
+    /// <summary>ສະຖານະຂອງເງິນຝາກ</summary>
     public DepositStatus Status { get; set; } = DepositStatus.Held;
 
-    /// <summary>เวลาที่รับเงินมัดจำ</summary>
+    /// <summary>ເວລາທີ່ຈະໄດ້ຮັບເງິນຝາກ</summary>
     public DateTimeOffset CollectedAt { get; set; }
 
-    /// <summary>จำนวนเงินที่คืนแล้ว เป็น 0 จนกว่าจะมีการคืนเงิน</summary>
+    /// <summary>ຈໍານວນທີ່ໄດ້ຮັບເງິນຄືນແມ່ນ 0 ຈົນກ່ວາການຄືນເງິນແມ່ນໃຫ້</summary>
     public decimal RefundedAmount { get; set; }
 
-    /// <summary>เวลาที่คืนเงิน เป็น null เมื่อยังไม่เคยคืน</summary>
+    /// <summary>ເວລາຄືນເງິນແມ່ນ null ໃນເວລາທີ່ຂ້າພະເຈົ້າຍັງບໍ່ໄດ້ກັບຄືນມັນເທື່ອ</summary>
     public DateTimeOffset? RefundedAt { get; set; }
 
-    /// <summary>เหตุผลของส่วนที่หักไว้ไม่คืน (ค่าเสียหาย ค่าปรับ ฯลฯ)</summary>
+    /// <summary>ເຫດຜົນສໍາລັບສ່ວນທີ່ຖືກຫັກບໍ່ຖືກສົ່ງຄືນ (ຄວາມເສຍຫາຍ, ການປັບໃໝ, ແລະອື່ນໆ)</summary>
     public string? DeductionReason { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

@@ -3,11 +3,11 @@ using DormFlow.Domain.Events;
 namespace DormFlow.Domain.Common;
 
 /// <summary>
-/// คลาสฐานของทุก Entity ในระบบ DormFlow
-/// รวมข้อมูล Audit, Soft Delete และ Concurrency Token ไว้ที่เดียว
+/// ຫ້ອງຮຽນພື້ນຖານຂອງທຸກໆ Entity ໃນລະບົບ DormFlow
+/// ຂໍ້ມູນລວມ Audit, Soft Delete ແລະ Concurrency Token ຢູ່ໃນສະຖານທີ່ດຽວ
 /// </summary>
 /// <remarks>
-/// Primary Key ใช้ UUID v7 เพื่อให้เรียงตามเวลาได้ ลดการแตกกระจายของ B-tree index บน PostgreSQL
+/// Primary Key ໃຊ້ UUID v7 ເພື່ອໃຫ້ສາມາດຈັດຕາມທີ່ໃຊ້ເວລາຫຼຸດຜ່ອນການ fragmentation ຂອງ B-tree index ສຸດ PostgreSQL
 /// </remarks>
 public abstract class BaseEntity : IEntity, IAuditableEntity, ISoftDeletable
 {
@@ -38,22 +38,22 @@ public abstract class BaseEntity : IEntity, IAuditableEntity, ISoftDeletable
     public Guid? DeletedBy { get; set; }
 
     /// <summary>
-    /// Concurrency Token สำหรับ Optimistic Concurrency
-    /// EF Core จะเพิ่มค่านี้ทุกครั้งที่บันทึก และโยน DbUpdateConcurrencyException เมื่อค่าไม่ตรง
+    /// Concurrency Token ສໍາລັບ Optimistic Concurrency
+    /// EF Core ມູນຄ່ານີ້ຈະເພີ່ມຂຶ້ນທຸກຄັ້ງທີ່ມັນຖືກບັນທຶກແລະຖິ້ມ DbUpdateConcurrencyException ເມື່ອຄ່າບໍ່ກົງກັນ
     /// </summary>
     public uint Version { get; set; }
 
-    /// <summary>รายการ Domain Event ที่ยังไม่ถูกเผยแพร่</summary>
+    /// <summary>ລາຍການ Domain Event ທີ່ຍັງບໍ່ທັນໄດ້ເຜີຍແຜ່</summary>
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    /// <summary>เพิ่ม Domain Event เข้าคิวรอเผยแพร่</summary>
-    /// <param name="domainEvent">เหตุการณ์ที่ต้องการเผยแพร่</param>
+    /// <summary>ເພີ່ມ Domain Event ຄິວ ແລະລໍຖ້າເຜີຍແຜ່</summary>
+    /// <param name="domainEvent">ເຫດການທີ່ຈະເຜີຍແຜ່</param>
     public void RaiseDomainEvent(IDomainEvent domainEvent)
     {
         ArgumentNullException.ThrowIfNull(domainEvent);
         _domainEvents.Add(domainEvent);
     }
 
-    /// <summary>ล้างคิว Domain Event เรียกหลังเผยแพร่สำเร็จแล้ว</summary>
+    /// <summary>ລ້າງຄິວ Domain Event ເອີ້ນວ່າຫຼັງຈາກການພິມເຜີຍແຜ່ສົບຜົນສໍາເລັດ</summary>
     public void ClearDomainEvents() => _domainEvents.Clear();
 }

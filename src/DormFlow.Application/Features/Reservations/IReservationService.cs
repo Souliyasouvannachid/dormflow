@@ -3,29 +3,34 @@ using DormFlow.Contracts.Reservations;
 
 namespace DormFlow.Application.Features.Reservations;
 
-/// <summary>Use Case ทั้งหมดของโมดูลการจอง</summary>
+/// <summary>Use Case ໂມດູນການຈອງທັງໝົດ</summary>
 public interface IReservationService
 {
-    /// <summary>ดึงรายการจองแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ການຈອງແບບ paginated</summary>
     Task<PagedResult<ReservationResponse>> GetPagedAsync(
         ReservationListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลการจองจากรหัสอ้างอิง</summary>
+    /// <summary>ນັບການຈອງ Pending ທີ່ກຳລັງຈະໝົດອາຍຸສຳລັບ Dashboard</summary>
+    Task<int> GetPendingExpiringCountAsync(
+        DateTimeOffset expiresBeforeOrAt,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ອ່ານຂໍ້ມູນການຈອງຈາກລະຫັດອ້າງອີງ</summary>
     Task<ReservationResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างการจองใหม่ ห้องจะถูกเปลี่ยนสถานะเป็นถูกจองทันที</summary>
+    /// <summary>ສ້າງການຈອງໃໝ່ ສະຖານະຫ້ອງຈະຖືກປ່ຽນເປັນຈອງທັນທີ</summary>
     Task<ReservationResponse> CreateAsync(
         CreateReservationRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ยกเลิกการจอง ห้องจะถูกปล่อยว่างคืนถ้ายังอยู่ในสถานะถูกจองจากรายการนี้</summary>
+    /// <summary>ຍົກເລີກການຈອງ. ຫ້ອງຈະຖືກປ່ອຍໄວ້ໃນຕອນກາງຄືນຖ້າຫາກວ່າມັນຍັງຢູ່ໃນສະຖານະສະຫງວນຈາກບັນຊີລາຍຊື່ນີ້</summary>
     Task<ReservationResponse> CancelAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// หมดอายุการจองที่ยังเป็น Pending แต่เลยเวลากันห้อง (ExpiresAt) แล้วทั้งหมด ห้องจะถูกปล่อยว่างคืนถ้ายังอยู่
-    /// ในสถานะถูกจองจากรายการนั้น เรียกโดย Background Job เป็นระยะ ทำงานข้ามทุกองค์กร ไม่มีการตรวจสิทธิ์ผู้ใช้
+    /// ການຈອງໝົດອາຍຸແລ້ວ Pending ແຕ່ມັນເຖິງເວລາທີ່ຈະອອກຈາກຫ້ອງ (ExpiresAt) ຫຼັງຈາກນັ້ນ, ຫ້ອງທັງຝົດຈະໄດ້ຮັບການປົດປ່ອຍສໍາລັບການໃນຕອນກາງຄືນຖ້າຫາກວ່າເຂົາເຈົ້າຍັງມີ
+    /// ໃນສະຖານະທີ່ຖືກສະຫງວນຈາກບັນຊີລາຍຊື່ນັ້ນ, ເອີ້ນວ່າໂດຍ Background Job ແຕ່ລະໄລຍະ, ເຮັດວຽກທົ່ວທຸກອົງກອນ. ບໍ່ມີການກວດສອບຜູ້ໃຊ້
     /// </summary>
-    /// <returns>จำนวนรายการที่ถูกหมดอายุในการเรียกครั้งนี้</returns>
+    /// <returns>ຈຳນວນລາຍການໝົດອາຍຸໃນການໂທນີ້</returns>
     Task<int> ExpirePastDueReservationsAsync(CancellationToken cancellationToken = default);
 }

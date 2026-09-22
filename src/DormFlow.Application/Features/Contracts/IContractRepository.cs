@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Contracts;
 
-/// <summary>ตัวกรองสำหรับดึงรายการสัญญาเช่าแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງສັນຍາເຊົ່າ</summary>
 public sealed record ContractListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -14,30 +14,30 @@ public sealed record ContractListFilter(
     ContractStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลสัญญาเช่าในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການເຊົ່າໃນຖານຂໍ້ມູນ</summary>
 public interface IContractRepository
 {
-    /// <summary>อ่านสัญญาเช่าจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານສັນຍາເຊົ່າຈາກລະຫັດອ້າງອີງ</summary>
     Task<Contract?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีเลขที่สัญญานี้อยู่แล้วในองค์กรเดียวกันหรือไม่ ใช้ตอนสุ่มเลขที่สัญญาเพื่อกันการชนกัน</summary>
+    /// <summary>ກວດເບິ່ງວ່າໝາຍເລກສັນຍານີ້ມີຢູ່ໃນອົງກອນດຽວກັນຫຼືບໍ່. ໃຊ້ໃນເວລາທີ່ການສຸ່ມຕົວເລກສັນຍາເພື່ອປ້ອງກັນການປະທະກັນ</summary>
     Task<bool> ExistsByContractNumberAsync(
         Guid organizationId,
         string contractNumber,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่าห้องที่ระบุมีสัญญาที่ยังไม่สิ้นสุด (Draft หรือ Active) ค้างอยู่หรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າຫ້ອງທີ່ກໍານົດມີສັນຍາທີ່ມີການເຄື່ອນໄຫວ (Draft ຫຼື Active) ລໍຖ້າຢູ່ຫຼືບໍ່?</summary>
     Task<bool> HasOpenContractAsync(Guid roomId, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการสัญญาเช่าแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງສັນຍາເຊົ່າໂດຍອີງຕາມຕົວກອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Contract>> GetPagedAsync(
         ContractListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มสัญญาเช่าใหม่</summary>
+    /// <summary>ເພີ່ມສັນຍາເຊົ່າໃໝ່</summary>
     Task AddAsync(Contract contract, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล รวมถึงการเปลี่ยนแปลงของ Entity อื่นที่ถูกติดตามอยู่ในธุรกรรมเดียวกัน</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ. ລວມທັງການປ່ຽນແປງໃນ Entity ທຸລະກໍາທີ່ຕິດຕາມອື່ນແມ່ນຢູ່ໃນທຸລະກໍາດຽວກັນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

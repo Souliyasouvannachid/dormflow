@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการพัสดุ</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງ parcels</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/parcels")]
@@ -17,7 +17,7 @@ public sealed class ParcelsController(IParcelService parcelService) : Controller
 {
     private readonly IParcelService _parcelService = parcelService;
 
-    /// <summary>ดึงรายการพัสดุแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງ parcels</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Parcels.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ParcelResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class ParcelsController(IParcelService parcelService) : Controller
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลพัสดุหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຜຶ່ງ parcel</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Parcels.View)]
     [ProducesResponseType(typeof(ApiResponse<ParcelResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class ParcelsController(IParcelService parcelService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกพัสดุที่มาถึงใหม่</summary>
+    /// <summary>ບັນທຶກການມາເຖິງ parcel ໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Parcels.Log)]
     [ProducesResponseType(typeof(ApiResponse<ParcelResponse>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ public sealed class ParcelsController(IParcelService parcelService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>บันทึกการรับพัสดุ</summary>
+    /// <summary>ບັນທຶກຂອງການຮັບການພັດທະນາ</summary>
     [HttpPost("{id:guid}/pickup")]
     [RequirePermission(PermissionCodes.Parcels.Pickup)]
     [ProducesResponseType(typeof(ApiResponse<ParcelResponse>), StatusCodes.Status200OK)]

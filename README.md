@@ -1,100 +1,100 @@
-# DormFlow — Dormitory Management System (Backend API)
+# DormFlow — ລະບົບຄຸ້ມຄອງຫໍພັກ (Backend API)
 
-ระบบบริหารจัดการหอพักและอพาร์ตเมนต์แบบหลายองค์กร (Multi-Organization SaaS)
-สร้างด้วย ASP.NET Core Web API บน .NET 10 ตามแนวทาง **Modular Monolith + Clean Architecture**
+ລະບົບການຄຸ້ມຄອງຫໍພັກ ແລະອາພາດເມັນຫຼາຍອົງກອນ (Multi-Organization SaaS)
+ສ້າງດ້ວຍ ASP.NET Core Web API ສຸດ .NET 10 ອີງຕາມຄໍາແນະນໍາ **Modular Monolith + Clean Architecture**
 
-> สถานะปัจจุบัน: **Phase 1 เสร็จสมบูรณ์** และ **Phase 2 เสร็จสมบูรณ์**
-> Phase 1 ครบทั้ง Identity, JWT, Refresh Token, Roles & Permissions และ Endpoint บริหารจัดการ
+> ສະຖານະປັດຈຸບັນ: **Phase 1 ສຳເລັດແລ້ວ** ແລະ **Phase 2 ສຳເລັດແລ້ວ**
+> Phase 1 ສໍາເລັດ Identity, JWT, Refresh Token, Roles & Permissions ແລະ Endpoint ຈັດການ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
-> Assignment, Roles/Permissions และ Audit Logs
-> Phase 2 ครบทั้ง Tenants, Reservations, Contracts (รวมเช็คอิน/เช็คเอาท์), Meter Readings,
-> Invoices, Payments, Maintenance (งานแจ้งซ่อมบำรุง), Reports (รายงานรายได้/ใบแจ้งหนี้ค้างชำระ),
-> Deposits (เงินมัดจำ), Receipts (ใบเสร็จรับเงิน), Expenses (ค่าใช้จ่ายในการดำเนินงาน),
-> Parcels (พัสดุ), Visitors (ผู้มาเยือน), Parking (ที่จอดรถ), Announcements (ประกาศ),
-> Notifications (การแจ้งเตือน) และ Settings (ค่าตั้งขององค์กร)
-> โมดูลของ Phase 2 ที่ไม่มีรายละเอียดกฎธุรกิจในเอกสารต้นฉบับ (ทุกโมดูลตั้งแต่ Deposits เป็นต้นไป)
-> ถูกออกแบบด้วยสมมติฐานที่สมเหตุสมผลและมีเหตุผลกำกับไว้ในหัวข้อ
-> [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts) **ควรทบทวนกับเจ้าของระบบก่อนใช้งานจริง**
-> ระหว่างพัฒนา Reports ยังพบและแก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของบทบาท Owner ใน List Endpoint
-> ของอีก 10 โมดูล ดูรายละเอียดที่หัวข้อ
-> [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint)
-> ดูรายละเอียดได้ที่หัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
-> และ [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
+> Assignment, Roles/Permissions ແລະ Audit Logs
+> Phase 2 ສໍາເລັດ Tenants, Reservations, Contracts (ລວມເຊັກອິນ/ກວດເບິ່ງ), Meter Readings,
+> Invoices, Payments, Maintenance (ວຽກງານແຈ້ງການບໍາລຸງຮັກສາ), Reports (ບົດລາຍງານລາຍຮັບ/ໃບແຈ້ງໜີ້ເກີນກຳນົດ),
+> Deposits (ຝາກ), Receipts (ໃບຮັບເງິນ), Expenses (ຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ),
+> Parcels (ພັດສະດຸ), Visitors (ນັກທ່ອງທ່ຽວ), Parking (ບ່ອນຈອດລົດ), Announcements (ປະກາດ),
+> Notifications (ການແຈ້ງເຕືອນ) ແລະ Settings (ການຕັ້ງຄ່າອົງກອນ)
+> ໂມດູນຂອງ Phase 2 ບ່ອນທີ່ກົດລະບຽບທຸລະກິດບໍ່ມີລາຍລະອຽດຢູ່ໃນເອກະສານຕົ້ນສະບັບ (ທຸກໆໂມດູນຈາກ Deposits ເປັນຕົ້ນໄປ)
+> ມັນໄດ້ຖືກອອກແບບດ້ວຍການສົມມຸດຕິຖານທີ່ສົມເຫດສົມຜົນແລະເຫດຜົນທີ່ໄດ້ຮັບໃນຫົວຂໍ້
+> [Phase 2 — ໂມດູນເສັ້ນ Contracts](#phase-2--ໂມດູນເສັ້ນ-contracts) **ຄວນໄດ້ຮັບການທົບທວນຄືນກັບເຈົ້າຂອງລະບົບກ່ອນທີ່ຈະໃຊ້ຕົວຈິງ**
+> ພາຍໃຕ້ການພັດທະນາ Reports ຊ່ອງໂຫວ່ຂອງການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນບົດບາດຍັງໄດ້ຖືກພົບເຫັນແລະແກ້ໄຂ Owner ໃນ List Endpoint
+> ສິ່ງອື່ນ 10 ໂມດູນ, ເບິ່ງລາຍລະອຽດໃນຫົວຂໍ້
+> [ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ](#ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ-owner-ໃນ-list-endpoint)
+> ເບິ່ງລາຍລະອຽດໃນຫົວຂໍ້ [ຂອບເຂດຂອງຂັ້ນຕອນ 1](#ຂອບເຂດຂອງຂັ້ນຕອນ-1)
+> ແລະ [Phase 2 — ໂມດູນເສັ້ນ Contracts](#phase-2--ໂມດູນເສັ້ນ-contracts)
 
 ---
 
-## สารบัญ
+## ສາລະບານ
 
-- [เทคโนโลยีที่ใช้](#เทคโนโลยีที่ใช้)
-- [โครงสร้าง Solution](#โครงสร้าง-solution)
-- [ทิศทางการพึ่งพาระหว่าง Layer](#ทิศทางการพึ่งพาระหว่าง-layer)
-- [สิ่งที่ต้องติดตั้งก่อน](#สิ่งที่ต้องติดตั้งก่อน)
-- [เริ่มต้นใช้งานบนเครื่องนักพัฒนา](#เริ่มต้นใช้งานบนเครื่องนักพัฒนา)
-- [รันด้วย Docker Compose](#รันด้วย-docker-compose)
-- [การตั้งค่าและตัวแปรสภาพแวดล้อม](#การตั้งค่าและตัวแปรสภาพแวดล้อม)
-- [Endpoint ที่ใช้งานได้ในขั้นตอนนี้](#endpoint-ที่ใช้งานได้ในขั้นตอนนี้)
-- [รูปแบบ API Response](#รูปแบบ-api-response)
-- [การทดสอบ](#การทดสอบ)
-- [Entity Framework Core และ Migration](#entity-framework-core-และ-migration)
+- [ເຕັກໂນໂລຊີທີ່ໃຊ້](#ເຕັກໂນໂລຊີທີ່ໃຊ້)
+- [ໂຄງສ້າງ Solution](#ໂຄງສ້າງ-solution)
+- [ທິດທາງຂອງການເພິ່ງພາອາໄສລະຫວ່າງ Layer](#ທິດທາງຂອງການເພິ່ງພາອາໄສລະຫວ່າງ-layer)
+- [ສິ່ງທີ່ຕ້ອງຕິດຕັ້ງກ່ອນ](#ສິ່ງທີ່ຕ້ອງຕິດຕັ້ງກ່ອນ)
+- [ເລີ່ມຕົ້ນໃນເຄື່ອງພັດທະນາຂອງທ່ານ](#ເລີ່ມຕົ້ນໃນເຄື່ອງພັດທະນາຂອງທ່ານ)
+- [ແລ່ນມັນຄືກັນ Docker Compose](#ແລ່ນມັນຄືກັນ-docker-compose)
+- [ການຕັ້ງຄ່າແລະຕົວແປສະພາບແວດລ້ອມ](#ການຕັ້ງຄ່າແລະຕົວແປສະພາບແວດລ້ອມ)
+- [Endpoint ທີ່ສາມາດຖືກນໍາໃຊ້ໃນຂັ້ນຕອນນີ້](#endpoint-ທີ່ສາມາດຖືກນໍາໃຊ້ໃນຂັ້ນຕອນນີ້)
+- [ຮູບແບບ API Response](#ຮູບແບບ-api-response)
+- [ການທົດສອບ](#ການທົດສອບ)
+- [Entity Framework Core ແລະ Migration](#entity-framework-core-ແລະ-migration)
 - [Background Jobs](#background-jobs)
-- [ข้อตกลงในการเขียนโค้ด](#ข้อตกลงในการเขียนโค้ด)
-- [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)
-- [Phase 2 — โมดูลสาย Contracts](#phase-2--โมดูลสาย-contracts)
+- [ສົນທິສັນຍາການເຂົ້າລະຫັດ](#ສົນທິສັນຍາການເຂົ້າລະຫັດ)
+- [ຂອບເຂດຂອງຂັ້ນຕອນ 1](#ຂອບເຂດຂອງຂັ້ນຕອນ-1)
+- [Phase 2 — ໂມດູນເສັ້ນ Contracts](#phase-2--ໂມດູນເສັ້ນ-contracts)
 
 ---
 
-## เทคโนโลยีที่ใช้
+## ເຕັກໂນໂລຊີທີ່ໃຊ້
 
-| ส่วน | เทคโนโลยี | เวอร์ชัน |
+| ສ່ວນ | ເຕັກໂນໂລຊີ | ຮຸ່ນ |
 | --- | --- | --- |
 | Runtime | .NET | 10.0 |
 | Web | ASP.NET Core Web API | 10.0 |
 | ORM | Entity Framework Core | 10.0 |
-| ฐานข้อมูล | PostgreSQL (Npgsql provider) | 17 / 10.0 |
-| การตั้งชื่อคอลัมน์ | EFCore.NamingConventions (snake_case) | 10.0 |
+| ຖານຂໍ້ມູນ | PostgreSQL (Npgsql provider) | 17 / 10.0 |
+| ການຕັ້ງຊື່ຖັນ | EFCore.NamingConventions (snake_case) | 10.0 |
 | Validation | FluentValidation | 12.1 |
 | Logging | Serilog | 10.0 |
-| เอกสาร API | Microsoft.AspNetCore.OpenApi + Scalar | 10.0 / 2.17 |
+| ເອກະສານ API | Microsoft.AspNetCore.OpenApi + Scalar | 10.0 / 2.17 |
 | API Versioning | Asp.Versioning | 10.2 |
 | Test framework | xUnit v3 + FluentAssertions | 4.0 / 7.2 |
 | Integration test | Testcontainers for PostgreSQL | 4.14 |
 | Architecture test | NetArchTest.Rules | 1.3 |
 
-> **หมายเหตุเรื่องสัญญาอนุญาต** — โปรเจกต์ตรึง FluentAssertions ไว้ที่ **7.2.2**
-> ซึ่งเป็นเวอร์ชันสุดท้ายที่ใช้ Apache-2.0 ตั้งแต่ 8.x เป็นต้นไปต้องซื้อ license สำหรับการใช้งานเชิงพาณิชย์
-> หากองค์กรซื้อ license แล้ว เปลี่ยนเวอร์ชันได้ที่ `Directory.Packages.props` ที่เดียว
+> **ຝາຍເຫດກ່ຽວກັບສັນຍາໃບອະນຸຍາດ** — ໂຄງການ Freeze FluentAssertions ທີ່ **7.2.2**
+> ເຊິ່ງເປັນລຸ້ນສຸດທ້າຍທີ່ໃຊ້ Apache-2.0 ນັບຕັ້ງແຕ່ 8.x ຕ້ອງຊື້ຕໍ່ໄປ license ສໍາລັບການນໍາໃຊ້ທາງການຄ້າ
+> ຖ້າອົງກອນຊື້ license ຫຼັງຈາກນັ້ນ, ການປ່ຽນແປງສະບັບທີ່ `Directory.Packages.props` ບ່ອນດຽວ
 
 ---
 
-## โครงสร้าง Solution
+## ໂຄງສ້າງ Solution
 
 ```
 DormFlow.sln
-├── global.json                  ตรึงเวอร์ชัน SDK และเปิดใช้ Microsoft Testing Platform
-├── Directory.Build.props        ค่าตั้ง MSBuild ที่ใช้ร่วมกันทุกโปรเจกต์
-├── Directory.Packages.props     Central Package Management (เวอร์ชันแพ็กเกจอยู่ที่นี่ที่เดียว)
-├── .editorconfig                ข้อตกลงการจัดรูปแบบและการตั้งชื่อ
+├── global.json                  Pin Version SDK ແລະເປີດໃຊ້ Microsoft Testing Platform
+├── Directory.Build.props        ການຕັ້ງຄ່າ MSBuild ແບ່ງປັນໂດຍທຸກໆໂຄງການ
+├── Directory.Packages.props     Central Package Management (ສະບັບຊຸດແມ່ນຢູ່ບ່ອນດຽວ)
+├── .editorconfig                ການຈັດຮູບແບບແລະການຕັ້ງຊື່ສົນທິສັນຍາ
 ├── docker-compose.yml           dormflow-api + dormflow-postgres
-├── .env.example                 ต้นแบบของไฟล์ .env
+├── .env.example                 ຕົ້ນສະບັບຂອງໄຟລ໌ .env
 │
 ├── src/
-│   ├── Directory.Build.props            เปิด TreatWarningsAsErrors เฉพาะโค้ด production
+│   ├── Directory.Build.props            ເປີດ TreatWarningsAsErrors ລະຫັດເທົ່ານັ້ນ production
 │   ├── DormFlow.Domain/                 Entity, Enum, Value Object, Domain Event, Business Rule
-│   ├── DormFlow.Contracts/              Request / Response Model ที่ใช้ร่วมกับ Client
+│   ├── DormFlow.Contracts/              Request / Response Model ໃຊ້ຮ່ວມກັບ Client
 │   ├── DormFlow.Application/            Use Case, Command, Query, DTO, Interface, Validation
 │   ├── DormFlow.Infrastructure/         EF Core, PostgreSQL, Repository, External Service
 │   └── DormFlow.Api/                    Controller, Middleware, DI, OpenAPI, Health Check
 │
 └── tests/
     ├── Directory.Build.props
-    ├── DormFlow.UnitTests/              ตรรกะล้วน ไม่แตะ I/O
-    ├── DormFlow.IntegrationTests/       ยิงผ่าน HTTP จริงบน PostgreSQL ใน Testcontainers
-    └── DormFlow.ArchitectureTests/      บังคับทิศทางการพึ่งพาระหว่าง Layer
+    ├── DormFlow.UnitTests/              ເຫດຜົນອັນບໍລິສຸດ, ບໍ່ມີການສໍາພັດ I/O
+    ├── DormFlow.IntegrationTests/       ຍິງຜ່ານ HTTP ແທ້ຈິງແລ້ວ PostgreSQL ໃນ Testcontainers
+    └── DormFlow.ArchitectureTests/      ການຂື້ນກັບໂດຍກົງລະຫວ່າງ Layer
 ```
 
 ---
 
-## ทิศทางการพึ่งพาระหว่าง Layer
+## ທິດທາງຂອງການເພິ່ງພາອາໄສລະຫວ່າງ Layer
 
 ```
         Contracts  ◄──────────────┐
@@ -103,89 +103,89 @@ DormFlow.sln
 Domain ◄── Application ◄── Infrastructure ◄── Api
 ```
 
-- **Domain** ไม่พึ่งพาอะไรเลย ไม่รู้จัก EF Core, ASP.NET Core หรือ Npgsql
-- **Application** พึ่งพาได้เฉพาะ Domain และ Contracts
-- **Infrastructure** พึ่งพา Application ได้ แต่ห้ามพึ่งพา Api
-- **Api** เป็นชั้นนอกสุด พึ่งพาได้ทุกชั้น
+- **Domain** ບໍ່ເພິ່ງອາໄສຫຍັງ, ບໍ່ຮູ້ EF Core, ASP.NET Core ຫຼື Npgsql
+- **Application** ພຽງແຕ່ສາມາດອີງໃສ່ Domain ແລະ Contracts
+- **Infrastructure** ອີງໃສ່ Application ແມ່ນແລ້ວ, ແຕ່ຢ່າອີງໃສ່ມັນ Api
+- **Api** ມັນເປັນຊັ້ນນອກທີ່ສຸດ. ສາມາດເອື່ອຍອີງໄດ້ໃນທຸກລະດັບ
 
-กฎเหล่านี้ถูกบังคับด้วยเทสต์จริงใน `tests/DormFlow.ArchitectureTests`
-การเผลอเพิ่ม `ProjectReference` ผิดทิศทางจะทำให้เทสต์ล้มเหลวทันที
+ກົດລະບຽບເຫຼົ່ານີ້ຖືກບັງຄັບໃຊ້ໂດຍການທົດສອບຕົວຈິງ `tests/DormFlow.ArchitectureTests`
+ການເພີ່ມອຸບັດຕິເຫດ `ProjectReference` ທິດທາງທີ່ບໍ່ຖືກຕ້ອງຈະເຮັດໃຫ້ການທົດສອບລົ້ມເຫຼວໃນທັນທີ
 
 ---
 
-## สิ่งที่ต้องติดตั้งก่อน
+## ສິ່ງທີ່ຕ້ອງຕິດຕັ້ງກ່ອນ
 
-| เครื่องมือ | เวอร์ชัน | ใช้ทำอะไร |
+| ເຄື່ອງມື | ຮຸ່ນ | ມັນໃຊ້ເພື່ອຫຍັງ? |
 | --- | --- | --- |
-| .NET SDK | 10.0.400 ขึ้นไป | build และรันโปรเจกต์ |
-| Docker Desktop / Docker Engine | ล่าสุด | รัน PostgreSQL, รัน compose และ Integration Test |
-| PostgreSQL | 17 | ใช้ผ่าน Docker ไม่ต้องติดตั้งบนเครื่อง |
+| .NET SDK | 10.0.400 ຂຶ້ນ | build ແລະດໍາເນີນການໂຄງການ |
+| Docker Desktop / Docker Engine | ລ່າສຸດ | ແລ່ນ PostgreSQL, ແລ່ນ compose ແລະ Integration Test |
+| PostgreSQL | 17 | ໃຊ້ຜ່ານ Docker ບໍ່ຈໍາເປັນຕ້ອງຕິດຕັ້ງໃນເຄື່ອງ |
 
-ตรวจเวอร์ชัน SDK:
+ກວດເບິ່ງສະບັບ SDK:
 
 ```bash
-dotnet --version   # ต้องได้ 10.0.400 ขึ้นไป
+dotnet --version   # ຕ້ອງໄດ້ຮັບ 10.0.400 ຂຶ້ນ
 ```
 
-> `global.json` ตรึง SDK ไว้ที่ `10.0.400` แบบ `rollForward: latestFeature`
-> ถ้าเครื่องมี SDK เก่ากว่านี้ คำสั่ง `dotnet` จะแจ้งให้อัปเดตก่อน
+> `global.json` ແຊ່ແຂງ SDK ທີ່ `10.0.400` ຕົວແບບ `rollForward: latestFeature`
+> ຖ້າເຄື່ອງມີ SDK ຄໍາສັ່ງເກົ່າ `dotnet` ຈະແຈ້ງໃຫ້ທ່ານປັບປຸງກ່ອນ
 
 ---
 
-## เริ่มต้นใช้งานบนเครื่องนักพัฒนา
+## ເລີ່ມຕົ້ນໃນເຄື່ອງພັດທະນາຂອງທ່ານ
 
-### 1. เตรียมฐานข้อมูล
+### 1. ກະກຽມຖານຂໍ້ມູນ
 
 ```bash
 cp .env.example .env
-# แก้ POSTGRES_PASSWORD ในไฟล์ .env ก่อน
+# ແກ້ໄຂ POSTGRES_PASSWORD ໃນໄຟລ໌ .env ທໍາອິດ
 docker compose up -d dormflow-postgres
 ```
 
-ตรวจว่าฐานข้อมูลพร้อมใช้งาน:
+ກວດສອບວ່າຖານຂໍ້ມູນມີຢູ່:
 
 ```bash
-docker compose ps dormflow-postgres      # STATUS ต้องเป็น healthy
+docker compose ps dormflow-postgres      # STATUS ຕ້ອງເປັນ healthy
 ```
 
-### 2. Restore และ Build
+### 2. Restore ແລະ Build
 
 ```bash
 dotnet restore
 dotnet build
 ```
 
-### 3. รัน API
+### 3. ແລ່ນ API
 
 ```bash
 dotnet run --project src/DormFlow.Api
 ```
 
-จะได้:
+ຈະໄດ້ຮັບ:
 
-| ปลายทาง | URL |
+| ປາຍທາງ | URL |
 | --- | --- |
-| เอกสาร API แบบโต้ตอบ (Scalar) | http://localhost:5080/scalar/v1 |
-| เอกสาร OpenAPI (JSON) | http://localhost:5080/openapi/v1.json |
+| ເອກະສານ API ໂຕ້ຕອບ (Scalar) | http://localhost:5080/scalar/v1 |
+| ເອກະສານ OpenAPI (JSON) | http://localhost:5080/openapi/v1.json |
 | Health Check | http://localhost:5080/health |
 
-Connection String ของสภาพแวดล้อม Development อยู่ใน `src/DormFlow.Api/appsettings.Development.json`
-และชี้ไปที่ PostgreSQL ของ docker compose บนเครื่องอยู่แล้ว
+Connection String ຂອງສິ່ງແວດລ້ອມ Development ຢູ່ໃນ `src/DormFlow.Api/appsettings.Development.json`
+ແລະຊີ້ໃຫ້ເຫັນ PostgreSQL ຂອງ docker compose ຢູ່ໃນເຄື່ອງແລ້ວ
 
 ---
 
-## รันด้วย Docker Compose
+## ແລ່ນມັນຄືກັນ Docker Compose
 
 ```bash
 cp .env.example .env
-# แก้ POSTGRES_PASSWORD, ConnectionStrings__DefaultConnection และ Cors__AllowedOrigins__0
+# ແກ້ໄຂ POSTGRES_PASSWORD, ConnectionStrings__DefaultConnection ແລະ Cors__AllowedOrigins__0
 
 docker compose up -d --build
 docker compose ps
 docker compose logs -f dormflow-api
 ```
 
-ตรวจสอบสุขภาพระบบ:
+ກວດເບິ່ງສຸຂະພາບຂອງລະບົບ:
 
 ```bash
 curl http://localhost:8080/health
@@ -193,148 +193,148 @@ curl http://localhost:8080/health/ready
 curl http://localhost:8080/health/live
 ```
 
-หยุดการทำงาน:
+ຢຸດເຮັດວຽກ:
 
 ```bash
-docker compose down            # หยุดคอนเทนเนอร์ แต่ยังเก็บข้อมูลไว้
-docker compose down -v         # ลบ volume ของฐานข้อมูลทิ้งด้วย
+docker compose down            # stop container ແຕ່ມັນຍັງເກັບຮັກສາຂໍ້ມູນ
+docker compose down -v         # ລຶບ volume ຂອງຖານຂໍ້ມູນໄດ້ຖືກຍົກເລີກເຊັ່ນດຽວກັນ
 ```
 
-**บริการใน compose**
+**ບໍລິການໃນ compose**
 
-| Service | Image | พอร์ต | Health Check |
+| Service | Image | ທ່າເຮືອ | Health Check |
 | --- | --- | --- | --- |
 | `dormflow-postgres` | `postgres:17-alpine` | `${POSTGRES_PORT:-5432}` | `pg_isready` |
-| `dormflow-api` | build จาก `src/DormFlow.Api/Dockerfile` | `${API_HTTP_PORT:-8080}` | `curl /health/live` |
+| `dormflow-api` | build ຈາກ `src/DormFlow.Api/Dockerfile` | `${API_HTTP_PORT:-8080}` | `curl /health/live` |
 
-`dormflow-api` จะเริ่มทำงานก็ต่อเมื่อ `dormflow-postgres` รายงานสถานะ `healthy` แล้วเท่านั้น
+`dormflow-api` ມັນຈະເລີ່ມເຮັດວຽກເມື່ອໃດ `dormflow-postgres` ບົດລາຍງານສະຖານະການ `healthy` ແລະຫຼັງຈາກນັ້ນເທົ່ານັ້ນ
 
-> Health Check ของ API เรียกเฉพาะ `/health/live` โดยตั้งใจ
-> เพื่อไม่ให้คอนเทนเนอร์ถูกรีสตาร์ตทิ้งเพียงเพราะฐานข้อมูลล่มไปชั่วครู่
+> Health Check ຂອງ API ຊື່ສະເພາະ `/health/live` ຕັ້ງໃຈ
+> ນີ້ຈະປ້ອງກັນບໍ່ໃຫ້ containers ຈາກການເລີ່ມຕົ້ນໃຝ່ພຽງແຕ່ເນື່ອງຈາກວ່າຖານຂໍ້ມູນ crashed ໃນເວລານີ້
 
 ---
 
-## การตั้งค่าและตัวแปรสภาพแวดล้อม
+## ການຕັ້ງຄ່າແລະຕົວແປສະພາບແວດລ້ອມ
 
-ค่าตั้งทั้งหมดอ่านผ่าน configuration ปกติของ ASP.NET Core
-กำหนดทับด้วย environment variable โดยใช้ `__` แทนการลงชั้น เช่น `ConnectionStrings__DefaultConnection`
+ການຕັ້ງຄ່າທັງຝົດອ່ານຜ່ານ configuration ປົກກະຕິຂອງ ASP.NET Core
+ກໍານົດກັບ environment variable ການນໍາໃຊ້ `__` ສໍາລັບຕົວຢ່າງ, ແທນທີ່ຈະເປັນຊັ້ນ `ConnectionStrings__DefaultConnection`
 
-| ตัวแปร | ค่าเริ่มต้น | คำอธิบาย |
+| ຕົວແປ | ຄ່າເລີ່ມຕົ້ນ | ລາຍລະອຽດ |
 | --- | --- | --- |
-| `ConnectionStrings__DefaultConnection` | *(ไม่มี)* | **จำเป็น** ระบบจะไม่สตาร์ตถ้าไม่ได้กำหนด |
-| `ASPNETCORE_ENVIRONMENT` | `Production` | `Development` เปิดเอกสาร OpenAPI และ Log ระดับ Debug |
-| `Https__EnableRedirection` | `true` | ตั้งเป็น `false` เมื่อมี reverse proxy จัดการ TLS ให้แล้ว |
-| `Cors__AllowedOrigins__0` … | *(ว่าง)* | **จำเป็นใน Production** ไม่กำหนดแล้วระบบจะไม่ยอมสตาร์ต |
-| `RateLimiting__Enabled` | `true` | เปิดหรือปิด Rate Limiting |
-| `RateLimiting__PermitLimit` | `100` | จำนวนคำขอต่อหนึ่งช่วงเวลา |
-| `RateLimiting__WindowSeconds` | `60` | ความยาวของช่วงเวลา |
-| `Database__CommandTimeoutSeconds` | `30` | เวลาสูงสุดของหนึ่งคำสั่ง SQL |
-| `Database__MaxRetryCount` | `3` | จำนวนครั้งที่ลองเชื่อมต่อใหม่เมื่อเจอข้อผิดพลาดชั่วคราว |
-| `Database__EnableSensitiveDataLogging` | `false` | **ห้ามเปิดใน Production** ทำให้ค่าพารามิเตอร์ SQL ปรากฏใน Log |
-| `Database__AutoMigrate` | `false` | รัน Migration ที่ค้างอยู่อัตโนมัติตอนเริ่มระบบ เปิดเฉพาะเครื่องนักพัฒนา |
-| `Database__SeedOnStartup` | `true` | สร้างสิทธิ์ บทบาท และบัญชีผู้ดูแลระบบเริ่มต้นตอนเริ่มระบบ (ทำงานได้หลายรอบโดยไม่สร้างซ้ำ) |
-| `Jwt__SigningKey` | *(ไม่มี)* | **จำเป็น** ต้องยาวอย่างน้อย 32 ตัวอักษร ใช้เซ็นและตรวจ Access Token |
-| `Jwt__Issuer` | `DormFlow` | ผู้ออกโทเคน |
-| `Jwt__Audience` | `DormFlow.Client` | ผู้รับโทเคน |
-| `Jwt__AccessTokenMinutes` | `15` | อายุของ Access Token |
-| `Jwt__RefreshTokenDays` | `7` | อายุของ Refresh Token |
-| `SEED_ADMIN_EMAIL` | *(ไม่มี)* | อีเมลผู้ดูแลระบบเริ่มต้น ไม่กำหนดแล้วระบบจะข้ามการสร้างบัญชีนี้ |
-| `SEED_ADMIN_PASSWORD` | *(ไม่มี)* | รหัสผ่านผู้ดูแลระบบเริ่มต้น ต้องผ่านนโยบายรหัสผ่านเดียวกับผู้ใช้ทั่วไป |
-| `SEED_ADMIN_FIRST_NAME` / `SEED_ADMIN_LAST_NAME` | `System` / `Administrator` | ชื่อของบัญชีผู้ดูแลระบบเริ่มต้น |
+| `ConnectionStrings__DefaultConnection` | *(ບໍ່ມີ)* | **ຈໍາເປັນ** ລະບົບຈະບໍ່ເລີ່ມຕົ້ນຖ້າບໍ່ໄດ້ລະບຸ |
+| `ASPNETCORE_ENVIRONMENT` | `Production` | `Development` ເປີດເອກະສານ OpenAPI ແລະ Log ລະດັບ Debug |
+| `Https__EnableRedirection` | `true` | ຕັ້ງເປັນ `false` ເມື່ອມີ reverse proxy ຈັດການ TLS ມອບໃຫ້ແລ້ວ |
+| `Cors__AllowedOrigins__0` … | *(ຟຣີ)* | **ຕ້ອງການໃນ Production** ຖ້າບໍ່ໄດ້ລະບຸ, ລະບົບຈະບໍ່ເລີ່ມຕົ້ນ |
+| `RateLimiting__Enabled` | `true` | ເປີດຫຼືປິດ Rate Limiting |
+| `RateLimiting__PermitLimit` | `100` | ຈໍານວນການຮ້ອງຂໍຕໍ່ໄລຍະເວລາ |
+| `RateLimiting__WindowSeconds` | `60` | ໄລຍະເວລາ |
+| `Database__CommandTimeoutSeconds` | `30` | ເວລາສູງສຸດຂອງຄໍາສັ່ງຜຶ່ງ SQL |
+| `Database__MaxRetryCount` | `3` | ຈໍານວນຄວາມພະຍາຍາມໃນການເຊື່ອມຕໍ່ຄືນໃຝ່ເມື່ອພົບຂໍ້ຜິດພາດຊົ່ວຄາວ |
+| `Database__EnableSensitiveDataLogging` | `false` | **ຢ່າເປີດໃນ Production** ເຮັດໃຫ້ຕົວກໍານົດການ SQL ປະກົດຢູ່ໃນ Log |
+| `Database__AutoMigrate` | `false` | ແລ່ນ Migration ທີ່ຕິດຢູ່ໂດຍອັດຕະໂນມັດໃນຕອນເລີ່ມຕົ້ນຂອງລະບົບ ເປີດພຽງແຕ່ຢູ່ໃນເຄື່ອງຂອງນັກພັດທະນາເທົ່ານັ້ນ |
+| `Database__SeedOnStartup` | `true` | ສ້າງສິດພິເສດ, ບົດບາດ, ແລະບັນຊີຜູ້ເບິ່ງແຍງລະບົບໃນຕອນເລີ່ມຕົ້ນ (ສາມາດເຮັດວຽກຫຼາຍຄັ້ງໂດຍບໍ່ມີການຊໍ້າກັນ) |
+| `Jwt__SigningKey` | *(ບໍ່ມີ)* | **ຈໍາເປັນ** ຢ່າງໜ້ອຍຕ້ອງມີຄວາມຍາວ 32 ຕົວອັກສອນທີ່ໃຊ້ສໍາລັບການເຊັນແລະການກວດສອບ Access Token |
+| `Jwt__Issuer` | `DormFlow` | ຜູ້ອອກໂທເຄັນ |
+| `Jwt__Audience` | `DormFlow.Client` | ຜູ້ຮັບໂທເຄັນ |
+| `Jwt__AccessTokenMinutes` | `15` | ອາຍຸຂອງ Access Token |
+| `Jwt__RefreshTokenDays` | `7` | ອາຍຸຂອງ Refresh Token |
+| `SEED_ADMIN_EMAIL` | *(ບໍ່ມີ)* | ອີເມວຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ ຖ້າບໍ່ໄດ້ລະບຸ, ການສ້າງບັນຊີນີ້ຈະຖືກຂ້າມໄປ |
+| `SEED_ADMIN_PASSWORD` | *(ບໍ່ມີ)* | ລະຫັດຜ່ານຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນຕ້ອງຜ່ານນະໂຍບາຍລະຫັດຜ່ານດຽວກັນກັບຜູ້ໃຊ້ທົ່ວໄປ |
+| `SEED_ADMIN_FIRST_NAME` / `SEED_ADMIN_LAST_NAME` | `System` / `Administrator` | ຊື່ຂອງບັນຊີຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ |
 
-### หลักการเรื่องความลับ
+### ຫຼັກການຂອງຄວາມລັບ
 
-- `appsettings.json` **ไม่มี** ค่าลับใด ๆ ช่อง Connection String และ `Jwt:SigningKey` ถูกเว้นว่างไว้โดยตั้งใจ
-- `appsettings.Development.json` มีเฉพาะรหัสผ่านของ PostgreSQL และกุญแจ JWT สำหรับเครื่องนักพัฒนาเท่านั้น
-  ค่าเหล่านี้ไม่ใช่ความลับจริงและตรงกับค่าใน compose ห้ามใช้ค่าเดียวกันใน Production เด็ดขาด
-- ค่าลับจริงส่งผ่าน environment variable, Docker Secret หรือ Secret Manager เท่านั้น
-- `.env` ถูกกันไว้ใน `.gitignore` และ `.dockerignore` แล้ว
-- บัญชีผู้ดูแลระบบเริ่มต้นสร้างจาก `SEED_ADMIN_*` เท่านั้น ไม่มีการ Hardcode รหัสผ่านไว้ในโค้ดเด็ดขาด
+- `appsettings.json` **ບໍ່ມີ** ມູນຄ່າຄວາມລັບຂອງຊ່ອງທາງໃດກໍ່ຕາມ Connection String ແລະ `Jwt:SigningKey` ຖືກປະໄວ້ໂດຍເຈດຕະນາ
+- `appsettings.Development.json` ມີພຽງແຕ່ລະຫັດຜ່ານສໍາລັບ PostgreSQL ແລະທີ່ສໍາຄັນ JWT ສໍາລັບເຄື່ອງພັດທະນາເທົ່ານັ້ນ
+  ຄຸນຄ່າເຫຼົ່ານີ້ແມ່ນຕົວຈິງແລ້ວບໍ່ແມ່ນຄວາມລັບແລະກົງກັບຄ່າໃນ compose ຢ່າໃຊ້ຄ່າດຽວກັນໃນ Production ຢ່າງແທ້ຈິງ
+- ຄວາມຈິງແລ້ວມູນຄ່າລັບໄດ້ຜ່ານໄປ environment variable, Docker Secret ຫຼື Secret Manager ເທົ່ານັ້ນ
+- `.env` ເກັບຮັກສາໄວ້ໃນ `.gitignore` ແລະ `.dockerignore` ແລ້ວ
+- ບັນຊີຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນແມ່ນສ້າງຂຶ້ນຈາກ `SEED_ADMIN_*` ເທົ່ານັ້ນ, ບໍ່ Hardcode ລະຫັດຜ່ານຕ້ອງຖືກລວມເຂົ້າໃນລະຫັດ
 
 ---
 
-## Endpoint ที่ใช้งานได้ในขั้นตอนนี้
+## Endpoint ທີ່ສາມາດຖືກນໍາໃຊ້ໃນຂັ້ນຕອນນີ້
 
-| Method | Path | สิทธิ์ที่ต้องมี | คำอธิบาย |
+| Method | Path | ການອະນຸຍາດທີ່ຕ້ອງການ | ລາຍລະອຽດ |
 | --- | --- | --- | --- |
-| `GET` | `/health` | - | ผลการตรวจสอบทั้งหมด |
-| `GET` | `/health/live` | - | ตรวจว่ากระบวนการยังทำงานอยู่ ไม่แตะฐานข้อมูล |
-| `GET` | `/health/ready` | - | ตรวจว่าเชื่อมต่อ PostgreSQL ได้แล้วหรือยัง |
-| `GET` | `/openapi/v1.json` | - | เอกสาร OpenAPI (เฉพาะสภาพแวดล้อมที่ไม่ใช่ Production) |
-| `GET` | `/scalar/v1` | - | เอกสาร API แบบโต้ตอบ (เฉพาะสภาพแวดล้อมที่ไม่ใช่ Production) |
-| `POST` | `/api/v1/auth/login` | ไม่ต้องยืนยันตัวตน | เข้าสู่ระบบด้วยอีเมลและรหัสผ่าน |
-| `POST` | `/api/v1/auth/refresh-token` | ไม่ต้องยืนยันตัวตน | ต่ออายุ Access Token ด้วย Refresh Token (มี Token Rotation) |
-| `POST` | `/api/v1/auth/logout` | ต้องเข้าสู่ระบบ | เพิกถอน Refresh Token ที่ส่งมา |
-| `POST` | `/api/v1/auth/forgot-password` | ไม่ต้องยืนยันตัวตน | ขอลิงก์ตั้งรหัสผ่านใหม่ทางอีเมล |
-| `POST` | `/api/v1/auth/reset-password` | ไม่ต้องยืนยันตัวตน | ตั้งรหัสผ่านใหม่ด้วยโทเคนที่ได้รับทางอีเมล |
-| `POST` | `/api/v1/auth/change-password` | ต้องเข้าสู่ระบบ | เปลี่ยนรหัสผ่าน (เพิกถอนเซสชันเดิมทั้งหมด) |
-| `GET` | `/api/v1/auth/me` | ต้องเข้าสู่ระบบ | ข้อมูลผู้ใช้ปัจจุบัน พร้อมบทบาทและสิทธิ์ทั้งหมด |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/organizations` | `organizations.*` | จัดการองค์กร (สร้าง/ลบทำได้เฉพาะ SuperAdmin) |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/dormitories` | `dormitories.*` | จัดการหอพัก |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/buildings` | `buildings.*` | จัดการอาคาร |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/floors` | `floors.*` | จัดการชั้นของอาคาร |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/room-types` | `room-types.*` | จัดการประเภทห้อง |
-| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/rooms` | `rooms.*` | จัดการห้องพัก |
-| `GET` | `/api/v1/rooms/available` | `rooms.view` | ห้องว่างที่พร้อมให้เช่า |
-| `GET` | `/api/v1/rooms/summary` | `rooms.view` | สรุปจำนวนห้องแยกตามสถานะ |
-| `GET`/`POST`/`PUT`/`PATCH .../status` | `/api/v1/users` | `users.manage` | จัดการบัญชีผู้ใช้ |
-| `POST` | `/api/v1/users/{id}/roles` | `users.manage` | กำหนดบทบาทให้ผู้ใช้ (แทนที่บทบาทเดิมทั้งหมด) |
-| `POST`/`DELETE` | `/api/v1/users/{id}/dormitories` | `users.manage` | มอบหมาย/ถอนหอพักที่ผู้ใช้ดูแล |
-| `GET`/`POST`/`PUT`/`DELETE` | `/api/v1/roles` | `roles.manage` | จัดการบทบาท (บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้) |
-| `POST` | `/api/v1/roles/{id}/permissions` | `roles.manage` | กำหนดสิทธิ์ให้บทบาท (แทนที่สิทธิ์เดิมทั้งหมด) |
-| `GET` | `/api/v1/permissions` | `roles.manage` | รายการสิทธิ์ทั้งหมดของระบบ |
-| `GET` | `/api/v1/audit-logs` | `audit-logs.view` | ประวัติเหตุการณ์ของระบบ เรียงล่าสุดก่อนเป็นค่าเริ่มต้น |
-| `GET`/`POST`/`PUT`/`PATCH .../status` | `/api/v1/tenants` | `tenants.*` | จัดการข้อมูลผู้เช่า (ไม่มี DELETE ตามที่สเปกไม่ได้ระบุสิทธิ์ลบไว้) |
-| `GET`/`POST` | `/api/v1/reservations` | `reservations.*` | จองห้องพัก (ห้องเปลี่ยนเป็น Reserved ทันที) |
-| `POST` | `/api/v1/reservations/{id}/cancel` | `reservations.cancel` | ยกเลิกการจอง ห้องกลับเป็น Available ถ้ายังไม่ถูกใช้ทางอื่น |
-| `GET`/`POST` | `/api/v1/contracts` | `contracts.*` | สร้างสัญญาเช่า (ผ่านการจองหรือทำสัญญาตรงก็ได้) |
-| `POST` | `/api/v1/contracts/{id}/activate` | `contracts.activate` | เปิดใช้งานสัญญา = เช็คอิน ห้องเปลี่ยนเป็น Occupied |
-| `POST` | `/api/v1/contracts/{id}/terminate` | `contracts.terminate` | สิ้นสุดสัญญา = เช็คเอาท์ ห้องเปลี่ยนเป็น Cleaning |
-| `GET`/`POST` | `/api/v1/meter-readings` | `meter-readings.*` | จดค่ามิเตอร์น้ำ/ไฟรายเดือน (ไม่มี UPDATE/DELETE เป็นบันทึกเชิงประวัติ) |
-| `GET`/`POST` | `/api/v1/invoices` | `invoices.*` | สร้างใบแจ้งหนี้ในสถานะร่าง คำนวณค่าน้ำ-ไฟจากค่ามิเตอร์อัตโนมัติ |
-| `POST` | `/api/v1/invoices/{id}/issue` | `invoices.issue` | ออกใบแจ้งหนี้ให้ผู้เช่า (Draft → Issued) |
-| `POST` | `/api/v1/invoices/{id}/cancel` | `invoices.cancel` | ยกเลิกใบแจ้งหนี้ (ทำได้เฉพาะที่ยังไม่มีการชำระเงินเข้ามา) |
-| `GET`/`POST` | `/api/v1/payments` | `payments.*` | บันทึกรายการชำระเงินในสถานะรอยืนยัน ยังไม่มีผลต่อยอดใบแจ้งหนี้ |
-| `POST` | `/api/v1/payments/{id}/confirm` | `payments.approve` | ยืนยันรายการชำระเงิน นำยอดไปหักใบแจ้งหนี้และปรับสถานะ |
-| `POST` | `/api/v1/payments/{id}/refund` | `payments.refund` | คืนเงิน (เฉพาะรายการที่ยืนยันแล้ว) ยอดถูกหักออกจากใบแจ้งหนี้คืน |
-| `GET`/`POST` | `/api/v1/maintenance-requests` | `maintenance.view` / `maintenance.update-status` | แจ้งซ่อมบำรุง (สร้างใช้สิทธิ์เดียวกับการเปลี่ยนสถานะ ไม่มีสิทธิ์ "create" แยก) |
-| `POST` | `/api/v1/maintenance-requests/{id}/assign` | `maintenance.assign` | มอบหมาย/มอบหมายซ้ำช่างซ่อมบำรุง ห้องเปลี่ยนเป็น Maintenance ถ้ายังว่างอยู่ |
-| `PATCH` | `/api/v1/maintenance-requests/{id}/status` | `maintenance.update-status` | เปลี่ยนสถานะตามลำดับที่กำหนด (ห้ามตั้งเป็น Assigned ตรง ๆ) ปิดงานแล้วห้องกลับเป็นว่างถ้าไม่มีงานอื่นค้าง |
-| `GET` | `/api/v1/reports/revenue` | `reports.view` | สรุปยอดออกบิล/เก็บเงินได้/ค้างชำระในช่วงเวลาที่ระบุ |
-| `GET` | `/api/v1/reports/revenue/export` | `reports.export` | ส่งออกรายงานสรุปรายได้เป็นไฟล์ CSV |
-| `GET` | `/api/v1/reports/outstanding-invoices` | `reports.view` | รายการใบแจ้งหนี้ค้างชำระแบบแบ่งหน้า พร้อมยอดคงเหลือและจำนวนวันเกินกำหนด |
-| `GET` | `/api/v1/reports/outstanding-invoices/export` | `reports.export` | ส่งออกรายงานใบแจ้งหนี้ค้างชำระเป็นไฟล์ CSV (สูงสุด 5,000 แถว) |
-| `GET`/`POST` | `/api/v1/deposits` | `deposits.view` / `deposits.collect` | รับเงินมัดจำ (สัญญาหนึ่งฉบับรับได้ครั้งเดียว ต้องยังไม่สิ้นสุดสัญญา) |
-| `POST` | `/api/v1/deposits/{id}/refund` | `deposits.refund` | คืนเงินมัดจำ (เต็ม/บางส่วน/ริบทั้งหมด) ทำได้เฉพาะสัญญาที่สิ้นสุดแล้ว และคืนได้ครั้งเดียวต่อรายการ |
-| `GET`/`POST` | `/api/v1/receipts` | `receipts.view` / `receipts.issue` | ออกใบเสร็จรับเงิน (เฉพาะรายการชำระเงินที่ยืนยันแล้ว รายการละครั้งเดียว) |
-| `GET`/`POST` | `/api/v1/expenses` | `expenses.view` / `expenses.create` | บันทึกค่าใช้จ่ายในการดำเนินงาน (ค่าน้ำ-ไฟส่วนกลาง, ซ่อมบำรุง, เงินเดือน ฯลฯ) |
-| `GET`/`POST` | `/api/v1/parcels` | `parcels.view` / `parcels.log` | บันทึกพัสดุที่มาถึงหอพัก |
-| `POST` | `/api/v1/parcels/{id}/pickup` | `parcels.pickup` | บันทึกการรับพัสดุ (ทำได้เฉพาะพัสดุที่ยังไม่ถูกรับ) |
-| `GET`/`POST` | `/api/v1/visitors` | `visitors.view` / `visitors.checkin` | บันทึกการเข้าของผู้มาเยือน |
-| `POST` | `/api/v1/visitors/{id}/checkout` | `visitors.checkout` | บันทึกการออกของผู้มาเยือน (ทำได้เฉพาะที่ยังไม่ออก) |
-| `GET`/`POST` | `/api/v1/parking` | `parking.view` / `parking.register` | จดทะเบียนที่จอดรถ (ทะเบียนรถเดียวกันซ้อนกันไม่ได้ขณะยังไม่สิ้นสุด) |
-| `POST` | `/api/v1/parking/{id}/release` | `parking.release` | สิ้นสุดการจดทะเบียนที่จอดรถ |
-| `GET`/`POST` | `/api/v1/announcements` | `announcements.view` / `announcements.create` | สร้างประกาศ (สถานะร่างเสมอ) |
-| `POST` | `/api/v1/announcements/{id}/publish` | `announcements.publish` | เผยแพร่ประกาศ (ทำได้เฉพาะประกาศที่ยังเป็นร่าง) |
-| `POST` | `/api/v1/announcements/{id}/archive` | `announcements.publish` | เก็บประกาศเข้าคลัง (ทำได้เฉพาะประกาศที่เผยแพร่แล้ว) |
-| `GET` | `/api/v1/notifications` | ต้องเข้าสู่ระบบ | ดูการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ เหมือน `/auth/me`) |
-| `POST` | `/api/v1/notifications/{id}/read` | ต้องเข้าสู่ระบบ | ทำเครื่องหมายว่าอ่านการแจ้งเตือนของตนเองแล้ว |
-| `POST` | `/api/v1/notifications` | `notifications.send` | ส่งการแจ้งเตือนถึงผู้ใช้หนึ่งคนในองค์กรเดียวกัน |
-| `GET`/`PUT .../{key}`/`DELETE .../{key}` | `/api/v1/settings` | `settings.manage` | จัดการค่าตั้งขององค์กรแบบ Key/Value อิสระ (สร้าง/แก้ไขผ่าน `PUT` เดียวกัน) |
+| `GET` | `/health` | - | ຜົນການກວດກາທັງໝົດ |
+| `GET` | `/health/live` | - | ກວດສອບວ່າຂະບວນການຍັງເຮັດວຽກຢູ່. ຢ່າແຕະໃສ່ຖານຂໍ້ມູນ |
+| `GET` | `/health/ready` | - | ໃຫ້ແນ່ໃຈວ່າມັນເຊື່ອມຕໍ່ແລ້ວ PostgreSQL ເຈົ້າໄດ້ຮັບມັນບໍ? |
+| `GET` | `/openapi/v1.json` | - | ເອກະສານ OpenAPI (ພຽງແຕ່ສະພາບແວດລ້ອມແມ່ນບໍ່ Production) |
+| `GET` | `/scalar/v1` | - | ເອກະສານ API ໂຕ້ຕອບ (ພຽງແຕ່ສະພາບແວດລ້ອມແມ່ນບໍ່ Production) |
+| `POST` | `/api/v1/auth/login` | ບໍ່ຈໍາເປັນຕ້ອງຢືນຢັນຕົວຕົນຂອງທ່ານ | ເຂົ້າສູ່ລະບົບດ້ວຍອີເມວ ແລະລະຫັດຜ່ານ |
+| `POST` | `/api/v1/auth/refresh-token` | ບໍ່ຈໍາເປັນຕ້ອງຢືນຢັນຕົວຕົນຂອງທ່ານ | ຕໍ່ອາຍຸ Access Token ຄືກັນ Refresh Token (ມີ Token Rotation) |
+| `POST` | `/api/v1/auth/logout` | ຕ້ອງເຂົ້າສູ່ລະບົບ | ຖອນຄືນ Refresh Token ສົ່ງ |
+| `POST` | `/api/v1/auth/forgot-password` | ບໍ່ຈໍາເປັນຕ້ອງຢືນຢັນຕົວຕົນຂອງທ່ານ | ຂໍລິ້ງເພື່ອຣີເຊັດລະຫັດຜ່ານຂອງທ່ານຜ່ານທາງອີເມວ |
+| `POST` | `/api/v1/auth/reset-password` | ບໍ່ຈໍາເປັນຕ້ອງຢືນຢັນຕົວຕົນຂອງທ່ານ | ຕັ້ງລະຫັດຜ່ານໃໝ່ດ້ວຍໂທເຄັນທີ່ໄດ້ຮັບຜ່ານທາງອີເມວ |
+| `POST` | `/api/v1/auth/change-password` | ຕ້ອງເຂົ້າສູ່ລະບົບ | ປ່ຽນລະຫັດຜ່ານ (ຖອດຖອນທຸກເຊດຊັນທີ່ຜ່ານມາ) |
+| `GET` | `/api/v1/auth/me` | ຕ້ອງເຂົ້າສູ່ລະບົບ | ຂໍ້ມູນຜູ້ໃຊ້ໃນປະຈຸບັນມີບົດບາດແລະສິດທັງຝົດ |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/organizations` | `organizations.*` | ຈັດການອົງກອນ (ສ້າງ/ສາມາດລຶບໄດ້ເທົ່ານັ້ນ SuperAdmin) |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/dormitories` | `dormitories.*` | ຄຸ້ມຄອງຫໍພັກ |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/buildings` | `buildings.*` | ຄຸ້ມຄອງອາຄານ |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/floors` | `floors.*` | ຈັດການຊັ້ນອາຄານ |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/room-types` | `room-types.*` | ຈັດການປະເພດຫ້ອງ |
+| `GET`/`POST`/`PUT`/`PATCH .../status`/`DELETE` | `/api/v1/rooms` | `rooms.*` | ຈັດການຫ້ອງ |
+| `GET` | `/api/v1/rooms/available` | `rooms.view` | ຫ້ອງຫວ່າງເປົ່າພ້ອມໃຫ້ເຊົ່າ |
+| `GET` | `/api/v1/rooms/summary` | `rooms.view` | ສະຫຼຸບຂອງຈໍານວນຫ້ອງທີ່ແຍກຕາມສະຖານະ |
+| `GET`/`POST`/`PUT`/`PATCH .../status` | `/api/v1/users` | `users.manage` | ຈັດການບັນຊີຜູ້ໃຊ້ |
+| `POST` | `/api/v1/users/{id}/roles` | `users.manage` | ກໍານົດບົດບາດໃຫ້ຜູ້ໃຊ້ (ແທນທີ່ບົດບາດທີ່ຜ່ານມາທັງໝົດ) |
+| `POST`/`DELETE` | `/api/v1/users/{id}/dormitories` | `users.manage` | ມອບໝາຍ/ຖອນຫໍພັກທີ່ຮັກສາໄວ້ໂດຍຜູ້ໃຊ້ |
+| `GET`/`POST`/`PUT`/`DELETE` | `/api/v1/roles` | `roles.manage` | ຄຸ້ມຄອງບົດບາດ (ບົດບາດມາດຕະຖານປ່ຽນຊື່/ບໍ່ສາມາດລຶບໄດ້) |
+| `POST` | `/api/v1/roles/{id}/permissions` | `roles.manage` | ມອບສິດໃຫ້ບົດບາດ (ປ່ຽນແທນສິດຕົ້ນສະບັບທັງໝົດ) |
+| `GET` | `/api/v1/permissions` | `roles.manage` | ລາຍຊື່ການອະນຸຍາດລະບົບທັງໝົດ |
+| `GET` | `/api/v1/audit-logs` | `audit-logs.view` | ປະຫວັດເຫດການຂອງລະບົບຈັດຮຽງຫຼ້າສຸດກ່ອນໂດຍຄ່າເລີ່ມຕົ້ນ |
+| `GET`/`POST`/`PUT`/`PATCH .../status` | `/api/v1/tenants` | `tenants.*` | ຈັດການຂໍ້ມູນຜູ້ເຊົ່າ (ບໍ່ມີ DELETE ຕາມສະເພາະ, ສິດໃນການລົບແມ່ນບໍ່ໄດ້ລະບຸໄວ້) |
+| `GET`/`POST` | `/api/v1/reservations` | `reservations.*` | ຈອງຫ້ອງ (ຫ້ອງປ່ຽນເປັນ Reserved ທັນທີ) |
+| `POST` | `/api/v1/reservations/{id}/cancel` | `reservations.cancel` | ຍົກເລີກການຈອງ. ຫ້ອງກັບຄືນໄປຫາ Available ຖ້າມັນບໍ່ໄດ້ຖືກໃຊ້ໃນທາງອື່ນ |
+| `GET`/`POST` | `/api/v1/contracts` | `contracts.*` | ສ້າງສັນຍາເຊົ່າ (ທ່ານສາມາດໄປໂດຍຜ່ານການຈອງຫຼືເຮັດສັນຍາໂດຍກົງ) |
+| `POST` | `/api/v1/contracts/{id}/activate` | `contracts.activate` | ເປີດໃຊ້ສັນຍາ = ເຊັກອິນ. ຫ້ອງປ່ຽນເປັນ Occupied |
+| `POST` | `/api/v1/contracts/{id}/terminate` | `contracts.terminate` | ສິ້ນສຸດສັນຍາ = ກວດເບິ່ງ. ຫ້ອງປ່ຽນເປັນ Cleaning |
+| `GET`/`POST` | `/api/v1/meter-readings` | `meter-readings.*` | ຂຽນຄ່າເຄື່ອງວັດແທກນໍ້າ/ໄຟຟ້າລາຍເດືອນ (ບໍ່ມີ UPDATE/DELETE ມັນເປັນບັນທຶກປະຫວັດສາດ) |
+| `GET`/`POST` | `/api/v1/invoices` | `invoices.*` | ສ້າງໃບແຈ້ງໜີ້ໃນສະຖານະສະບັບຮ່າງ. ຄິດໄລ່ຄ່ານ້ຳ-ໄຟຟ້າຈາກການອ່ານແມັດອັດຕະໂນມັດ |
+| `POST` | `/api/v1/invoices/{id}/issue` | `invoices.issue` | ອອກໃບແຈ້ງໜີ້ໃຫ້ຜູ້ເຊົ່າ (Draft → Issued) |
+| `POST` | `/api/v1/invoices/{id}/cancel` | `invoices.cancel` | ຍົກເລີກໃບແຈ້ງໜີ້ (ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ຖ້າບໍ່ມີການຈ່າຍເງິນເທື່ອ) |
+| `GET`/`POST` | `/api/v1/payments` | `payments.*` | ບັນທຶກທຸລະກໍາການຈ່າຍເງິນຢູ່ໃນສະຖານະລໍຖ້າການຢືນຢັນ. ຍັງບໍ່ມີຜົນຕໍ່ກັບຈຳນວນໃບແຈ້ງໜີ້ເທື່ອ |
+| `POST` | `/api/v1/payments/{id}/confirm` | `payments.approve` | ຢືນຢັນລາຍການການຈ່າຍເງິນ ເອົາຈໍານວນທີ່ຈະຫັກໃບແຈ້ງຜີ້ແລະປັບສະຖານະ |
+| `POST` | `/api/v1/payments/{id}/refund` | `payments.refund` | ເງິນຄືນ (ພຽງແຕ່ລາຍການທີ່ຢືນຢັນ) ຈຳນວນດັ່ງກ່າວຖືກຫັກອອກຈາກໃບແຈ້ງໜີ້ການຄືນເງິນ |
+| `GET`/`POST` | `/api/v1/maintenance-requests` | `maintenance.view` / `maintenance.update-status` | ແຈ້ງການບໍາລຸງຮັກສາ (ສ້າງໃຊ້ການອະນຸຍາດດຽວກັນກັບການປ່ຽນແປງສະຖານະ. ບໍ່ມີການອະນຸຍາດ "create" ແຍກຕ່າງຫາກ) |
+| `POST` | `/api/v1/maintenance-requests/{id}/assign` | `maintenance.assign` | ມອບໝາຍ/Reassign ຊ່າງບໍາລຸງຮັກສາຫ້ອງປ່ຽນເປັນ Maintenance ຖ້າມັນຍັງມີຢູ່ |
+| `PATCH` | `/api/v1/maintenance-requests/{id}/status` | `maintenance.update-status` | ປ່ຽນສະຖານະຕາມລຳດັບທີ່ກຳນົດໄວ້ (ຢ່າຕັ້ງມັນເປັນ Assigned ກົງ) ວຽກປິດແລ້ວ ແລະຫ້ອງຈະກັບມາຫວ່າງເປົ່າ ຖ້າບໍ່ມີວຽກອື່ນຄ້າງຢູ່ |
+| `GET` | `/api/v1/reports/revenue` | `reports.view` | ສະຫຼຸບຂອງຈໍານວນໃບບິນ/ສາມາດປະຫຍັດເງິນໄດ້/ເກີນກຳນົດໃນໄລຍະທີ່ກຳນົດ |
+| `GET` | `/api/v1/reports/revenue/export` | `reports.export` | ສົ່ງອອກບົດລາຍງານສະຫຼຸບລາຍຮັບເພື່ອຍື່ນ CSV |
+| `GET` | `/api/v1/reports/outstanding-invoices` | `reports.view` | ລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຢູ່ໃນບັນຊີທີ່ຍັງເຫຼືອ ແລະຈຳນວນມື້ທີ່ຄົບກຳນົດ |
+| `GET` | `/api/v1/reports/outstanding-invoices/export` | `reports.export` | ສົ່ງອອກບົດລາຍງານໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຄາເປັນໄຟລ໌ CSV (ສູງສຸດ 5,000 ແຖວ) |
+| `GET`/`POST` | `/api/v1/deposits` | `deposits.view` / `deposits.collect` | ຮັບເງິນຝາກ (ສັນຍາຜຶ່ງສາມາດໄດ້ຮັບພຽງແຕ່ຄັ້ງດຽວ. ສັນຍາຈະຕ້ອງຍັງບໍ່ທັນສິ້ນສຸດເທື່ອ) |
+| `POST` | `/api/v1/deposits/{id}/refund` | `deposits.refund` | ຝາກເງິນຄືນ (ເຕັມ/ບາງ/ປະຖິ້ມທັງຝົດ) ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ໃນສັນຍາທີ່ໄດ້ສິ້ນສຸດລົງແລ້ວ. ແລະສາມາດສົ່ງຄືນໄດ້ພຽງແຕ່ຄັ້ງດຽວຕໍ່ລາຍການ |
+| `GET`/`POST` | `/api/v1/receipts` | `receipts.view` / `receipts.issue` | ອອກໃບຮັບເງິນ (ພຽງແຕ່ຢືນຢັນທຸລະກໍາການຈ່າຍເງິນຜຶ່ງຄັ້ງຕໍ່ລາຍການ) |
+| `GET`/`POST` | `/api/v1/expenses` | `expenses.view` / `expenses.create` | ບັນທຶກຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ (ໃບບິນຄ່ານໍ້າ-ແສງກາງ, ບໍາລຸງຮັກສາ, ເງິນເດືອນ ແລະ ອື່ນໆ) |
+| `GET`/`POST` | `/api/v1/parcels` | `parcels.view` / `parcels.log` | ບັນທຶກ parcels ທີ່ມາຮອດຫໍພັກ |
+| `POST` | `/api/v1/parcels/{id}/pickup` | `parcels.pickup` | ບັນທຶກຂອງການຮັບການພັດທະນາ (ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ສໍາລັບ parcels ທີ່ຍັງບໍ່ທັນໄດ້ຮັບ) |
+| `GET`/`POST` | `/api/v1/visitors` | `visitors.view` / `visitors.checkin` | ບັນທຶກການເຂົ້າຂອງນັກທ່ອງທ່ຽວ |
+| `POST` | `/api/v1/visitors/{id}/checkout` | `visitors.checkout` | ບັນທຶກຜູ້ເຂົ້າຊົມ (ເຈົ້າສາມາດເຮັດໄດ້ພຽງແຕ່ຖ້າມັນຍັງບໍ່ໄດ້ປ່ອຍອອກມາເທື່ອ) |
+| `GET`/`POST` | `/api/v1/parking` | `parking.view` / `parking.register` | ການລົງທະບຽນບ່ອນຈອດລົດ (ປ້າຍທະບຽນລົດດຽວກັນບໍ່ສາມາດວາງຊ້ອນກັນໄດ້ ໃນຂະນະທີ່ປ້າຍທະບຽນລົດຍັງບໍ່ທັນໄດ້ສໍາເລັດ) |
+| `POST` | `/api/v1/parking/{id}/release` | `parking.release` | ສິ້ນສຸດການລົງທະບຽນບ່ອນຈອດລົດ |
+| `GET`/`POST` | `/api/v1/announcements` | `announcements.view` / `announcements.create` | ສ້າງການປະກາດ (ສະເຝີສະຖານະຮ່າງ) |
+| `POST` | `/api/v1/announcements/{id}/publish` | `announcements.publish` | ປະກາດ (ມີພຽງແຕ່ການປະກາດທີ່ຍັງຮ່າງເທົ່ານັ້ນທີ່ສາມາດເຮັດໄດ້) |
+| `POST` | `/api/v1/announcements/{id}/archive` | `announcements.publish` | ປະກາດການເກັບຮັກສາໃນສາງ (ມີພຽງແຕ່ການປະກາດທີ່ໄດ້ຖືກເຜີຍແຜ່ແລ້ວເທົ່ານັ້ນທີ່ສາມາດເຮັດໄດ້) |
+| `GET` | `/api/v1/notifications` | ຕ້ອງເຂົ້າສູ່ລະບົບ | ເບິ່ງການແຈ້ງເຕືອນຂອງທ່ານເອງ (ບໍ່ຈໍາເປັນຕ້ອງມີສິດສະເພາະເຊັ່ນ `/auth/me`) |
+| `POST` | `/api/v1/notifications/{id}/read` | ຕ້ອງເຂົ້າສູ່ລະບົບ | ໝາຍການແຈ້ງເຕືອນຂອງທ່ານວ່າອ່ານແລ້ວ |
+| `POST` | `/api/v1/notifications` | `notifications.send` | ສົ່ງການແຈ້ງເຕືອນໃຫ້ຜູ້ໃຊ້ໜຶ່ງຄົນໃນອົງກອນດຽວກັນ |
+| `GET`/`PUT .../{key}`/`DELETE .../{key}` | `/api/v1/settings` | `settings.manage` | ຈັດການການຕັ້ງຄ່າອົງກອນຂອງທ່ານ Key/Value ເອກະລາດ (ສ້າງ/ແກ້ໄຂຜ່ານ `PUT` ດຽວກັນ) |
 
-ทุก List Endpoint รองรับ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ร่วมกัน
-และ Endpoint ที่ข้อมูลผูกกับองค์กร/หอพักรองรับตัวกรอง `organizationId`/`dormitoryId` เพิ่มเติม
-ผู้ใช้ที่ไม่ใช่ SuperAdmin ถูกจำกัดให้เห็นเฉพาะข้อมูลในองค์กรของตนเองเสมอที่ชั้น Application
-ไม่ว่าคำขอจะระบุตัวกรองเหล่านี้เป็นค่าใดก็ตาม
+ທຸກໆ List Endpoint ສະຜັບສະຜູນ `page`, `pageSize`, `search`, `sortBy`, `sortDirection` ຮ່ວມກັນ
+ແລະ Endpoint ບ່ອນທີ່ຂໍ້ມູນຖືກຜູກມັດກັບອົງກອນ/ຫໍພັກສະຜັບສະຜູນການກັ່ນຕອງ `organizationId`/`dormitoryId` ເພີ່ມເຕີມ
+ບໍ່ແມ່ນຜູ້ໃຊ້ SuperAdmin ສະເຝີຖືກຈໍາກັດໃຫ້ເຫັນພຽງແຕ່ຂໍ້ມູນອົງກອນຂອງທ່ານໃນຊັ້ນວາງ Application
+ໂດຍບໍ່ຄໍານຶງເຖິງມູນຄ່າສິ່ງທີ່ຄໍາຮ້ອງຂໍກໍານົດສໍາລັບການກັ່ນຕອງເຫຼົ່ານີ້
 
-ตัวอย่างผลลัพธ์ของ `GET /health`:
+ຕົວຢ່າງຜົນໄດ້ຮັບຂອງ `GET /health`:
 
 ```json
 {
   "status": "Healthy",
   "totalDurationMs": 12.34,
   "checks": [
-    { "name": "self", "status": "Healthy", "durationMs": 0.01, "description": "API ทำงานอยู่" },
+    { "name": "self", "status": "Healthy", "durationMs": 0.01, "description": "API ເຮັດວຽກ" },
     { "name": "postgresql", "status": "Healthy", "durationMs": 11.9, "description": null }
   ]
 }
@@ -342,23 +342,23 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 
 ---
 
-## รูปแบบ API Response
+## ຮູບແບບ API Response
 
-ทุก Endpoint ของ DormFlow ตอบกลับด้วยโครงสร้างเดียวกัน กำหนดไว้ที่
+ທຸກໆ Endpoint ຂອງ DormFlow ຕອບກັບໂຄງສ້າງດຽວກັນ, ກໍານົດຢູ່ທີ່
 `src/DormFlow.Contracts/Common/ApiResponse.cs`
 
-**สำเร็จ**
+**ປະສົບຜົນສໍາເລັດ**
 
 ```json
-{ "success": true, "message": "ดำเนินการสำเร็จ", "data": {} }
+{ "success": true, "message": "ສຳເລັດແລ້ວ", "data": {} }
 ```
 
-**สำเร็จ พร้อมข้อมูลแบ่งหน้า**
+**ສໍາເລັດດ້ວຍຂໍ້ມູນ pagination**
 
 ```json
 {
   "success": true,
-  "message": "ดึงข้อมูลสำเร็จ",
+  "message": "ດຶງຂໍ້ມູນສຳເລັດແລ້ວ",
   "data": {
     "items": [],
     "page": 1,
@@ -371,47 +371,47 @@ docker compose down -v         # ลบ volume ของฐานข้อมู
 }
 ```
 
-**ข้อมูลไม่ผ่านการตรวจสอบ (400)**
+**ຂໍ້ມູນດັ່ງກ່າວຍັງບໍ່ໄດ້ຮັບການຢືນຢັນ (400)**
 
 ```json
 {
   "success": false,
-  "message": "ข้อมูลไม่ถูกต้อง",
-  "errors": { "name": ["กรุณาระบุชื่อ"] },
+  "message": "ຂໍ້ມູນບໍ່ຖືກຕ້ອງ",
+  "errors": { "name": ["ກະລຸນາລະບຸຊື່ຂອງເຈົ້າ"] },
   "traceId": "00-..."
 }
 ```
 
-**สถานะข้อผิดพลาดที่ระบบแปลงให้อัตโนมัติ**
+**ສະຖານະການຜິດພາດຖືກແປງໂດຍອັດຕະໂນມັດ**
 
-| Exception | HTTP | ข้อความ |
+| Exception | HTTP | ຂໍ້ຄວາມ |
 | --- | --- | --- |
-| `ValidationFailedException`, `FluentValidation.ValidationException` | 400 | ข้อมูลไม่ถูกต้อง |
-| `UnauthorizedAccessException` | 401 | กรุณาเข้าสู่ระบบ |
-| `ForbiddenAccessException` | 403 | คุณไม่มีสิทธิ์ทำรายการนี้ |
-| `NotFoundException` | 404 | ไม่พบข้อมูลที่ต้องการ |
-| `ConflictException`, `DomainException` | 409 | ข้อความจาก exception |
-| `DbUpdateConcurrencyException` | 409 | ข้อมูลถูกแก้ไขโดยผู้ใช้อื่น |
-| อื่น ๆ ทั้งหมด | 500 | เกิดข้อผิดพลาดภายในระบบ |
+| `ValidationFailedException`, `FluentValidation.ValidationException` | 400 | ຂໍ້ມູນບໍ່ຖືກຕ້ອງ |
+| `UnauthorizedAccessException` | 401 | ກະລຸນາເຂົ້າສູ່ລະບົບ |
+| `ForbiddenAccessException` | 403 | ທ່ານບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຮັດລາຍການນີ້ |
+| `NotFoundException` | 404 | ບໍ່ພົບຂໍ້ມູນທີ່ຕ້ອງການ |
+| `ConflictException`, `DomainException` | 409 | ຂໍ້ຄວາມຈາກ exception |
+| `DbUpdateConcurrencyException` | 409 | ຂໍ້ມູນໄດ້ຖືກແກ້ໄຂໂດຍຜູ້ໃຊ້ອື່ນ |
+| ອື່ນໆທັງຝົດ | 500 | ເກີດຄວາມຜິດພາດພາຍໃນລະບົບ |
 
-`traceId` ที่ส่งกลับไปตรงกับ `TraceId` ที่บันทึกไว้ใน Log ใช้ค้นหาต้นเหตุได้ทันที
-ข้อความของ exception ที่ไม่คาดคิดจะปรากฏใน Response เฉพาะสภาพแวดล้อม Development เท่านั้น
+`traceId` ເຊິ່ງຖືກສົ່ງກັບຄືນໄປຫາການແຂ່ງຂັນ `TraceId` ບັນທຶກໃນ Log ໃຊ້ມັນເພື່ອຊອກຫາສາເຫດຂອງຮາກທັນທີ
+ຂໍ້ຄວາມຂອງ exception ລາຍການທີ່ບໍ່ຄາດຄິດຈະປາກົດຢູ່ໃນ Response ສະພາບແວດລ້ອມສະເພາະ Development ເທົ່ານັ້ນ
 
-พารามิเตอร์มาตรฐานของ List Endpoint ทุกตัว: `page`, `pageSize`, `search`, `sortBy`, `sortDirection`
-บวกกับ `organizationId` และ `dormitoryId` สำหรับข้อมูลที่แยกตามองค์กร
-`pageSize` ถูกจำกัดไม่ให้เกิน 200 รายการเสมอ
+ຕົວກໍານົດການມາດຕະຖານຂອງ List Endpoint ແຕ່ລະຄົນຂອງພວກເຂົາ: `page`, `pageSize`, `search`, `sortBy`, `sortDirection`
+ບວກ `organizationId` ແລະ `dormitoryId` ສໍາລັບຂໍ້ມູນທີ່ແຍກອອກໂດຍອົງກອນ
+`pageSize` ແມ່ນຖືກຈຳກັດບໍ່ໃຫ້ເກີນ 200 ລາຍຊື່ສະເໝີ
 
 ---
 
-## การทดสอบ
+## ການທົດສອບ
 
-### รันเทสต์ทั้งหมด
+### ດໍາເນີນການທົດສອບທັງຝົດ
 
 ```bash
 dotnet msbuild -t:Test
 ```
 
-รันเฉพาะบางโปรเจกต์:
+ດໍາເນີນໂຄງການສະເພາະ:
 
 ```bash
 dotnet msbuild tests/DormFlow.UnitTests/DormFlow.UnitTests.csproj -t:Test
@@ -419,521 +419,521 @@ dotnet msbuild tests/DormFlow.ArchitectureTests/DormFlow.ArchitectureTests.cspro
 dotnet msbuild tests/DormFlow.IntegrationTests/DormFlow.IntegrationTests.csproj -t:Test
 ```
 
-> **ทำไมไม่ใช้ `dotnet test`**
-> โปรเจกต์เทสต์ใช้ xUnit v3 บน Microsoft Testing Platform ตามมาตรฐานของ .NET 10
-> แต่ orchestrator ของ `dotnet test` ใน SDK 10.0.400 ยังเชื่อมต่อกับ Microsoft.Testing.Platform 2.3.3 ไม่สำเร็จ
-> และรายงานว่า `Zero tests ran` ทั้งที่เทสต์ทำงานได้ปกติ
-> เป้าหมาย `-t:Test` เรียกตัวรันเดียวกันผ่าน MSBuild และทำงานได้ถูกต้อง
-> เมื่อ SDK รุ่นถัดไปแก้ปัญหานี้แล้ว `dotnet test` จะใช้งานได้ทันทีโดยไม่ต้องแก้โปรเจกต์
+> **ເປັນຫຍັງເຈົ້າບໍ່ໃຊ້ມັນ? `dotnet test`**
+> ການທົດສອບການນໍາໃຊ້ໂຄງການ xUnit v3 ສຸດ Microsoft Testing Platform ອີງຕາມມາດຕະຖານຂອງ .NET 10
+> ແຕ່ orchestrator ຂອງ `dotnet test` ໃນ SDK 10.0.400 ຍັງເຊື່ອມຕໍ່ກັບ Microsoft.Testing.Platform 2.3.3 ບໍ່ສໍາເລັດ
+> ແລະລາຍງານວ່າ `Zero tests ran` ເຖິງແມ່ນວ່າຜູ້ທົດສອບເຮັດວຽກຕາມປົກກະຕິ
+> ເປົ້າໝາຍ `-t:Test` ໂທຫາການປະຕິບັດດຽວກັນໂດຍຜ່ານ MSBuild ແລະສາມາດເຮັດວຽກໄດ້ຢ່າງຖືກຕ້ອງ
+> ເມື່ອໃດ SDK ສະບັບຕໍ່ໄປແກ້ໄຂບັນຫານີ້ `dotnet test` ມັນສາມາດນໍາໃຊ້ໄດ້ທັນທີໂດຍບໍ່ຕ້ອງແກ້ໄຂໂຄງການ
 
-รันไฟล์ปฏิบัติการของเทสต์โดยตรงก็ได้ (แต่ละโปรเจกต์เทสต์ compile เป็น executable):
+ນອກນັ້ນທ່ານຍັງສາມາດດໍາເນີນການທົດສອບໄຟລ໌ປະຕິບັດໄດ້ໂດຍກົງ (ແຕ່ລະໂຄງການທົດສອບ compile ແມ່ນ executable):
 
 ```bash
 dotnet run --project tests/DormFlow.UnitTests
 ```
 
-### ขอบเขตของเทสต์ในขั้นตอนนี้
+### ຂອບເຂດຂອງການທົດສອບໃນຂັ້ນຕອນນີ້
 
-| โปรเจกต์ | จำนวน | ครอบคลุม |
+| ໂຄງການ | ປະລິມານ | ກວມເອົາ |
 | --- | --- | --- |
-| `DormFlow.UnitTests` | 132 | รูปแบบ API Response, การแบ่งหน้า, การแปลงข้อผิดพลาด Validation, BaseEntity, Domain Exception, ตรรกะสิทธิ์ของ `ICurrentUser`, วงจรชีวิต Refresh Token, รายการสิทธิ์และสิทธิ์เริ่มต้นของแต่ละบทบาท, กฎ Validation ของ Auth และของหอพัก, การสร้าง/แฮช Refresh Token, `TenantScope` (ตรรกะกันข้อมูลข้ามองค์กร/หอพักที่ทุกโมดูลใช้ร่วมกัน) |
-| `DormFlow.ArchitectureTests` | 11 | ทิศทางการพึ่งพาระหว่าง Layer, ตำแหน่งของ `DbContext`, ข้อตกลงการตั้งชื่อ |
-| `DormFlow.IntegrationTests` | 107 | Health Check ทั้งสามเส้นทาง, เอกสาร OpenAPI, JWT Bearer Security Scheme, เส้นทางที่ไม่มีอยู่จริง, Login สำเร็จ/ล้มเหลว, `/auth/me`, Refresh Token Rotation, การตรวจจับการใช้ Token ซ้ำ, Logout, Change Password, Forgot Password, ลำดับชั้นทรัพย์สินทั้งสาย (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, การกันข้อมูลข้ามองค์กร, CRUD ผู้ใช้ + กำหนดบทบาท + มอบหมาย/ถอนหอพัก, บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้, Audit Log, วงจรชีวิตการเช่าเต็มสาย (Tenant→Reservation→Contract→Activate→Terminate พร้อมตรวจสถานะห้องทุกจุด), การจองห้องซ้ำและผู้เช่าบัญชีดำต้องถูกปฏิเสธ, การจดค่ามิเตอร์ (ดึงค่าครั้งก่อนหน้าอัตโนมัติ, ห้ามจดซ้ำเดือนเดียวกัน, ห้ามจดค่าต่ำกว่าครั้งก่อน), วงจรชีวิตการออกบิล (MeterReading→Invoice→Payment ครบสาย, ชำระบางส่วนแล้วคืนเงิน, ห้ามออกบิลซ้ำเดือนเดียวกัน, ห้ามยกเลิกบิลที่ชำระแล้ว, ห้ามยืนยันยอดเกินยอดคงเหลือ), วงจรชีวิตงานแจ้งซ่อมบำรุง (Report→Assign→InProgress→Complete พร้อมห้องเปลี่ยนสถานะอัตโนมัติ, มอบหมายซ้ำ, ห้องมีงานซ่อมสองรายการ, ปฏิเสธช่างที่ไม่มีสิทธิ์/ไม่ได้ดูแลหอพักนี้, ห้ามตั้งสถานะ Assigned ตรง ๆ, ห้ามข้ามขั้นตอน, ห้องที่มีผู้เช่าไม่ถูกแตะต้อง), การกันข้อมูลข้ามองค์กรของ Owner
-ใน List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ของช่องโหว่ที่พบและแก้ไขแล้ว,
-รายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระ (คำนวณยอดถูกต้อง, กรองตามหอพัก, ส่งออก CSV ทั้งสองรายงาน),
-วงจรชีวิตเงินมัดจำ (รับเงิน→สิ้นสุดสัญญา→คืนเต็ม/บางส่วน/ริบทั้งหมด, ห้ามรับซ้ำ, ห้ามคืนก่อนสัญญาสิ้นสุด,
-ห้ามคืนเกินยอด, บังคับระบุเหตุผลเมื่อคืนไม่เต็ม, ห้ามคืนซ้ำ), การออกใบเสร็จรับเงิน (เฉพาะรายการชำระเงิน
-ที่ยืนยันแล้ว, ห้ามออกซ้ำ, ห้ามออกให้รายการที่ยังไม่ยืนยันหรือถูกคืนเงินไปแล้ว), การบันทึกค่าใช้จ่าย
-(กรองตามหมวดหมู่และช่วงวันที่, ปฏิเสธหมวดหมู่ที่ไม่ถูกต้อง), วงจรชีวิตพัสดุ (บันทึกรับ→รับพัสดุ,
-ห้ามรับซ้ำ), วงจรชีวิตผู้มาเยือน (เข้า→ออก, ห้ามออกซ้ำ), วงจรชีวิตการจดทะเบียนที่จอดรถ (จดทะเบียน→สิ้นสุด,
-ห้ามจดทะเบียนซ้อนทะเบียนรถเดียวกัน, จดทะเบียนซ้ำได้หลังรายการเดิมสิ้นสุดแล้ว), วงจรชีวิตประกาศ
-(สร้าง (ร่าง)→เผยแพร่→เก็บเข้าคลัง, ห้ามเผยแพร่ซ้ำ, ห้ามเก็บเข้าคลังก่อนเผยแพร่), การแจ้งเตือน
-(ส่งถึงผู้ใช้→ปรากฏในรายการของผู้รับ, ทำเครื่องหมายอ่านแล้วของตนเอง, ห้ามอ่านแทนผู้อื่น,
-ห้ามส่งข้ามองค์กร), ค่าตั้งขององค์กร (สร้างใหม่, แก้ไขค่าเดิมไม่สร้างซ้ำ, ลบแล้วอ่านต่อได้ 404,
-สร้างคีย์เดิมซ้ำได้หลังลบ, แยกข้อมูลตามองค์กร), Background Job (หมดอายุการจองที่เลย ExpiresAt แล้วและปล่อยห้องคืน,
-ไม่แตะการจองที่ยังไม่หมดอายุ, ไม่แตะห้องที่ถูกเปลี่ยนสถานะไปทางอื่นแล้ว, ทำเครื่องหมายใบแจ้งหนี้เกินกำหนดชำระเป็น
-Overdue พร้อมคำนวณค่าปรับทั้งแบบคงที่และร้อยละ, ไม่แตะบิลที่ยังไม่ถึงกำหนด, รันซ้ำไม่บวกค่าปรับซ้ำ) |
+| `DormFlow.UnitTests` | 132 | ຮູບແບບ API Response, Pagination, ການແປງຜິດພາດ Validation, BaseEntity, Domain Exception, ເຫດຜົນຂອງການອະນຸຍາດ `ICurrentUser`, ວົງຈອນຊີວິດ Refresh Token, ລາຍຊື່ການອະນຸຍາດແລະການອະນຸຍາດເລີ່ມຕົ້ນສໍາລັບແຕ່ລະບົດບາດ, ກົດລະບຽບ Validation ຂອງ Auth ແລະລາຍການຫໍພັກ, ການສ້າງ/ແຮຊ Refresh Token, `TenantScope` (ເຫດຜົນເພື່ອປົກປ້ອງຂໍ້ມູນໃນທົ່ວອົງກອນ/ຫໍພັກແບ່ງປັນໂດຍທຸກໂມດູນ) |
+| `DormFlow.ArchitectureTests` | 11 | ທິດທາງຂອງການເພິ່ງພາອາໄສລະຫວ່າງ Layer, ຕໍາແຜ່ງຂອງ `DbContext`, ສົນທິສັນຍາການຕັ້ງຊື່ |
+| `DormFlow.IntegrationTests` | 107 | Health Check ທັງສາມເສັ້ນທາງ, ເອກະສານ OpenAPI, JWT Bearer Security Scheme, ເສັ້ນທາງທີ່ບໍ່ມີຢູ່ແທ້ໆ, Login ປະສົບຜົນສໍາເລັດ/ລົ້ມເຫຼວ, `/auth/me`, Refresh Token Rotation, ການກວດສອບການນໍາໃຊ້ Token ເຮັດຊ້ຳ, Logout, Change Password, Forgot Password, ລຳດັບຊັບສິນທັງໝົດ (Organization→Dormitory→Building→Floor→RoomType→Room), Rooms available/summary, ການປົກປ້ອງຂໍ້ມູນທົ່ວອົງກອນ, CRUD ຜູ້ໃຊ້ + ກໍານົດບົດບາດ + ມອບໝາຍ/ຖອນຫໍພັກ, ບົດບາດມາດຕະຖານປ່ຽນຊື່/ບໍ່ສາມາດລຶບໄດ້, Audit Log, ວົງຈອນຊີວິດການເຊົ່າເຕັມ (Tenant→Reservation→Contract→Activate→Terminate ພ້ອມກວດສອບສະຖານະຫ້ອງທຸກຈຸດ), ການຈອງຊໍ້າກັນ ແລະຜູ້ເຊົ່າບັນຊີດໍາຈະຕ້ອງຖືກປະຕິເສດ, ບັນທຶກຄ່າແມັດ (ດຶງເອົາຄ່າທີ່ຜ່ານມາໂດຍອັດຕະໂນມັດ, ຢ່າບັນທຶກຊ້ຳໆໃນເດືອນດຽວກັນ, ຢ່າຂຽນຄ່າຕ່ໍາກວ່າເວລາທີ່ຜ່ານມາ), ວົງຈອນຊີວິດການຮຽກເກັບເງິນ (MeterReading→Invoice→Payment ເສັ້ນຄົບຖ້ວນ, ການຈ່າຍເງິນບາງສ່ວນແລະການຄືນເງິນ, ຫ້າມອອກໃບບິນຄ່າຊໍ້າກັນໃນເດືອນດຽວກັນ, ຢ່າຍົກເລີກໃບບິນທີ່ຈ່າຍແລ້ວ, ຢ່າຢືນຢັນຍອດເງິນເກີນຍອດຄົງເຫຼືອ), ວົງຈອນຊີວິດຂອງວຽກງານບໍາລຸງຮັກສາ (Report→Assign→InProgress→Complete ມີຫ້ອງປ່ຽນສະຖານະອັດຕະໂນມັດ, ມອບໝາຍຄືນໃໝ່, ຫ້ອງມີສອງວຽກງານສ້ອມແປງ, ປະຕິເສດນັກວິຊາການທີ່ບໍ່ມີຄຸນສົມບັດ/ຫໍພັກນີ້ບໍ່ໄດ້ຖືກຮັກສາໄວ້, ຢ່າຕັ້ງສະຖານະ Assigned ກົງ, ຢ່າຂ້າມຂັ້ນຕອນ, ຫ້ອງທີ່ຖືກຄອບຄອງໂດຍຜູ້ເຊົ່າໄດ້ຖືກປະໄວ້ untouched), ການປົກປ້ອງຂໍ້ມູນທົ່ວອົງກອນ Owner
+ໃນ List Endpoint (Rooms, Invoices, MaintenanceRequests) — Regression Test ຂອງຊ່ອງໂຫວ່ທີ່ໄດ້ພົບເຫັນແລະການແກ້ໄຂ,
+ບົດລາຍງານສະຫຼຸບລາຍຮັບແລະລາຍງານໃບເກັບເງິນທີ່ຍັງຄ້າງຄາ (ຄິດໄລ່ຈໍານວນທີ່ຖືກຕ້ອງ, ກັ່ນຕອງຕາມຫໍພັກ, ສົ່ງອອກ CSV ບົດລາຍງານທັງສອງ),
+ວົງຈອນຊີວິດການຝາກເງິນ (ໄດ້ເງິນ→ສິ້ນສຸດສັນຍາ→ເງິນຄືນເຕັມ/ບາງ/ປະຖິ້ມທັງຝົດ, ບໍ່ຍອມຮັບອີກເທື່ອຜຶ່ງ, ຢ່າກັບຄືນກ່ອນທີ່ສັນຍາຈະສິ້ນສຸດລົງ,
+ຢ່າສົ່ງຄືນຫຼາຍກ່ວາຈໍານວນທັງຝົດ, ບັງຄັບໃຫ້ລະບຸເຫດຜົນສໍາລັບການບໍ່ຄົບຖ້ວນໃນຄືນທີ່ຜ່ານມາ, ຢ່າກັບຄືນມາອີກ), ການອອກໃບຮັບເງິນ (ລາຍການການຈ່າຍເງິນເທົ່ານັ້ນ
+ຢືນຢັນ, ຫ້າມອອກໃໝ່, ຢ່າອອກລາຍການທີ່ບໍ່ໄດ້ຮັບການຢືນຢັນຫຼືຄືນເງິນ), ບັນທຶກຄ່າໃຊ້ຈ່າຍ
+(ກັ່ນຕອງຕາມໝວດໝູ່ ແລະຊ່ວງວັນທີ, ປະຕິເສດໝວດໝູ່ທີ່ບໍ່ຖືກຕ້ອງ), ວົງຈອນຊີວິດ parcel (ໄດ້ຮັບບັນທຶກ→ຮັບເຄື່ອງ,
+ບໍ່ຍອມຮັບອີກເທື່ອຜຶ່ງ), ວົງຈອນຊີວິດຂອງນັກທ່ອງທ່ຽວ (ເຂົ້າ→ອອກ, ຫ້າມອອກໃໝ່), ວົງຈອນຊີວິດການລົງທະບຽນບ່ອນຈອດລົດ (ລົງທະບຽນ→ສິ້ນສຸດ,
+ຫ້າມໃສ່ປ້າຍທະບຽນລົດຫຼາຍຄັນສຳລັບພາຫະນະດຽວກັນ, ທ່ານສາມາດລົງທະບຽນຄືນໃຝ່ໄດ້ຫຼັງຈາກຕົ້ນສະບັບໄດ້ສິ້ນສຸດລົງ), ວົງຈອນຊີວິດປະກາດ
+(ສ້າງ (ແຕ້ມຮູບ)→ເຜີຍແຜ່→ເອົາເຂົ້າໄປໃນບ່ອນເກັບຮັກສາ, ຫ້າມເຜີຍແຜ່ໃໝ່, ຢ່າເກັບຮັກສາມັນໄວ້ໃນບ່ອນເກັບມ້ຽນກ່ອນທີ່ຈະເຜີຍແຜ່), ການແຈ້ງເຕືອນ
+(ສົ່ງໃຫ້ຜູ້ໃຊ້→ປາກົດຢູ່ໃນລາຍຊື່ຜູ້ຮັບ, ໝາຍຂອງເຈົ້າວ່າອ່ານແລ້ວ, ຢ່າອ່ານໃນນາມຂອງຄົນອື່ນ,
+ຢ່າສົ່ງທົ່ວອົງກອນ), ການຕັ້ງຄ່າອົງກອນ (ກໍ່ສ້າງຄືນໃໝ່, ແກ້ໄຂຄ່າຕົ້ນສະບັບ, ບໍ່ສ້າງຊ້ໍາກັນ, ລຶບ ແລະສືບຕໍ່ອ່ານ 404,
+ລະຫັດດຽວກັນສາມາດຖືກສ້າງອີກເທື່ອຜຶ່ງຫຼັງຈາກການລຶບ, ແຍກຂໍ້ມູນຕາມອົງກອນ), Background Job (ການຈອງໝົດອາຍຸດຽວນີ້ ExpiresAt ແລ້ວປ່ອຍຫ້ອງຄືນ,
+ຢ່າແຕະຕ້ອງຈອງທີ່ຍັງບໍ່ທັນໝົດອາຍຸເທື່ອ, ຢ່າແຕະຕ້ອງຫ້ອງທີ່ຖືກປ່ຽນເປັນສະຖານະອື່ນ, ໝາຍໃບແຈ້ງໜີ້ວ່າໝົດກຳນົດ
+Overdue ພ້ອມຄິດໄລ່ຄ່າປັບໃໝຄົງທີ່ ແລະສ່ວນຮ້ອຍ, ຢ່າແຕະຕ້ອງໃບບິນຄ່າທີ່ຍັງບໍ່ທັນຮອດກຳນົດ, Rerun ບໍ່ໄດ້ເພີ່ມການປັບໃໝຊໍ້າກັນ) |
 
-Integration Test ใช้ **PostgreSQL จริง** ผ่าน Testcontainers ไม่ใช้ InMemory Database
-เพราะพฤติกรรมสำคัญหลายอย่าง เช่น Global Query Filter, `timestamptz`, `jsonb`
-และ Optimistic Concurrency ด้วยคอลัมน์ `xmin` ไม่มีอยู่ใน InMemory Provider
+Integration Test ໃຊ້ **PostgreSQL ຄວາມຈິງ** ຜ່ານ Testcontainers ຢ່າໃຊ້ InMemory Database
+ເນື່ອງຈາກວ່າພຶດຕິກໍາທີ່ສໍາຄັນຈໍານວນຫຼາຍເຊັ່ນ: Global Query Filter, `timestamptz`, `jsonb`
+ແລະ Optimistic Concurrency ກັບຖັນ `xmin` ບໍ່ມີຢູ່ໃນ InMemory Provider
 
-> Integration Test ต้องการ Docker ที่ทำงานอยู่ ถ้า Docker ไม่ทำงาน เทสต์ชุดนี้จะล้มเหลวตั้งแต่ขั้นสร้างคอนเทนเนอร์
+> Integration Test ຕ້ອງການ Docker ທີ່ເຮັດວຽກຖ້າຫາກວ່າ Docker ບໍ່ເຮັດວຽກ. ການທົດສອບນີ້ຈະລົ້ມເຫຼວໃນເວລາສ້າງ container
 
 ---
 
-## Entity Framework Core และ Migration
+## Entity Framework Core ແລະ Migration
 
-มี Migration แรกแล้ว (`InitialCreate`) ครอบคลุมตารางของ ASP.NET Core Identity
+ມີ Migration ທໍາອິດ (`InitialCreate`) ກວມເອົາຕາຕະລາງຂອງ ASP.NET Core Identity
 (`users`, `roles`, `user_roles`, `user_claims`, `user_logins`, `user_tokens`, `role_claims`)
-และตารางธุรกิจของขั้นตอนนี้ (`organizations`, `permissions`, `role_permissions`, `refresh_tokens`, `audit_logs`)
+ແລະຕາຕະລາງທຸລະກິດຂອງຂັ້ນຕອນນີ້ (`organizations`, `permissions`, `role_permissions`, `refresh_tokens`, `audit_logs`)
 
-ติดตั้งเครื่องมือ (ครั้งเดียวต่อเครื่อง):
+ຕິດຕັ້ງເຄື່ອງມື (ຜຶ່ງຄັ້ງຕໍ່ອຸປະກອນ):
 
 ```bash
 dotnet tool install --global dotnet-ef
 ```
 
-คำสั่งที่ใช้จัดการ Migration:
+ຄໍາສັ່ງທີ່ໃຊ້ໃນການຄຸ້ມຄອງ Migration:
 
 ```bash
-# สร้าง Migration ใหม่
-dotnet ef migrations add ชื่อMigration \
+# ສ້າງ Migration ໃໝ່
+dotnet ef migrations add ຊື່Migration \
   --project src/DormFlow.Infrastructure \
   --startup-project src/DormFlow.Infrastructure
 
-# ปรับฐานข้อมูลให้ตรงกับ Migration ล่าสุด
+# ປັບຖານຂໍ້ມູນໃຫ້ກົງກັນ Migration ລ່າສຸດ
 dotnet ef database update \
   --project src/DormFlow.Infrastructure \
   --startup-project src/DormFlow.Infrastructure
 ```
 
-> **ทำไม `--startup-project` ชี้ไปที่ `DormFlow.Infrastructure` ไม่ใช่ `DormFlow.Api`**
-> เครื่องมือ `dotnet ef` ต้องการให้ Startup Project อ้างอิงแพ็กเกจ `Microsoft.EntityFrameworkCore.Design` โดยตรง
-> ซึ่ง `DormFlow.Infrastructure` มีอยู่แล้ว (จำเป็นสำหรับ `DormFlowDbContextFactory`)
-> ส่วน `DormFlow.Api` ไม่มีแพ็กเกจนี้เพราะไม่ควรต้องรู้จักเครื่องมือ Migration โดยตรง
-> `DormFlowDbContextFactory` อ่าน Connection String จาก environment variable `ConnectionStrings__DefaultConnection`
-> เมื่อไม่ได้กำหนดจะใช้ค่าเริ่มต้นของ docker compose บนเครื่องนักพัฒนาแทน
+> **ເປັນຫຍັງ? `--startup-project` ຊີ້ໄປ `DormFlow.Infrastructure` ບໍ່ `DormFlow.Api`**
+> ເຄື່ອງມື `dotnet ef` ຕ້ອງການໃຫ້ Startup Project ການອ້າງອີງແພັກເກດ `Microsoft.EntityFrameworkCore.Design` ໂດຍກົງ
+> ເຊິ່ງ `DormFlow.Infrastructure` ມີຢູ່ແລ້ວ (ຈໍາເປັນສໍາລັບ `DormFlowDbContextFactory`)
+> ສ່ວນ `DormFlow.Api` ຊຸດນີ້ບໍ່ໄດ້ຖືກລວມເອົາເພາະວ່າເຄື່ອງມືບໍ່ຄວນຮູ້ຈັກ Migration ໂດຍກົງ
+> `DormFlowDbContextFactory` ອ່ານ Connection String ຈາກ environment variable `ConnectionStrings__DefaultConnection`
+> ເມື່ອບໍ່ໄດ້ລະບຸ, ຄ່າເລີ່ມຕົ້ນຂອງ docker compose ໃນເຄື່ອງພັດທະນາແທນ
 
-> **ข้อควรระวังเมื่อสร้าง Migration ด้วยตัวเอง**
-> `DormFlowDbContextFactory` ต้องตั้งชื่อตารางประวัติ Migration ด้วย `DormFlowDbContext.MigrationsHistoryTableName`
-> ให้ตรงกับที่ `DependencyInjection.AddPersistence` ใช้ตอนแอปทำงานจริงเสมอ (ปัจจุบันตั้งไว้ให้แล้วทั้งสองจุด)
-> ถ้าค่าไม่ตรงกัน `dotnet ef` จะสร้างตารางประวัติคนละชื่อกับที่แอปมองหา
-> ทำให้แอปพยายามสร้างตารางที่มีอยู่แล้วซ้ำตอนเริ่มทำงานและล้มเหลวทันที
+> **ຂໍ້ຄວນລະວັງໃນເວລາສ້າງ Migration ດ້ວຍຕົວທ່ານເອງ**
+> `DormFlowDbContextFactory` ຕາຕະລາງປະຫວັດສາດຕ້ອງມີຊື່ Migration ຄືກັນ `DormFlowDbContext.MigrationsHistoryTableName`
+> ກົງກັບວ່າ `DependencyInjection.AddPersistence` ໃຊ້ມັນສະເໝີເມື່ອແອັບກຳລັງເຮັດວຽກຢູ່ (ໃນປັດຈຸບັນ, ທັງສອງຈຸດແມ່ນຖືກກໍານົດ)
+> ຖ້າຄ່າບໍ່ກົງກັນ `dotnet ef` ມັນຈະສ້າງຕາຕະລາງປະຫວັດສາດທີ່ມີຊື່ທີ່ແຕກຕ່າງກັນກ່ວາສິ່ງທີ່ app ກໍາລັງຊອກຫາ
+> ອັນນີ້ເຮັດໃຫ້ແອັບຯພະຍາຍາມຊໍ້າກັນຕາຕະລາງທີ່ມີຢູ່ແລ້ວໃນຕອນເລີ່ມຕົ້ນ ແລະລົ້ມເຫຼວໃນທັນທີ
 
-### ข้อตกลงของฐานข้อมูล
+### ຂໍ້ຕົກລົງຖານຂໍ້ມູນ
 
-| หัวข้อ | ค่าที่ใช้ |
+| ຫົວຂໍ້ | ມູນຄ່າທີ່ໃຊ້ |
 | --- | --- |
-| การตั้งชื่อตารางและคอลัมน์ | `snake_case` ผ่าน `UseSnakeCaseNamingConvention()` |
-| Primary Key | `uuid` (UUID v7 เรียงตามเวลา ลดการแตกกระจายของ index) |
-| วันเวลา | `timestamptz` ผ่าน `DateTimeOffset` เก็บเป็น UTC เสมอ |
-| Optimistic Concurrency | คอลัมน์ระบบ `xmin` ของ PostgreSQL แม็ปเข้ากับ property `Version` |
-| Soft Delete | คอลัมน์ `is_deleted` + Global Query Filter ใส่ให้อัตโนมัติทุก Entity |
-| Audit | `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by` เติมโดย Interceptor |
-| Index | `is_deleted` และ `(organization_id, dormitory_id)` ถูกสร้างให้อัตโนมัติ |
-| ตาราง Migration History | `__ef_migrations_history` |
-| ความละเอียดของ `decimal` | `numeric(18,2)` เป็นค่าเริ่มต้น |
+| ການຕັ້ງຊື່ຕາຕະລາງແລະຖັນ | `snake_case` ຜ່ານ `UseSnakeCaseNamingConvention()` |
+| Primary Key | `uuid` (UUID v7 ຈັດຮຽງຕາມເວລາເພື່ອຫຼຸດຜ່ອນການແຕກແຍກ index) |
+| ວັນທີແລະເວລາ | `timestamptz` ຜ່ານ `DateTimeOffset` ຮັກສາມັນເປັນ UTC ສະເໝີ |
+| Optimistic Concurrency | ຖັນລະບົບ `xmin` ຂອງ PostgreSQL ແຜນທີ່ກັບ property `Version` |
+| Soft Delete | ຖັນ `is_deleted` + Global Query Filter ໃສ່ມັນອັດຕະໂນມັດທຸກຄັ້ງ Entity |
+| Audit | `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by` ຕື່ມໂດຍ Interceptor |
+| Index | `is_deleted` ແລະ `(organization_id, dormitory_id)` ຖືກສ້າງຂື້ນໂດຍອັດຕະໂນມັດ |
+| ໂຕະ Migration History | `__ef_migrations_history` |
+| ຄວາມລະອຽດຂອງ `decimal` | `numeric(18,2)` ເປັນຄ່າເລີ່ມຕົ້ນ |
 
-ข้อตกลงเหล่านี้ถูกใส่ให้ทุก Entity โดยอัตโนมัติที่
+ຂໍ້ຕົກລົງເຫຼົ່ານີ້ແມ່ນໄດ້ຮັບການຈັດຕັ້ງໃນສະຖານທີ່ສໍາລັບທຸກຄົນ Entity ອັດຕະໂນມັດຢູ່ທີ່
 `src/DormFlow.Infrastructure/Persistence/Extensions/ModelBuilderExtensions.cs`
-ไม่ต้องเขียนซ้ำในแต่ละ `IEntityTypeConfiguration`
+ບໍ່ຈໍາເປັນຕ້ອງຂຽນອີກເທື່ອຜຶ່ງໃນແຕ່ລະຄັ້ງ `IEntityTypeConfiguration`
 
 ---
 
 ## Background Jobs
 
-ใช้ **Hangfire** พร้อม **Hangfire.PostgreSql** เป็น Job Storage บน PostgreSQL ตัวเดียวกับฐานข้อมูลหลัก
-(ไม่ต้องเพิ่ม Redis หรือบริการแยก) Hangfire สร้าง Schema ของตัวเอง (`hangfire`) ในฐานข้อมูลเดียวกันโดยอัตโนมัติ
-ตอนเริ่มระบบ แยกต่างหากจาก Schema `public` ที่ EF Core Migration จัดการ ไม่ต้องรัน Migration เพิ่มสำหรับส่วนนี้
+ໃຊ້ **Hangfire** ພ້ອມ **Hangfire.PostgreSql** ແມ່ນ Job Storage ສຸດ PostgreSQL ຄືກັນກັບຖານຂໍ້ມູນຫຼັກ
+(ບໍ່ຈໍາເປັນຕ້ອງເພີ່ມ Redis ຫຼືການບໍລິການແຍກຕ່າງຫາກ) Hangfire ສ້າງ Schema ຂອງຕົນເອງ (`hangfire`) ໃນຖານຂໍ້ມູນດຽວກັນອັດຕະໂນມັດ
+ໃນຕອນເລີ່ມຕົ້ນຂອງລະບົບ, ແຍກອອກຈາກ Schema `public` ທີ່ EF Core Migration ການຄຸ້ມຄອງ, ບໍ່ຈໍາເປັນຕ້ອງດໍາເນີນການ Migration ເພີ່ມສໍາລັບພາກນີ້
 
-### Recurring Job ที่มีอยู่
+### Recurring Job ທີ່ມີຢູ່ແລ້ວ
 
-| Job | กำหนดเวลา | ทำอะไร |
+| Job | ຕັ້ງເວລາ | ເຈົ້າເຮັດຫຍັງຢູ່? |
 | --- | --- | --- |
-| `expire-reservations` | ทุก 15 นาที (`*/15 * * * *`) | หมดอายุการจองที่ยังเป็น `Pending` แต่เลย `ExpiresAt` แล้ว (`Reservation.Status → Expired`) ปล่อยห้องคืนเป็น `Available` ถ้ายังอยู่ในสถานะ `Reserved` |
-| `mark-overdue-invoices` | วันละครั้ง 01:00 UTC | ทำเครื่องหมายใบแจ้งหนี้ที่ `Status` เป็น `Issued`/`PartiallyPaid` แต่เลย `DueDate` แล้วให้เป็น `Overdue` พร้อมคำนวณค่าปรับชำระล่าช้าตามค่าตั้งของหอพัก (`LateFeeType`/`LateFeeAmount`) ครั้งเดียวตอนเปลี่ยนสถานะ |
+| `expire-reservations` | ທຸກໆ 15 ນາທີ (`*/15 * * * *`) | ການຈອງໝົດອາຍຸແລ້ວ `Pending` ແຕ່ຢູ່ໃນທັງຝົດ `ExpiresAt` ແລ້ວ (`Reservation.Status → Expired`) ປ່ອຍຄືນຫ້ອງ `Available` ຖ້າຍັງຢູ່ໃນສະຖານະ `Reserved` |
+| `mark-overdue-invoices` | ມື້ລະເທື່ອ 01:00 UTC | ໝາຍໃບແຈ້ງໜີ້ຢູ່ `Status` ແມ່ນ `Issued`/`PartiallyPaid` ແຕ່ຢູ່ໃນທັງຝົດ `DueDate` ຫຼັງຈາກນັ້ນ, ໃຫ້ມັນເປັນ `Overdue` ຄຽງຄູ່ກັບການຄິດໄລ່ຄ່າປັບໃໝຈ່າຍຊ້າຕາມການກຳນົດຂອງຫໍພັກ (`LateFeeType`/`LateFeeAmount`) ພຽງແຕ່ຄັ້ງດຽວໃນເວລາທີ່ມີການປ່ຽນແປງສະຖານະ |
 
-ตรรกะทางธุรกิจของทั้งสอง Job อยู่ใน Use Case เดิม (`IReservationService.ExpirePastDueReservationsAsync`,
-`IInvoiceService.MarkOverdueInvoicesAsync`) ไม่ได้แยกเป็นคลาส "Job" ต่างหาก — Hangfire เรียก Interface เหล่านี้
-ตรง ๆ ผ่าน Dependency Injection ทำให้ทดสอบได้แบบเดียวกับ Use Case อื่นทั้งหมด ทั้งสองเมธอดทำงานข้ามทุกองค์กร
-โดยไม่ผ่าน `TenantScope` เพราะเป็นการทำงานของระบบเอง ไม่ใช่คำสั่งที่ผู้ใช้คนใดคนหนึ่งเรียก (`AuditLog` ที่บันทึกไว้
-จะมี `UserId` เป็น `null` เป็นสัญญาณว่าระบบเป็นผู้ทำรายการนี้เอง)
+ເຫດຜົນທາງທຸລະກິດຂອງທັງສອງ Job ຢູ່ໃນ Use Case ຕົ້ນສະບັບ (`IReservationService.ExpirePastDueReservationsAsync`,
+`IInvoiceService.MarkOverdueInvoicesAsync`) ບໍ່ໄດ້ແຍກອອກເປັນຫ້ອງຮຽນ "Job" ແຍກຕ່າງຫາກ — Hangfire ໂທ Interface ເຫຼົ່ານີ້
+ກົງຜ່ານ Dependency Injection ເຮັດໃຫ້ມັນເປັນໄປໄດ້ທີ່ຈະທົດສອບໃນລັກສະນະດຽວກັນ Use Case ທຸກສິ່ງທຸກຢ່າງອື່ນ: ທັງສອງວິທີການເຮັດວຽກໃນທົ່ວອົງກອນ
+ໂດຍບໍ່ມີການຜ່ານ `TenantScope` ເນື່ອງຈາກວ່າມັນເປັນການເຮັດວຽກຂອງລະບົບຕົວມັນເອງ. ມັນບໍ່ແມ່ນຄໍາສັ່ງທີ່ເອີ້ນໂດຍຜູ້ໃຊ້ໃດໆ (`AuditLog` ບັນທຶກແລ້ວ
+ຈະມີ `UserId` ແມ່ນ `null` ມັນເປັນສັນຍານວ່າລະບົບໄດ້ສ້າງທຸລະກໍານີ້)
 
-### Dashboard และการตั้งค่า
+### Dashboard ແລະການຕັ້ງຄ່າ
 
-- หน้า Dashboard อยู่ที่ `/hangfire` เปิดเฉพาะสภาพแวดล้อมที่ไม่ใช่ Production เหมือนกับเอกสาร OpenAPI/Scalar
-  (ใน Production ต้องป้องกันด้วยการยืนยันตัวตนก่อนเปิดใช้งานเสมอ ยังไม่ได้เชื่อมกับระบบสิทธิ์ของแอปในขั้นตอนนี้)
-- ปิดใช้งาน Background Job ทั้งหมดได้ผ่านค่าตั้ง `BackgroundJobs__Enabled` (ค่าเริ่มต้น `true`) โดยไม่ต้อง deploy ใหม่
-- ข้ามการลงทะเบียน Hangfire ทั้งหมด (ทั้ง Storage และ Server) ในสภาพแวดล้อม Testing เสมอ ไม่ว่าค่าตั้งจะเป็นอย่างไร
-  เพราะ Integration Test ใช้ฐานข้อมูลชั่วคราวของตัวเองผ่าน Testcontainers และ Hangfire.PostgreSql ติดตั้ง Schema
-  ของตัวเองทันทีตอนลงทะเบียน (ไม่รอจน Server เริ่มทำงาน) ถ้าปล่อยให้ทำงานคู่ขนานกับการเตรียมฐานข้อมูลของเทสต์
-  EF Core จะเข้าใจผิดว่าฐานข้อมูลมีตารางอยู่แล้วและข้ามการสร้างตารางของแอปพลิเคชันทั้งหมด (พบเป็นบั๊กจริงระหว่างพัฒนา
-  Feature นี้ แก้แล้วโดยย้ายเงื่อนไขข้ามสภาพแวดล้อม Testing ไปไว้ที่จุดลงทะเบียน Storage ด้วย ไม่ใช่แค่จุดเริ่ม Server)
+- ໜ້າ Dashboard ທີ່ `/hangfire` ສະພາບແວດລ້ອມເປີດເທົ່ານັ້ນທີ່ບໍ່ມີ Production ຄືກັນກັບເອກະສານ OpenAPI/Scalar
+  (ໃນ Production ຕ້ອງໄດ້ຮັບການປົກປ້ອງສະເຝີໂດຍການຢືນຢັນຕົວຕົນຂອງທ່ານກ່ອນທີ່ຈະເປີດໃຊ້. ລະບົບການອະນຸຍາດຂອງແອັບຯບໍ່ໄດ້ເຊື່ອມຕໍ່ກັບໃນເວລານີ້)
+- ຄົນພິການ Background Job ທັງໝົດໄດ້ຜ່ານການຕັ້ງຄ່າແລ້ວ `BackgroundJobs__Enabled` (ຄ່າເລີ່ມຕົ້ນ `true`) ໂດຍບໍ່ມີການ deploy ໃໝ່
+- ຂ້າມການລົງທະບຽນ Hangfire ທັງໝົດ (ທັງສອງ Storage ແລະ Server) ໃນສະພາບແວດລ້ອມ Testing ສະເຝີ, ບໍ່ວ່າການຕັ້ງຄ່າແມ່ນຫຍັງ
+  ເນື່ອງຈາກວ່າ Integration Test ໃຊ້ຖານຂໍ້ມູນຊົ່ວຄາວຂອງຕົນເອງໂດຍຜ່ານ Testcontainers ແລະ Hangfire.PostgreSql ຕິດຕັ້ງ Schema
+  ຂອງທ່ານເອງທັນທີທີ່ລົງທະບຽນ (ຢ່າລໍຖ້າຈົນກ່ວາ Server ເລີ່ມເຮັດວຽກ) ຖ້າອະນຸຍາດໃຫ້ເຮັດວຽກຂະຜານກັບການກະກຽມຖານຂໍ້ມູນການທົດສອບ
+  EF Core ມັນເຮັດໃຫ້ຄວາມຜິດພາດຂອງການສົມມຸດວ່າຖານຂໍ້ມູນມີຕາຕະລາງແລ້ວແລະຂ້າມການສ້າງຕາຕະລາງຂອງແອັບພລິເຄຊັນທັງຝົດ (ພົບແມງໄມ້ທີ່ແທ້ຈິງໃນລະຫວ່າງການພັດທະນາ
+  Feature ນີ້ໄດ້ຖືກແກ້ໄຂໂດຍການຍ້າຍເງື່ອນໄຂໃນທົ່ວສະພາບແວດລ້ອມ Testing ໄປທີ່ຈຸດລົງທະບຽນ Storage ມັນບໍ່ແມ່ນພຽງແຕ່ຈຸດເລີ່ມຕົ້ນ Server)
 
 ---
 
-## ข้อตกลงในการเขียนโค้ด
+## ສົນທິສັນຍາການເຂົ້າລະຫັດ
 
-- `Nullable` เปิดทุกโปรเจกต์
-- `TreatWarningsAsErrors` เปิดเฉพาะโปรเจกต์ใน `src/` โปรเจกต์เทสต์ไม่เปิด
-- เมธอดที่ทำ I/O ต้องเป็น `async` และรับ `CancellationToken` เสมอ
-- ห้ามคืน Entity ออกจาก Controller ให้ใช้ DTO หรือ Response Contract เท่านั้น
-- ห้ามใส่ Business Logic ใน Controller
-- ทุก Query ที่อ่านข้อมูลธุรกิจต้องกรองด้วย `organization_id` และ `dormitory_id`
-- ห้ามบันทึกรหัสผ่าน, Access Token หรือ Refresh Token ลง Log
-- Log ไม่บันทึก Request Body หรือ Response Body เลย เพราะเส้นทางอย่าง login มีรหัสผ่านอยู่ในเนื้อหา
-- เวอร์ชันของแพ็กเกจอยู่ที่ `Directory.Packages.props` ที่เดียว ห้ามใส่ `Version` ใน `.csproj`
+- `Nullable` ເປີດທຸກໂຄງການ
+- `TreatWarningsAsErrors` ພຽງແຕ່ໂຄງການເປີດຢູ່ໃນ `src/` ການທົດສອບໂຄງການບໍ່ເປີດ
+- ວິທີການເຮັດ I/O ຕ້ອງເປັນ `async` ແລະໄດ້ຮັບ `CancellationToken` ສະເໝີ
+- ຢ່າກັບຄືນ Entity ອອກໄປ Controller ການນໍາໃຊ້ DTO ຫຼື Response Contract ເທົ່ານັ້ນ
+- ຢ່າໃສ່ Business Logic ໃນ Controller
+- ທຸກໆ Query ຜູ້ທີ່ອ່ານຂໍ້ມູນທຸລະກິດຍັງຕ້ອງການກັ່ນຕອງມັນ `organization_id` ແລະ `dormitory_id`
+- ຢ່າບັນທຶກລະຫັດຜ່ານ, Access Token ຫຼື Refresh Token ລົງ Log
+- Log ບໍ່ໄດ້ບັນທຶກ Request Body ຫຼື Response Body ເນື່ອງຈາກວ່າເສັ້ນທາງເຊັ່ນ login ມີລະຫັດຜ່ານຢູ່ໃນເນື້ອຫາ
+- ສະບັບຊຸດແມ່ນຢູ່ທີ່ `Directory.Packages.props` ບ່ອນດຽວ, ຢ່າໃສ່ມັນ `Version` ໃນ `.csproj`
 
 ### Logging
 
-Serilog เขียน Log ลง Console และไฟล์ `logs/dormflow-<วันที่>.log` (เก็บ 14 วัน)
-ทุกคำขอถูกสรุปเป็นหนึ่งบรรทัดพร้อม `TraceId`, `RemoteIp`, `UserAgent`
-และเมื่อผู้ใช้ยืนยันตัวตนแล้วจะมี `UserId`, `OrganizationId`, `DormitoryIds` เพิ่มเข้ามา
-คำขอไปยัง `/health` ถูกลดระดับเป็น `Verbose` เพื่อไม่ให้กลบ Log ที่มีความหมาย
+Serilog ຂຽນ Log ລົງ Console ແລະໄຟລ໌ `logs/dormflow-<ວັນທີ>.log` (ເກັບກໍາ 14 ມື້)
+ຄໍາຮ້ອງສະຝັກທຸກແມ່ນໄດ້ສະຫຼຸບເຂົ້າໄປໃນແຖວດຽວກັບ `TraceId`, `RemoteIp`, `UserAgent`
+ແລະໃນເວລາທີ່ຜູ້ໃຊ້ໄດ້ຢັ້ງຢືນຕົວຕົນຂອງເຂົາເຈົ້າ, ຈະມີ `UserId`, `OrganizationId`, `DormitoryIds` ເພີ່ມ
+ຮ້ອງຂໍໃຫ້ `/health` ໄດ້ຖືກຫຼຸດລົງເປັນ `Verbose` ເພື່ອບໍ່ໃຫ້ກວມເອົາເຖິງ Log ມີຄວາມໝາຍ
 
 ---
 
-## ขอบเขตของขั้นตอนที่ 1
+## ຂອບເຂດຂອງຂັ້ນຕອນ 1
 
-### ทำแล้ว
+### ສຳເລັດແລ້ວ
 
-| # | รายการ | ที่อยู่ |
+| # | ລາຍການ | ທີ່ຢູ່ |
 | --- | --- | --- |
-| 1 | Solution และโครงสร้างโปรเจกต์ 8 โปรเจกต์ | `DormFlow.sln` |
-| 2 | Project References ตามทิศทาง Clean Architecture | `src/**/*.csproj` |
-| 3 | NuGet Packages ที่จำเป็น | `Directory.Packages.props` |
+| 1 | Solution ແລະໂຄງສ້າງໂຄງການ 8 ໂຄງການ | `DormFlow.sln` |
+| 2 | Project References ຕາມທິດທາງ Clean Architecture | `src/**/*.csproj` |
+| 3 | NuGet Packages ຈໍາເປັນ | `Directory.Packages.props` |
 | 4 | `Directory.Build.props` (root, src, tests) | `Directory.Build.props` |
 | 5 | `Directory.Packages.props` (Central Package Management) | `Directory.Packages.props` |
 | 6 | `.editorconfig` | `.editorconfig` |
-| 7 | `appsettings.json` และ `appsettings.Development.json` | `src/DormFlow.Api/` |
-| 8 | การเชื่อมต่อ PostgreSQL + snake_case + retry + soft delete + audit | `src/DormFlow.Infrastructure/` |
-| 9 | Serilog พร้อม request logging และการเติมข้อมูลบริบท | `src/DormFlow.Api/Configuration/SerilogConfiguration.cs` |
-| 10 | OpenAPI พร้อม JWT Bearer, XML Comments และ Scalar | `src/DormFlow.Api/Configuration/OpenApiConfiguration.cs` |
-| 11 | Health Check สามเส้นทาง | `src/DormFlow.Api/Configuration/HealthCheckConfiguration.cs` |
+| 7 | `appsettings.json` ແລະ `appsettings.Development.json` | `src/DormFlow.Api/` |
+| 8 | ການເຊື່ອມຕໍ່ PostgreSQL + snake_case + retry + soft delete + audit | `src/DormFlow.Infrastructure/` |
+| 9 | Serilog ພ້ອມ request logging ແລະເພີ່ມຂໍ້ມູນບໍລິບົດ | `src/DormFlow.Api/Configuration/SerilogConfiguration.cs` |
+| 10 | OpenAPI ພ້ອມ JWT Bearer, XML Comments ແລະ Scalar | `src/DormFlow.Api/Configuration/OpenApiConfiguration.cs` |
+| 11 | Health Check ສາມເສັ້ນທາງ | `src/DormFlow.Api/Configuration/HealthCheckConfiguration.cs` |
 | 12 | Global Exception Middleware | `src/DormFlow.Api/Middleware/` |
 | 13 | API Response Model + Pagination Contract | `src/DormFlow.Contracts/Common/` |
-| 14 | `BaseEntity` และ `TenantEntity` | `src/DormFlow.Domain/Common/` |
-| 15 | Dockerfile และ docker-compose.yml | `src/DormFlow.Api/Dockerfile`, `docker-compose.yml` |
-| 16 | README | ไฟล์นี้ |
-| 17 | Build ผ่านทั้ง Solution และเทสต์ผ่านทั้งหมด | — |
+| 14 | `BaseEntity` ແລະ `TenantEntity` | `src/DormFlow.Domain/Common/` |
+| 15 | Dockerfile ແລະ docker-compose.yml | `src/DormFlow.Api/Dockerfile`, `docker-compose.yml` |
+| 16 | README | ໄຟລ໌ນີ້ |
+| 17 | Build ຜ່ານທັງສອງ Solution ແລະການທົດສອບທັງຝົດຜ່ານ | — |
 
-เพิ่มเติมนอกรายการ เพราะจำเป็นต่อการทำให้ระบบพื้นฐานทำงานได้จริง:
-CORS ที่อ่านค่าจาก configuration และไม่ยอมสตาร์ตถ้าไม่ได้ตั้งค่าใน Production,
-Rate Limiting, API Versioning, `ICurrentUser`, Forwarded Headers และ Architecture Test
+ລາຍການເພີ່ມເຕີມຢູ່ນອກບັນຊີລາຍຊື່ເນື່ອງຈາກວ່າມັນເປັນສິ່ງຈໍາເປັນເພື່ອເຮັດໃຫ້ລະບົບພື້ນຖານເຮັດວຽກ:
+CORS ທີ່ອ່ານຄ່າຈາກ configuration ແລະປະຕິເສດທີ່ຈະເລີ່ມຕົ້ນຖ້າຫາກວ່າມັນບໍ່ໄດ້ຖືກຕັ້ງຢູ່ໃນ Production,
+Rate Limiting, API Versioning, `ICurrentUser`, Forwarded Headers ແລະ Architecture Test
 
-### ทำแล้ว (ขั้นตอนที่ 2 — Identity, JWT, Refresh Token, Roles & Permissions)
+### ສຳເລັດແລ້ວ (ຂັ້ນຕອນ 2 — Identity, JWT, Refresh Token, Roles & Permissions)
 
-| # | รายการ | ที่อยู่ |
+| # | ລາຍການ | ທີ່ຢູ່ |
 | --- | --- | --- |
 | 1 | ASP.NET Core Identity (`ApplicationUser`, `ApplicationRole`) | `src/DormFlow.Infrastructure/Identity/` |
-| 2 | JWT Access Token (HMAC-SHA256, 15 นาที, ตรวจ Issuer/Audience/Signature/Expiration) | `src/DormFlow.Infrastructure/Authentication/JwtAccessTokenGenerator.cs` |
-| 3 | Refresh Token แบบเก็บค่าแฮช พร้อม Token Rotation และตรวจจับการใช้ซ้ำ | `src/DormFlow.Infrastructure/Authentication/RefreshTokenService.cs` |
-| 4 | Roles และ Permissions (7 บทบาท, สิทธิ์ตามที่ระบุไว้ครบทุกโมดูล) | `src/DormFlow.Application/Common/Authorization/` |
-| 5 | Permission-Based Authorization แบบไดนามิก (`[RequirePermission("...")]`) | `src/DormFlow.Api/Authorization/` |
-| 6 | Audit Log ครบ 15 ประเภทเหตุการณ์ตามที่ระบุไว้ เก็บ old/new values เป็น jsonb | `src/DormFlow.Domain/Enums/AuditAction.cs`, `src/DormFlow.Infrastructure/Persistence/AuditLogWriter.cs` |
-| 7 | Endpoint การยืนยันตัวตนครบ 7 เส้นทางตามที่ระบุไว้ | `src/DormFlow.Api/Controllers/V1/AuthController.cs` |
-| 8 | Lock Account เมื่อกรอกรหัสผ่านผิดครบ 5 ครั้ง (ล็อก 15 นาที) | `src/DormFlow.Infrastructure/DependencyInjection.cs` |
-| 9 | Seed ข้อมูลเริ่มต้น (สิทธิ์, บทบาท, ผู้ดูแลระบบจาก `SEED_ADMIN_*`) | `src/DormFlow.Infrastructure/Persistence/DatabaseSeeder.cs` |
-| 10 | Migration แรก (`InitialCreate`) | `src/DormFlow.Infrastructure/Migrations/` |
-| 11 | Integration Test ครบวงจร Login/Refresh/Logout/Change Password | `tests/DormFlow.IntegrationTests/Endpoints/AuthEndpointTests.cs` |
-| 12 | ทดสอบจริงกับ PostgreSQL ผ่าน docker compose (ไม่ใช่แค่ Testcontainers) | ตรวจด้วยตนเองระหว่างพัฒนา |
+| 2 | JWT Access Token (HMAC-SHA256, 15 ນາທີ, ກວດ Issuer/Audience/Signature/Expiration) | `src/DormFlow.Infrastructure/Authentication/JwtAccessTokenGenerator.cs` |
+| 3 | Refresh Token ບ່ອນຈັດເກັບຂໍ້ມູນຄ່າ Hash ພ້ອມແລ້ວ Token Rotation ແລະກວດຫາການນໍາໃຊ້ຄືນ | `src/DormFlow.Infrastructure/Authentication/RefreshTokenService.cs` |
+| 4 | Roles ແລະ Permissions (7 ບົດບາດ, ສິດທີ່ລະບຸໄວ້ແມ່ນຄົບຖ້ວນສົມບູນສໍາລັບທຸກໂມດູນ) | `src/DormFlow.Application/Common/Authorization/` |
+| 5 | Permission-Based Authorization ເຄື່ອນໄຫວ (`[RequirePermission("...")]`) | `src/DormFlow.Api/Authorization/` |
+| 6 | Audit Log ສໍາເລັດ 15 ປະເພດເຫດການທີ່ລະບຸໄວ້ຈະຖືກເກັບໄວ້ old/new values ແມ່ນ jsonb | `src/DormFlow.Domain/Enums/AuditAction.cs`, `src/DormFlow.Infrastructure/Persistence/AuditLogWriter.cs` |
+| 7 | Endpoint ສໍາເລັດການຢັ້ງຢືນຕົວຕົນ 7 ເສັ້ນທາງທີ່ໄດ້ລະບຸໄວ້ | `src/DormFlow.Api/Controllers/V1/AuthController.cs` |
+| 8 | Lock Account ເມື່ອໃສ່ລະຫັດຜ່ານຜິດຢ່າງສົມບູນ 5 ເທື່ອ (ລັອກ 15 ນາທີ) | `src/DormFlow.Infrastructure/DependencyInjection.cs` |
+| 9 | Seed ຂໍ້ມູນເລີ່ມຕົ້ນ (ສິດ, ບົດບາດ, ຜູ້ບໍລິຫານຈາກ `SEED_ADMIN_*`) | `src/DormFlow.Infrastructure/Persistence/DatabaseSeeder.cs` |
+| 10 | Migration ທໍາອິດ (`InitialCreate`) | `src/DormFlow.Infrastructure/Migrations/` |
+| 11 | Integration Test ທີ່ສົມບູນແບບ Login/Refresh/Logout/Change Password | `tests/DormFlow.IntegrationTests/Endpoints/AuthEndpointTests.cs` |
+| 12 | ການທົດສອບທີ່ແທ້ຈິງກັບ PostgreSQL ຜ່ານ docker compose (ບໍ່ພຽງແຕ່ Testcontainers) | ກວດເບິ່ງຕົວທ່ານເອງໃນລະຫວ່າງການພັດທະນາ |
 
-รองรับ Two-Factor Authentication ไว้แล้วในระดับโครงสร้าง (`AuthenticationService` ตรวจสถานะ
-`RequiresTwoFactor` และปฏิเสธการเข้าสู่ระบบ) แต่ยังไม่มี Endpoint สำหรับยืนยันรหัส 2FA จริง
-เพราะ ASP.NET Core Identity รองรับ 2FA ผ่าน Authenticator App ได้ทันทีที่เปิดใช้งาน
-แต่ต้องมี UI/Endpoint รับรหัสเพิ่มซึ่งอยู่นอกขอบเขตของขั้นตอนนี้
+ສະຜັບສະຜູນ Two-Factor Authentication ຢູ່ໃນລະດັບໂຄງສ້າງແລ້ວ (`AuthenticationService` ກວດເບິ່ງສະຖານະ
+`RequiresTwoFactor` ແລະປະຕິເສດການເຂົ້າສູ່ລະບົບ) ແຕ່ຍັງບໍ່ທັນມີເທື່ອ Endpoint ສໍາລັບການຢືນຢັນລະຫັດ 2FA ຄວາມຈິງ
+ເນື່ອງຈາກວ່າ ASP.NET Core Identity ສະຜັບສະຜູນ 2FA ຜ່ານ Authenticator App ທັນທີທີ່ມັນຖືກເປີດໃຊ້
+ແຕ່ຕ້ອງມີ UI/Endpoint ໄດ້ຮັບລະຫັດເພີ່ມເຕີມທີ່ຢູ່ນອກຂອບເຂດຂອງຂັ້ນຕອນນີ້
 
-### ทำแล้ว (ขั้นตอนที่ 3 — Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, Roles/Permissions, Audit Logs)
+### ສຳເລັດແລ້ວ (ຂັ້ນຕອນ 3 — Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, Roles/Permissions, Audit Logs)
 
-| # | รายการ | ที่อยู่ |
+| # | ລາຍການ | ທີ່ຢູ່ |
 | --- | --- | --- |
-| 1 | Organizations CRUD (สร้าง/ลบเฉพาะ SuperAdmin, Owner ดู/แก้ไขได้เฉพาะองค์กรตน) | `src/DormFlow.Application/Features/Organizations/` |
-| 2 | Dormitories CRUD พร้อม billing day / payment due day / late fee | `src/DormFlow.Application/Features/Dormitories/` |
-| 3 | Buildings, Floors, Room Types CRUD (ตรวจความเป็นเจ้าของของ Entity แม่ทุกชั้น) | `src/DormFlow.Application/Features/{Buildings,Floors,RoomTypes}/` |
-| 4 | Rooms CRUD พร้อม `GET /rooms/available` และ `GET /rooms/summary` | `src/DormFlow.Application/Features/Rooms/` |
-| 5 | Users CRUD, กำหนดบทบาท (`POST /users/{id}/roles`), มอบหมาย/ถอนหอพัก | `src/DormFlow.Application/Features/Users/` |
-| 6 | Roles CRUD (บทบาทมาตรฐานเปลี่ยนชื่อ/ลบไม่ได้ แต่ปรับสิทธิ์ได้) และ Permissions (อ่านอย่างเดียว) | `src/DormFlow.Application/Features/{Roles,Permissions}/` |
-| 7 | Audit Logs Endpoint พร้อมตัวกรองครบ (องค์กร, หอพัก, ผู้ใช้, ประเภทเหตุการณ์, ช่วงเวลา) | `src/DormFlow.Application/Features/AuditLogs/` |
-| 8 | `TenantScope` — ตรรกะกลางกันข้อมูลข้ามองค์กร/หอพัก ใช้ร่วมกันทุกโมดูลข้างต้น | `src/DormFlow.Application/Common/Authorization/TenantScope.cs` |
-| 9 | Controller ครบ 9 โมดูล พร้อม `[RequirePermission("...")]` ทุก Endpoint | `src/DormFlow.Api/Controllers/V1/` |
+| 1 | Organizations CRUD (ສ້າງ/ລຶບອອກເທົ່ານັ້ນ SuperAdmin, Owner ສັງເກດເບິ່ງ/ສາມາດແກ້ໄຂໄດ້ໂດຍອົງກອນຂອງເຈົ້າເທົ່ານັ້ນ) | `src/DormFlow.Application/Features/Organizations/` |
+| 2 | Dormitories CRUD ພ້ອມ billing day / payment due day / late fee | `src/DormFlow.Application/Features/Dormitories/` |
+| 3 | Buildings, Floors, Room Types CRUD (ກວດສອບຄວາມເປັນເຈົ້າຂອງ Entity ແມ່ຂອງທຸກຫ້ອງຮຽນ) | `src/DormFlow.Application/Features/{Buildings,Floors,RoomTypes}/` |
+| 4 | Rooms CRUD ພ້ອມ `GET /rooms/available` ແລະ `GET /rooms/summary` | `src/DormFlow.Application/Features/Rooms/` |
+| 5 | Users CRUD, ກໍານົດບົດບາດ (`POST /users/{id}/roles`), ມອບໝາຍ/ຖອນຫໍພັກ | `src/DormFlow.Application/Features/Users/` |
+| 6 | Roles CRUD (ບົດບາດມາດຕະຖານປ່ຽນຊື່/ບໍ່ສາມາດລຶບໄດ້, ແຕ່ການອະນຸຍາດສາມາດປັບໄດ້) ແລະ Permissions (ອ່ານເທົ່ານັ້ນ) | `src/DormFlow.Application/Features/{Roles,Permissions}/` |
+| 7 | Audit Logs Endpoint ສໍາເລັດດ້ວຍຕົວກອງ (ອົງກອນ, ຫໍພັກ, ຜູ້ໃຊ້, ປະເພດເຫດການ, ໄລຍະເວລາ) | `src/DormFlow.Application/Features/AuditLogs/` |
+| 8 | `TenantScope` — ເຫດຜົນສູນກາງເພື່ອປົກປ້ອງຂໍ້ມູນໃນທົ່ວອົງກອນ/ຫໍພັກແບ່ງປັນກັບທຸກໂມດູນຂ້າງເທິງ | `src/DormFlow.Application/Common/Authorization/TenantScope.cs` |
+| 9 | Controller ສໍາເລັດ 9 ໂມດູນພ້ອມ `[RequirePermission("...")]` ທຸກໆ Endpoint | `src/DormFlow.Api/Controllers/V1/` |
 
-แต่ละโมดูลแบ่งเป็น Repository Port (Application) + Repository Implementation (Infrastructure)
-ตามแนวทางเดียวกับ `IDormitoryRepository`/`DormitoryRepository` เพื่อให้ชั้น Application
-ทำงานกับ Domain Entity ได้โดยไม่ต้องอ้างอิง EF Core โดยตรง — ยืนยันด้วย Architecture Test แล้ว
+ແຕ່ລະໂມດູນແບ່ງອອກເປັນ Repository Port (Application) + Repository Implementation (Infrastructure)
+ປະຕິບັດຕາມຄໍາແນະນໍາດຽວກັນກັບ `IDormitoryRepository`/`DormitoryRepository` ດັ່ງນັ້ນຊັ້ນ Application
+ເຮັດວຽກກັບ Domain Entity ໂດຍບໍ່ມີການອ້າງອີງ EF Core ໂດຍກົງ — ກະລຸນາຢືນຢັນ Architecture Test ແລ້ວ
 
-**หลักการแยกข้อมูลตามองค์กรและหอพักที่ใช้จริงในโค้ด**
+**ຫຼັກການແຍກຂໍ້ມູນຕາມອົງກອນແລະຫໍພັກທີ່ໃຊ້ຕົວຈິງໃນລະຫັດ**
 
-- สร้างข้อมูลใหม่: SuperAdmin ต้องระบุ `organizationId` เอง ผู้ใช้อื่นถูกบังคับใช้องค์กรของตนเสมอ
-  ไม่ว่าคำขอจะระบุค่าใดมาก็ตาม (`TenantScope.ResolveOrganizationIdForCreate`)
-- อ่าน/แก้ไข/ลบข้อมูลที่มีอยู่: ถ้าองค์กรของข้อมูลไม่ตรงกับผู้ใช้ ตอบ 404 แทน 403 เพื่อไม่ให้เดาได้ว่า
-  มีข้อมูลนั้นอยู่จริงในองค์กรอื่น (`TenantScope.EnsureOrganizationAccess` / `EnsureDormitoryAccess`)
-- List Endpoint: SuperAdmin และ Owner เห็นได้ทุกหอพักในองค์กรของตน ส่วนบทบาทอื่น (DormManager, Staff ฯลฯ)
-  เห็นเฉพาะหอพักที่ตนถูกมอบหมาย (`TenantScope.GetDormitoryRestrictionForListing`) **และ**
-  ทุก List Endpoint ต้องเรียก `TenantScope.GetOrganizationRestrictionForListing` คู่กันเสมอเพื่อกรอง
-  ด้วย `OrganizationId` ด้วย (ดูหัวข้อ [แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร](#แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร-owner-ใน-list-endpoint))
-- Building ต้องอยู่ใน Dormitory ที่ระบุ, Floor ต้องอยู่ใน Building เดียวกับห้อง,
-  RoomType ต้องอยู่ใน Dormitory เดียวกับอาคารที่เลือก — ตรวจก่อนบันทึกทุกครั้งที่ Application layer
+- ສ້າງຂໍ້ມູນໃຝ່: SuperAdmin ຕ້ອງການ `organizationId` ຕົວເອງ, ຜູ້ໃຊ້ອື່ນໆຖືກບັງຄັບໃຫ້ບັງຄັບໃຫ້ອົງກອນຂອງພວກເຂົາສະເຝີ
+  ໂດຍບໍ່ຄໍານຶງເຖິງມູນຄ່າສິ່ງທີ່ຄໍາຮ້ອງຂໍກໍານົດ (`TenantScope.ResolveOrganizationIdForCreate`)
+- ອ່ານ/ແກ້ໄຂ/ລຶບຂໍ້ມູນທີ່ມີຢູ່ແລ້ວ: ຖ້າອົງກອນຂອງຂໍ້ມູນບໍ່ກົງກັບຄໍາຕອບຂອງຜູ້ໃຊ້ 404 ແທນ 403 ເພື່ອບໍ່ໃຫ້ເດົາວ່າ
+  ຂໍ້ມູນນັ້ນມີຢູ່ໃນອົງກອນອື່ນ (`TenantScope.EnsureOrganizationAccess` / `EnsureDormitoryAccess`)
+- List Endpoint: SuperAdmin ແລະ Owner ທ່ານສາມາດເບິ່ງມັນຢູ່ໃນທຸກໆຫໍພັກໃນອົງກອນຂອງເຈົ້າ. ສໍາລັບບົດບາດອື່ນໆ (DormManager, Staff ແລະອື່ນໆ)
+  ພຽງແຕ່ໄດ້ເຫັນຫໍພັກທີ່ເຂົາເຈົ້າໄດ້ຖືກມອບຝາຍ (`TenantScope.GetDormitoryRestrictionForListing`) **ແລະ**
+  ທຸກໆ List Endpoint ຕ້ອງໂທຫາ `TenantScope.GetOrganizationRestrictionForListing` ຈັບຄູ່ກັນສະເໝີເພື່ອກັ່ນຕອງ
+  ຄືກັນ `OrganizationId` ຄືກັນ (ເບິ່ງຫົວຂໍ້ [ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ](#ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ-owner-ໃນ-list-endpoint))
+- Building ຕ້ອງຢູ່ໃນ Dormitory ລະບຸ, Floor ຕ້ອງຢູ່ໃນ Building ຄືກັນກັບຫ້ອງ,
+  RoomType ຕ້ອງຢູ່ໃນ Dormitory ຄືກັນກັບອາຄານທີ່ເລືອກ — ກວດເບິ່ງກ່ອນທີ່ຈະບັນທຶກທຸກຄັ້ງ Application layer
 
-### แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กร (Owner) ใน List Endpoint
+### ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ (Owner) ໃນ List Endpoint
 
-**พบระหว่างพัฒนาโมดูล Reports ของ Phase 2 (2026-08-24) และแก้ไขทันทีก่อนทำงานต่อ:**
-`TenantScope.GetDormitoryRestrictionForListing` คืนค่า `null` ให้ผู้ใช้บทบาท Owner โดยมีเจตนาว่า
-"ไม่ต้องจำกัดหอพัก เพราะ Owner เห็นได้ทุกหอพักในองค์กรของตนอยู่แล้ว" แต่ Repository ของโมดูลที่แยกข้อมูล
-ตามหอพัก (Buildings, Floors, RoomTypes, Rooms, Reservations, Contracts, MeterReadings, Invoices,
-Payments, MaintenanceRequests — รวม 10 โมดูล ทั้งจาก Phase 1 และ Phase 2) ไม่มีการกรองด้วย `OrganizationId`
-เพิ่มเติมเลย ผลคือ Owner ที่เรียก List Endpoint โดยไม่ระบุ `dormitoryId` (เช่น `GET /api/v1/rooms`,
-`GET /api/v1/invoices`) จะเห็นข้อมูลของ**ทุกองค์กรในระบบ** ไม่ใช่แค่ขององค์กรตนเอง — รวมถึงข้อมูลการเงิน
-และข้อมูลส่วนบุคคลของลูกค้ารายอื่นบนแพลตฟอร์ม SaaS แบบหลายองค์กรนี้ (การอ่านทีละรายการด้วย `GET /{id}`
-ไม่ได้รับผลกระทบ เพราะ `TenantScope.EnsureDormitoryAccess` ตรวจ `OrganizationId` ควบคู่กับหอพักอยู่แล้ว
-บทบาทอื่นที่ไม่ใช่ SuperAdmin/Owner ก็ไม่ได้รับผลกระทบเช่นกัน เพราะ `DormitoryIds` ของบทบาทเหล่านั้น
-ถูกจำกัดอยู่ในองค์กรตนเองอยู่แล้วโดยธรรมชาติจากการมอบหมายหอพัก)
+**ພົບໃນລະຫວ່າງການພັດທະນາໂມດູນ Reports ຂອງ Phase 2 (2026-08-24) ແລະແກ້ໄຂທັນທີກ່ອນທີ່ຈະສືບຕໍ່ເຮັດວຽກ:**
+`TenantScope.GetDormitoryRestrictionForListing` ຟື້ນຟູ `null` ໃຫ້ຜູ້ໃຊ້ມີບົດບາດ Owner ດ້ວຍຄວາມຕັ້ງໃຈນັ້ນ
+"ບໍ່ຈໍາເປັນຕ້ອງຈໍາກັດຫໍພັກເພາະວ່າ Owner ທ່ານສາມາດເບິ່ງມັນຢູ່ໃນທຸກໆຫໍພັກໃນອົງກອນຂອງເຈົ້າ" ແຕ່ Repository ຂອງໂມດູນທີ່ສະກັດຂໍ້ມູນ
+ອີງຕາມຫໍພັກ (Buildings, Floors, RoomTypes, Rooms, Reservations, Contracts, MeterReadings, Invoices,
+Payments, MaintenanceRequests — ທັງໝົດ 10 ໂມດູນທັງສອງຈາກ Phase 1 ແລະ Phase 2) ບໍ່ມີການກັ່ນຕອງຄືກັນ `OrganizationId`
+ຍິ່ງໄປກວ່ານັ້ນ, ຜົນໄດ້ຮັບແມ່ນ Owner ເອີ້ນວ່າ List Endpoint ໂດຍບໍ່ມີການລະບຸ `dormitoryId` (ເຊັ່ນ `GET /api/v1/rooms`,
+`GET /api/v1/invoices`) ທ່ານຈະເຫັນຂໍ້ມູນກ່ຽວກັບ**ທຸກໆອົງກອນໃນລະບົບ** ບໍ່ພຽງແຕ່ອົງກອນຂອງທ່ານເອງ — ລວມທັງຂໍ້ມູນທາງດ້ານການເງິນ
+ແລະຂໍ້ມູນສ່ວນຕົວຂອງລູກຄ້າອື່ນໆໃນເວທີ SaaS ຮູບແບບຫຼາຍອົງກອນນີ້ (ການອ່ານແຕ່ລະລາຍການເປັນສ່ວນບຸກຄົນ `GET /{id}`
+ບໍ່ໄດ້ຮັບຜົນກະທົບເພາະວ່າ `TenantScope.EnsureDormitoryAccess` ກວດ `OrganizationId` ແລ້ວຮ່ວມກັບຫໍພັກ
+ບົດບາດນອກເໜືອໄປຈາກ SuperAdmin/Owner ບໍ່ໄດ້ຮັບຜົນກະທົບທັງເພາະວ່າ `DormitoryIds` ຂອງບົດບາດເຫຼົ່ານັ້ນ
+ໂດຍທໍາມະຊາດຈໍາກັດຢູ່ໃນອົງກອນຂອງຕົນເອງໂດຍການມອບຝາຍຂອງຫໍພັກ)
 
-แก้ไขด้วยการเพิ่มเมธอด `TenantScope.GetOrganizationRestrictionForListing(currentUser)` (คืนค่า `null`
-เฉพาะ SuperAdmin เท่านั้น) แล้วเพิ่มฟิลด์ `OrganizationId` ให้ `*ListFilter` ของทั้ง 10 โมดูล พร้อมเพิ่มเงื่อนไข
-กรองใน Repository ทุกตัว — เรียกคู่กับ `GetDormitoryRestrictionForListing` เสมอในทุก Use Case ที่ดึงรายการ
-ข้อมูลที่แยกตามหอพัก มี Regression Test ยืนยันแล้วที่
-`tests/DormFlow.IntegrationTests/Endpoints/CrossOrganizationIsolationEndpointTests.cs` (ครอบคลุมทั้ง
-โมดูล Phase 1 อย่าง Rooms และโมดูล Phase 2 อย่าง Invoices/MaintenanceRequests)
+ແກ້ໄຂໂດຍການເພີ່ມວິທີການ `TenantScope.GetOrganizationRestrictionForListing(currentUser)` (ຟື້ນຟູ `null`
+ເທົ່ານັ້ນ SuperAdmin ເທົ່ານັ້ນ) ຫຼັງຈາກນັ້ນ, ເພີ່ມພາກສະຜາມ `OrganizationId` ໃຫ້ `*ListFilter` ຂອງທັງສອງ 10 ໂມດູນພ້ອມທີ່ຈະເພີ່ມເງື່ອນໄຂ
+ການກັ່ນຕອງໃນ Repository ແຕ່ລະຄົນຂອງພວກເຂົາ — ຮຽກຮ້ອງຮ່ວມກັບ `GetDormitoryRestrictionForListing` ສະເຝີໄປໃນທຸກ Use Case ທີ່ດຶງລາຍການ
+ຂໍ້ມູນແຍກໂດຍຫໍພັກແມ່ນມີຢູ່ Regression Test ຢັ້ງຢືນຢູ່
+`tests/DormFlow.IntegrationTests/Endpoints/CrossOrganizationIsolationEndpointTests.cs` (ກວມເອົາທັງສອງ
+ໂມດູນ Phase 1 ມັກ Rooms ແລະໂມດູນ Phase 2 ມັກ Invoices/MaintenanceRequests)
 
-### ยังไม่ทำ
+### ຍັງບໍ່ແລ້ວ
 
-Endpoint ยืนยันรหัส Two-Factor Authentication (โครงสร้างรองรับแล้ว แต่ยังไม่มี UI/Endpoint รับรหัส)
+Endpoint ຢືນຢັນລະຫັດ Two-Factor Authentication (ໂຄງປະກອບການສະຜັບສະຜູນແມ່ນມີ, ແຕ່ຍັງບໍ່ທັນ UI/Endpoint ເອົາລະຫັດ)
 
-Integration Test ของโมดูลใหม่ในขั้นตอนที่ 3 ครบแล้วเช่นกัน (ดูตารางด้านบน) รวมถึงกรณีที่พบบั๊กจริง
-ระหว่างพัฒนา: `RoleRepository.SetPermissionsAsync` เปิดธุรกรรมเองตรง ๆ ด้วย `BeginTransactionAsync`
-ซึ่งใช้ร่วมกับ `EnableRetryOnFailure` ของ Npgsql ไม่ได้ (Retrying Execution Strategy ไม่รองรับธุรกรรม
-ที่ผู้เรียกเปิดเอง) ต้องครอบด้วย `Database.CreateExecutionStrategy().ExecuteAsync(...)` แทน
-Integration Test เป็นตัวจับบั๊กนี้ได้ตั้งแต่รอบแรกที่รันกับ PostgreSQL จริง
+Integration Test ຂອງໂມດູນໃຝ່ໃນຂັ້ນຕອນ 3 ມັນສົມບູນເຊັ່ນກັນ (ເບິ່ງຕາຕະລາງຂ້າງເທິງ) ລວມທັງກໍລະນີທີ່ພົບແມງໄມ້ຕົວຈິງ
+ພາຍໃຕ້ການພັດທະນາ: `RoleRepository.SetPermissionsAsync` ເປີດທຸລະກໍາຕົວທ່ານເອງໂດຍກົງເຊັ່ນດຽວກັນ `BeginTransactionAsync`
+ເຊິ່ງໃຊ້ຮ່ວມກັບ `EnableRetryOnFailure` ຂອງ Npgsql ເຮັດບໍ່ໄດ້ (Retrying Execution Strategy ບໍ່ຮອງຮັບທຸລະກຳ
+ວ່າຜູ້ໂທເປີດຕົນເອງ) ຈະຕ້ອງກວມເອົາເຊັ່ນດຽວກັນ `Database.CreateExecutionStrategy().ExecuteAsync(...)` ແທນ
+Integration Test ສາມາດຈັບແມງໄມ້ນີ້ຈາກຮອບທໍາອິດແລ່ນກັບ PostgreSQL ຄວາມຈິງ
 
 ---
 
-## Phase 2 — โมดูลสาย Contracts
+## Phase 2 — ໂມດູນເສັ້ນ Contracts
 
-เอกสารต้นฉบับระบุรายละเอียด Entity/Endpoint/กฎ Validation ของ Phase 1 ไว้ครบ
-แต่สำหรับ Phase 2 ระบุไว้เพียงชื่อโมดูล (Reservations, Contracts, CheckIns, CheckOuts, Meters,
+ເອກະສານຕົ້ນສະບັບລະບຸລາຍລະອຽດ Entity/Endpoint/ກົດລະບຽບ Validation ຂອງ Phase 1 ສົມບູນ
+ແຕ່ສໍາລັບ Phase 2 ພຽງແຕ່ລະບຸຊື່ໂມດູນ (Reservations, Contracts, CheckIns, CheckOuts, Meters,
 Billing, Invoices, Payments, Receipts, Deposits, Expenses, Maintenance, Parcels, Visitors,
-Parking, Announcements, Notifications, Reports, Settings) โดยไม่มีรายละเอียดด้านธุรกิจ
-เริ่มจากสาย **Tenants → Reservations → Contracts → Meter Readings → Billing/Invoices/Payments** ก่อน
-เพราะ Billing ทั้งหมดต้องพึ่งพาว่ามีสัญญาเช่าที่ Active และมีค่ามิเตอร์ของรอบบิลนั้นอยู่แล้วเป็นพื้นฐาน
-ตามด้วย **Maintenance** เพราะเป็นโมดูลเดียวที่เหลือใน Phase 2 ที่มีสิทธิ์ (`maintenance.*`) และบทบาท
-`Technician` กำหนดไว้แล้วตั้งแต่ Phase 1 ต่างจากโมดูลอื่นที่เหลือซึ่งไม่มีสิทธิ์ใด ๆ ถูกกำหนดไว้เลย
-จากนั้นสร้าง Reports, Deposits, Receipts, Expenses, Parcels, Visitors, Parking, Announcements และ
-Notifications ตามลำดับด้วยสมมติฐานที่สมเหตุสมผล (ดูหัวข้อด้านล่าง) และปิดท้าย Phase 2 ด้วย **Settings**
-ซึ่งมีสัญญาณเดียวกับ Maintenance คือสิทธิ์ `settings.manage` และการมอบสิทธิ์นี้ให้ Owner
-ถูกกำหนดไว้แล้วตั้งแต่ Phase 1 (ในหมวด Administration) เพียงแต่ยังไม่มี Entity/Endpoint จริงมารองรับ
+Parking, Announcements, Notifications, Reports, Settings) ໂດຍບໍ່ມີລາຍລະອຽດທຸລະກິດ
+ເລີ່ມຕົ້ນຈາກສາຍ **Tenants → Reservations → Contracts → Meter Readings → Billing/Invoices/Payments** ທໍາອິດ
+ເນື່ອງຈາກວ່າ Billing ທັງຝົດຕ້ອງອີງໃສ່ການມີສັນຍາເຊົ່າ Active ແລະມີມູນຄ່າແມັດພື້ນຖານສໍາລັບຮອບບິນນັ້ນ
+ຕິດຕາມດ້ວຍ **Maintenance** ເນື່ອງຈາກວ່າມັນເປັນໂມດູນດຽວທີ່ຍັງເຫຼືອຢູ່ໃນ Phase 2 ມີສິດໄດ້ຮັບ (`maintenance.*`) ແລະບົດບາດ
+`Technician` ມັນໄດ້ຖືກຕັ້ງໄວ້ຕັ້ງແຕ່ນັ້ນມາ Phase 1 ອັນນີ້ບໍ່ຄືກັບສ່ວນທີ່ເຫຼືອຂອງໂມດູນທີ່ບໍ່ມີການອະນຸຍາດໃດໆທີ່ຕັ້ງໄວ້ເລີຍ
+ຫຼັງຈາກນັ້ນ, ສ້າງ Reports, Deposits, Receipts, Expenses, Parcels, Visitors, Parking, Announcements ແລະ
+Notifications ຕາມລໍາດັບດ້ວຍການສົມມຸດຕິຖານທີ່ສົມເຫດສົມຜົນ (ເບິ່ງຫົວຂໍ້ຂ້າງລຸ່ມນີ້) ແລະປິດ Phase 2 ຄືກັນ **Settings**
+ເຊິ່ງມີສັນຍານດຽວກັນກັບ Maintenance ເປັນສິດ `settings.manage` ແລະໃຫ້ສິດນີ້ Owner
+ມັນໄດ້ຖືກຕັ້ງໄວ້ຕັ້ງແຕ່ນັ້ນມາ Phase 1 (ຢູ່ໃນປະເພດ Administration) ພຽງແຕ່ບໍ່ມີມັນເທື່ອ Entity/Endpoint ມາສະຜັບສະຜູນແທ້ໆ
 
-### ทำแล้ว
+### ສຳເລັດແລ້ວ
 
-| # | รายการ | ที่อยู่ |
+| # | ລາຍການ | ທີ່ຢູ່ |
 | --- | --- | --- |
-| 1 | Tenants CRUD (ระดับองค์กร ไม่ผูกกับหอพักใดหอพักหนึ่งถาวร ไม่มี Endpoint ลบ) | `src/DormFlow.Application/Features/Tenants/` |
-| 2 | Reservations — จองห้อง (ห้องเปลี่ยนเป็น Reserved ทันที) และยกเลิกการจอง | `src/DormFlow.Application/Features/Reservations/` |
-| 3 | Contracts — สร้าง (ผ่านการจองหรือทำสัญญาตรง), เปิดใช้งาน (เช็คอิน), สิ้นสุด (เช็คเอาท์) | `src/DormFlow.Application/Features/Contracts/` |
-| 4 | สิทธิ์ `reservations.view/create/cancel` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 1 | Tenants CRUD (ລະດັບອົງກອນ, ບໍ່ໄດ້ຜູກມັດຢ່າງຖາວອນກັບຫໍພັກໃດນຶ່ງ, ບໍ່ມີ Endpoint ລຶບ) | `src/DormFlow.Application/Features/Tenants/` |
+| 2 | Reservations — ຈອງຫ້ອງ (ຫ້ອງປ່ຽນເປັນ Reserved ທັນທີ) ແລະຍົກເລີກການຈອງ | `src/DormFlow.Application/Features/Reservations/` |
+| 3 | Contracts — ສ້າງ (ໂດຍຜ່ານການຈອງຫຼືສັນຍາໂດຍກົງ), ເປີດໃຊ້ (ເຊັກອິນ), ສິ້ນສຸດ (ກວດເບິ່ງ) | `src/DormFlow.Application/Features/Contracts/` |
+| 4 | ສິດ `reservations.view/create/cancel` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
 | 5 | Migration `AddLeasingModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 6 | Integration Test วงจรชีวิตการเช่าเต็มสาย + กรณีปฏิเสธ (ห้องไม่ว่าง, ผู้เช่าบัญชีดำ) | `tests/DormFlow.IntegrationTests/Endpoints/LeasingLifecycleEndpointTests.cs` |
-| 7 | Meter Readings — จดค่ามิเตอร์น้ำ/ไฟรายเดือน ดึงค่าครั้งก่อนหน้ามาต่ออัตโนมัติ (View/Create เท่านั้น) | `src/DormFlow.Application/Features/MeterReadings/` |
+| 6 | Integration Test ວົງຈອນຊີວິດການເຊົ່າເຕັມ + ໃນກໍລະນີຂອງການປະຕິເສດ (ບໍ່ມີຫ້ອງຫວ່າງ, ຜູ້ເຊົ່າບັນຊີດຳ) | `tests/DormFlow.IntegrationTests/Endpoints/LeasingLifecycleEndpointTests.cs` |
+| 7 | Meter Readings — ຂຽນຄ່າເຄື່ອງວັດແທກນໍ້າ/ໄຟຟ້າປະຈໍາເດືອນອັດຕະໂນມັດດຶງມູນຄ່າທີ່ຜ່ານມາເພື່ອຕໍ່ອາຍຸ (View/Create ເທົ່ານັ້ນ) | `src/DormFlow.Application/Features/MeterReadings/` |
 | 8 | Migration `AddMeterReadings` | `src/DormFlow.Infrastructure/Migrations/` |
-| 9 | Integration Test การจดค่ามิเตอร์ (ค่าเริ่มต้น, ต่อเนื่องข้ามเดือน, กันจดซ้ำ, กันค่าย้อนหลัง) | `tests/DormFlow.IntegrationTests/Endpoints/MeterReadingsEndpointTests.cs` |
-| 10 | เพิ่ม `WaterRatePerUnit`/`ElectricityRatePerUnit` ให้ Dormitory (ต่อจากฟิลด์ Billing เดิมของ Phase 1) | `src/DormFlow.Domain/Entities/Dormitory.cs` |
-| 11 | Invoices — สร้างจากสัญญา+ค่ามิเตอร์ (Draft), ออกให้ผู้เช่า (Issued), ยกเลิก | `src/DormFlow.Application/Features/Invoices/` |
-| 12 | Payments — บันทึก (Pending), ยืนยัน (Confirmed → หักยอดบิล), คืนเงิน (Refunded → คืนยอด) | `src/DormFlow.Application/Features/Payments/` |
+| 9 | Integration Test ບັນທຶກຄ່າແມັດ (ຄ່າເລີ່ມຕົ້ນ, ຢ່າງຕໍ່ເນື່ອງຕະຫຼອດເດືອນ, ປ້ອງກັນບໍ່ໃຫ້ການລົງທະບຽນຊ້ໍາຊ້ອນ, ປ້ອງກັນການເກັບຄ່າທໍານຽມ retroactive) | `tests/DormFlow.IntegrationTests/Endpoints/MeterReadingsEndpointTests.cs` |
+| 10 | ເພີ່ມ `WaterRatePerUnit`/`ElectricityRatePerUnit` ໃຫ້ Dormitory (ຫຼັງຈາກພາກສະຜາມ Billing ຕົ້ນສະບັບຂອງ Phase 1) | `src/DormFlow.Domain/Entities/Dormitory.cs` |
+| 11 | Invoices — ສ້າງຂຶ້ນຕາມສັນຍາ+ຄ່າແມັດ (Draft), ອອກໃຫ້ຜູ້ເຊົ່າ (Issued), ຍົກເລີກ | `src/DormFlow.Application/Features/Invoices/` |
+| 12 | Payments — ບັນທຶກ (Pending), ຢືນຢັນ (Confirmed → ຫັກຈໍານວນໃບບິນ), ເງິນຄືນ (Refunded → ສົ່ງຄືນຍອດເງິນ) | `src/DormFlow.Application/Features/Payments/` |
 | 13 | Migration `AddBillingModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 14 | Integration Test วงจรชีวิตการออกบิลเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/BillingLifecycleEndpointTests.cs` |
-| 15 | Maintenance — แจ้งซ่อม, มอบหมาย/มอบหมายซ้ำช่าง, เปลี่ยนสถานะตามลำดับที่กำหนด | `src/DormFlow.Application/Features/Maintenance/` |
-| 16 | เพิ่ม `HasRoleForDormitoryAsync` ให้ `IUserAdministrationRepository` (ตรวจว่าเป็นช่างของหอพักนี้จริง) | `src/DormFlow.Infrastructure/Identity/UserAdministrationRepository.cs` |
+| 14 | Integration Test ຮອບວຽນໃບບິນເຕັມ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/BillingLifecycleEndpointTests.cs` |
+| 15 | Maintenance — ລາຍງານການສ້ອມແປງ, ມອບໝາຍ/ມອບໝາຍນັກວິຊາການຄືນໃໝ່, ປ່ຽນສະຖານະຕາມລຳດັບທີ່ກຳນົດໄວ້ | `src/DormFlow.Application/Features/Maintenance/` |
+| 16 | ເພີ່ມ `HasRoleForDormitoryAsync` ໃຫ້ `IUserAdministrationRepository` (ຢືນຢັນວ່າເຈົ້າແມ່ນຊ່າງຊ່າງຢູ່ຫໍພັກນີ້ແທ້ໆ) | `src/DormFlow.Infrastructure/Identity/UserAdministrationRepository.cs` |
 | 17 | Migration `AddMaintenanceModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 18 | Integration Test วงจรชีวิตงานซ่อมบำรุงเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/MaintenanceEndpointTests.cs` |
-| 19 | Reports — สรุปรายได้ (View/Export) และใบแจ้งหนี้ค้างชำระ (View/Export) เป็น CSV | `src/DormFlow.Application/Features/Reports/` |
-| 20 | แก้ไขช่องโหว่ข้อมูลรั่วข้ามองค์กรของ Owner ใน List Endpoint 10 โมดูล (พบระหว่างพัฒนา Reports) | `src/DormFlow.Application/Common/Authorization/TenantScope.cs` |
-| 21 | Integration Test รายงานรายได้/ใบแจ้งหนี้ค้างชำระ + Regression Test การกันข้อมูลข้ามองค์กร | `tests/DormFlow.IntegrationTests/Endpoints/{Reports,CrossOrganizationIsolation}EndpointTests.cs` |
-| 22 | สิทธิ์ `deposits.view/collect/refund` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 23 | Deposits — รับเงินมัดจำ (Held), คืนเงิน (เต็ม/บางส่วน/ริบทั้งหมด ครั้งเดียวต่อรายการ) | `src/DormFlow.Application/Features/Deposits/` |
+| 18 | Integration Test ວົງຈອນຊີວິດການບໍາລຸງຮັກສາຢ່າງເຕັມທີ່ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/MaintenanceEndpointTests.cs` |
+| 19 | Reports — ສະຫຼຸບລາຍຮັບ (View/Export) ແລະໃບເກັບເງິນທີ່ຍັງຄ້າງຄາ (View/Export) ແມ່ນ CSV | `src/DormFlow.Application/Features/Reports/` |
+| 20 | ການແກ້ໄຂຊ່ອງຫວ່າງໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ Owner ໃນ List Endpoint 10 ໂມດູນ (ພົບເຫັນໃນລະຫວ່າງການພັດທະນາ Reports) | `src/DormFlow.Application/Common/Authorization/TenantScope.cs` |
+| 21 | Integration Test ບົດລາຍງານລາຍຮັບ/ໃບແຈ້ງໜີ້ເກີນກຳນົດ + Regression Test ການປົກປ້ອງຂໍ້ມູນທົ່ວອົງກອນ | `tests/DormFlow.IntegrationTests/Endpoints/{Reports,CrossOrganizationIsolation}EndpointTests.cs` |
+| 22 | ສິດ `deposits.view/collect/refund` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 23 | Deposits — ຮັບເງິນຝາກ (Held), ເງິນຄືນ (ເຕັມ/ບາງ/ເສຍຫາຍທັງໝົດ, ຄັ້ງຕໍ່ລາຍການ) | `src/DormFlow.Application/Features/Deposits/` |
 | 24 | Migration `AddDepositsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 25 | Integration Test วงจรชีวิตเงินมัดจำเต็มสาย + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/DepositsEndpointTests.cs` |
-| 26 | สิทธิ์ `receipts.view/issue` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 27 | Receipts — ออกใบเสร็จรับเงินจากรายการชำระเงินที่ยืนยันแล้ว (ไม่มี Endpoint แก้ไข/ลบ) | `src/DormFlow.Application/Features/Receipts/` |
+| 25 | Integration Test ວົງຈອນຊີວິດເງິນຝາກເຕັມ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/DepositsEndpointTests.cs` |
+| 26 | ສິດ `receipts.view/issue` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 27 | Receipts — ອອກໃບຮັບເງິນຈາກທຸລະກໍາການຈ່າຍເງິນທີ່ຢືນຢັນ (ບໍ່ມີ Endpoint ແກ້ໄຂ/ລຶບ) | `src/DormFlow.Application/Features/Receipts/` |
 | 28 | Migration `AddReceiptsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 29 | Integration Test การออกใบเสร็จรับเงิน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/ReceiptsEndpointTests.cs` |
-| 30 | สิทธิ์ `expenses.view/create` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 31 | Expenses — บันทึกค่าใช้จ่ายในการดำเนินงาน แยกจากฝั่งรายรับโดยสิ้นเชิง | `src/DormFlow.Application/Features/Expenses/` |
+| 29 | Integration Test ການອອກໃບຮັບເງິນ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/ReceiptsEndpointTests.cs` |
+| 30 | ສິດ `expenses.view/create` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 31 | Expenses — ບັນທຶກຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ ແຍກອອກຈາກດ້ານລາຍຮັບຢ່າງສົມບູນ | `src/DormFlow.Application/Features/Expenses/` |
 | 32 | Migration `AddExpensesModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 33 | Integration Test การบันทึกและค้นหาค่าใช้จ่าย | `tests/DormFlow.IntegrationTests/Endpoints/ExpensesEndpointTests.cs` |
-| 34 | สิทธิ์ `parcels.view/log/pickup` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 35 | Parcels — บันทึกพัสดุที่มาถึง (Received), บันทึกการรับพัสดุ (PickedUp) | `src/DormFlow.Application/Features/Parcels/` |
+| 33 | Integration Test ການບັນທຶກແລະການຊອກຫາຄ່າໃຊ້ຈ່າຍ | `tests/DormFlow.IntegrationTests/Endpoints/ExpensesEndpointTests.cs` |
+| 34 | ສິດ `parcels.view/log/pickup` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 35 | Parcels — ບັນທຶກຊຸດທີ່ມາຮອດແລ້ວ (Received), ບັນທຶກຂອງການຮັບການພັດທະນາ (PickedUp) | `src/DormFlow.Application/Features/Parcels/` |
 | 36 | Migration `AddParcelsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 37 | Integration Test วงจรชีวิตพัสดุ + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/ParcelsEndpointTests.cs` |
-| 38 | สิทธิ์ `visitors.view/checkin/checkout` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 39 | Visitors — บันทึกการเข้า (CheckedIn), บันทึกการออก (CheckedOut) | `src/DormFlow.Application/Features/Visitors/` |
+| 37 | Integration Test ວົງຈອນຊີວິດ parcel + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/ParcelsEndpointTests.cs` |
+| 38 | ສິດ `visitors.view/checkin/checkout` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 39 | Visitors — ບັນທຶກການເຂົ້າ (CheckedIn), ອອກຈາກບັນທຶກ (CheckedOut) | `src/DormFlow.Application/Features/Visitors/` |
 | 40 | Migration `AddVisitorsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 41 | Integration Test วงจรชีวิตผู้มาเยือน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/VisitorsEndpointTests.cs` |
-| 42 | สิทธิ์ `parking.view/register/release` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 43 | Parking — จดทะเบียนที่จอดรถ (Active), สิ้นสุดการจดทะเบียน (Ended) | `src/DormFlow.Application/Features/Parking/` |
+| 41 | Integration Test ວົງຈອນຊີວິດຂອງນັກທ່ອງທ່ຽວ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/VisitorsEndpointTests.cs` |
+| 42 | ສິດ `parking.view/register/release` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 43 | Parking — ການລົງທະບຽນບ່ອນຈອດລົດ (Active), ສິ້ນສຸດການລົງທະບຽນ (Ended) | `src/DormFlow.Application/Features/Parking/` |
 | 44 | Migration `AddParkingModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 45 | Integration Test วงจรชีวิตการจดทะเบียนที่จอดรถ + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/ParkingEndpointTests.cs` |
-| 46 | สิทธิ์ `announcements.view/create/publish` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 47 | Announcements — สร้างประกาศ (Draft), เผยแพร่ (Published), เก็บเข้าคลัง (Archived) | `src/DormFlow.Application/Features/Announcements/` |
+| 45 | Integration Test ວົງຈອນຊີວິດການລົງທະບຽນບ່ອນຈອດລົດ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/ParkingEndpointTests.cs` |
+| 46 | ສິດ `announcements.view/create/publish` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 47 | Announcements — ສ້າງການປະກາດ (Draft), ເຜີຍແຜ່ (Published), ເອົາເຂົ້າໄປໃນບ່ອນເກັບຮັກສາ (Archived) | `src/DormFlow.Application/Features/Announcements/` |
 | 48 | Migration `AddAnnouncementsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 49 | Integration Test วงจรชีวิตประกาศ + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/AnnouncementsEndpointTests.cs` |
-| 50 | สิทธิ์ `notifications.send` เพิ่มใหม่ (ไม่มีในเอกสารต้นฉบับ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
-| 51 | Notifications — ส่งถึงผู้ใช้หนึ่งคน, ดู/ทำเครื่องหมายอ่านการแจ้งเตือนของตนเอง (ไม่ต้องมีสิทธิ์เฉพาะ) | `src/DormFlow.Application/Features/Notifications/` |
+| 49 | Integration Test ວົງຈອນຊີວິດປະກາດ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/AnnouncementsEndpointTests.cs` |
+| 50 | ສິດ `notifications.send` ເພີ່ມໃໝ່ (ບໍ່ມີຢູ່ໃນເອກະສານຕົ້ນສະບັບ) | `src/DormFlow.Application/Common/Authorization/PermissionCodes.cs` |
+| 51 | Notifications — ສົ່ງໃຫ້ຜູ້ໃຊ້ຄົນດຽວ, ສັງເກດເບິ່ງ/ໝາຍການແຈ້ງເຕືອນຂອງຕົນເອງວ່າອ່ານແລ້ວ (ບໍ່ຈໍາເປັນຕ້ອງມີການອະນຸຍາດສະເພາະ) | `src/DormFlow.Application/Features/Notifications/` |
 | 52 | Migration `AddNotificationsModule` | `src/DormFlow.Infrastructure/Migrations/` |
-| 53 | Integration Test วงจรชีวิตการแจ้งเตือน + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/NotificationsEndpointTests.cs` |
-| 54 | Settings — ค่าตั้งขององค์กรแบบ Key/Value อิสระ (GET/PUT upsert/DELETE) ใช้สิทธิ์ `settings.manage` เดิมของ Phase 1 | `src/DormFlow.Application/Features/Settings/` |
-| 55 | Migration `AddSettingsModule` (unique index บน `organization_id`+`key` กรองด้วย `is_deleted = false`) | `src/DormFlow.Infrastructure/Migrations/` |
-| 56 | Integration Test การจัดการค่าตั้ง + กรณีปฏิเสธ | `tests/DormFlow.IntegrationTests/Endpoints/SettingsEndpointTests.cs` |
+| 53 | Integration Test ວົງຈອນຊີວິດການແຈ້ງເຕືອນ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/NotificationsEndpointTests.cs` |
+| 54 | Settings — ການຕັ້ງຄ່າອົງກອນ Key/Value ເອກະລາດ (GET/PUT upsert/DELETE) ໃຊ້ສິດຂອງເຈົ້າ `settings.manage` ຕົ້ນສະບັບຂອງ Phase 1 | `src/DormFlow.Application/Features/Settings/` |
+| 55 | Migration `AddSettingsModule` (unique index ສຸດ `organization_id`+`key` ການກັ່ນຕອງດ້ວຍ `is_deleted = false`) | `src/DormFlow.Infrastructure/Migrations/` |
+| 56 | Integration Test ການຈັດການການຕັ້ງຄ່າ + ໃນກໍລະນີຂອງການປະຕິເສດ | `tests/DormFlow.IntegrationTests/Endpoints/SettingsEndpointTests.cs` |
 
-### สมมติฐานทางธุรกิจที่ใช้ (ยังไม่ได้ยืนยันกับเจ้าของระบบ)
+### ສົມມຸດຕິຖານທຸລະກິດທີ່ໃຊ້ (ຍັງບໍ່ໄດ້ຢືນຢັນກັບເຈົ້າຂອງລະບົບເທື່ອ)
 
-เอกสารต้นฉบับไม่ได้ระบุกฎธุรกิจของโมดูลเหล่านี้ไว้ จึงใช้สมมติฐานที่สมเหตุสมผลต่อไปนี้
-**ควรทบทวนก่อนใช้งานจริง**:
+ເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸກົດລະບຽບທຸລະກິດສໍາລັບໂມດູນເຫຼົ່ານີ້. ດັ່ງນັ້ນ, ການສົມມຸດຕິຖານທີ່ສົມເຫດສົມຜົນຕໍ່ໄປນີ້ຖືກນໍາໃຊ້
+**ຄວນຈະທົບທວນຄືນກ່ອນທີ່ຈະໃຊ້ຕົວຈິງ**:
 
-- **ไม่มี Entity แยกสำหรับ CheckIn/CheckOut** — รวมเป็นการกระทำบนสัญญาแทน
-  (`POST /contracts/{id}/activate` = เช็คอิน, `POST /contracts/{id}/terminate` = เช็คเอาท์)
-  ถ้าต้องการบันทึกรายละเอียดการตรวจสภาพห้องหรือรูปถ่ายตอนเข้า-ออก ต้องแยกเป็น Entity ใหม่ภายหลัง
-- **สถานะห้องเปลี่ยนอัตโนมัติตามวงจรชีวิต**: จอง/ทำสัญญา (Draft) → `Reserved`,
-  เปิดใช้งานสัญญา (เช็คอิน) → `Occupied`, สิ้นสุดสัญญา (เช็คเอาท์) → `Cleaning`
-  (เจ้าหน้าที่ต้องเปลี่ยนเป็น `Available` เองผ่าน Endpoint ของห้องหลังทำความสะอาดเสร็จ)
-- **เลขที่สัญญา** สุ่มเป็นรูปแบบ `CT-{yyyyMMdd}-{6 อักขระสุ่ม}` ไม่ใช้เลขรันต่อเนื่อง
-  เพราะยังไม่มีข้อกำหนดเรื่องรูปแบบเลขที่สัญญาที่ต้องอ้างอิงระบบบัญชีภายนอก
-- **ผู้เช่าที่ถูกขึ้นบัญชีดำ (`Blacklisted`)** จองห้องหรือทำสัญญาใหม่ไม่ได้ แต่สัญญาเดิมที่ Active อยู่แล้วไม่ถูกยกเลิกอัตโนมัติ
-- **ห้องหนึ่งห้องมีสัญญาที่ยังไม่สิ้นสุด (Draft หรือ Active) ได้ครั้งละหนึ่งฉบับเท่านั้น**
-- **ค่าเช่า/ค่ามัดจำของสัญญาคัดลอกมาจากห้องตอนทำสัญญา** ไม่เปลี่ยนตามค่าเช่าห้องที่แก้ไขในภายหลัง
-- **การจองมีอายุจำกัด** (`HoldDays`, ค่าเริ่มต้น 3 วัน สูงสุด 30 วัน) และตอนนี้มี Background Job
-  (Hangfire, ดูหัวข้อ [Background Jobs](#background-jobs)) คอยหมดอายุการจองที่เลย `ExpiresAt` แล้วให้อัตโนมัติ
-  ทุก 15 นาที (`Reservation.Status → Expired`, ปล่อยห้องคืนถ้ายังอยู่ในสถานะ `Reserved`) ไม่ต้องยกเลิกด้วยมือผ่าน
-  `POST /reservations/{id}/cancel` อีกต่อไป (ยัง Endpoint นี้ไว้สำหรับยกเลิกก่อนครบกำหนดเอง)
-- **ไม่มี Entity แม่ของ "มิเตอร์" แยกต่างหาก** — `MeterReading` ผูกกับห้อง+ประเภทมิเตอร์+เดือนตรง ๆ
-  เพราะสิทธิ์ที่มีอยู่เดิม (`meter-readings.view/create` เท่านั้น ไม่มี CRUD มิเตอร์) บ่งบอกว่าไม่ได้ตั้งใจให้มี
-  ทะเบียนมิเตอร์แยกเป็นของตัวเอง ถ้าห้องเปลี่ยนมิเตอร์จริง (มิเตอร์เสีย/เปลี่ยนใหม่) ต้องจดค่าเริ่มต้นใหม่เอง
-  ระบบไม่รองรับการรีเซ็ตค่ามิเตอร์กลับไปต่ำกว่าค่าครั้งก่อนหน้า
-- **ค่ามิเตอร์เป็นบันทึกเชิงประวัติที่แก้ไข/ลบไม่ได้** จดผิดต้องจดรายการใหม่ของเดือนถัดไปแก้ไขแทน
-- **อัตราค่าน้ำ/ค่าไฟต่อหน่วยเก็บไว้ที่ระดับหอพัก** (`Dormitory.WaterRatePerUnit`/`ElectricityRatePerUnit`)
-  ต่อจากฟิลด์ตั้งค่าบิลเดิมของ Phase 1 (`BillingDay`, `PaymentDueDay`, `LateFeeType/Amount`)
-  เพราะเป็นค่าที่ควรเท่ากันทั้งหอพัก ไม่ใช่รายห้อง — ถ้าบางหอพักต้องการอัตราต่างกันตามประเภทห้อง
-  ต้องย้ายไปเก็บที่ `RoomType` แทนในภายหลัง
-- **ไม่มี Entity แยกสำหรับ "รายการ" ในใบแจ้งหนี้ (Invoice Line Item)** — ค่าเช่า/ค่าน้ำ/ค่าไฟ/ค่าปรับ
-  เก็บเป็นฟิลด์ตรง ๆ บน `Invoice` เพราะจำนวนประเภทค่าใช้จ่ายคงที่ในขอบเขตนี้ ถ้าต้องรองรับค่าใช้จ่ายอื่น
-  ที่ไม่รู้จำนวนล่วงหน้า (เช่น ค่าปรับจากผู้เช่าทำของเสียหาย) ต้องแยกเป็นตาราง Line Item ในภายหลัง
-- **ใบแจ้งหนี้ออกได้เฉพาะจากสัญญาที่ Active เท่านั้น** และออกได้เดือนละหนึ่งฉบับต่อสัญญา
-  ค่าน้ำ/ค่าไฟคำนวณจากค่ามิเตอร์ของห้องในเดือนนั้น ถ้ายังไม่มีค่ามิเตอร์ของเดือนนั้นจะคิดเป็น 0
-  (ไม่บังคับต้องจดมิเตอร์ก่อนออกบิลเสมอไป เพราะบางหอพักอาจรวมค่าน้ำ-ไฟในค่าเช่าอยู่แล้ว)
-- **วันครบกำหนดชำระคำนวณจาก `Dormitory.PaymentDueDay`** โดยหาวันที่ตรงกับเลขวันนั้นที่อยู่ *หลัง*
-  วันออกบิลที่ใกล้ที่สุด (ถ้าเลขวันครบกำหนดผ่านไปแล้วในเดือนที่ออกบิล จะเลื่อนไปเดือนถัดไป)
-  และไม่มีการคำนวณค่าปรับชำระล่าช้า (`LateFeeAmount`) อัตโนมัติเมื่อเกินกำหนด เพราะต้องมี Background Job
-  ที่ยังไม่ได้ติดตั้ง (เช่นเดียวกับช่องโหว่ HoldDays ของ Reservations) — สถานะ `Overdue` นิยามไว้ในระบบ
-  แต่ยังไม่มีจุดใดตั้งค่าอัตโนมัติ
-- **การชำระเงินต้องผ่านการยืนยันก่อนจึงมีผลกับยอดบิล** (`Pending` → `Confirmed`) แยกสิทธิ์บันทึก
-  (`payments.create`) ออกจากสิทธิ์ยืนยัน (`payments.approve`) ตามที่ Phase 1 กำหนดสิทธิ์ไว้แล้ว
-  เพื่อให้มีจุดตรวจสอบก่อนเงินเข้าระบบจริง โดยเฉพาะกรณีโอน/QR ที่ต้องเทียบกับใบนำฝากธนาคาร
-  ไม่มีสถานะ "ปฏิเสธ" แยกต่างหาก (ไม่มีสิทธิ์ `payments.reject` ในเอกสารต้นฉบับ) รายการที่บันทึกผิดปล่อยเป็น
-  `Pending` ค้างไว้ได้โดยไม่กระทบยอดบิล
-- **ยืนยันยอดชำระเกินยอดคงเหลือของบิลไม่ได้** ป้องกัน Overpayment แต่ยังไม่รองรับ "เครดิตคงเหลือ"
-  ย้ายไปใช้กับบิลเดือนถัดไป (ต้องคืนเงินส่วนเกินเป็นรายการแยก หรือออกแบบเพิ่มภายหลัง)
-- **ยกเลิกใบแจ้งหนี้ได้เฉพาะที่ยังไม่มีการชำระเงินเข้ามา** (`PaidAmount == 0`) ถ้ามีการชำระแล้วต้องคืนเงิน
-  รายการที่ยืนยันไว้ก่อน จึงจะยกเลิกบิลได้
-- **ไม่มีสิทธิ์ "สร้างงานแจ้งซ่อม" แยกต่างหาก** สิทธิ์เดิมของ Phase 1 มีแค่ `maintenance.view/assign/update-status`
-  จึงตีความว่าการแจ้งซ่อมคือการตั้งสถานะเริ่มต้น (`Reported`) ใช้สิทธิ์ `maintenance.update-status` เดียวกัน
-  ทำให้ Staff และ Technician (ที่ไม่มีสิทธิ์ `assign`) แจ้งซ่อมเองได้ ตรงกับที่ RolePermissionDefaults
-  มอบสิทธิ์นี้ให้ทั้งสองบทบาท — ผู้เช่ายังแจ้งซ่อมเองไม่ได้ (บทบาท Tenant ไม่มีสิทธิ์ในโมดูลนี้เลย เหมือนทุกโมดูลอื่น)
-- **การมอบหมายช่าง (`POST /assign`) แยกจากการเปลี่ยนสถานะทั่วไป (`PATCH /status`) โดยตั้งใจ**
-  เพราะต้องตรวจสอบว่าผู้ใช้ที่ระบุมีบทบาท `Technician` และได้รับมอบหมายให้ดูแลหอพักนั้นจริง (ผ่าน `UserDormitory`)
-  ก่อนบันทึก — `PATCH /status` ปฏิเสธการตั้งสถานะเป็น `Assigned` โดยตรงเสมอ
-- **อนุญาตให้มอบหมายซ้ำ (เปลี่ยนช่างคนใหม่) ได้ตราบใดที่งานยังไม่ปิด** (`Reported`/`Assigned`/`InProgress`)
-  ไม่จำกัดแค่ตอนสร้างงานครั้งแรก เพราะงานจริงมักต้องสลับช่างเมื่อคนเดิมติดงานอื่น
-- **ลำดับการเปลี่ยนสถานะที่อนุญาตกำหนดตายตัว**: `Reported→Cancelled`, `Assigned→InProgress|Cancelled`,
-  `InProgress→Completed|Cancelled` เท่านั้น ข้ามขั้นตอน (เช่น `Reported→Completed`) ไม่ได้
-- **สถานะห้องเปลี่ยนอัตโนมัติเช่นเดียวกับโมดูล Reservations/Contracts**: มอบหมายช่างครั้งแรกให้ห้องที่ว่างอยู่
-  (`Available`) → เปลี่ยนเป็น `Maintenance`; ปิดงาน (`Completed`/`Cancelled`) แล้วห้องจะกลับเป็น `Available`
-  ก็ต่อเมื่อไม่มีงานแจ้งซ่อมอื่นค้างอยู่ในห้องเดียวกัน — ห้องที่ไม่ได้อยู่ในสถานะ `Available`/`Maintenance`
-  ตอนนั้น (เช่น `Occupied`) จะไม่ถูกแตะต้องเลย เพราะห้องมีผู้เช่าอยู่แล้วไม่จำเป็นต้องกันไม่ให้จองซ้ำ
-- **`RoomService.ChangeStatusAsync` (Endpoint ทั่วไปของห้อง) ไม่มีการตรวจลำดับสถานะใด ๆ** ผู้ใช้ที่มีสิทธิ์
-  `rooms.change-status` จึงยังเปลี่ยนสถานะห้องที่มีงานซ่อมค้างอยู่กลับเป็น `Available` เองได้โดยตรง
-  การเปลี่ยนสถานะอัตโนมัติของโมดูลนี้เป็นเพียงการช่วยเหลือ ไม่ใช่ข้อบังคับระดับฐานข้อมูล — ยอมรับได้ในขอบเขตนี้
-- **Reports เลือกทำแค่ 2 รายงานก่อน** (สรุปรายได้ และใบแจ้งหนี้ค้างชำระ) เพราะเป็นสองรายงานที่ต่อยอดจากข้อมูล
-  Invoice/Payment ที่มีอยู่แล้วได้ทันทีโดยไม่ต้องออกแบบ Entity ใหม่ — ยังไม่มีรายงานสรุปการเข้าพัก (Occupancy)
-  เพราะซ้ำซ้อนกับ `GET /rooms/summary` ที่มีอยู่แล้ว (คนละสิทธิ์กัน คือ `rooms.view` ไม่ใช่ `reports.view`)
-  และยังไม่มีรายงานสรุปงานซ่อมบำรุงหรือรายงานอื่น ๆ
-- **สถานะ `Overdue` ของใบแจ้งหนี้ตอนนี้ถูกตั้งค่าอัตโนมัติแล้วโดย Background Job รายวัน** (ดูหัวข้อ
-  [Background Jobs](#background-jobs)) แต่รายงานทั้งสองยังคงคำนวณ "เกินกำหนด" สดจากการเทียบ `DueDate` กับ
-  วันที่ปัจจุบันตอนเรียกเช่นเดิม แทนที่จะอ่านจาก `Invoice.Status == Overdue` โดยตรง เพื่อให้ผลลัพธ์ถูกต้องเสมอ
-  แม้ Job ล่าสุดยังไม่ได้รันตั้งแต่บิลเลยกำหนด (Job รันวันละครั้งเท่านั้น มีช่วงเวลาที่สถานะยังไม่ทันอัปเดต)
-- **ส่งออก CSV จำกัดไม่เกิน 5,000 แถวต่อคำขอ** (`ReportRepository.MaxExportRows`) ป้องกันการดึงข้อมูลจำนวนมาก
-  เกินไปในคำขอเดียว ถ้าต้องการมากกว่านั้นต้องกรองด้วย `dormitoryId`/ช่วงเวลาให้แคบลง หรือแบ่งส่งออกหลายรอบ
-- **Deposits แยกออกจากโมดูล Payments โดยสิ้นเชิง** ไม่ใช้ Invoice/Payment ผูกกับเงินมัดจำเลย เพราะเป็นกระแสเงิน
-  คนละก้อนกัน (เงินค้ำประกันที่ต้องคืน ไม่ใช่รายรับตามรอบบิล) และไม่มีสิทธิ์ `deposits.*` อยู่ในเอกสารต้นฉบับ
-  จึงเพิ่มสิทธิ์ใหม่ตามรูปแบบเดียวกับที่เคยทำกับ `reservations.*` ในสาย Contracts
-- **สัญญาเช่าหนึ่งฉบับรับเงินมัดจำได้เพียงครั้งเดียว** และรับได้เฉพาะตอนสัญญายังไม่สิ้นสุด (`Draft`/`Active`)
-  ค่าเริ่มต้นคัดลอกจาก `Contract.DepositAmount` แต่ปรับเป็นจำนวนอื่นได้ตอนรับจริง
-- **คืนเงินมัดจำได้เฉพาะสัญญาที่สิ้นสุดแล้ว (`Terminated`) เท่านั้น** และคืนได้เพียงครั้งเดียวต่อรายการ
-  (ไม่รองรับการคืนหลายงวดเหมือน Payment) — ถ้าคืนไม่เต็มจำนวนต้องระบุเหตุผลของส่วนที่หักไว้เสมอ
-  คืนเป็น 0 หมายถึงริบเงินมัดจำทั้งหมด (`Forfeited`)
-- **Receipts ออกได้เฉพาะจากรายการชำระเงินที่ยืนยันแล้ว (`Payment.Status == Confirmed`)** และออกได้ครั้งเดียว
-  ต่อรายการชำระเงินหนึ่งรายการ (unique index บน `PaymentId`) — ถ้ารายการนั้นถูกคืนเงินภายหลังจากออกใบเสร็จ
-  ไปแล้ว ใบเสร็จเดิมจะยังคงอยู่เป็นหลักฐานทางประวัติ ไม่ถูกยกเลิกอัตโนมัติ (ระบบยังไม่มี Endpoint ยกเลิก/ออกใหม่
-  ใบเสร็จ ถือว่าอยู่นอกขอบเขตของ Phase 2 สายนี้)
-- **จำนวนเงินในใบเสร็จคัดลอกจาก `Payment.Amount` ตอนออกใบเสร็จ (Snapshot)** ไม่ใช่การอ้างอิงสด เพื่อให้เอกสาร
-  ที่ออกไปแล้วคงที่ตลอดไปแม้ข้อมูลต้นทางจะถูกแก้ไขภายหลัง — เหมือนหลักการเดียวกับที่ `Contract.MonthlyRent`
-  คัดลอกจาก `Room.MonthlyRent` ตอนทำสัญญา
-- **Expenses เป็นสมุดบันทึกฝั่งรายจ่ายล้วน ๆ ไม่มีสถานะหรือ Workflow อนุมัติ** ต่างจาก Invoices/Payments
-  ที่เป็นฝั่งรายรับซึ่งมี Draft/Issued/Confirmed ให้ตรวจสอบ เพราะยังไม่มีข้อกำหนดเรื่องการอนุมัติค่าใช้จ่าย
-  จากเอกสารต้นฉบับ — ถ้าต้องการ Workflow อนุมัติภายหลัง (เช่น ต้องผ่าน Owner ก่อนบันทึกจริง) ต้องออกแบบเพิ่ม
-- **หมวดหมู่ค่าใช้จ่ายกำหนดเป็น Enum ตายตัว 6 ค่า** (Utilities, Maintenance, Salaries, Supplies, Marketing,
-  Other) แทนที่จะให้ผู้ใช้กำหนดหมวดหมู่เองแบบอิสระ เพื่อให้จัดกลุ่ม/ทำรายงานสรุปได้ง่ายในอนาคต — ถ้าไม่พอ
-  ต้องเพิ่มค่าใหม่ใน Enum (ไม่ใช่ตารางหมวดหมู่แยกต่างหาก เพราะมองว่าจำนวนหมวดหมู่คงที่ไม่บ่อยเปลี่ยน)
-- **ไม่มีสิทธิ์ `expenses.*` ให้ Staff/Technician** เพราะมองว่าเป็นข้อมูลการเงินภายในที่ไม่จำเป็นต้องให้
-  พนักงานหน้าเคาน์เตอร์เข้าถึง ต่างจาก Payments ที่ Staff ยังมีสิทธิ์ View ได้ (เพราะเกี่ยวข้องกับผู้เช่าโดยตรง)
-- **Parcels ผูกกับห้อง (`RoomId`) เสมอ ส่วนผู้เช่า (`TenantId`) เป็นทางเลือก** เพราะเจ้าหน้าที่หน้าเคาน์เตอร์
-  มักบันทึกพัสดุที่มาถึงก่อนยืนยันได้แน่ชัดว่าเป็นของผู้เช่าคนไหนในห้อง (ห้องอาจมีผู้เช่าร่วมหลายคน)
-  และห้องคือหน่วยที่จำเป็นสำหรับขอบเขตองค์กร/หอพัก (`Tenant` ไม่ได้ผูกกับหอพักถาวรเหมือน `Room`)
-- **ผู้มารับพัสดุจริงบันทึกเป็นชื่ออิสระ (`PickedUpByName`) ไม่ใช่การอ้างอิง `TenantId`** เพราะในทางปฏิบัติ
-  คนที่มารับอาจไม่ใช่ผู้เช่าโดยตรง (เช่น เพื่อนร่วมห้อง หรือญาติมารับแทน) — ไม่ตรวจสอบตัวตนเข้มงวดกว่านี้
-- **สิทธิ์ `parcels.*` มอบให้ Staff เต็มรูปแบบ** (View/Log/Pickup) ต่างจาก Deposits/Receipts/Expenses ที่ไม่ให้
-  Staff เลย เพราะพัสดุเป็นงานหน้าเคาน์เตอร์ประจำวันโดยตรง ไม่ใช่ข้อมูลการเงินภายใน — ให้ Accountant/Technician
-  ไม่มีสิทธิ์เลยเพราะไม่เกี่ยวข้องกับงานของทั้งสองบทบาทนี้
-- **Visitors ออกแบบตามแบบเดียวกับ Parcels ทุกประการ** (ผูกกับห้องเสมอ ผู้เช่าเป็นทางเลือก, สิทธิ์มอบให้
-  Owner/DormManager/Staff เต็มรูปแบบเหมือนงานหน้าเคาน์เตอร์) เพราะเป็นกรณีใช้งานที่คล้ายกันมาก
-  (บันทึกคนเข้า-ออกที่ไม่ใช่ผู้เช่าเอง) ต่างกันแค่ Visitors ไม่มีสถานะ "ริบ/ยกเลิก" เพราะเข้า-ออกมีแค่สองสถานะ
-- **เก็บเลขบัตรประจำตัวประชาชนของผู้มาเยือนได้ (`IdNumber`) เป็นทางเลือก** สำหรับหอพักที่ต้องการบันทึก
-  เพื่อความปลอดภัยตามระเบียบภายใน แต่ไม่บังคับ เพราะเอกสารต้นฉบับไม่ได้กำหนดข้อบังคับด้านนี้ไว้
-  (ควรพิจารณาเรื่องการเก็บรักษาข้อมูลส่วนบุคคลตาม PDPA ก่อนใช้งานจริงถ้าเปิดใช้ฟิลด์นี้)
-- **Parking ต้องระบุผู้เช่าเสมอ (`TenantId` บังคับ) ต่างจาก Parcels/Visitors ที่ผู้เช่าเป็นทางเลือก**
-  เพราะรถหนึ่งคันต้องมีเจ้าของที่ระบุตัวตนได้เสมอในทางปฏิบัติ ไม่เหมือนพัสดุ/ผู้มาเยือนที่อาจยังไม่ทราบ
-  แน่ชัดตอนบันทึกครั้งแรก — ห้องยังคงเก็บไว้เพื่อขอบเขตองค์กร/หอพักเช่นเดิม
-- **ไม่มี Entity แม่ของ "ช่องจอดรถ" แยกต่างหาก** (`ParkingSpotLabel` เป็นข้อความอิสระ ไม่ผูกกับระบบจัดการ
-  ช่องจอดที่มีจำนวนจำกัดหรือการจองล่วงหน้า) เพราะไม่มีข้อกำหนดเรื่องนี้จากเอกสารต้นฉบับ ถ้าต้องการจัดการ
-  ช่องจอดอย่างเป็นระบบ (เช่น จำกัดจำนวนช่อง, ป้องกันชนกัน) ต้องออกแบบเพิ่มภายหลัง
-- **ป้องกันเฉพาะทะเบียนรถเดียวกันมีการจดทะเบียนที่ยัง Active ซ้อนกันสองรายการ** ไม่ได้ป้องกันผู้เช่าคนเดียวกัน
-  จดทะเบียนรถหลายคันพร้อมกัน (อาจมีรถมากกว่าหนึ่งคันจริง ๆ) และไม่ได้จำกัดจำนวนคันต่อห้อง/ต่อผู้เช่า
-- **Announcement ผูกกับหอพักเดียวเสมอ (`DormitoryId` บังคับ)** ไม่รองรับประกาศระดับองค์กรที่แสดงพร้อมกัน
-  ทุกหอพักในองค์กร เพราะเอกสารต้นฉบับไม่ได้ระบุรายละเอียดของโมดูลนี้ไว้เลย ถ้าต้องการประกาศระดับองค์กร
-  ต้องออกแบบเพิ่ม (เช่น สร้างประกาศแยกทีละหอพัก หรือเพิ่ม `DormitoryId` แบบไม่บังคับในภายหลัง)
-- **วงจรชีวิตมีสามสถานะตายตัว**: `Draft` (สร้างใหม่) → `Published` (เผยแพร่ ตั้ง `PublishedAt`) →
-  `Archived` (เก็บเข้าคลัง) เดินไปทางเดียว ไม่มี Endpoint แก้ไขเนื้อหาหรือย้อนกลับจาก `Published` ไป `Draft`
-  เพราะเอกสารต้นฉบับไม่ได้กำหนดรายละเอียดเรื่องการแก้ไขประกาศที่เผยแพร่ไปแล้ว
-- **ไม่มีสิทธิ์ `announcements.archive` แยกต่างหาก** ใช้สิทธิ์ `announcements.publish` เดียวกันครอบคลุมทั้ง
-  การเผยแพร่และการเก็บเข้าคลัง เพราะทั้งสองเป็นการเปลี่ยนสถานะที่ทำโดยผู้มีอำนาจเผยแพร่ประกาศกลุ่มเดียวกันเสมอ
-  ในทางปฏิบัติ ต่างจาก Parcels/Visitors ที่แยกสิทธิ์ Log/Pickup หรือ CheckIn/CheckOut เพราะกรณีนั้นมักทำโดย
-  เจ้าหน้าที่คนละกะกัน
-- **สิทธิ์ `announcements.*` มอบให้ Owner/DormManager เต็มรูปแบบ แต่ Staff ได้แค่ View** ต่างจาก
-  Parcels/Visitors/Parking ที่ให้ Staff เต็มรูปแบบ เพราะประกาศเป็นการสื่อสารอย่างเป็นทางการจากฝ่ายบริหาร
-  ไม่ใช่งานบันทึกประจำวันหน้าเคาน์เตอร์ — Accountant/Technician ไม่มีสิทธิ์เลยเพราะไม่เกี่ยวข้องกับงานทั้งสองบทบาทนี้
-- **Notification ไม่สืบทอดจาก `TenantEntity`** ต่างจากทุกโมดูลก่อนหน้าของ Phase 2 เพราะผูกกับผู้ใช้ผู้รับ
-  โดยตรง (`RecipientUserId`) ไม่ใช่ข้อมูลที่ต้องกรองด้วยหอพักแบบ List Endpoint ทั่วไป — ใช้แนวทางเดียวกับ
-  `AuditLog` ที่ไม่ใช้ `TenantScope` เพราะไม่ใช่ทรัพยากรที่ผู้ใช้หลายคนแชร์เห็นร่วมกันตามขอบเขตองค์กร/หอพัก
-- **การดูและทำเครื่องหมายอ่านแล้วของการแจ้งเตือนตนเองเปิดให้ผู้ใช้ที่เข้าสู่ระบบทุกคนทำได้เสมอ** ไม่ผูกกับ
-  สิทธิ์ใด (`[Authorize]` เฉย ๆ เหมือน `GET /auth/me`) เพราะเป็นข้อมูลของตนเองโดยตรง ไม่ใช่ข้อมูลที่ต้องเช็ค
-  บทบาท — มีเพียงสิทธิ์ `notifications.send` สิทธิ์เดียวที่คุมว่าใครส่งการแจ้งเตือนถึงคนอื่นได้ (Owner/DormManager)
-- **ส่งการแจ้งเตือนได้เฉพาะถึงผู้ใช้ในองค์กรเดียวกันเท่านั้น** (ยกเว้น SuperAdmin ส่งข้ามองค์กรได้) ตรวจจาก
-  `OrganizationId` ของผู้รับเทียบกับผู้ส่ง ถ้าไม่ตรงกันตอบ 404 เพื่อไม่ให้เดาได้ว่ามีผู้ใช้รหัสนั้นอยู่จริงใน
-  องค์กรอื่น ตามหลักการเดียวกับ `TenantScope.EnsureOrganizationAccess`
-- **ไม่มีการแจ้งเตือนอัตโนมัติจากเหตุการณ์อื่นในระบบ** (เช่น ออกใบแจ้งหนี้แล้วแจ้งเตือนผู้เช่า, งานซ่อมเสร็จแล้ว
-  แจ้งเตือนผู้แจ้ง) — โมดูลนี้เป็นเพียงกลไกส่ง/รับการแจ้งเตือนด้วยมือเท่านั้น การเชื่อมต่ออัตโนมัติกับเหตุการณ์
-  ของโมดูลอื่นต้องออกแบบเพิ่มภายหลัง (เช่น Domain Event หรือ Background Job)
-- **ผู้รับเป็น User ของระบบ (พนักงาน/ผู้ดูแล) เท่านั้น ไม่ใช่ Tenant** เพราะบทบาท Tenant ยังไม่มี Endpoint
-  หรือกลไกยืนยันตัวตนสำหรับพอร์ทัลผู้เช่าแยกต่างหากในขอบเขตนี้ (ดูหัวข้อ Tenants ด้านบน)
-- **Settings เก็บเป็นคู่ Key/Value อิสระต่อองค์กร** (`Setting.Key`/`Setting.Value` เป็นข้อความอิสระ ไม่ใช่
-  คอลัมน์ตายตัวทีละค่าตั้ง) เพราะเอกสารต้นฉบับไม่ได้ระบุรายการค่าตั้งที่ต้องมีไว้เลย มีเพียงสิทธิ์
-  `settings.manage` ที่กำหนดไว้แล้วตั้งแต่ Phase 1 การเก็บแบบอิสระทำให้เพิ่มค่าตั้งใหม่ในอนาคตได้โดยไม่ต้อง
-  Migration ทุกครั้ง แลกกับการไม่มี Type Safety หรือ Validation เฉพาะของแต่ละค่าตั้ง (ฝั่ง Client ต้องรู้เอง
-  ว่าคีย์ไหนควรมีรูปแบบค่าอย่างไร) — ไม่ทับซ้อนกับค่าตั้งที่มีโครงสร้างชัดเจนอยู่แล้วอย่างค่าตั้งบิลของ
+- **ບໍ່ມີ Entity ແຍກຕ່າງຫາກສໍາລັບ CheckIn/CheckOut** — ລວມເປັນການກະທໍາໃນສັນຍາແທນ
+  (`POST /contracts/{id}/activate` = ເຊັກອິນ, `POST /contracts/{id}/terminate` = ກວດເບິ່ງ)
+  ຖ້າທ່ານຕ້ອງການບັນທຶກລາຍລະອຽດຂອງການກວດກາຫ້ອງຫຼືຮູບພາບໃນເວລາເຂົ້າ-ຕ້ອງໄດ້ຮັບການແຍກອອກເປັນ Entity ໃໝ່ຕໍ່ມາ
+- **ສະຖານະຫ້ອງມີການປ່ຽນແປງອັດຕະໂນມັດຕາມວົງຈອນຊີວິດ**: ຈອງ/ເຮັດສັນຍາ (Draft) → `Reserved`,
+  ເປີດໃຊ້ສັນຍາ (ເຊັກອິນ) → `Occupied`, ສິ້ນສຸດສັນຍາ (ກວດເບິ່ງ) → `Cleaning`
+  (ເຈົ້າຜ້າທີ່ຕ້ອງປ່ຽນເປັນ `Available` ຂ້ອຍຜ່ານມັນເອງ Endpoint ຂອງຫ້ອງຫຼັງຈາກທໍາຄວາມສະອາດສໍາເລັດ)
+- **ໝາຍເລກສັນຍາ** ແບບສຸ່ມ `CT-{yyyyMMdd}-{6 ຕົວອັກສອນແບບສຸ່ມ}` ຢ່າໃຊ້ຕົວເລກແລ່ນຢ່າງຕໍ່ເນື່ອງ
+  ເນື່ອງຈາກວ່າຍັງບໍ່ທັນມີຂໍ້ກໍານົດກ່ຽວກັບຮູບແບບຕົວເລກສັນຍາທີ່ຕ້ອງອ້າງອີງໃສ່ລະບົບບັນຊີພາຍນອກ
+- **ຜູ້ເຊົ່າບັນຊີດຳ (`Blacklisted`)** ບໍ່ສາມາດຈອງຫ້ອງ ຫຼືເຮັດສັນຍາໃໝ່ໄດ້. ແຕ່ສັນຍາຕົ້ນສະບັບ Active ທີ່ມີຢູ່ແລ້ວຈະບໍ່ຖືກຍົກເລີກໂດຍອັດຕະໂນມັດ
+- **ຫ້ອງຜຶ່ງມີສັນຍາທີ່ຍັງບໍ່ທັນສໍາເລັດ (Draft ຫຼື Active) ມີພຽງສຳເນົາອັນດຽວເທົ່ານັ້ນ**
+- **ເຊົ່າ/ເງິນຝາກໃນສັນຍາແມ່ນຄັດລອກຈາກຫ້ອງໃນເວລາທີ່ສັນຍາໄດ້ຖືກເຊັນ** ມັນບໍ່ປ່ຽນແປງຕາມຄ່າເຊົ່າຫ້ອງທີ່ປັບປຸງຕໍ່ມາ
+- **ການຈອງແມ່ນຖືກຕ້ອງເປັນເວລາຈໍາກັດ** (`HoldDays`, ຄ່າເລີ່ມຕົ້ນ 3 ມື້ສູງສຸດ 30 ມື້) ແລະໃນປັດຈຸບັນມີ Background Job
+  (Hangfire, ເບິ່ງຫົວຂໍ້ [Background Jobs](#background-jobs)) ລໍຖ້າການຈອງໝົດອາຍຸ `ExpiresAt` ແລະຫຼັງຈາກນັ້ນອັດຕະໂນມັດ
+  ທຸກໆ 15 ນາທີ (`Reservation.Status → Expired`, ປ່ອຍຫ້ອງຄືນຖ້າມັນຍັງຢູ່ໃນສະຖານະ `Reserved`) ບໍ່ຈໍາເປັນຕ້ອງຍົກເລີກດ້ວຍມື
+  `POST /reservations/{id}/cancel` ອີກຕໍ່ໄປ (ຍັງບໍ່ທັນ Endpoint ນີ້ແມ່ນສໍາລັບການຍົກເລີກກ່ອນວັນກໍານົດ)
+- **ບໍ່ມີ Entity ແມ່ຂອງ "ແມັດ" ແຍກ** — `MeterReading` ຜູກມັດກັບຫ້ອງ+ປະເພດແມັດ+ເດືອນທີ່ແນ່ນອນ
+  ເນື່ອງຈາກວ່າສິດທີ່ມີຢູ່ແລ້ວ (`meter-readings.view/create` ເທົ່ານັ້ນ, ບໍ່ CRUD ແມັດ) ສະແດງໃຫ້ເຫັນວ່າມັນບໍ່ມີຈຸດປະສົງ
+  ການລົງທະບຽນແມັດແຍກຕ່າງຫາກຖ້າຫາກວ່າຫ້ອງຕົວຈິງມີການປ່ຽນແປງແມັດ (ແມັດຫັກ/ປ່ຽນອັນໃໝ່) ທ່ານຕ້ອງຂຽນຄ່າເລີ່ມຕົ້ນໃຝ່ດ້ວຍຕົນເອງ
+  ລະບົບບໍ່ສະຜັບສະຜູນການປັບຄ່າເຄື່ອງວັດແທກເປັນຄ່າຕ່ໍາກວ່າຄ່າທີ່ຜ່ານມາ
+- **ມູນຄ່າແມັດແມ່ນການແກ້ໄຂບັນທຶກປະຫວັດສາດ/ບໍ່ສາມາດລຶບໄດ້** ຖ້າເຈົ້າເຮັດຜິດ, ເຈົ້າຕ້ອງເຮັດລາຍການໃໝ່ສໍາລັບເດືອນຕໍ່ໄປ ແລະແກ້ໄຂແທນ
+- **ອັດຕານໍ້າ/ຄ່າໄຟຟ້າຕໍ່ຜ່ວຍແມ່ນເກັບຮັກສາໄວ້ໃນລະດັບຫໍພັກ** (`Dormitory.WaterRatePerUnit`/`ElectricityRatePerUnit`)
+  ຫຼັງຈາກພາກສະຜາມການຕັ້ງຄ່າຕົ້ນສະບັບຂອງ Phase 1 (`BillingDay`, `PaymentDueDay`, `LateFeeType/Amount`)
+  ເນື່ອງຈາກວ່າມັນເປັນມູນຄ່າທີ່ຄວນຈະຄືກັນສໍາລັບຫໍພັກທັງຝົດ. ບໍ່ແມ່ນຕໍ່ຫ້ອງ — ຖ້າບາງຫໍພັກຕ້ອງການອັດຕາທີ່ແຕກຕ່າງກັນຕາມປະເພດຫ້ອງ
+  ຕ້ອງຍ້າຍໄປບ່ອນເກັບມ້ຽນ `RoomType` ແທນທີ່ຕໍ່ມາ
+- **ບໍ່ມີ Entity ແຍກຕ່າງຫາກສໍາລັບ "ລາຍການ" ໃນໃບເກັບເງິນ (Invoice Line Item)** — ເຊົ່າ/ໃບບິນຄ່ານໍ້າ/ໃບບິນຄ່າໄຟຟ້າ/ດີ
+  ເກັບຮັກສາເປັນພາກສະຜາມໂດຍກົງກ່ຽວກັບ `Invoice` ເນື່ອງຈາກວ່າຈໍານວນປະເພດຄ່າໃຊ້ຈ່າຍແມ່ນຖືກແກ້ໄຂໃນຂອບເຂດນີ້. ຖ້າຄ່າໃຊ້ຈ່າຍອື່ນໆຕ້ອງໄດ້ຮັບການສະຜັບສະຜູນ
+  ຈໍານວນເງິນແມ່ນບໍ່ໄດ້ຮູ້ລ່ວງຜ້າ (ຕົວຢ່າງ, ການປັບໃໝຈາກຜູ້ເຊົ່າທີ່ທໍາລາຍລາຍການ) ຕ້ອງແຍກອອກເປັນຕາຕະລາງ Line Item ຕໍ່ມາ
+- **ໃບເກັບເງິນສາມາດອອກໄດ້ຈາກສັນຍາເທົ່ານັ້ນ Active ເທົ່ານັ້ນ** ແລະສາມາດອອກເອກະສານຜຶ່ງຕໍ່ເດືອນຕໍ່ສັນຍາ
+  ໃບບິນຄ່ານໍ້າ/ໃບເກັບຄ່າໄຟຟ້າແມ່ນຄິດໄລ່ຈາກຄ່າແມັດຫ້ອງສໍາລັບເດືອນນັ້ນ. ຖ້າບໍ່ມີຄ່າແມັດສໍາລັບເດືອນນັ້ນ, ມັນຈະຖືກຄິດໄລ່ 0
+  (ມັນບໍ່ຈໍາເປັນສະເຝີທີ່ຈະຂຽນລົງແມັດກ່ອນທີ່ຈະອອກໃບບິນຄ່າ. ເພາະບາງຫໍພັກອາດຈະລວມຄ່ານ້ຳ-ມີໄຟໃຫ້ເຊົ່າແລ້ວ)
+- **ວັນທີຊໍາລະແມ່ນຄິດໄລ່ຈາກ `Dormitory.PaymentDueDay`** ໂດຍການຊອກຫາວັນທີທີ່ກົງກັບຕົວເລກທີ່ຢູ່ໃນທີ່ຢູ່ *ກັບຄືນ*
+  ວັນທີໃບບິນທີ່ໃກ້ທີ່ສຸດ (ຖ້າເລກທີ່ກຳນົດໄດ້ຜ່ານໄປແລ້ວໃນເດືອນທີ່ໃບບິນຖືກອອກຈະຖືກເລື່ອນໄປໃນເດືອນໜ້າ)
+  ແລະບໍ່ມີການຄິດໄລ່ການລົງໂທດການຈ່າຍເງິນຊ້າ (`LateFeeAmount`) ອັດຕະໂນມັດເມື່ອເກີນກໍານົດເນື່ອງຈາກວ່າຕ້ອງມີ Background Job
+  ທີ່ຍັງບໍ່ທັນໄດ້ຕິດຕັ້ງ (ດຽວກັນໃຊ້ກັບຄວາມອ່ອນແອ HoldDays ຂອງ Reservations) — ສະຖານະ `Overdue` ທີ່ກໍານົດໄວ້ໃນລະບົບ
+  ແຕ່ມັນຍັງບໍ່ທັນມີຈຸດໃດໃນການຕັ້ງຄ່າອັດຕະໂນມັດ
+- **ການຈ່າຍເງິນຕ້ອງໄດ້ຮັບການກວດສອບກ່ອນທີ່ຈະສາມາດຖືກນໍາໃຊ້ກັບໃບບິນຄ່າ** (`Pending` → `Confirmed`) ສິດການບັນທຶກແຍກຕ່າງຫາກ
+  (`payments.create`) ຢືນຢັນການອະນຸຍາດອອກ (`payments.approve`) ອີງຕາມ Phase 1 ການອະນຸຍາດໄດ້ຖືກກໍານົດ
+  ເພື່ອໃຫ້ມີຈຸດກວດກາກ່ອນເງິນເຂົ້າລະບົບຕົວຈິງ. ໂດຍສະເພາະໃນກໍລະນີຂອງການໂອນ/QR ຈະຕ້ອງປຽບທຽບກັບໃບຝາກເງິນຂອງທະນາຄານ
+  ບໍ່ມີສະຖານະ "ປະຕິເສດ" ແຍກ (ບໍ່ມີສິດ `payments.reject` ໃນເອກະສານຕົ້ນສະບັບ) ລາຍການທີ່ບັນທຶກໄວ້ອອກບໍ່ຖືກຕ້ອງເປັນ
+  `Pending` ສາມາດຖືໄດ້ໂດຍບໍ່ມີຜົນກະທົບຕໍ່ຍອດເງິນໃນບັນຊີລາຍການ
+- **ບໍ່ສາມາດຢືນຢັນຈຳນວນການຈ່າຍເງິນເກີນຍອດເງິນໃນໃບບິນ** ປົກປ້ອງ Overpayment ແຕ່ຍັງບໍ່ໄດ້ສະຜັບສະຜູນ "ສິນເຊື່ອທີ່ຍັງເຫຼືອ"
+  ໂອນໄປໃຊ້ໃນໃບບິນຂອງເດືອນຕໍ່ໄປ (ເງິນເກີນໃດໆຕ້ອງຖືກສົ່ງຄືນເປັນລາຍການແຍກຕ່າງຫາກ. ຫຼືເພີ່ມການອອກແບບໃນພາຍຫຼັງ)
+- **ໃບເກັບເງິນສາມາດຖືກຍົກເລີກເທົ່ານັ້ນທີ່ບໍ່ໄດ້ຮັບການຈ່າຍເງິນ** (`PaidAmount == 0`) ຖ້າຈ່າຍເງິນແລ້ວ, ເງິນຕ້ອງຖືກສົ່ງຄືນ
+  ລາຍການທີ່ໄດ້ຮັບການຢືນຢັນໃນເມື່ອກ່ອນດັ່ງນັ້ນບັນຊີລາຍການສາມາດຍົກເລີກໄດ້
+- **ບໍ່ມີສິດ "ສ້າງບົດລາຍງານການສ້ອມແປງ" ແຍກ** ສິດເດີມຂອງ Phase 1 ມີພຽງແຕ່ `maintenance.view/assign/update-status`
+  ດັ່ງນັ້ນ, ມັນຖືກຕີຄວາມວ່າການລາຍງານການສ້ອມແປງແມ່ນກໍານົດສະຖານະເລີ່ມຕົ້ນ (`Reported`) ໃຊ້ສິດຂອງເຈົ້າ `maintenance.update-status` ດຽວກັນ
+  ເຮັດ Staff ແລະ Technician (ຜູ້ທີ່ບໍ່ມີສິດ `assign`) ທ່ານສາມາດລາຍງານການສ້ອມແປງດ້ວຍຕົນເອງ RolePermissionDefaults
+  ມອບສິດພິເສດນີ້ໃຫ້ທັງສອງບົດບາດ — ຜູ້ເຊົ່າຍັງບໍ່ສາມາດລາຍງານການສ້ອມແປງດ້ວຍຕົນເອງໄດ້ (ບົດບາດ Tenant ບໍ່ມີສິດໃນໂມດູນນີ້ເລີຍ. ເຊັ່ນດຽວກັນກັບທຸກໂມດູນອື່ນໆ)
+- **ການແຕ່ງຕັ້ງນັກວິຊາການ (`POST /assign`) ແຍກອອກຈາກການຫັນປ່ຽນຂອງລັດທົ່ວໄປ (`PATCH /status`) ຕັ້ງໃຈ**
+  ເນື່ອງຈາກວ່າມັນຕ້ອງກວດເບິ່ງວ່າຜູ້ໃຊ້ທີ່ລະບຸໄວ້ມີບົດບາດ `Technician` ແລະຕົວຈິງແລ້ວໄດ້ຖືກມອບໝາຍໃຫ້ເບິ່ງແຍງຫໍພັກນັ້ນ (ຜ່ານ `UserDormitory`)
+  ກ່ອນທີ່ຈະບັນທຶກ — `PATCH /status` ປະຕິເສດທີ່ຈະຕັ້ງສະຖານະເປັນ `Assigned` ໂດຍກົງຢູ່ສະ ເໝີ
+- **ອະນຸຍາດໃຫ້ມອບໝາຍຄືນໃໝ່ (ປ່ຽນຊ່າງໃໝ່) ແມ່ນແລ້ວ, ຕາບໃດທີ່ວຽກບໍ່ໄດ້ປິດ** (`Reported`/`Assigned`/`InProgress`)
+  ບໍ່ຈໍາກັດພຽງແຕ່ຄັ້ງທໍາອິດໃນການສ້າງວຽກເຮັດງານທໍາ. ເພາະວຽກຕົວຈິງມັກຈະຕ້ອງປ່ຽນຊ່າງຊ່າງເມື່ອຄົນດຽວກັນຫຍຸ້ງກັບວຽກອື່ນ
+- **ຄໍາສັ່ງຂອງການຫັນປ່ຽນຂອງລັດທີ່ອະນຸຍາດໃຫ້ຖືກແກ້ໄຂ**: `Reported→Cancelled`, `Assigned→InProgress|Cancelled`,
+  `InProgress→Completed|Cancelled` ພຽງແຕ່ຂ້າມຂັ້ນຕອນ (ເຊັ່ນ `Reported→Completed`) ເຮັດບໍ່ໄດ້
+- **ສະຖານະຫ້ອງຈະປ່ຽນອັດຕະໂນມັດຄືກັບໂມດູນ Reservations/Contracts**: ແຕ່ງຕັ້ງນັກວິຊາການຄັ້ງທໍາອິດກັບຫ້ອງຫວ່າງ
+  (`Available`) → ປ່ຽນເປັນ `Maintenance`; ວຽກງານປິດ (`Completed`/`Cancelled`) ຫຼັງຈາກນັ້ນ, ຫ້ອງຈະກັບຄືນໄປບ່ອນ `Available`
+  ພຽງແຕ່ໃນເວລາທີ່ບໍ່ມີວຽກສ້ອມແປງອື່ນໆທີ່ຍັງຄ້າງຢູ່ໃນຫ້ອງດຽວກັນ — ຫ້ອງທີ່ບໍ່ຢູ່ໃນສະຖານະ `Available`/`Maintenance`
+  ໃນເວລານັ້ນ (ເຊັ່ນ `Occupied`) ຈະບໍ່ຖືກແຕະຕ້ອງເລີຍ ເພາະວ່າຫ້ອງເຊົ່າແລ້ວ, ບໍ່ຈໍາເປັນຕ້ອງປ້ອງກັນການຈອງຊ້ຳອີກ
+- **`RoomService.ChangeStatusAsync` (Endpoint ທົ່ວໄປຂອງຫ້ອງ) ບໍ່ມີການກວດສອບສະຖານະ** ຜູ້ໃຊ້ທີ່ມີສິດ
+  `rooms.change-status` ດັ່ງນັ້ນ, ສະຖານະຂອງຫ້ອງທີ່ມີວຽກສ້ອມແປງທີ່ຍັງຄ້າງໄດ້ຖືກປ່ຽນກັບຄືນໄປບ່ອນ `Available` ເຈົ້າສາມາດເຮັດມັນໄດ້ໂດຍກົງ
+  ການຫັນປ່ຽນສະຖານະອັດຕະໂນມັດຂອງໂມດູນນີ້ແມ່ນພຽງແຕ່ເພື່ອຊ່ວຍ. ມັນບໍ່ແມ່ນກົດລະບຽບລະດັບຖານຂໍ້ມູນ — ທີ່ຍອມຮັບໄດ້ໃນຂອບເຂດນີ້
+- **Reports ພຽງແຕ່ເລືອກທີ່ຈະເຮັດມັນ 2 ລາຍງານກ່ອນ** (ສະຫຼຸບລາຍຮັບ ແລະ ໃບແຈ້ງໜີ້ຄ້າງຈ່າຍ) ເນື່ອງຈາກວ່າເຫຼົ່ານີ້ແມ່ນສອງບົດລາຍງານທີ່ສ້າງຂຶ້ນໃນຂໍ້ມູນ
+  Invoice/Payment ທີ່ມີຢູ່ແລ້ວທັນທີໂດຍບໍ່ມີການມີການອອກແບບ Entity ໃໝ່ — ບໍ່ມີບົດລາຍງານສະຫຼຸບກ່ຽວກັບການພັກເຊົາ (Occupancy)
+  ເນື່ອງຈາກວ່າມັນຊໍ້າຊ້ອນກັບ `GET /rooms/summary` ທີ່ມີຢູ່ແລ້ວ (ແຕ່ລະຄົນມີສິດແຕກຕ່າງກັນ `rooms.view` ບໍ່ `reports.view`)
+  ແລະບໍ່ມີບົດລາຍງານສະຫຼຸບວຽກງານບໍາລຸງຮັກສາຫຼືບົດລາຍງານອື່ນໆ
+- **ສະຖານະ `Overdue` ໃບແຈ້ງໜີ້ຖືກຕັ້ງອັດຕະໂນມັດໂດຍ Background Job ປະຈໍາວັນ** (ເບິ່ງຫົວຂໍ້
+  [Background Jobs](#background-jobs)) ແຕ່ບົດລາຍງານທັງສອງຍັງຖືກຄິດໄລ່ "ເກີນກຳນົດ" ສົດໆຈາກການປຽບທຽບ `DueDate` ກັບ
+  ວັນທີປັດຈຸບັນໃນເວລາໂທແມ່ນຄືກັນກັບກ່ອນໜ້ານີ້. ແທນທີ່ຈະອ່ານຈາກ `Invoice.Status == Overdue` ໂດຍກົງເພື່ອໃຫ້ຜົນໄດ້ຮັບທີ່ຖືກຕ້ອງສະເຝີ
+  ເຖິງແມ່ນວ່າ Job ບໍ່ດົນມານີ້, ມັນບໍ່ໄດ້ດໍາເນີນການນັບຕັ້ງແຕ່ບັນຊີລາຍການຝົດອາຍຸ (Job ດໍາເນີນການພຽງແຕ່ຜຶ່ງຄັ້ງຕໍ່ມື້ມີເວລາທີ່ສະຖານະຍັງບໍ່ທັນໄດ້ປັບປຸງ)
+- **ສົ່ງອອກ CSV ຈໍາກັດບໍ່ເກີນ 5,000 ແຖວຕໍ່ຄໍາຮ້ອງຂໍ** (`ReportRepository.MaxExportRows`) ປ້ອງກັນການສະກັດເອົາຂໍ້ມູນຈໍານວນຫຼວງຫຼາຍ
+  ຫຼາຍເກີນໄປໃນຜຶ່ງຄໍາຮ້ອງຂໍຖ້າຫາກວ່າທ່ານຕ້ອງການຫຼາຍກ່ວານັ້ນ, ທ່ານຕ້ອງການກັ່ນຕອງມັນເຊັ່ນດຽວກັນ `dormitoryId`/ແຄບໄລຍະເວລາ ຫຼືແບ່ງອອກເປັນຫຼາຍຮອບ
+- **Deposits ແຍກອອກຈາກໂມດູນ Payments ສົມບູນ** ຢ່າໃຊ້ Invoice/Payment tied ກັບເງິນຝາກຈໍາເລີຍເນື່ອງຈາກວ່າມັນເປັນເງິນໄຫຼ
+  ແຕ່ລະອັນ (ຮັບປະກັນເງິນທີ່ຕ້ອງສົ່ງຄືນ ບໍ່ແມ່ນລາຍຮັບຕາມຮອບບິນ) ແລະບໍ່ມີສິດ `deposits.*` ຢູ່ໃນເອກະສານຕົ້ນສະບັບ
+  ດັ່ງນັ້ນຈຶ່ງເພີ່ມສິດໃຝ່ຕາມຮູບແບບດຽວກັນກັບທີ່ໄດ້ເຮັດຜ່ານມາ `reservations.*` ຢູ່ໃນເສັ້ນ Contracts
+- **ສັນຍາເຊົ່າຜຶ່ງໄດ້ຮັບພຽງແຕ່ຜຶ່ງເງິນຝາກ** ແລະສາມາດໄດ້ຮັບພຽງແຕ່ໃນຂະນະທີ່ສັນຍາຍັງບໍ່ທັນສິ້ນສຸດ (`Draft`/`Active`)
+  ສຳເນົາເລີ່ມຕົ້ນຈາກ `Contract.DepositAmount` ແຕ່ມັນສາມາດປັບເປັນຈໍານວນອື່ນໄດ້ເມື່ອໄດ້ຮັບຕົວຈິງ
+- **ເງິນຝາກແມ່ນສາມາດຄືນເງິນໄດ້ພຽງແຕ່ຫຼັງຈາກສັນຍາສິ້ນສຸດລົງ (`Terminated`) ເທົ່ານັ້ນ** ແລະສາມາດສົ່ງຄືນໄດ້ພຽງແຕ່ຄັ້ງດຽວຕໍ່ລາຍການ
+  (ບໍ່ຮອງຮັບການກັບຄືນມາໃນຫຼາຍໄລຍະເຊັ່ນ Payment) — ຖ້າຈໍານວນເງິນເຕັມບໍ່ຖືກສົ່ງຄືນ, ເຫດຜົນສໍາລັບການຫັກອອກຕ້ອງໄດ້ຮັບການລະບຸໄວ້ສະເຝີ
+  ກັບຄືນຫາ 0 ຝາຍຄວາມວ່າ forfeiting ເງິນຝາກທັງຝົດ (`Forfeited`)
+- **Receipts ສາມາດອອກໄດ້ຈາກທຸລະກໍາການຈ່າຍເງິນທີ່ຢືນຢັນ (`Payment.Status == Confirmed`)** ແລະສາມາດອອກໄດ້ຄັ້ງດຽວເທົ່ານັ້ນ
+  ຕໍ່ລາຍການການຈ່າຍເງິນ (unique index ສຸດ `PaymentId`) — ຖ້າລາຍການຖືກສົ່ງຄືນຫຼັງຈາກອອກໃບຮັບເງິນ
+  ໄປ, ໃບຮັບເງິນຕົ້ນສະບັບຈະຍັງຄົງເປັນຫຼັກຖານປະຫວັດສາດ. ບໍ່ໄດ້ຍົກເລີກອັດຕະໂນມັດ (ລະບົບຍັງບໍ່ທັນມີ Endpoint ຍົກເລີກ/ອອກໃໝ່
+  ໃບຮັບເງິນຖືກພິຈາລະນາຢູ່ນອກຂອບເຂດຂອງ Phase 2 ເສັ້ນນີ້)
+- **ຈຳນວນໃບຮັບເງິນທີ່ສຳເນົາມາຈາກ `Payment.Amount` ເມື່ອອອກໃບຮັບເງິນ (Snapshot)** ບໍ່ແມ່ນການອ້າງອີງສົດເພື່ອສະໜອງເອກະສານ
+  ເຊິ່ງຍັງຄົງຄົງທີ່ເຖິງແມ່ນວ່າຂໍ້ມູນຕົ້ນສະບັບຈະຖືກດັດແກ້ຕໍ່ມາ — ມັນຄ້າຍຄືກັບຫຼັກການດຽວກັນ `Contract.MonthlyRent`
+  ສຳເນົາມາຈາກ `Room.MonthlyRent` ເມື່ອເຮັດສັນຍາ
+- **Expenses ມັນເປັນປື້ມບັນທຶກຄ່າໃຊ້ຈ່າຍອັນບໍລິສຸດ. ບໍ່ມີສະຖານະຫຼື Workflow ອະນຸມັດ** ແຕກຕ່າງຈາກ Invoices/Payments
+  ເຊິ່ງແມ່ນດ້ານລາຍຮັບທີ່ມີ Draft/Issued/Confirmed ກະລຸນາກວດເບິ່ງເພາະວ່າບໍ່ມີຂໍ້ກໍານົດສໍາລັບການອະນຸມັດຄ່າໃຊ້ຈ່າຍ
+  ຈາກເອກະສານຕົ້ນສະບັບ — ຖ້າທ່ານຕ້ອງການ Workflow ການອະນຸມັດຕໍ່ມາ (ເຊັ່ນວ່າຕ້ອງຜ່ານ Owner ກ່ອນທີ່ຈະບັນທຶກຕົວຈິງ) ຕ້ອງການອອກແບບເພີ່ມເຕີມ
+- **ປະເພດຄ່າໃຊ້ຈ່າຍແມ່ນຖືກກໍານົດເປັນ Enum ຄົງທີ່ 6 ມູນຄ່າ** (Utilities, Maintenance, Salaries, Supplies, Marketing,
+  Other) ແທນທີ່ຈະໃຫ້ຜູ້ໃຊ້ໃນການກໍານົດປະເພດຂອງຕົນເອງໄດ້ຢ່າງເສລີ, ການຈັດກຸ່ມ/ສ້າງບົດລາຍງານສະຫຼຸບໄດ້ຢ່າງງ່າຍດາຍໃນອະນາຄົດ — ຖ້າມັນບໍ່ພຽງພໍ
+  ທ່ານຕ້ອງເພີ່ມມູນຄ່າໃຝ່ໃນ Enum (ມັນບໍ່ແມ່ນຕາຕະລາງປະເພດແຍກຕ່າງຫາກ. ເນື່ອງຈາກວ່າມັນເຫັນວ່າຈໍານວນປະເພດແມ່ນຄົງທີ່ແລະບໍ່ປ່ຽນແປງເລື້ອຍໆ)
+- **ບໍ່ມີສິດ `expenses.*` ໃຫ້ Staff/Technician** ເນື່ອງຈາກວ່າມັນຖືກເບິ່ງເປັນຂໍ້ມູນທາງດ້ານການເງິນພາຍໃນທີ່ບໍ່ຈໍາເປັນຕ້ອງໃຫ້
+  ພະນັກງານເຄົາເຕີມີການເຂົ້າເຖິງທີ່ແຕກຕ່າງກັນ Payments ທີ່ Staff ຍັງມີສິດ View ແມ່ນແລ້ວ (ເນື່ອງຈາກວ່າມັນກ່ຽວຂ້ອງໂດຍກົງກັບຜູ້ເຊົ່າ)
+- **Parcels ຜູກມັດກັບຫ້ອງ (`RoomId`) ສະເຝີ, ສໍາລັບຜູ້ເຊົ່າ (`TenantId`) ມັນເປັນທາງເລືອກ** ເພາະພະນັກງານເຄົາເຕີ
+  ມັນມັກຈະເປັນໄປໄດ້ທີ່ຈະບັນທຶກຊຸດທີ່ມາຮອດກ່ອນ, ຢືນຢັນວ່າຜູ້ເຊົ່າຢູ່ໃນຫ້ອງໃດ (ຫ້ອງໜຶ່ງອາດມີຜູ້ເຊົ່າຫຼາຍຄົນ)
+  ແລະຫ້ອງແມ່ນຜ່ວຍງານທີ່ຈໍາເປັນສໍາລັບຂອບເຂດຂອງອົງກອນ/ຫໍພັກ (`Tenant` ບໍ່ຜູກມັດກັບຫໍພັກຖາວອນເຊັ່ນ `Room`)
+- **ຜູ້ຮັບຕົວຈິງຂອງຊຸດແມ່ນບັນທຶກໄວ້ພາຍໃຕ້ຊື່ເອກະລາດ (`PickedUpByName`) ບໍ່ແມ່ນການອ້າງອີງ `TenantId`** ເນື່ອງຈາກວ່າໃນການປະຕິບັດ
+  ບຸກຄົນທີ່ມາຮັບເອົາອາດຈະບໍ່ແມ່ນຜູ້ເຊົ່າໂດຍກົງ (ເຊັ່ນ: ເພື່ອນຮ່ວມຫ້ອງ ຫຼືຍາດພີ່ນ້ອງມາຮັບແທນ) — ບໍ່ມີການຢັ້ງຢືນຕົວຕົນທີ່ເຄັ່ງຄັດອີກຕໍ່ໄປ
+- **ສິດ `parcels.*` ໃຫ້ Staff ເຕັມ** (View/Log/Pickup) ແຕກຕ່າງຈາກ Deposits/Receipts/Expenses ວ່າບໍ່ໃຫ້
+  Staff ທັງຝົດ, ເນື່ອງຈາກວ່າ parcels ແມ່ນວຽກງານປະຈໍາວັນໂດຍກົງຢູ່ທາງຜ້າຂອງ counter ໄດ້. ບໍ່ແມ່ນຂໍ້ມູນທາງດ້ານການເງິນພາຍໃນ — ໃຫ້ Accountant/Technician
+  ບໍ່ມີສິດໃດໆເພາະວ່າພວກເຂົາບໍ່ກ່ຽວຂ້ອງກັບການເຮັດວຽກຂອງສອງບົດບາດນີ້
+- **Visitors ອອກແບບໃນລັກສະນະດຽວກັນກັບ Parcels ໃນທຸກໆດ້ານ** (ສະເຝີ tied ກັບຫ້ອງຜູ້ເຊົ່າເປັນທາງເລືອກ, ສິດທີ່ໄດ້ຮັບ
+  Owner/DormManager/Staff ການບໍລິການເຕັມທີ່ຄືກັບການເຮັດວຽກຢູ່ເຄົາເຕີ) ເນື່ອງຈາກວ່າພວກເຂົາເຈົ້າແມ່ນກໍລະນີການນໍາໃຊ້ທີ່ຄ້າຍຄືກັນຫຼາຍ
+  (ບັນທຶກຄົນເຂົ້າມາ-ອອກໃຫ້ໂດຍຄົນທີ່ບໍ່ແມ່ນຜູ້ເຊົ່າເອງ) ພຽງແຕ່ແຕກຕ່າງກັນ Visitors ບໍ່ມີສະຖານະ "ສູນເສຍ/ຍົກເລີກ" ເພາະວ່າຂ້ອຍເຂົ້າ-ມີພຽງແຕ່ສອງລັດເທົ່ານັ້ນ
+- **ສາມາດເກັບກຳເລກບັດປະຈຳຕົວຂອງຜູ້ເຂົ້າຊົມ (`IdNumber`) ມັນເປັນທາງເລືອກ** ສໍາລັບຫໍພັກທີ່ຕ້ອງການບັນທຶກ
+  ເພື່ອຄວາມປອດໄພຕາມລະບຽບການພາຍໃນ, ແຕ່ບໍ່ຈໍາເປັນເພາະວ່າເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸກົດລະບຽບໃນພື້ນທີ່ນີ້
+  (ການພິຈາລະນາຄວນໄດ້ຮັບການຮັກສາຂໍ້ມູນສ່ວນຕົວໃຫ້ສອດຄ່ອງກັບ PDPA ກ່ອນທີ່ຈະຖ່າຍທອດສົດຖ້າຊ່ອງຂໍ້ມູນນີ້ຖືກເປີດໃຊ້)
+- **Parking ຜູ້ເຊົ່າຕ້ອງຖືກລະບຸສະເໝີ (`TenantId` ບັງຄັບ) ແຕກຕ່າງຈາກ Parcels/Visitors ວ່າຜູ້ເຊົ່າມີທາງເລືອກ**
+  ເນື່ອງຈາກວ່າໃນການປະຕິບັດລົດຕ້ອງມີເຈົ້າຂອງທີ່ກໍານົດຕົວສະເຝີ. ບໍ່ຄືກັບ parcel/ນັກທ່ອງທ່ຽວທີ່ອາດຈະຍັງບໍ່ທັນຮູ້
+  ມັນເປັນທີ່ຊັດເຈນເມື່ອມັນຖືກບັນທຶກຄັ້ງທໍາອິດ — ຫ້ອງຍັງຖືກເກັບຮັກສາໄວ້ສໍາລັບຂອບເຂດຂອງອົງກອນ/ຫໍພັກຕາມປົກກະຕິ
+- **ບໍ່ມີ Entity ແມ່ຂອງ "ບ່ອນຈອດລົດ" ແຍກ** (`ParkingSpotLabel` ຂໍ້ຄວາມແມ່ນບໍ່ເສຍຄ່າ ບໍ່ໄດ້ຜູກມັດກັບລະບົບການຈັດການ
+  ສະລັອດຕິງບ່ອນຈອດລົດຈໍາກັດຫຼືການຈອງລ່ວງຜ້າ) ເນື່ອງຈາກວ່າບໍ່ມີການສະຜອງໃນເລື່ອງນີ້ຈາກເອກະສານຕົ້ນສະບັບ. ຖ້າທ່ານຕ້ອງການຈັດການ
+  ບ່ອນຈອດລົດທີ່ເປັນລະບົບ (ຕົວຢ່າງ, ການຈໍາກັດຈໍານວນຊ່ອງທາງ, ປ້ອງກັນການປະທະກັນ) ຕ້ອງໄດ້ຮັບການອອກແບບຕໍ່ມາ
+- **ປົກປ້ອງພຽງແຕ່ການລົງທະບຽນຍານພາຫະນະດຽວກັນຍ້ອນວ່າມັນຍັງລົງທະບຽນ Active ຊ້ອນສອງລາຍການ** ມັນບໍ່ໄດ້ປົກປ້ອງຜູ້ເຊົ່າດຽວກັນ
+  ລົງທະບຽນລົດຫຼາຍຄັນໃນເວລາດຽວກັນ (ໃນຄວາມເປັນຈິງ, ອາດຈະມີຫຼາຍກວ່າຜຶ່ງລົດ) ແລະບໍ່ມີຂອບເຂດຈໍາກັດກ່ຽວກັບຈໍານວນລົດຕໍ່ຫ້ອງ/ຕໍ່ຜູ້ເຊົ່າ
+- **Announcement ຜູກມັດຢູ່ຫໍພັກໜຶ່ງສະເໝີ (`DormitoryId` ບັງຄັບ)** ບໍ່ຮອງຮັບການປະກາດວິສາຫະກິດພ້ອມກັນ
+  ທຸກໆຫໍພັກໃນອົງກອນ ເນື່ອງຈາກວ່າເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸລາຍລະອຽດຂອງໂມດູນນີ້ເລີຍ. ຖ້າທ່ານຕ້ອງການປະກາດໃນລະດັບບໍລິສັດ
+  ຕ້ອງການອອກແບບເພີ່ມເຕີມ (ຕົວຢ່າງ, ສ້າງການປະກາດແຍກຕ່າງຫາກສໍາລັບແຕ່ລະຫໍພັກຫຼືເພີ່ມ `DormitoryId` ທາງເລືອກຕໍ່ມາ)
+- **ວົງຈອນຊີວິດມີສາມສະຖານະຄົງທີ່**: `Draft` (ກໍ່ສ້າງຄືນໃໝ່) → `Published` (ເຜີຍແຜ່ຊຸດ `PublishedAt`) →
+  `Archived` (ເອົາເຂົ້າໄປໃນບ່ອນເກັບຮັກສາ) ຍ່າງໄປໃນທິດທາງດຽວ, ບໍ່ມີ Endpoint ແກ້ໄຂເນື້ອຫາຫຼືກັບຄືນຈາກ `Published` ໄປ `Draft`
+  ເນື່ອງຈາກວ່າເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸລາຍລະອຽດຂອງການປັບປຸງການປະກາດທີ່ໄດ້ພິມອອກແລ້ວ
+- **ບໍ່ມີສິດ `announcements.archive` ແຍກ** ໃຊ້ສິດຂອງເຈົ້າ `announcements.publish` ດຽວກັນກວມເອົາທັງສອງ
+  ການພິມເຜີຍແຜ່ ແລະເກັບຂໍ້ມູນ ເນື່ອງຈາກທັງສອງແມ່ນການປ່ຽນແປງສະຖານະທີ່ເຮັດໂດຍອົງກອນຈັດພິມດຽວກັນສະເໝີ
+  ໃນການປະຕິບັດ, ແຕກຕ່າງຈາກ Parcels/Visitors ທີ່ແຍກສິດ Log/Pickup ຫຼື CheckIn/CheckOut ເນື່ອງຈາກວ່າໃນກໍລະນີດັ່ງກ່າວມັນມັກຈະເຮັດໂດຍ
+  ພະນັກງານທີ່ແຕກຕ່າງກັນກ່ຽວກັບການປ່ຽນແປງທີ່ແຕກຕ່າງກັນ
+- **ສິດ `announcements.*` ໃຫ້ Owner/DormManager ເຕັມແຕ່ Staff ຂ້າພະເຈົ້າພຽງແຕ່ສາມາດ View** ແຕກຕ່າງຈາກ
+  Parcels/Visitors/Parking ທີ່ໃຫ້ Staff ຢ່າງເຕັມທີ່ເນື່ອງຈາກວ່າການປະກາດເປັນການສື່ສານຢ່າງເປັນທາງການຈາກການຄຸ້ມຄອງ
+  ມັນບໍ່ແມ່ນວຽກປະຈຳວັນຢູ່ໜ້າເຄົາເຕີ — Accountant/Technician ບໍ່ມີສິດໃດໆເພາະວ່າສອງບົດບາດນີ້ບໍ່ກ່ຽວຂ້ອງກັບການເຮັດວຽກ
+- **Notification ບໍ່ໄດ້ສືບທອດມາຈາກ `TenantEntity`** ບໍ່ເຝືອນກັບທຸກໂມດູນທີ່ຜ່ານມາຂອງ Phase 2 ເນື່ອງຈາກວ່າມັນຖືກຜູກມັດກັບຜູ້ໃຊ້ຜູ້ຮັບ
+  ໂດຍກົງ (`RecipientUserId`) ມັນບໍ່ແມ່ນຂໍ້ມູນທີ່ຕ້ອງໄດ້ຮັບການກັ່ນຕອງຜ່ານຫໍພັກ List Endpoint ທົ່ວໄປ — ໃຊ້ຄໍາແນະນໍາດຽວກັນກັບ
+  `AuditLog` ທີ່ບໍ່ໄດ້ໃຊ້ `TenantScope` ເນື່ອງຈາກວ່າມັນບໍ່ແມ່ນຊັບພະຍາກອນທີ່ຖືກແບ່ງປັນໂດຍຜູ້ໃຊ້ຫຼາຍຄົນໃນທົ່ວຂອບເຂດຂອງອົງກອນ/ຫໍພັກ
+- **ການເບິ່ງ ແລະໝາຍການແຈ້ງເຕືອນຕົນເອງວ່າອ່ານແລ້ວແມ່ນມີຢູ່ສະເໝີສຳລັບຜູ້ໃຊ້ທີ່ເຂົ້າສູ່ລະບົບທັງໝົດ** ບໍ່ໄດ້ຜູກມັດກັບ
+  ສິດໃດ? (`[Authorize]` ຄືກັນກັບ `GET /auth/me`) ເນື່ອງຈາກວ່າມັນເປັນຂໍ້ມູນຂອງຕົນເອງໂດຍກົງ ມັນບໍ່ແມ່ນຂໍ້ມູນທີ່ຈະຕ້ອງໄດ້ກວດສອບ
+  ບົດບາດ — ມີພຽງແຕ່ສິດ `notifications.send` ການອະນຸຍາດດຽວທີ່ຄວບຄຸມວ່າໃຜສາມາດສົ່ງການແຈ້ງເຕືອນໃຫ້ຄົນອື່ນ (Owner/DormManager)
+- **ການແຈ້ງເຕືອນສາມາດຖືກສົ່ງໄປຫາຜູ້ໃຊ້ຢູ່ໃນອົງກອນດຽວກັນເທົ່ານັ້ນ** (ຍົກເວັ້ນ SuperAdmin ສາມາດສົ່ງຜ່ານອົງກອນ) ກວດເບິ່ງຈາກ
+  `OrganizationId` ຂອງຜູ້ຮັບທຽບກັບຜູ້ສົ່ງ ຖ້າພວກເຂົາບໍ່ກົງກັນ, ຕອບ 404 ເພື່ອບໍ່ໃຫ້ຄາດເດົາວ່າມີຜູ້ໃຊ້ລະຫັດນັ້ນແທ້ໆ
+  ອົງກອນອື່ນໆປະຕິບັດຕາມຫຼັກການດຽວກັນກັບ `TenantScope.EnsureOrganizationAccess`
+- **ບໍ່ມີການແຈ້ງເຕືອນອັດຕະໂນມັດຈາກເຫດການອື່ນໆໃນລະບົບ** (ສໍາລັບຕົວຢ່າງ, ອອກໃບແຈ້ງຜີ້ແລະແຈ້ງໃຫ້ຜູ້ເຊົ່າ, ວຽກງານສ້ອມແປງແມ່ນສໍາເລັດ
+  ແຈ້ງຜູ້ໃຫ້ຂໍ້ມູນ) — ໂມດູນນີ້ແມ່ນພຽງແຕ່ກົນໄກການສົ່ງຕໍ່/ຮັບການແຈ້ງເຕືອນດ້ວຍມືເທົ່ານັ້ນ ການເຊື່ອມຕໍ່ອັດຕະໂນມັດກັບເຫດການ
+  ໂມດູນອື່ນໆຕ້ອງໄດ້ຮັບການອອກແບບຕໍ່ມາ (ເຊັ່ນ Domain Event ຫຼື Background Job)
+- **ຜູ້ຮັບແມ່ນ User ຂອງລະບົບ (ພະນັກງານ/ຜູ້ດູແລ) ເທົ່ານັ້ນ, ບໍ່ Tenant** ຍ້ອນບົດບາດ Tenant ຍັງບໍ່ທັນ Endpoint
+  ຫຼືກົນໄກການຢັ້ງຢືນຕົວຕົນແຍກຕ່າງຫາກສໍາລັບປະຕູຜູ້ເຊົ່າໃນຂອບເຂດນີ້ (ເບິ່ງຫົວຂໍ້ Tenants ເທິງ)
+- **Settings ຮັກສາມັນເປັນຄູ່ Key/Value ເອກະລາດກັບອົງກອນ** (`Setting.Key`/`Setting.Value` ມັນເປັນຂໍ້ຄວາມຟຣີ, ມັນບໍ່ແມ່ນ
+  ຖັນຄົງທີ່ຕັ້ງແຕ່ລະຄັ້ງ) ເນື່ອງຈາກວ່າເອກະສານຕົ້ນສະບັບບໍ່ໄດ້ລະບຸບັນຊີລາຍຊື່ຂອງການຕັ້ງຄ່າທີ່ກໍານົດໄວ້ທັງຝົດ. ມີພຽງແຕ່ສິດ
+  `settings.manage` ທີ່ໄດ້ລະບຸໄວ້ຕັ້ງແຕ່ນັ້ນມາ Phase 1 ບ່ອນຈັດເກັບຂໍ້ມູນຟຣີອະນຸຍາດໃຫ້ທ່ານເພີ່ມການຕັ້ງຄ່າໃໝ່ໃນອະນາຄົດໄດ້ໂດຍບໍ່ຈໍາເປັນຕ້ອງ
+  Migration ທຸກຄັ້ງ, ໃນການແລກປ່ຽນສໍາລັບການບໍ່ມີ Type Safety ຫຼື Validation ສະເພາະແຕ່ລະການຕັ້ງຄ່າ (ຝັ່ງ Client ເຈົ້າຕ້ອງຮູ້ຈັກຕົວເອງ
+  ລະຫັດໃດຄວນມີຮູບແບບມູນຄ່າໃດ?) — ມັນບໍ່ທັບຊ້ອນກັບການຕັ້ງຄ່າທີ່ມີໂຄງສ້າງທີ່ຊັດເຈນ, ເຊັ່ນ: ການຕັ້ງຄ່າການເອີ້ນເກັບເງິນຂອງ
   `Dormitory` (`BillingDay`, `PaymentDueDay`, `LateFeeType/Amount`, `WaterRatePerUnit`/`ElectricityRatePerUnit`)
-- **Settings เป็นระดับองค์กรเท่านั้น ไม่ใช่ระดับหอพัก** (`Setting` สืบทอดจาก `BaseEntity` ไม่ใช่ `TenantEntity`
-  เหมือน `Tenant`) เพราะสิทธิ์ `settings.manage` เดิมของ Phase 1 อยู่ในหมวด Administration ระดับองค์กร
-  ไม่มีสัญญาณว่าต้องแยกค่าตั้งรายหอพัก ถ้าต้องการค่าตั้งเฉพาะหอพักในอนาคต ควรเพิ่มฟิลด์ที่ `Dormitory`
-  โดยตรงเหมือนค่าตั้งบิลที่มีอยู่แล้ว ไม่ใช่ขยายโมดูลนี้
-- **สร้างและแก้ไขใช้ `PUT` เดียวกัน (Upsert) แทนที่จะแยก `POST`/`PUT`** เพราะคีย์เป็นตัวระบุตัวตนของค่าตั้ง
-  อยู่แล้ว (ไม่มี ID แยกที่ต้องสร้างก่อนถึงจะแก้ไขได้) — เรียก `PUT` ซ้ำด้วยคีย์เดิมกี่ครั้งก็ได้ผลลัพธ์เดิมเสมอ
-  (Idempotent) ตรงกับความหมายของ HTTP `PUT` มากกว่า `POST`
-- **Unique Index บน `(organization_id, key)` กรองด้วย `is_deleted = false`** (ไม่ใช่ Unique Index เฉย ๆ)
-  ตามรูปแบบเดียวกับทุก Unique Index ของ Entity ที่ใช้ Soft Delete ในระบบ (เช่น `Deposit.ContractId`,
-  `Receipt.PaymentId`) เพื่อให้สร้างค่าตั้งคีย์เดิมซ้ำได้หลังจากลบรายการเดิมไปแล้ว — ถ้าลืมใส่ Filter
-  จะลบไม่ได้จริงเพราะแถวเดิมยังอยู่ในฐานข้อมูล (Soft Delete) และชนกับ Unique Index ทันทีที่สร้างใหม่
+- **Settings ມັນເປັນລະດັບບໍລິສັດເທົ່ານັ້ນ. ບໍ່ແມ່ນລະດັບຫໍພັກ** (`Setting` ສືບທອດມາຈາກ `BaseEntity` ບໍ່ `TenantEntity`
+  ມັກ `Tenant`) ເພາະສິດ `settings.manage` ຕົ້ນສະບັບຂອງ Phase 1 ຢູ່ໃນປະເພດ Administration ລະດັບວິສາຫະກິດ
+  ບໍ່ມີສັນຍານທີ່ຈະຈຳເປັນຕ້ອງແຍກຄ່າທຳນຽມຂອງແຕ່ລະຫໍພັກ. ຖ້າຫາກວ່າທ່ານຕ້ອງການທີ່ຈະສ້າງຕັ້ງພຽງແຕ່ຫໍພັກໃນອະນາຄົດພາກສະຜາມຄວນຈະໄດ້ຮັບການເພີ່ມເຂົ້າໄປໃນ `Dormitory`
+  ໂດຍກົງຄືກັບການຕັ້ງຄ່າໃບບິນທີ່ມີຢູ່ກ່ອນແລ້ວ ໂມດູນນີ້ບໍ່ໄດ້ຖືກຂະຫຍາຍອອກ
+- **ສ້າງແລະແກ້ໄຂການນໍາໃຊ້ `PUT` ດຽວກັນ (Upsert) ແທນທີ່ຈະແຍກ `POST`/`PUT`** ເນື່ອງຈາກວ່າກຸນແຈແມ່ນຕົວຕົນຂອງການຕັ້ງຄ່າ
+  ແລ້ວ (ບໍ່ມີ ID ການແບ່ງປັນທີ່ຕ້ອງຖືກສ້າງຂຶ້ນກ່ອນທີ່ຈະສາມາດແກ້ໄຂໄດ້) — ໂທ `PUT` ບໍ່ວ່າທ່ານເຮັດຊ້ຳກະແຈອັນດຽວກັນຫຼາຍປານໃດ, ທ່ານກໍໄດ້ຮັບຜົນຄືກັນສະເໝີ
+  (Idempotent) ສອດຄ້ອງກັບຄວາມຝາຍຂອງ HTTP `PUT` ຫຼາຍກວ່າ `POST`
+- **Unique Index ສຸດ `(organization_id, key)` ການກັ່ນຕອງດ້ວຍ `is_deleted = false`** (ບໍ່ Unique Index indifferent)
+  ປະຕິບັດຕາມຮູບແບບດຽວກັນກັບທັງຝົດ Unique Index ຂອງ Entity ໃຊ້ Soft Delete ໃນລະບົບ (ເຊັ່ນ `Deposit.ContractId`,
+  `Receipt.PaymentId`) ນີ້ອະນຸຍາດໃຫ້ທ່ານສ້າງການຕັ້ງຄ່າລະຫັດດຽວກັນຄືນໃຝ່ຫຼັງຈາກລຶບລາຍການຕົ້ນສະບັບ — ຖ້າລືມໃສ່ Filter
+  ມັນບໍ່ສາມາດຖືກລຶບໄດ້ຢ່າງແທ້ຈິງເພາະວ່າແຖວຕົ້ນສະບັບຍັງຢູ່ໃນຖານຂໍ້ມູນ (Soft Delete) ແລະ collided ກັບ Unique Index ທັນທີທີ່ສ້າງໃຝ່
 
-### ยังไม่ทำ
+### ຍັງບໍ່ແລ້ວ
 
-ไม่มีส่วนใดของ Phase 2 เหลือค้างอยู่ — ทุกโมดูลที่ระบุชื่อไว้ในเอกสารต้นฉบับถูกสร้างแล้วครบถ้วน
-รายการที่ยังไม่ทำในระบบทั้งหมดคือ Endpoint ยืนยันรหัส Two-Factor Authentication ของ Phase 1
-(ดูหัวข้อ [ขอบเขตของขั้นตอนที่ 1](#ขอบเขตของขั้นตอนที่-1)) และการทบทวนสมมติฐานทางธุรกิจทั้งหมดของ
-Phase 2 กับเจ้าของระบบจริงก่อนใช้งานจริง (ดูรายการทั้งหมดในหัวข้อด้านบน)
+ບໍ່ມີສ່ວນຜຶ່ງຂອງ Phase 2 ຍັງເຫຼືອ — ໂມດູນທັງຝົດທີ່ມີຊື່ໃນເອກະສານຕົ້ນສະບັບແມ່ນຖືກສ້າງຂຶ້ນຢ່າງເຕັມສ່ວນ
+ລາຍການທັງໝົດທີ່ຍັງບໍ່ທັນສຳເລັດໃນລະບົບແມ່ນ: Endpoint ຢືນຢັນລະຫັດ Two-Factor Authentication ຂອງ Phase 1
+(ເບິ່ງຫົວຂໍ້ [ຂອບເຂດຂອງຂັ້ນຕອນ 1](#ຂອບເຂດຂອງຂັ້ນຕອນ-1)) ແລະທົບທວນຄືນສົມມຸດຕິຖານທຸລະກິດທັງຝົດ
+Phase 2 ກັບເຈົ້າຂອງລະບົບຕົວຈິງກ່ອນທີ່ຈະໃຊ້ມັນ (ເບິ່ງບັນຊີລາຍຊື່ເຕັມຢູ່ໃນພາກຂ້າງເທິງ)

@@ -2,13 +2,13 @@
 
   <!--
     Central Package Management
-    ทุก PackageVersion ถูกกำหนดที่ไฟล์เดียวนี้
-    โปรเจกต์ย่อยประกาศแค่ <PackageReference Include="..." /> โดยไม่ต้องใส่ Version
+    ທຸກໆ PackageVersion ຖືກກໍານົດໄວ້ໃນເອກະສານດຽວນີ້
+    ໂຄງການຍ່ອຍພຽງແຕ່ປະກາດ <PackageReference Include="..." /> ໂດຍບໍ່ມີການນຸ່ງເສື້ອ Version
   -->
 
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- เวอร์ชันกลางของ .NET 10 stack -->
+    <!-- ຮຸ່ນກາງຂອງ .NET 10 stack -->
     <MicrosoftExtensionsVersion>10.0.11</MicrosoftExtensionsVersion>
     <EfCoreVersion>10.0.11</EfCoreVersion>
   </PropertyGroup>
@@ -55,21 +55,21 @@
   </ItemGroup>
 
   <ItemGroup Label="Background Jobs">
-    <!-- ใช้ PostgreSQL เดียวกับฐานข้อมูลหลักเป็น Job Storage ไม่ต้องเพิ่ม Redis หรือบริการแยก -->
+    <!-- ໃຊ້ PostgreSQL ຄືກັນກັບຖານຂໍ້ມູນຫຼັກ Job Storage ບໍ່ຈໍາເປັນຕ້ອງເພີ່ມ Redis ຫຼືການບໍລິການແຍກຕ່າງຫາກ -->
     <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.24" />
     <PackageVersion Include="Hangfire.PostgreSql" Version="1.21.1" />
     <!--
-      Hangfire.Core ดึง Newtonsoft.Json 11.0.1 มาแบบ transitive ซึ่งมีช่องโหว่ความรุนแรงสูงที่ทราบแล้ว
-      (GHSA-5crp-9r3c-p9vr) ต้องปักเวอร์ชันที่แก้ไขแล้วตรงนี้เพื่อบังคับให้ Dependency Graph ทั้งหมดใช้เวอร์ชันนี้แทน
+      Hangfire.Core ດຶງ Newtonsoft.Json 11.0.1 ມາຄື transitive ຊຶ່ງເປັນທີ່ຮູ້ຈັກຄວາມສ່ຽງຄວາມຮຸນແຮງສູງ
+      (GHSA-5crp-9r3c-p9vr) ສະບັບທີ່ແກ້ໄຂຕ້ອງຖືກປັກໝຸດຢູ່ບ່ອນນີ້ເພື່ອບັງຄັບມັນ Dependency Graph ທັງໝົດໃຊ້ເວີຊັນນີ້ແທນ
     -->
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">
     <PackageVersion Include="xunit.v3" Version="4.0.0" />
     <!--
-      FluentAssertions 7.x เป็นเวอร์ชันสุดท้ายที่ใช้สัญญาอนุญาต Apache-2.0
-      ตั้งแต่ 8.x เป็นต้นไปต้องซื้อ license สำหรับการใช้งานเชิงพาณิชย์
+      FluentAssertions 7.x ນີ້ແມ່ນສະບັບສຸດທ້າຍໂດຍໃຊ້ໃບອະນຸຍາດ Apache-2.0
+      ນັບຕັ້ງແຕ່ 8.x ຕ້ອງຊື້ຕໍ່ໄປ license ສໍາລັບການນໍາໃຊ້ທາງການຄ້າ
     -->
     <PackageVersion Include="FluentAssertions" Version="7.2.2" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />

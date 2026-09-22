@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลสำหรับสร้างรายงานบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນເພື່ອສ້າງບົດລາຍງານກ່ຽວກັບ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ReportRepository(DormFlowDbContext dbContext) : IReportRepository
 {
-    /// <summary>จำนวนแถวสูงสุดที่ยอมส่งออกในคำขอเดียว ป้องกันการดึงข้อมูลจำนวนมากเกินไปในคำขอเดียว</summary>
+    /// <summary>ຈໍານວນແຖວສູງສຸດທີ່ອະນຸຍາດໃຫ້ສົ່ງອອກໃນຄໍາຮ້ອງຂໍດຽວ. ປ້ອງກັນການດຶງຂໍ້ມູນຫຼາຍເກີນໄປໃນຄໍາຮ້ອງຂໍດຽວ</summary>
     private const int MaxExportRows = 5000;
 
     private static readonly InvoiceStatus[] OpenInvoiceStatuses = [InvoiceStatus.Issued, InvoiceStatus.PartiallyPaid];
@@ -46,6 +46,22 @@ public sealed class ReportRepository(DormFlowDbContext dbContext) : IReportRepos
         return aggregate is null
             ? new RevenueSummary(0, 0, 0, 0, 0)
             : new RevenueSummary(aggregate.Count, aggregate.PaidCount, overdueCount, aggregate.TotalInvoiced, aggregate.TotalCollected);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<RevenueTrendSummary>> GetRevenueTrendAsync(
+        RevenueReportFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        return await ApplyRevenueFilter(_dbContext.Invoices.AsNoTracking(), filter)
+            .GroupBy(invoice => invoice.PeriodMonth)
+            .Select(group => new RevenueTrendSummary(
+                group.Key,
+                group.Sum(invoice => invoice.PaidAmount)))
+            .OrderBy(summary => summary.PeriodMonth)
+            .ToListAsync(cancellationToken);
     }
 
     /// <inheritdoc />

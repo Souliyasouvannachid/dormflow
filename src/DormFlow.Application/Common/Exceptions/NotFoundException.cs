@@ -1,39 +1,39 @@
 namespace DormFlow.Application.Common.Exceptions;
 
 /// <summary>
-/// ไม่พบข้อมูลที่ร้องขอ หรือผู้ใช้ไม่มีสิทธิ์เห็นข้อมูลนั้น
-/// ชั้น API จะแปลงเป็น HTTP 404
+/// ບໍ່ພົບຂໍ້ມູນທີ່ຮ້ອງຂໍ. ຫຼືຜູ້ໃຊ້ບໍ່ມີສິດທີ່ຈະເຫັນຂໍ້ມູນນັ້ນ
+/// ຊັ້ນ API ຈະປ່ຽນເປັນ HTTP 404
 /// </summary>
 /// <remarks>
-/// เมื่อข้อมูลอยู่นอกขอบเขตองค์กรของผู้ใช้ ให้ตอบ 404 แทน 403
-/// เพื่อไม่ให้ผู้เรียกเดาได้ว่ามีข้อมูลนั้นอยู่จริงในองค์กรอื่น
+/// ເມື່ອຂໍ້ມູນຢູ່ນອກຂອບເຂດອົງກອນຂອງຜູ້ໃຊ້, ຕອບສະໜອງ 404 ແທນ 403
+/// ເພື່ອປ້ອງກັນບໍ່ໃຫ້ຜູ້ໂທຄາດເດົາວ່າຂໍ້ມູນນັ້ນມີຢູ່ໃນອົງກອນອື່ນ
 /// </remarks>
 public class NotFoundException : Exception
 {
-    /// <summary>สร้าง Exception พร้อมข้อความเริ่มต้น</summary>
+    /// <summary>ສ້າງ Exception ດ້ວຍຂໍ້ຄວາມເບື້ອງຕົ້ນ</summary>
     public NotFoundException()
-        : base("ไม่พบข้อมูลที่ต้องการ")
+        : base("ບໍ່ພົບຂໍ້ມູນທີ່ຕ້ອງການ")
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความที่กำหนดเอง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມທີ່ກໍາຜົດເອງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
     public NotFoundException(string message)
         : base(message)
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความและ Exception ต้นทาง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
-    /// <param name="innerException">Exception ต้นทาง</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມແລະ Exception ຕົ້ນກໍາເນີດ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
+    /// <param name="innerException">Exception ຕົ້ນກໍາເນີດ</param>
     public NotFoundException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    /// <summary>สร้าง Exception จากชื่อ Entity และคีย์ที่ค้นหา</summary>
-    /// <param name="entityName">ชื่อ Entity เช่น Room</param>
-    /// <param name="key">คีย์ที่ใช้ค้นหา</param>
+    /// <summary>ສ້າງ Exception ຈາກຊື່ Entity ແລະກະແຈທີ່ຄົ້ນຫາ</summary>
+    /// <param name="entityName">ຊື່ Entity ເຊັ່ນ Room</param>
+    /// <param name="key">ກະແຈຄົ້ນຫາ</param>
     public static NotFoundException For(string entityName, object key)
-        => new($"ไม่พบข้อมูล {entityName} ที่อ้างอิง {key}");
+        => new($"ບໍ່ພົບຂໍ້ມູນ {entityName} ທີ່ອ້າງອີງ {key}");
 }

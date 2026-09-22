@@ -3,30 +3,30 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Domain.Entities;
 
-/// <summary>ประเภทห้องพักหนึ่งแบบภายในหอพัก เช่น ห้องแอร์ ห้องพัดลม</summary>
+/// <summary>ປະເພດຫ້ອງໜຶ່ງພາຍໃນຫໍພັກ ເຊັ່ນ: ຫ້ອງແອ ແລະ ຫ້ອງພັດລົມ</summary>
 public class RoomType : TenantEntity
 {
-    /// <summary>รหัสประเภทห้อง ไม่ซ้ำกันภายในหอพักเดียวกัน</summary>
+    /// <summary>ລະຫັດປະເພດຫ້ອງບໍ່ຊໍ້າກັນພາຍໃນຫໍພັກດຽວກັນ</summary>
     public required string Code { get; set; }
 
-    /// <summary>ชื่อประเภทห้อง</summary>
+    /// <summary>ຊື່ປະເພດຫ້ອງ</summary>
     public required string Name { get; set; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>ค่าเช่ารายเดือน</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນ</summary>
     public decimal MonthlyRent { get; set; }
 
-    /// <summary>ค่าเช่ารายวัน เป็น null เมื่อประเภทห้องนี้ไม่รองรับการเช่ารายวัน</summary>
+    /// <summary>ຄ່າເຊົ່າປະຈໍາວັນແມ່ນ null ເມື່ອຫ້ອງປະເພດນີ້ບໍ່ຮອງຮັບການເຊົ່າປະຈໍາວັນ</summary>
     public decimal? DailyRent { get; set; }
 
-    /// <summary>ค่ามัดจำ</summary>
+    /// <summary>ຝາກ</summary>
     public decimal DepositAmount { get; set; }
 
-    /// <summary>จำนวนผู้เข้าพักสูงสุด</summary>
+    /// <summary>ຈຳນວນແຂກສູງສຸດ</summary>
     public int MaximumOccupants { get; set; } = 1;
 
-    /// <summary>สถานะของประเภทห้อง</summary>
+    /// <summary>ສະຖານະປະເພດຫ້ອງ</summary>
     public RoomTypeStatus Status { get; set; } = RoomTypeStatus.Active;
 }

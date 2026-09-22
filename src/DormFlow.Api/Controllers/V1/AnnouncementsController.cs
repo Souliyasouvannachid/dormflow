@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการประกาศ</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງການປະກາດ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/announcements")]
@@ -17,7 +17,7 @@ public sealed class AnnouncementsController(IAnnouncementService announcementSer
 {
     private readonly IAnnouncementService _announcementService = announcementService;
 
-    /// <summary>ดึงรายการประกาศแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ການປະກາດແບບ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Announcements.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<AnnouncementResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class AnnouncementsController(IAnnouncementService announcementSer
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลประกาศหนึ่งฉบับ</summary>
+    /// <summary>ອ່ານປະກາດຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Announcements.View)]
     [ProducesResponseType(typeof(ApiResponse<AnnouncementResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class AnnouncementsController(IAnnouncementService announcementSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างประกาศใหม่ในสถานะร่าง</summary>
+    /// <summary>ສ້າງການປະກາດໃໝ່ໃນສະຖານະສະບັບຮ່າງ</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Announcements.Create)]
     [ProducesResponseType(typeof(ApiResponse<AnnouncementResponse>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ public sealed class AnnouncementsController(IAnnouncementService announcementSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>เผยแพร่ประกาศ</summary>
+    /// <summary>ປະກາດ</summary>
     [HttpPost("{id:guid}/publish")]
     [RequirePermission(PermissionCodes.Announcements.Publish)]
     [ProducesResponseType(typeof(ApiResponse<AnnouncementResponse>), StatusCodes.Status200OK)]
@@ -70,7 +70,7 @@ public sealed class AnnouncementsController(IAnnouncementService announcementSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>เก็บประกาศเข้าคลัง</summary>
+    /// <summary>ປະກາດການເກັບຮັກສາໃນສາງ</summary>
     [HttpPost("{id:guid}/archive")]
     [RequirePermission(PermissionCodes.Announcements.Publish)]
     [ProducesResponseType(typeof(ApiResponse<AnnouncementResponse>), StatusCodes.Status200OK)]

@@ -14,7 +14,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Invoices;
 
-/// <summary>Use Case ทั้งหมดของโมดูลใบแจ้งหนี้</summary>
+/// <summary>Use Case ໂມດູນໃບແຈ້ງໜີ້ທັງໝົດ</summary>
 public sealed class InvoiceService(
     IInvoiceRepository repository,
     IContractRepository contractRepository,
@@ -26,8 +26,9 @@ public sealed class InvoiceService(
     IValidator<CreateInvoiceRequest> createValidator) : IInvoiceService
 {
     private const string AuditEntityName = "Invoice";
+    private const int OverdueBatchSize = 500;
 
-    /// <summary>จำนวนครั้งสูงสุดที่ลองสุ่มเลขที่ใบแจ้งหนี้ใหม่เมื่อชนกับที่มีอยู่แล้ว</summary>
+    /// <summary>ຈຳນວນຄັ້ງສູງສຸດເພື່ອລອງໃຊ້ໝາຍເລກໃບແຈ້ງໜີ້ໃໝ່ແບບສຸ່ມເມື່ອມີການຕຳກັນກັບອັນທີ່ມີຢູ່ແລ້ວ</summary>
     private const int MaxInvoiceNumberAttempts = 5;
 
     private static readonly string[] AllowedSortFields = ["invoiceNumber", "periodMonth", "dueDate", "status", "createdAt"];
@@ -80,24 +81,24 @@ public sealed class InvoiceService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Contract contract = await _contractRepository.GetByIdAsync(request.ContractId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบสัญญาเช่าที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບສັນຍາເຊົ່າທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             contract.OrganizationId,
             contract.DormitoryId.GetValueOrDefault(),
-            "ไม่พบสัญญาเช่าที่ระบุ");
+            "ບໍ່ພົບສັນຍາເຊົ່າທີ່ລະບຸ");
 
         if (contract.Status != ContractStatus.Active)
         {
-            throw new ConflictException("ออกใบแจ้งหนี้ได้เฉพาะสัญญาเช่าที่เปิดใช้งานอยู่เท่านั้น");
+            throw new ConflictException("ສາມາດອອກໃບແຈ້ງໜີ້ໄດ້ສະເພາະສັນຍາເຊົ່າທີ່ເປີດໃຊ້ງານຢູ່ເທົ່ານັ້ນ");
         }
 
         DateOnly periodMonth = NormalizeToFirstOfMonth(request.PeriodMonth);
 
         if (await _repository.ExistsForContractPeriodAsync(contract.Id, periodMonth, cancellationToken))
         {
-            throw new ConflictException("สัญญาเช่านี้ถูกออกใบแจ้งหนี้ของเดือนที่ระบุไปแล้ว");
+            throw new ConflictException("ສັນຍາເຊົ່ານີ້ຖືກອອກໃບແຈ້ງໜີ້ຂອງເດືອນທີ່ລະບຸໄປແລ້ວ");
         }
 
         Dormitory? dormitory = contract.DormitoryId.HasValue
@@ -152,7 +153,7 @@ public sealed class InvoiceService(
 
         if (invoice.Status != InvoiceStatus.Draft)
         {
-            throw new ConflictException("ออกให้ผู้เช่าได้เฉพาะใบแจ้งหนี้ที่ยังเป็นร่างเท่านั้น");
+            throw new ConflictException("ສາມາດອອກໃຫ້ຜູ້ເຊົ່າໄດ້ສະເພາະໃບແຈ້ງໜີ້ທີ່ຍັງເປັນສະບັບຮ່າງເທົ່ານັ້ນ");
         }
 
         invoice.Status = InvoiceStatus.Issued;
@@ -177,12 +178,12 @@ public sealed class InvoiceService(
 
         if (invoice.Status == InvoiceStatus.Cancelled)
         {
-            throw new ConflictException("ใบแจ้งหนี้นี้ถูกยกเลิกไปแล้ว");
+            throw new ConflictException("ໃບແຈ້ງໜີ້ນີ້ຖືກຍົກເລີກໄປແລ້ວ");
         }
 
         if (invoice.PaidAmount > 0)
         {
-            throw new ConflictException("ยกเลิกไม่ได้เพราะมีการชำระเงินเข้ามาแล้ว ต้องคืนเงินรายการที่ชำระไว้ก่อน");
+            throw new ConflictException("ບໍ່ສາມາດຍົກເລີກໄດ້ເນື່ອງຈາກມີການຊຳລະເງິນເຂົ້າມາແລ້ວ ຕ້ອງຄືນເງິນລາຍການທີ່ຊຳລະໄວ້ກ່ອນ");
         }
 
         invoice.Status = InvoiceStatus.Cancelled;
@@ -204,42 +205,66 @@ public sealed class InvoiceService(
     public async Task<int> MarkOverdueInvoicesAsync(CancellationToken cancellationToken = default)
     {
         DateOnly today = DateOnly.FromDateTime(_dateTimeProvider.UtcNow.UtcDateTime);
+        int overdueCount = 0;
 
-        IReadOnlyList<Invoice> overdueCandidates = await _repository.GetOverdueCandidatesAsync(today, cancellationToken);
-
-        foreach (Invoice invoice in overdueCandidates)
+        while (true)
         {
-            Dormitory? dormitory = invoice.DormitoryId.HasValue
-                ? await _dormitoryRepository.GetByIdAsync(invoice.DormitoryId.Value, cancellationToken)
-                : null;
+            IReadOnlyList<Invoice> overdueCandidates = await _repository.GetOverdueCandidatesAsync(
+                today,
+                OverdueBatchSize,
+                cancellationToken);
 
-            decimal lateFee = CalculateLateFee(invoice, dormitory);
+            if (overdueCandidates.Count == 0)
+            {
+                break;
+            }
 
-            invoice.LateFeeAmount += lateFee;
-            invoice.TotalAmount += lateFee;
-            invoice.Status = InvoiceStatus.Overdue;
+            IReadOnlyDictionary<Guid, Dormitory> dormitories = await _dormitoryRepository.GetByIdsAsync(
+                overdueCandidates
+                    .Where(invoice => invoice.DormitoryId.HasValue)
+                    .Select(invoice => invoice.DormitoryId!.Value)
+                    .Distinct()
+                    .ToArray(),
+                cancellationToken);
 
-            await _auditLogWriter.WriteAsync(
-                AuditAction.ChangeStatus,
-                AuditEntityName,
-                invoice.Id.ToString(),
-                organizationId: invoice.OrganizationId,
-                newValues: $$"""{"status":"{{InvoiceStatus.Overdue}}","lateFeeAmount":{{lateFee}}}""",
-                cancellationToken: cancellationToken);
-        }
+            foreach (Invoice invoice in overdueCandidates)
+            {
+                Dormitory? dormitory = invoice.DormitoryId.HasValue
+                    && dormitories.TryGetValue(invoice.DormitoryId.Value, out Dormitory? loadedDormitory)
+                    ? loadedDormitory
+                    : null;
 
-        if (overdueCandidates.Count > 0)
-        {
+                decimal lateFee = CalculateLateFee(invoice, dormitory);
+
+                invoice.LateFeeAmount += lateFee;
+                invoice.TotalAmount += lateFee;
+                invoice.Status = InvoiceStatus.Overdue;
+
+                await _auditLogWriter.WriteAsync(
+                    AuditAction.ChangeStatus,
+                    AuditEntityName,
+                    invoice.Id.ToString(),
+                    organizationId: invoice.OrganizationId,
+                    newValues: $$"""{"status":"{{InvoiceStatus.Overdue}}","lateFeeAmount":{{lateFee}}}""",
+                    cancellationToken: cancellationToken);
+            }
+
             await _repository.SaveChangesAsync(cancellationToken);
+            overdueCount += overdueCandidates.Count;
+
+            if (overdueCandidates.Count < OverdueBatchSize)
+            {
+                break;
+            }
         }
 
-        return overdueCandidates.Count;
+        return overdueCount;
     }
 
     /// <summary>
-    /// คำนวณค่าปรับชำระล่าช้าตอนใบแจ้งหนี้เปลี่ยนเป็น Overdue
-    /// แบบร้อยละคิดจากยอดคงเหลือ (TotalAmount - PaidAmount) ณ เวลานั้น ไม่ใช่ยอดเต็มของบิล
-    /// เพื่อไม่ให้ลงโทษซ้ำกับยอดที่ชำระไปแล้วบางส่วน
+    /// ຄິດໄລ່ຄ່າປັບໃໝການຈ່າຍເງິນຊ້າເມື່ອໃບແຈ້ງໜີ້ປ່ຽນເປັນ Overdue
+    /// ເປີເຊັນຄິດໄລ່ຈາກຍອດຍັງເຫຼືອ (TotalAmount - PaidAmount) ໃນເວລານັ້ນ, ມັນບໍ່ແມ່ນຈໍານວນເຕັມຂອງໃບບິນຄ່າ
+    /// ເພື່ອບໍ່ໃຫ້ມີການລົງໂທດອີກເທື່ອຜຶ່ງດ້ວຍຈໍານວນທີ່ຈ່າຍແລ້ວ
     /// </summary>
     private static decimal CalculateLateFee(Invoice invoice, Dormitory? dormitory)
     {
@@ -301,19 +326,19 @@ public sealed class InvoiceService(
             }
         }
 
-        throw new InvalidOperationException("ไม่สามารถสุ่มเลขที่ใบแจ้งหนี้ที่ไม่ซ้ำกันได้ กรุณาลองใหม่อีกครั้ง");
+        throw new InvalidOperationException("ບໍ່ສາມາດສຸ່ມເລກທີໃບແຈ້ງໜີ້ທີ່ບໍ່ຊ້ຳກັນໄດ້ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ");
     }
 
     private async Task<Invoice> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Invoice invoice = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลใบแจ้งหนี้ที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນໃບແຈ້ງໜີ້ທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             invoice.OrganizationId,
             invoice.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลใบแจ้งหนี้ที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນໃບແຈ້ງໜີ້ທີ່ຕ້ອງການ");
 
         return invoice;
     }

@@ -3,18 +3,18 @@ using Microsoft.Extensions.Options;
 
 namespace DormFlow.Api.Configuration;
 
-/// <summary>ตั้งค่า CORS จาก configuration เท่านั้น</summary>
+/// <summary>ຕັ້ງຄ່າ CORS ຈາກ configuration ເທົ່ານັ້ນ</summary>
 public static class CorsConfiguration
 {
     /// <summary>
-    /// ลงทะเบียน CORS policy ตามรายการ Origin ที่กำหนดไว้ใน configuration
+    /// ລົງທະບຽນ CORS policy ອີງຕາມບັນຊີລາຍຊື່ Origin ລະບຸໄວ້ໃນ configuration
     /// </summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
-    /// <param name="environment">สภาพแวดล้อมที่กำลังทำงาน</param>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="environment">ສະພາບແວດລ້ອມແລ່ນ</param>
     /// <exception cref="InvalidOperationException">
-    /// เมื่อรันใน Production แต่ไม่ได้ระบุ Origin ที่อนุญาตไว้เลย
-    /// ระบบจะไม่ยอมสตาร์ต แทนที่จะเผลอเปิดกว้างให้ทุก Origin
+    /// ເມື່ອແລ່ນເຂົ້າ Production ແຕ່ບໍ່ໄດ້ລະບຸ Origin ວ່າອະນຸຍາດ
+    /// ລະບົບຈະບໍ່ເລີ່ມຕົ້ນ. ແທນທີ່ຈະເປີດມັນຂຶ້ນກັບທຸກຄົນໂດຍບັງເອີນ Origin
     /// </exception>
     public static IServiceCollection AddDormFlowCors(
         this IServiceCollection services,
@@ -38,24 +38,17 @@ public static class CorsConfiguration
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        if (allowedOrigins.Length == 0 && environment.IsProduction())
+        if (allowedOrigins.Length == 0)
         {
             throw new InvalidOperationException(
-                "ไม่พบรายการ Cors:AllowedOrigins สำหรับ Production " +
-                "กำหนดผ่าน environment variable ชื่อ Cors__AllowedOrigins__0 เป็นต้นไป");
+                "ບໍ່ພົບລາຍການ Cors:AllowedOrigins ສຳລັບສະພາບແວດລ້ອມ " +
+                $"{environment.EnvironmentName} " +
+                "ກຳນົດຜ່ານ environment variable ຊື່ Cors__AllowedOrigins__0 ເປັນຕົ້ນໄປ");
         }
 
         services.AddCors(options => options.AddPolicy(CorsOptions.PolicyName, policy =>
         {
-            if (allowedOrigins.Length == 0)
-            {
-                // เกิดได้เฉพาะนอก Production เท่านั้น เพราะกรณี Production ถูกดักไว้ด้านบนแล้ว
-                policy.SetIsOriginAllowed(_ => true);
-            }
-            else
-            {
-                policy.WithOrigins(allowedOrigins);
-            }
+            policy.WithOrigins(allowedOrigins);
 
             policy.AllowAnyHeader()
                 .AllowAnyMethod()
@@ -66,8 +59,8 @@ public static class CorsConfiguration
         return services;
     }
 
-    /// <summary>อ่านรายการ Origin ที่อนุญาตหลังการลงทะเบียน ใช้ตอนบันทึก Log ตอนสตาร์ต</summary>
-    /// <param name="services">Service provider ของแอปพลิเคชัน</param>
+    /// <summary>ອ່ານລາຍການ Origin ອະນຸຍາດຫຼັງຈາກການລົງທະບຽນ, ໃຊ້ໃນເວລາບັນທຶກ Log ເມື່ອເລີ່ມຕົ້ນ</summary>
+    /// <param name="services">Service provider ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IReadOnlyList<string> GetAllowedOrigins(this IServiceProvider services)
     {
         ArgumentNullException.ThrowIfNull(services);

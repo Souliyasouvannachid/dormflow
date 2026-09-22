@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลงานแจ้งซ่อมบำรุงบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການບຳລຸງຮັກສາຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class MaintenanceRequestRepository(DormFlowDbContext dbContext) : IMaintenanceRequestRepository
 {
     private static readonly MaintenanceStatus[] OpenStatuses =
@@ -89,6 +89,43 @@ public sealed class MaintenanceRequestRepository(DormFlowDbContext dbContext) : 
         requests = ApplySort(requests, query);
 
         return requests.ToPagedResultAsync(query, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<MaintenanceStatus, int>> GetStatusCountsAsync(
+        MaintenanceRequestListFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        IQueryable<MaintenanceRequest> requests = _dbContext.MaintenanceRequests.AsNoTracking();
+
+        if (filter.OrganizationId.HasValue)
+        {
+            requests = requests.Where(request => request.OrganizationId == filter.OrganizationId.Value);
+        }
+
+        if (filter.DormitoryId.HasValue)
+        {
+            requests = requests.Where(request => request.DormitoryId == filter.DormitoryId.Value);
+        }
+
+        if (filter.RoomId.HasValue)
+        {
+            requests = requests.Where(request => request.RoomId == filter.RoomId.Value);
+        }
+
+        if (filter.RestrictToDormitoryIds is not null)
+        {
+            requests = requests.Where(request =>
+                request.DormitoryId != null && filter.RestrictToDormitoryIds.Contains(request.DormitoryId.Value));
+        }
+
+        return await requests
+            .Where(request => OpenStatuses.Contains(request.Status))
+            .GroupBy(request => request.Status)
+            .Select(group => new { group.Key, Count = group.Count() })
+            .ToDictionaryAsync(item => item.Key, item => item.Count, cancellationToken);
     }
 
     /// <inheritdoc />

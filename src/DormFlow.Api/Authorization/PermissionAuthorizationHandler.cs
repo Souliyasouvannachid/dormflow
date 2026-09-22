@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace DormFlow.Api.Authorization;
 
 /// <summary>
-/// ตรวจว่าผู้ใช้มีสิทธิ์ตามที่ <see cref="PermissionRequirement"/> ระบุหรือไม่
+/// ກວດສອບວ່າຜູ້ໃຊ້ມີສິດຕາມທີ່ລະບຸໄວ້ <see cref="PermissionRequirement"/> ລະບຸຫຼືບໍ່
 /// </summary>
 /// <remarks>
-/// อ่านสิทธิ์จาก Claim ของ Access Token ทั้งหมด ไม่ยิงฐานข้อมูลเพิ่ม
-/// SuperAdmin ผ่านทุกข้อกำหนดเสมอผ่านตรรกะใน <see cref="ICurrentUser.HasPermission"/>
+/// ອ່ານການອະນຸຍາດຈາກ Claim ຂອງ Access Token ທັງຝົດ, ບໍ່ມີໄຟຖານຂໍ້ມູນເພີ່ມເຕີມ
+/// SuperAdmin ສະເຝີຜ່ານຄວາມຕ້ອງການທັງຝົດໂດຍຜ່ານ logic in <see cref="ICurrentUser.HasPermission"/>
 /// </remarks>
 public sealed class PermissionAuthorizationHandler(ICurrentUser currentUser)
     : AuthorizationHandler<PermissionRequirement>

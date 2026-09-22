@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 namespace DormFlow.Application.Features.Authentication;
 
 /// <summary>
-/// Use Case ทั้งหมดที่เกี่ยวกับการยืนยันตัวตน
+/// Use Case ທັງໝົດກ່ຽວກັບການຢັ້ງຢືນຕົວຕົນ
 /// </summary>
 /// <remarks>
-/// คลาสนี้ตัดสินใจเชิงธุรกิจอย่างเดียว ไม่รู้จัก HTTP, EF Core หรือ Identity
-/// รายละเอียดเหล่านั้นอยู่หลัง interface ที่ชั้น Infrastructure เป็นผู้ให้บริการ
+/// ຫ້ອງຮຽນນີ້ເຮັດການຕັດສິນໃຈທາງທຸລະກິດເທົ່ານັ້ນ. ບໍ່ຮູ້ຈັກ HTTP, EF Core ຫຼື Identity
+/// ລາຍລະອຽດເຫຼົ່ານັ້ນແມ່ນຢູ່ເບື້ອງຫຼັງ interface ຢູ່ເທິງພື້ນ Infrastructure ເປັນຜູ້ໃຫ້ບໍລິການ
 /// </remarks>
 public sealed class AuthenticationService(
     IUserAccountService userAccountService,
@@ -31,7 +31,7 @@ public sealed class AuthenticationService(
     IValidator<ChangePasswordRequest> changePasswordValidator,
     ILogger<AuthenticationService> logger) : IAuthenticationService
 {
-    /// <summary>ชื่อ Entity ที่ใช้กำกับเหตุการณ์เกี่ยวกับการยืนยันตัวตนใน Audit Log</summary>
+    /// <summary>ຊື່ Entity ໃຊ້ເພື່ອຄວບຄຸມເຫດການທີ່ກ່ຽວຂ້ອງກັບການຢັ້ງຢືນຕົວຕົນໃນ Audit Log</summary>
     private const string AuditEntityName = "Authentication";
 
     private readonly IUserAccountService _userAccountService = userAccountService;
@@ -102,8 +102,8 @@ public sealed class AuthenticationService(
 
         if (validation.Status == RefreshTokenValidationStatus.ReuseDetected)
         {
-            // การเพิกถอนทั้งสายโทเคนเกิดขึ้นแล้วภายใน ValidateAsync
-            // ที่นี่เหลือแค่บันทึกเหตุการณ์เพื่อให้ทีมความปลอดภัยตรวจสอบย้อนหลังได้
+            // ການຍົກເລີກລະບົບຕ່ອງໂສ້ໂທເຄັນທັງໝົດໄດ້ເກີດຂຶ້ນພາຍໃນແລ້ວ ValidateAsync
+            // ທີ່ນີ້, ທັງຝົດທີ່ເຫຼືອແມ່ນການບັນທຶກເຫດການເພື່ອໃຫ້ທີມງານຄວາມປອດໄພສາມາດທົບທວນຄືນໄດ້
             AuthenticationLog.RefreshTokenReuseDetected(_logger, validation.UserId, _currentUser.IpAddress);
 
             await _auditLogWriter.WriteAsync(
@@ -113,7 +113,7 @@ public sealed class AuthenticationService(
                 validation.UserId,
                 cancellationToken: cancellationToken);
 
-            throw new UnauthorizedAccessException("Refresh Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+            throw new UnauthorizedAccessException("Refresh Token ບໍ່ຖືກຕ້ອງ ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່");
         }
 
         if (validation.Status != RefreshTokenValidationStatus.Valid
@@ -135,7 +135,7 @@ public sealed class AuthenticationService(
                 _currentUser.IpAddress,
                 cancellationToken);
 
-            throw new UnauthorizedAccessException("บัญชีนี้ถูกปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบ");
+            throw new UnauthorizedAccessException("ບັນຊີນີ້ຖືກປິດການນຳໃຊ້ ກະລຸນາຕິດຕໍ່ຜູ້ດູແລລະບົບ");
         }
 
         AccessToken accessToken = _accessTokenGenerator.Generate(profile);
@@ -169,7 +169,7 @@ public sealed class AuthenticationService(
             _currentUser.IpAddress,
             cancellationToken);
 
-        // ไม่บอกผู้เรียกว่าโทเคนมีอยู่จริงหรือไม่ เพื่อไม่ให้ใช้ endpoint นี้ตรวจสอบความมีอยู่ของโทเคน
+        // ມັນບໍ່ໄດ້ບອກອັນທີ່ເອີ້ນວ່າ tokens ວ່າພວກມັນມີຢູ່ແທ້ຫຼືບໍ່. ເພື່ອບໍ່ໃຫ້ໃຊ້ endpoint ນີ້ກວດສອບການມີຢູ່ຂອງໂທເຄັນ
         if (!revoked)
         {
             AuthenticationLog.LogoutWithInactiveToken(_logger);
@@ -194,8 +194,8 @@ public sealed class AuthenticationService(
         string email = request.Email.Trim();
         string? token = await _userAccountService.GeneratePasswordResetTokenAsync(email, cancellationToken);
 
-        // ตอบข้อความเดียวกันเสมอไม่ว่าจะพบบัญชีหรือไม่
-        // เพื่อไม่ให้ endpoint นี้ถูกใช้ไล่ตรวจว่าอีเมลใดมีบัญชีอยู่ในระบบบ้าง
+        // ຕອບກັບຂໍ້ຄວາມດຽວກັນສະເໝີວ່າພົບບັນຊີນັ້ນຫຼືບໍ່
+        // ໃນຄໍາສັ່ງທີ່ຈະບໍ່ endpoint ນີ້ແມ່ນໃຊ້ເພື່ອກວດເບິ່ງວ່າອີເມລ໌ໃດມີບັນຊີຢູ່ໃນລະບົບ
         if (token is null)
         {
             AuthenticationLog.ForgotPasswordForUnknownAccount(_logger);
@@ -205,15 +205,15 @@ public sealed class AuthenticationService(
         await _emailSender.SendAsync(
             new EmailMessage(
                 email,
-                "ตั้งรหัสผ่านใหม่สำหรับ DormFlow",
+                "ຕັ້ງລະຫັດຜ່ານໃໝ່ສຳລັບ DormFlow",
                 $"""
-                 คุณได้ขอตั้งรหัสผ่านใหม่สำหรับบัญชี {email}
+                 ທ່ານໄດ້ຂໍຕັ້ງລະຫັດຜ່ານໃໝ່ສຳລັບບັນຊີ {email}
 
-                 โทเคนสำหรับตั้งรหัสผ่านใหม่:
+                 ໂທເຄນສຳລັບຕັ້ງລະຫັດຜ່ານໃໝ່:
                  {token}
 
-                 นำโทเคนนี้ไปใช้กับ POST /api/v1/auth/reset-password ภายในเวลาที่กำหนด
-                 หากคุณไม่ได้เป็นผู้ขอ ไม่ต้องดำเนินการใด ๆ รหัสผ่านเดิมยังใช้งานได้ตามปกติ
+                 ນຳໂທເຄນນີ້ໄປໃຊ້ກັບ POST /api/v1/auth/reset-password ພາຍໃນເວລາທີ່ກຳນົດ
+                 ຫາກທ່ານບໍ່ໄດ້ເປັນຜູ້ຂໍ ບໍ່ຕ້ອງດຳເນີນການໃດໆ ລະຫັດຜ່ານເດີມຍັງໃຊ້ງານໄດ້ຕາມປົກກະຕິ
                  """),
             cancellationToken);
 
@@ -243,13 +243,13 @@ public sealed class AuthenticationService(
             throw new ValidationFailedException(
                 result.Errors.Count > 0
                     ? string.Join(" ", result.Errors)
-                    : "ตั้งรหัสผ่านใหม่ไม่สำเร็จ โทเคนอาจหมดอายุหรือถูกใช้ไปแล้ว");
+                    : "ຕັ້ງລະຫັດຜ່ານໃໝ່ບໍ່ສຳເລັດ ໂທເຄນອາດໝົດອາຍຸຫຼືຖືກໃຊ້ໄປແລ້ວ");
         }
 
         UserSecurityProfile? profile = await _userAccountService.GetSecurityProfileByEmailAsync(email, cancellationToken);
         if (profile is not null)
         {
-            // รหัสผ่านเปลี่ยนแล้ว เซสชันเดิมทั้งหมดต้องหมดสิทธิ์ทันที
+            // ການປ່ຽນລະຫັດຜ່ານ ເຊດຊັນຕົ້ນສະບັບທັງໝົດຈະຕ້ອງຖືກຕັດສິດໃນທັນທີ
             await _refreshTokenService.RevokeAllForUserAsync(
                 profile.UserId,
                 RefreshTokenRevocationReason.PasswordChanged,
@@ -287,7 +287,7 @@ public sealed class AuthenticationService(
             throw new ValidationFailedException(
                 result.Errors.Count > 0
                     ? string.Join(" ", result.Errors)
-                    : "เปลี่ยนรหัสผ่านไม่สำเร็จ");
+                    : "ປ່ຽນລະຫັດຜ່ານບໍ່ສຳເລັດ");
         }
 
         await _refreshTokenService.RevokeAllForUserAsync(
@@ -313,7 +313,7 @@ public sealed class AuthenticationService(
 
         if (profile is null)
         {
-            throw new NotFoundException("ไม่พบข้อมูลผู้ใช้ของโทเคนนี้");
+            throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ໃຊ້ຂອງໂທເຄນນີ້");
         }
 
         return ToCurrentUserResponse(profile);
@@ -340,8 +340,8 @@ public sealed class AuthenticationService(
         UserAuthenticationResult result,
         CancellationToken cancellationToken)
     {
-        // ไม่บันทึกอีเมลหรือรหัสผ่านลงใน Audit Log เพราะเป็นข้อมูลที่ระบุตัวบุคคลได้
-        // บันทึกเฉพาะสาเหตุ ส่วนหมายเลข IP และ User Agent ถูกเติมให้อัตโนมัติ
+        // ຢ່າບັນທຶກອີເມວ ຫຼືລະຫັດຜ່ານຂອງທ່ານໄວ້ໃນ Audit Log ເນື່ອງຈາກວ່າມັນເປັນຂໍ້ມູນສ່ວນບຸກຄົນ
+        // ບັນທຶກພຽງແຕ່ສາເຫດ, ເປັນສໍາລັບຈໍານວນ IP ແລະ User Agent ຖືກຕື່ມໃສ່ໂດຍອັດຕະໂນມັດ
         AuthenticationLog.LoginFailed(_logger, _currentUser.IpAddress, result.Status);
 
         await _auditLogWriter.WriteAsync(
@@ -353,7 +353,7 @@ public sealed class AuthenticationService(
 
     private Guid RequireAuthenticatedUserId()
         => _currentUser.UserId
-            ?? throw new UnauthorizedAccessException("กรุณาเข้าสู่ระบบก่อนใช้งานคำสั่งนี้");
+            ?? throw new UnauthorizedAccessException("ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນນຳໃຊ້ຄຳສັ່ງນີ້");
 
     private static AuthTokenResponse BuildResponse(
         AccessToken accessToken,
@@ -388,42 +388,42 @@ public sealed class AuthenticationService(
         };
 
     /// <summary>
-    /// แปลงสาเหตุที่เข้าสู่ระบบไม่สำเร็จเป็น Exception
+    /// ແປງເຫດຜົນການເຂົ້າສູ່ລະບົບລົ້ມເຫຼວ Exception
     /// </summary>
     /// <remarks>
-    /// กรณีอีเมลไม่มีอยู่จริงกับกรณีรหัสผ่านผิด ตอบข้อความเดียวกันเสมอ
-    /// เพื่อไม่ให้ผู้โจมตีใช้หน้าเข้าสู่ระบบไล่ตรวจว่าอีเมลใดมีบัญชีอยู่
+    /// ໃນກໍລະນີທີ່ຢູ່ອີເມລ໌ທີ່ບໍ່ມີຕົວຈິງແລະໃນກໍລະນີຂອງລະຫັດຜ່ານຜິດພາດສະເຝີຕອບກັບຂໍ້ຄວາມດຽວກັນ
+    /// ນີ້ແມ່ນເພື່ອປ້ອງກັນບໍ່ໃຫ້ຜູ້ໂຈມຕີໃຊ້ຜ້າເຂົ້າສູ່ລະບົບເພື່ອກວດເບິ່ງວ່າມີບັນຊີອີເມວໃດ
     /// </remarks>
     private static Exception ToLoginException(UserAuthenticationResult result) => result.Status switch
     {
         UserAuthenticationStatus.LockedOut => new ForbiddenAccessException(
             result.LockoutEndAt is null
-                ? "บัญชีนี้ถูกล็อกชั่วคราวเพราะกรอกรหัสผ่านผิดหลายครั้ง"
-                : $"บัญชีนี้ถูกล็อกชั่วคราว กรุณาลองใหม่หลัง {result.LockoutEndAt.Value.ToLocalTime():HH:mm}"),
+                ? "ບັນຊີນີ້ຖືກລັອກຊົ່ວຄາວເພາະປ້ອນລະຫັດຜ່ານຜິດຫຼາຍຄັ້ງ"
+                : $"ບັນຊີນີ້ຖືກລັອກຊົ່ວຄາວ ກະລຸນາລອງໃໝ່ຫຼັງ {result.LockoutEndAt.Value.ToLocalTime():HH:mm}"),
 
         UserAuthenticationStatus.AccountDisabled => new ForbiddenAccessException(
-            "บัญชีนี้ถูกปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบ"),
+            "ບັນຊີນີ້ຖືກປິດການນຳໃຊ້ ກະລຸນາຕິດຕໍ່ຜູ້ດູແລລະບົບ"),
 
         UserAuthenticationStatus.OrganizationDisabled => new ForbiddenAccessException(
-            "องค์กรของคุณถูกระงับการใช้งาน กรุณาติดต่อผู้ดูแลระบบ"),
+            "ອົງກອນຂອງທ່ານຖືກລະງັບການນຳໃຊ້ ກະລຸນາຕິດຕໍ່ຜູ້ດູແລລະບົບ"),
 
         UserAuthenticationStatus.RequiresTwoFactor => new ForbiddenAccessException(
-            "บัญชีนี้เปิดการยืนยันตัวตนสองขั้นตอนไว้ กรุณายืนยันตัวตนขั้นที่สอง"),
+            "ບັນຊີນີ້ເປີດການຢືນຢັນຕົວຕົນສອງຂັ້ນຕອນໄວ້ ກະລຸນາຢືນຢັນຕົວຕົນຂັ້ນທີສອງ"),
 
-        _ => new UnauthorizedAccessException("อีเมลหรือรหัสผ่านไม่ถูกต้อง"),
+        _ => new UnauthorizedAccessException("ອີເມວຫຼືລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ"),
     };
 
     private static Exception ToRefreshException(RefreshTokenValidationStatus status) => status switch
     {
         RefreshTokenValidationStatus.Expired =>
-            new UnauthorizedAccessException("Refresh Token หมดอายุแล้ว กรุณาเข้าสู่ระบบใหม่"),
+            new UnauthorizedAccessException("Refresh Token ໝົດອາຍຸແລ້ວ ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່"),
 
         RefreshTokenValidationStatus.Revoked =>
-            new UnauthorizedAccessException("Refresh Token ถูกเพิกถอนไปแล้ว กรุณาเข้าสู่ระบบใหม่"),
+            new UnauthorizedAccessException("Refresh Token ຖືກເພີກຖອນໄປແລ້ວ ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່"),
 
         RefreshTokenValidationStatus.AccountDisabled =>
-            new ForbiddenAccessException("บัญชีนี้ถูกปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบ"),
+            new ForbiddenAccessException("ບັນຊີນີ້ຖືກປິດການນຳໃຊ້ ກະລຸນາຕິດຕໍ່ຜູ້ດູແລລະບົບ"),
 
-        _ => new UnauthorizedAccessException("Refresh Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่"),
+        _ => new UnauthorizedAccessException("Refresh Token ບໍ່ຖືກຕ້ອງ ກະລຸນາເຂົ້າສູ່ລະບົບໃໝ່"),
     };
 }

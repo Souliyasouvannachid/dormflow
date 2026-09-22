@@ -3,24 +3,24 @@ using DormFlow.Contracts.Deposits;
 
 namespace DormFlow.Application.Features.Deposits;
 
-/// <summary>Use Case ทั้งหมดของโมดูลเงินมัดจำ</summary>
+/// <summary>Use Case ໂມດູນເງິນຝາກທັງໝົດ</summary>
 public interface IDepositService
 {
-    /// <summary>ดึงรายการเงินมัดจำแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ເງິນຝາກທີ່ແບ່ງອອກເປັນໜ້າ</summary>
     Task<PagedResult<DepositResponse>> GetPagedAsync(
         DepositListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลเงินมัดจำจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນເງິນຝາກຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<DepositResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการรับเงินมัดจำใหม่ สัญญาเช่าหนึ่งฉบับรับได้เพียงครั้งเดียว</summary>
+    /// <summary>ບັນທຶກການໄດ້ຮັບເງິນຝາກໃຝ່ ສັນຍາເຊົ່າຜຶ່ງສາມາດໄດ້ຮັບການຍອມຮັບພຽງແຕ່ຄັ້ງດຽວ</summary>
     Task<DepositResponse> CollectAsync(
         CollectDepositRequest request,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// คืนเงินมัดจำ ทำได้เฉพาะสัญญาเช่าที่สิ้นสุดแล้วและเงินมัดจำที่ยังไม่เคยคืน ทำได้เพียงครั้งเดียวต่อรายการ
+    /// ການຄືນເງິນເງິນຝາກສາມາດໃຊ້ໄດ້ພຽງແຕ່ສໍາລັບການເຊົ່າທີ່ສິ້ນສຸດລົງແລະເງິນຝາກທີ່ຍັງບໍ່ໄດ້ສົ່ງຄືນ. ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ຜຶ່ງຄັ້ງຕໍ່ລາຍການ
     /// </summary>
     Task<DepositResponse> RefundAsync(
         Guid id,

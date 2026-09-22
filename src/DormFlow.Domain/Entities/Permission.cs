@@ -3,26 +3,26 @@ using DormFlow.Domain.Common;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// สิทธิ์การใช้งานหนึ่งรายการ เช่น rooms.create
+/// ໃບອະນຸຍາດຜຶ່ງ, e.g rooms.create
 /// </summary>
 /// <remarks>
-/// เป็นข้อมูลอ้างอิงที่ระบบสร้างให้เองตอน Seed ไม่ได้ให้ผู้ใช้เพิ่มเอง
-/// เพราะทุกรหัสสิทธิ์ต้องมีจุดที่ตรวจสอบอยู่ในโค้ดจริง
+/// ມັນເປັນການອ້າງອີງທີ່ລະບົບສ້າງສໍາລັບຕົວມັນເອງ Seed ມັນບໍ່ໃຫ້ຜູ້ໃຊ້ເພີ່ມມັນດ້ວຍຕົນເອງ
+/// ເນື່ອງຈາກວ່າທຸກໆລະຫັດສິດພິເສດຕ້ອງມີຈຸດກວດກາຢູ່ໃນລະຫັດຕົວຈິງ
 /// </remarks>
 public class Permission : BaseEntity
 {
-    /// <summary>รหัสสิทธิ์ที่ใช้อ้างอิงในโค้ดและใน Claim ของ Access Token</summary>
+    /// <summary>ລະຫັດການອະນຸຍາດທີ່ໃຊ້ສໍາລັບການອ້າງອີງໃນລະຫັດແລະໃນ Claim ຂອງ Access Token</summary>
     public required string Code { get; set; }
 
-    /// <summary>ชื่อสิทธิ์สำหรับแสดงผล</summary>
+    /// <summary>ສະແດງຊື່ການອະນຸຍາດ</summary>
     public required string Name { get; set; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>โมดูลที่สิทธิ์นี้สังกัด ใช้จัดกลุ่มในหน้าจอกำหนดสิทธิ์</summary>
+    /// <summary>ໂມດູນທີ່ສິດອະນຸຍາດນີ້ແມ່ນໃຊ້ກັບກຸ່ມກຸ່ມໃນຜ້າຈໍການອະນຸຍາດ</summary>
     public required string Module { get; set; }
 
-    /// <summary>บทบาทที่ได้รับสิทธิ์นี้</summary>
+    /// <summary>ບົດບາດທີ່ມີສິດພິເສດນີ້</summary>
     public ICollection<RolePermission> RolePermissions { get; } = [];
 }

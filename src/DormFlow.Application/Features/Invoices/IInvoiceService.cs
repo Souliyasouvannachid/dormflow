@@ -3,35 +3,35 @@ using DormFlow.Contracts.Invoices;
 
 namespace DormFlow.Application.Features.Invoices;
 
-/// <summary>Use Case ทั้งหมดของโมดูลใบแจ้งหนี้</summary>
+/// <summary>Use Case ໂມດູນໃບແຈ້ງໜີ້ທັງໝົດ</summary>
 public interface IInvoiceService
 {
-    /// <summary>ดึงรายการใบแจ้งหนี้แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ໄດ້ວາງໄວ້ແລ້ວ</summary>
     Task<PagedResult<InvoiceResponse>> GetPagedAsync(
         InvoiceListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลใบแจ้งหนี้จากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນໃບແຈ້ງໜີ້ຈາກລະຫັດອ້າງອີງ</summary>
     Task<InvoiceResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// สร้างใบแจ้งหนี้ใหม่ในสถานะร่าง คำนวณค่าน้ำ-ไฟจากค่ามิเตอร์ของเดือนที่ระบุให้อัตโนมัติ
+    /// ສ້າງໃບແຈ້ງໜີ້ໃໝ່ໃນສະຖານະສະບັບຮ່າງ. ຄິດໄລ່ໃບບິນຄ່ານ້ໍາ-ໄຟຟ້າຈາກຄ່າແມັດຂອງເດືອນທີ່ກໍານົດອັດຕະໂນມັດ
     /// </summary>
     Task<InvoiceResponse> CreateAsync(
         CreateInvoiceRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ออกใบแจ้งหนี้ให้ผู้เช่า (Draft → Issued)</summary>
+    /// <summary>ອອກໃບແຈ້ງໜີ້ໃຫ້ຜູ້ເຊົ່າ (Draft → Issued)</summary>
     Task<InvoiceResponse> IssueAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ยกเลิกใบแจ้งหนี้ ทำได้เฉพาะเมื่อยังไม่มีการชำระเงินเข้ามา</summary>
+    /// <summary>ຍົກເລີກໃບແຈ້ງໜີ້ ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ຖ້າຍັງບໍ່ໄດ້ຮັບການຈ່າຍເງິນເທື່ອ</summary>
     Task<InvoiceResponse> CancelAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ทำเครื่องหมายใบแจ้งหนี้ที่เลยวันครบกำหนดชำระแล้ว (Issued/PartiallyPaid ที่ DueDate ผ่านไปแล้ว) ให้เป็น
-    /// Overdue พร้อมคำนวณค่าปรับชำระล่าช้าตามค่าตั้งของหอพักครั้งเดียวตอนเปลี่ยนสถานะ เรียกโดย Background Job
-    /// เป็นระยะ ทำงานข้ามทุกองค์กร ไม่มีการตรวจสิทธิ์ผู้ใช้
+    /// ໝາຍໃບແຈ້ງໜີ້ທີ່ຜ່ານວັນທີຮອດກຳນົດ (Issued/PartiallyPaid ທີ່ DueDate ມັນໄດ້ຜ່ານໄປ) ໃຫ້ມັນເປັນ
+    /// Overdue ຄຽງຄູ່ກັບການຄິດໄລ່ຄ່າປັບໃໝການຊໍາລະຊ້າຕາມການກຳນົດຂອງຫໍພັກຄັ້ງດຽວ ເມື່ອປ່ຽນສະຖານະ, ເອີ້ນໂດຍ Background Job
+    /// ແຕ່ລະໄລຍະ, ເຮັດວຽກທົ່ວທຸກອົງກອນ. ບໍ່ມີການກວດສອບຜູ້ໃຊ້
     /// </summary>
-    /// <returns>จำนวนรายการที่ถูกทำเครื่องหมายเกินกำหนดในการเรียกครั้งนี้</returns>
+    /// <returns>ຈຳນວນລາຍການທີ່ຖືກໝາຍວ່າໝົດກຳນົດໃນການໂທນີ້</returns>
     Task<int> MarkOverdueInvoicesAsync(CancellationToken cancellationToken = default);
 }

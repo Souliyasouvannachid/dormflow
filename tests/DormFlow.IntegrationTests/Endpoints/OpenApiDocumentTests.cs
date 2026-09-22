@@ -6,14 +6,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ตรวจว่าเอกสาร OpenAPI ถูกสร้างและประกาศ JWT Bearer ไว้จริง</summary>
+/// <summary>ກວດເບິ່ງວ່າເອກະສານ OpenAPI ສ້າງແລະປະກາດ JWT Bearer ຮັກສາມັນເປັນຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class OpenApiDocumentTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task เอกสาร_OpenAPI_เวอร์ชัน_v1_ต้องเข้าถึงได้()
+    public async Task ເອກະສານ_OpenAPI_ຮຸ່ນ_v1_ຕ້ອງສາມາດເຂົ້າເຖິງໄດ້()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -23,7 +23,7 @@ public class OpenApiDocumentTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เอกสาร_OpenAPI_ต้องประกาศ_Bearer_Security_Scheme()
+    public async Task ເອກະສານ_OpenAPI_ຕ້ອງປະກາດ_Bearer_Security_Scheme()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -41,7 +41,7 @@ public class OpenApiDocumentTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เอกสาร_OpenAPI_ต้องใช้ชื่อระบบจาก_Configuration()
+    public async Task ເອກະສານ_OpenAPI_ຊື່ລະບົບຕ້ອງຖືກນໍາໃຊ້ຈາກ_Configuration()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -49,6 +49,6 @@ public class OpenApiDocumentTests(DormFlowApiFactory factory)
 
         using JsonDocument document = JsonDocument.Parse(body);
         document.RootElement.GetProperty("info").GetProperty("title").GetString()
-            .Should().Be("DormFlow API");
+            .Should().Be("DormFlow API ພາສາລາວ");
     }
 }

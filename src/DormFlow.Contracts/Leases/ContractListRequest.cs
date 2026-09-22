@@ -2,18 +2,18 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Leases;
 
-/// <summary>พารามิเตอร์การค้นหารายการสัญญาเช่า</summary>
+/// <summary>ເຊົ່າລາຍຊື່ຕົວກໍານົດການຊອກຫາ</summary>
 public class ContractListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะสัญญาของหอพักที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງພຽງແຕ່ສັນຍາຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะสัญญาของห้องที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ສັນຍາຂອງຫ້ອງທີ່ກໍານົດໄວ້</summary>
     public Guid? RoomId { get; set; }
 
-    /// <summary>กรองเฉพาะสัญญาของผู้เช่าที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງພຽງແຕ່ສັນຍາຂອງຜູ້ເຊົ່າທີ່ລະບຸໄວ້</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>กรองเฉพาะสัญญาที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງພຽງແຕ່ການເຮັດສັນຍາທີ່ມີສະຖານະທີ່ກົງກັບທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

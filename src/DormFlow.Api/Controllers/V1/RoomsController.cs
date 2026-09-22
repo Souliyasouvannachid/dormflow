@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการห้องพัก</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງຫ້ອງ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/rooms")]
@@ -18,7 +18,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
 {
     private readonly IRoomService _roomService = roomService;
 
-    /// <summary>ดึงรายการห้องพักแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງລາຍຊື່ຫ້ອງທີ່ມີ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Rooms.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<RoomResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>ดึงรายการห้องว่างที่พร้อมให้เช่า</summary>
+    /// <summary>ດຶງລາຍຊື່ຫ້ອງທີ່ມີໃຫ້ເຊົ່າ</summary>
     [HttpGet("available")]
     [RequirePermission(PermissionCodes.Rooms.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<RoomResponse>>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>สรุปจำนวนห้องแยกตามสถานะ</summary>
+    /// <summary>ສະຫຼຸບຂອງຈໍານວນຫ້ອງທີ່ແຍກຕາມສະຖານະ</summary>
     [HttpGet("summary")]
     [RequirePermission(PermissionCodes.Rooms.View)]
     [ProducesResponseType(typeof(ApiResponse<RoomSummaryResponse>), StatusCodes.Status200OK)]
@@ -54,7 +54,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>อ่านข้อมูลห้องพักหนึ่งห้อง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບຫ້ອງຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Rooms.View)]
     [ProducesResponseType(typeof(ApiResponse<RoomResponse>), StatusCodes.Status200OK)]
@@ -65,7 +65,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างห้องพักใหม่</summary>
+    /// <summary>ສ້າງຫ້ອງໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Rooms.Create)]
     [ProducesResponseType(typeof(ApiResponse<RoomResponse>), StatusCodes.Status200OK)]
@@ -80,7 +80,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลห้องพัก</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນຫ້ອງ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.Rooms.Update)]
     [ProducesResponseType(typeof(ApiResponse<RoomResponse>), StatusCodes.Status200OK)]
@@ -96,7 +96,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะห้องพัก</summary>
+    /// <summary>ປ່ຽນສະຖານະຫ້ອງ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Rooms.ChangeStatus)]
     [ProducesResponseType(typeof(ApiResponse<RoomResponse>), StatusCodes.Status200OK)]
@@ -111,7 +111,7 @@ public sealed class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบห้องพัก</summary>
+    /// <summary>ລຶບຫ້ອງ</summary>
     [HttpDelete("{id:guid}")]
     [RequirePermission(PermissionCodes.Rooms.Delete)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

@@ -1,41 +1,41 @@
 namespace DormFlow.Contracts.Deposits;
 
-/// <summary>ข้อมูลเงินมัดจำหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນເງິນຝາກຜຶ່ງ</summary>
 public class DepositResponse
 {
-    /// <summary>รหัสอ้างอิงของเงินมัดจำ</summary>
+    /// <summary>ລະຫັດອ້າງອີງເງິນຝາກ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>สัญญาเช่าที่เงินมัดจำนี้ผูกอยู่</summary>
+    /// <summary>ສັນຍາເຊົ່າທີ່ເງິນຝາກນີ້ຖືກຜູກມັດ</summary>
     public Guid ContractId { get; init; }
 
-    /// <summary>จำนวนเงินมัดจำที่รับไว้</summary>
+    /// <summary>ຈໍານວນເງິນຝາກທີ່ໄດ້ຮັບ</summary>
     public decimal Amount { get; init; }
 
-    /// <summary>สถานะของเงินมัดจำ</summary>
+    /// <summary>ສະຖານະຂອງເງິນຝາກ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่รับเงินมัดจำ</summary>
+    /// <summary>ເວລາທີ່ຈະໄດ້ຮັບເງິນຝາກ</summary>
     public DateTimeOffset CollectedAt { get; init; }
 
-    /// <summary>จำนวนเงินที่คืนแล้ว</summary>
+    /// <summary>ຈໍານວນທີ່ສົ່ງຄືນ</summary>
     public decimal RefundedAmount { get; init; }
 
-    /// <summary>เวลาที่คืนเงิน</summary>
+    /// <summary>ເວລາຄືນເງິນ</summary>
     public DateTimeOffset? RefundedAt { get; init; }
 
-    /// <summary>เหตุผลของส่วนที่หักไว้ไม่คืน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບສ່ວນທີ່ຖືກຫັກບໍ່ຖືກສົ່ງຄືນ</summary>
     public string? DeductionReason { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

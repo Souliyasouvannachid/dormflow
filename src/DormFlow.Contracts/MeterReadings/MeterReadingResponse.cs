@@ -1,41 +1,41 @@
 namespace DormFlow.Contracts.MeterReadings;
 
-/// <summary>ข้อมูลค่ามิเตอร์หนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນຄ່າໜຶ່ງແມັດ</summary>
 public class MeterReadingResponse
 {
-    /// <summary>รหัสอ้างอิงของรายการ</summary>
+    /// <summary>ລະຫັດອ້າງອີງລາຍການ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องที่จดค่ามิเตอร์</summary>
+    /// <summary>ຫ້ອງທີ່ບັນທຶກການອ່ານແມັດ</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>ประเภทมิเตอร์</summary>
+    /// <summary>ປະເພດແມັດ</summary>
     public string MeterType { get; init; } = string.Empty;
 
-    /// <summary>เดือนที่นำค่านี้ไปออกบิล</summary>
+    /// <summary>ເດືອນທີ່ຄ່ານີ້ຖືກຮຽກເກັບ</summary>
     public DateOnly PeriodMonth { get; init; }
 
-    /// <summary>วันที่จดมิเตอร์จริง</summary>
+    /// <summary>ວັນທີລົງທະບຽນຕົວຈິງແມັດ</summary>
     public DateOnly ReadingDate { get; init; }
 
-    /// <summary>ค่ามิเตอร์ครั้งก่อนหน้า</summary>
+    /// <summary>ຄ່າແມັດກ່ອນໜ້າ</summary>
     public decimal PreviousReading { get; init; }
 
-    /// <summary>ค่ามิเตอร์ที่จดได้ในรอบนี้</summary>
+    /// <summary>ຄ່າແມັດທີ່ບັນທຶກໄວ້ໃນຮອບນີ້</summary>
     public decimal CurrentReading { get; init; }
 
-    /// <summary>หน่วยที่ใช้ไป</summary>
+    /// <summary>ຜ່ວຍງານທີ່ໃຊ້</summary>
     public decimal UnitsUsed { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

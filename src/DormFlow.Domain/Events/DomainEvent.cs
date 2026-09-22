@@ -1,7 +1,7 @@
 namespace DormFlow.Domain.Events;
 
 /// <summary>
-/// คลาสฐานของ Domain Event กำหนด <see cref="EventId"/> และ <see cref="OccurredAt"/> ให้อัตโนมัติ
+/// ຊັ້ນພື້ນຖານຂອງ Domain Event ຕັ້ງ <see cref="EventId"/> ແລະ <see cref="OccurredAt"/> ອັດຕະໂນມັດ
 /// </summary>
 public abstract record DomainEvent : IDomainEvent
 {

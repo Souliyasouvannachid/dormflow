@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการข้อมูลผู้เช่า</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງຂໍ້ມູນຜູ້ເຊົ່າ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/tenants")]
@@ -18,7 +18,7 @@ public sealed class TenantsController(ITenantService tenantService) : Controller
 {
     private readonly ITenantService _tenantService = tenantService;
 
-    /// <summary>ดึงรายการผู้เช่าแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ເຊົ່າທີ່ຕັ້ງໄວ້ແລ້ວ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Tenants.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<TenantResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class TenantsController(ITenantService tenantService) : Controller
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลผู้เช่าหนึ่งคน</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບຜູ້ເຊົ່າຄົນໜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Tenants.View)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class TenantsController(ITenantService tenantService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างข้อมูลผู้เช่าใหม่</summary>
+    /// <summary>ສ້າງຂໍ້ມູນຜູ້ເຊົ່າໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Tenants.Create)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class TenantsController(ITenantService tenantService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลผู้เช่า</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.Tenants.Update)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
@@ -73,7 +73,7 @@ public sealed class TenantsController(ITenantService tenantService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะผู้เช่า</summary>
+    /// <summary>ປ່ຽນສະຖານະຜູ້ເຊົ່າ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Tenants.Update)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]

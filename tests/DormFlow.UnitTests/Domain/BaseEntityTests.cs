@@ -5,11 +5,11 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Domain;
 
-/// <summary>ตรวจพฤติกรรมพื้นฐานของ BaseEntity และ TenantEntity</summary>
+/// <summary>ກວດສອບພຶດຕິກໍາພື້ນຖານຂອງ BaseEntity ແລະ TenantEntity</summary>
 public class BaseEntityTests
 {
     [Fact]
-    public void Entity_ที่สร้างใหม่_ต้องมี_Id_เป็น_UUID_v7()
+    public void Entity_ສ້າງໃໝ່_ຕ້ອງມີ_Id_ແມ່ນ_UUID_v7()
     {
         TestEntity entity = new();
 
@@ -18,7 +18,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void Entity_สองตัว_ต้องมี_Id_ไม่ซ้ำกัน()
+    public void Entity_ສອງ_ຕ້ອງມີ_Id_ເປັນເອກະລັກ()
     {
         TestEntity first = new();
         TestEntity second = new();
@@ -27,7 +27,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void Entity_ที่สร้างใหม่_ต้องยังไม่ถูกลบ()
+    public void Entity_ສ້າງໃໝ່_ບໍ່ຄວນຖືກລຶບ()
     {
         TestEntity entity = new();
 
@@ -37,7 +37,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void RaiseDomainEvent_ต้องเก็บเหตุการณ์ไว้ในคิว()
+    public void RaiseDomainEvent_ເຫດການຕ້ອງຖືກເກັບໄວ້ໃນແຖວ()
     {
         TestEntity entity = new();
         TestDomainEvent domainEvent = new();
@@ -48,7 +48,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void RaiseDomainEvent_ต้องไม่รับค่า_null()
+    public void RaiseDomainEvent_ທ່ານຕ້ອງບໍ່ຍອມຮັບຄ່າທໍານຽມ_null()
     {
         TestEntity entity = new();
 
@@ -58,7 +58,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void ClearDomainEvents_ต้องล้างคิวจนหมด()
+    public void ClearDomainEvents_ແຖວຕ້ອງຖືກລຶບລ້າງໃຫ້ໝົດ()
     {
         TestEntity entity = new();
         entity.RaiseDomainEvent(new TestDomainEvent());
@@ -69,7 +69,7 @@ public class BaseEntityTests
     }
 
     [Fact]
-    public void TenantEntity_ต้องเก็บขอบเขตองค์กรและหอพักได้()
+    public void TenantEntity_ຕ້ອງສາມາດຮັກສາຂອບເຂດຂອງອົງກອນແລະຫໍພັກ()
     {
         Guid organizationId = Guid.CreateVersion7();
         Guid dormitoryId = Guid.CreateVersion7();

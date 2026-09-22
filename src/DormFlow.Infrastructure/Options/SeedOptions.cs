@@ -1,40 +1,40 @@
 namespace DormFlow.Infrastructure.Options;
 
 /// <summary>
-/// ข้อมูลผู้ดูแลระบบเริ่มต้นที่ใช้ตอน Seed
+/// ຂໍ້ມູນຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນໃຊ້ເມື່ອ Seed
 /// </summary>
 /// <remarks>
-/// อ่านจาก environment variable โดยตรงตามชื่อที่กำหนดไว้ในเอกสารระบบ
-/// ถ้าไม่ได้กำหนดครบ ระบบจะข้ามการสร้างบัญชีผู้ดูแลและบันทึกคำเตือนไว้
-/// จะไม่มีการสร้างบัญชีที่ฝังรหัสผ่านไว้ในโค้ดเด็ดขาด
+/// ອ່ານຈາກ environment variable ໂດຍກົງໂດຍຊື່ທີ່ກໍານົດໄວ້ໃນເອກະສານລະບົບ
+/// ຖ້າບໍ່ໄດ້ລະບຸຢ່າງຄົບຖ້ວນ, ການສ້າງບັນຊີຜູ້ເບິ່ງແຍງລະບົບຈະຖືກຂ້າມໄປ ແລະການແຈ້ງເຕືອນຈະຖືກບັນທຶກ
+/// ຢ່າສ້າງບັນຊີດ້ວຍລະຫັດຜ່ານທີ່ຝັງຢູ່ໃນລະຫັດ
 /// </remarks>
 public sealed class SeedOptions
 {
-    /// <summary>ชื่อ environment variable ของอีเมลผู้ดูแลระบบ</summary>
+    /// <summary>ຊື່ environment variable ອີເມວຂອງຜູ້ເບິ່ງແຍງລະບົບ</summary>
     public const string AdminEmailVariable = "SEED_ADMIN_EMAIL";
 
-    /// <summary>ชื่อ environment variable ของรหัสผ่านผู้ดูแลระบบ</summary>
+    /// <summary>ຊື່ environment variable ລະຫັດຜ່ານຂອງຜູ້ເບິ່ງແຍງລະບົບ</summary>
     public const string AdminPasswordVariable = "SEED_ADMIN_PASSWORD";
 
-    /// <summary>ชื่อ environment variable ของชื่อผู้ดูแลระบบ</summary>
+    /// <summary>ຊື່ environment variable ຂອງຊື່ຜູ້ບໍລິຫານ</summary>
     public const string AdminFirstNameVariable = "SEED_ADMIN_FIRST_NAME";
 
-    /// <summary>ชื่อ environment variable ของนามสกุลผู้ดูแลระบบ</summary>
+    /// <summary>ຊື່ environment variable ນາມສະກຸນຂອງຜູ້ບໍລິຫານ</summary>
     public const string AdminLastNameVariable = "SEED_ADMIN_LAST_NAME";
 
-    /// <summary>อีเมลของผู้ดูแลระบบเริ่มต้น</summary>
+    /// <summary>ອີເມວຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ</summary>
     public string? AdminEmail { get; set; }
 
-    /// <summary>รหัสผ่านของผู้ดูแลระบบเริ่มต้น</summary>
+    /// <summary>ລະຫັດຜ່ານຂອງຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ</summary>
     public string? AdminPassword { get; set; }
 
-    /// <summary>ชื่อของผู้ดูแลระบบเริ่มต้น</summary>
+    /// <summary>ຊື່ຂອງຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ</summary>
     public string? AdminFirstName { get; set; }
 
-    /// <summary>นามสกุลของผู้ดูแลระบบเริ่มต้น</summary>
+    /// <summary>ນາມສະກຸນຜູ້ເບິ່ງແຍງເລີ່ມຕົ້ນ</summary>
     public string? AdminLastName { get; set; }
 
-    /// <summary>มีข้อมูลครบพอที่จะสร้างบัญชีผู้ดูแลระบบหรือไม่</summary>
+    /// <summary>ທ່ານມີຂໍ້ມູນພຽງພໍເພື່ອສ້າງບັນຊີຜູ້ບໍລິຫານບໍ?</summary>
     public bool HasAdminCredentials =>
         !string.IsNullOrWhiteSpace(AdminEmail) && !string.IsNullOrWhiteSpace(AdminPassword);
 }

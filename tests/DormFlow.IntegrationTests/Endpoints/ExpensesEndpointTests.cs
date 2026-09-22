@@ -11,14 +11,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการบันทึกและค้นหาค่าใช้จ่ายผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບການບັນທຶກແລະຄ່າໃຊ້ຈ່າຍໃນການຄົ້ນຫາໂດຍຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ExpensesEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task บันทึกค่าใช้จ่ายใหม่_ต้องสำเร็จ()
+    public async Task ບັນທຶກຄ່າໃຊ້ຈ່າຍໃຝ່_ຕ້ອງປະສົບຜົນສໍາເລັດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -34,8 +34,8 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
                 Category = "Utilities",
                 Amount = 4500,
                 ExpenseDate = new DateOnly(2026, 3, 5),
-                Description = "ค่าไฟฟ้าส่วนกลางเดือนมีนาคม",
-                PaidTo = "การไฟฟ้าส่วนภูมิภาค",
+                Description = "ໃບເກັບເງິນຄ່າໄຟຟ້າສູນກາງສໍາລັບເດືອນມີນາ",
+                PaidTo = "ການໄຟຟ້າແຂວງ",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -45,11 +45,11 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
 
         expense.Category.Should().Be("Utilities");
         expense.Amount.Should().Be(4500);
-        expense.PaidTo.Should().Be("การไฟฟ้าส่วนภูมิภาค");
+        expense.PaidTo.Should().Be("ການໄຟຟ້າແຂວງ");
     }
 
     [Fact]
-    public async Task กรองรายการค่าใช้จ่ายตามหมวดหมู่และช่วงวันที่_ต้องได้ผลลัพธ์ถูกต้อง()
+    public async Task ກັ່ນຕອງລາຍການລາຍຈ່າຍຕາມໝວດໝູ່ແລະຊ່ວງວັນທີ_ຕ້ອງໄດ້ຮັບຜົນທີ່ຖືກຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -77,7 +77,7 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task บันทึกค่าใช้จ่ายด้วยหมวดหมู่ที่ไม่ถูกต้อง_ต้องได้_400()
+    public async Task ບັນທຶກຄ່າໃຊ້ຈ່າຍທີ່ມີປະເພດທີ່ບໍ່ຖືກຕ້ອງ_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -93,7 +93,7 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
                 Category = "NotARealCategory",
                 Amount = 100,
                 ExpenseDate = DateOnly.FromDateTime(DateTime.UtcNow),
-                Description = "ทดสอบ",
+                Description = "ການທົດສອບ",
             },
             TestContext.Current.CancellationToken);
 
@@ -111,7 +111,7 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
                 Category = category,
                 Amount = amount,
                 ExpenseDate = expenseDate,
-                Description = $"ทดสอบ {category}",
+                Description = $"ການທົດສອບ {category}",
             },
             TestContext.Current.CancellationToken);
 
@@ -123,7 +123,7 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -135,7 +135,7 @@ public class ExpensesEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",

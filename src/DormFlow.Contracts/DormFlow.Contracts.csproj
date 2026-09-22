@@ -3,9 +3,9 @@
   <PropertyGroup>
     <RootNamespace>DormFlow.Contracts</RootNamespace>
     <AssemblyName>DormFlow.Contracts</AssemblyName>
-    <Description>Shared API Contract - Request Model, Response Model (ใช้ร่วมกันระหว่าง API และ Client)</Description>
+    <Description>Shared API Contract - Request Model, Response Model (ແບ່ງປັນລະຫວ່າງ API ແລະ Client)</Description>
   </PropertyGroup>
 
-  <!-- Contracts ต้องเป็น POCO ล้วน ไม่อ้างอิง Layer อื่น -->
+  <!-- Contracts ຕ້ອງເປັນ POCO ທັງຝົດໂດຍບໍ່ມີການອ້າງອີງ Layer ອື່ນໆ -->
 
 </Project>

@@ -12,10 +12,10 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Deposits;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลเงินมัดจำ
+/// Use Case ໂມດູນເງິນຝາກທັງໝົດ
 /// </summary>
 /// <remarks>
-/// แยกจากโมดูล Payments โดยตั้งใจ ดูเหตุผลเพิ่มเติมที่ <see cref="Domain.Entities.Deposit"/>
+/// ແຍກອອກຈາກໂມດູນ Payments ຕັ້ງໃຈ, ເບິ່ງເຫດຜົນເພີ່ມເຕີມຢູ່ <see cref="Domain.Entities.Deposit"/>
 /// </remarks>
 public sealed class DepositService(
     IDepositRepository repository,
@@ -75,22 +75,22 @@ public sealed class DepositService(
         await _collectValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Contract contract = await _contractRepository.GetByIdAsync(request.ContractId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบสัญญาเช่าที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບສັນຍາເຊົ່າທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             contract.OrganizationId,
             contract.DormitoryId.GetValueOrDefault(),
-            "ไม่พบสัญญาเช่าที่ระบุ");
+            "ບໍ່ພົບສັນຍາເຊົ່າທີ່ລະບຸ");
 
         if (contract.Status is ContractStatus.Terminated or ContractStatus.Expired)
         {
-            throw new ConflictException("สัญญาเช่านี้สิ้นสุดไปแล้ว ไม่สามารถรับเงินมัดจำได้");
+            throw new ConflictException("ສັນຍາເຊົ່ານີ້ສິ້ນສຸດໄປແລ້ວ ບໍ່ສາມາດຮັບເງິນມັດຈຳໄດ້");
         }
 
         if (await _repository.ExistsByContractIdAsync(contract.Id, cancellationToken))
         {
-            throw new ConflictException("สัญญาเช่านี้มีการรับเงินมัดจำไว้แล้ว");
+            throw new ConflictException("ສັນຍາເຊົ່ານີ້ມີການຮັບເງິນມັດຈຳໄວ້ແລ້ວ");
         }
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
@@ -131,26 +131,26 @@ public sealed class DepositService(
 
         if (deposit.Status != DepositStatus.Held)
         {
-            throw new ConflictException("เงินมัดจำนี้ถูกคืนหรือริบไปแล้ว คืนได้เพียงครั้งเดียวต่อรายการ");
+            throw new ConflictException("ເງິນມັດຈຳນີ້ຖືກຄືນຫຼືຮິບໄປແລ້ວ ສາມາດຄືນໄດ້ພຽງຄັ້ງດຽວຕໍ່ລາຍການ");
         }
 
         Contract contract = await _contractRepository.GetByIdAsync(deposit.ContractId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบสัญญาเช่าของเงินมัดจำนี้");
+            ?? throw new NotFoundException("ບໍ່ພົບສັນຍາເຊົ່າຂອງເງິນມັດຈຳນີ້");
 
         if (contract.Status != ContractStatus.Terminated)
         {
-            throw new ConflictException("คืนเงินมัดจำได้เฉพาะสัญญาเช่าที่สิ้นสุดแล้วเท่านั้น");
+            throw new ConflictException("ຄືນເງິນມັດຈຳໄດ້ສະເພາະສັນຍາເຊົ່າທີ່ສິ້ນສຸດແລ້ວເທົ່ານັ້ນ");
         }
 
         if (request.RefundAmount > deposit.Amount)
         {
             throw new ValidationFailedException(
-                $"จำนวนเงินที่คืน ({request.RefundAmount}) เกินจำนวนเงินมัดจำที่รับไว้ ({deposit.Amount})");
+                $"ຈຳນວນເງິນທີ່ຄືນ ({request.RefundAmount}) ເກີນຈຳນວນເງິນມັດຈຳທີ່ຮັບໄວ້ ({deposit.Amount})");
         }
 
         if (request.RefundAmount < deposit.Amount && string.IsNullOrWhiteSpace(request.DeductionReason))
         {
-            throw new ValidationFailedException("กรุณาระบุเหตุผลของส่วนที่หักไว้ไม่คืน");
+            throw new ValidationFailedException("ກະລຸນາລະບຸເຫດຜົນຂອງສ່ວນທີ່ຫັກໄວ້ບໍ່ຄືນ");
         }
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
@@ -180,13 +180,13 @@ public sealed class DepositService(
     private async Task<Deposit> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Deposit deposit = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลเงินมัดจำที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນເງິນມັດຈຳທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             deposit.OrganizationId,
             deposit.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลเงินมัดจำที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນເງິນມັດຈຳທີ່ຕ້ອງການ");
 
         return deposit;
     }

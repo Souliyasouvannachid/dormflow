@@ -4,41 +4,41 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// บันทึกการเข้า-ออกของผู้มาเยือนหนึ่งครั้ง
+/// ບັນທຶກການເຂົ້າ-ນັກທ່ອງທ່ຽວອອກຄັ້ງດຽວ
 /// </summary>
 /// <remarks>
-/// ผูกกับห้องเสมอ (เพื่อขอบเขตองค์กร/หอพักและระบุว่ามาเยี่ยมห้องไหน) ส่วนผู้เช่าเป็นทางเลือก
-/// เช่นเดียวกับ <see cref="Parcel"/> เพราะห้องอาจมีผู้เช่าร่วมหลายคน
+/// ສະເຝີ tied ກັບຫ້ອງ (ສໍາລັບຂອບເຂດການຈັດຕັ້ງ/ຫໍພັກ ແລະລະບຸຫ້ອງໃດທີ່ເຈົ້າຈະໄປຢ້ຽມຢາມ) ສໍາລັບຜູ້ເຊົ່າ, ມັນເປັນທາງເລືອກ
+/// ເຊັ່ນດຽວກັນກັບ <see cref="Parcel"/> ເພາະຫ້ອງອາດມີຜູ້ເຊົ່າຮ່ວມຫຼາຍຄົນ
 /// </remarks>
 public class Visitor : TenantEntity
 {
-    /// <summary>ห้องที่ผู้มาเยือนมาเยี่ยม</summary>
+    /// <summary>ຫ້ອງທີ່ນັກທ່ອງທ່ຽວມາຢ້ຽມຢາມ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่ผู้มาเยือนมาเยี่ยม เป็น null เมื่อไม่ระบุ</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ເຂົ້າມາຢ້ຽມຢາມແມ່ນ null ເມື່ອບໍ່ໄດ້ລະບຸ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>ชื่อผู้มาเยือน</summary>
+    /// <summary>ຊື່ນັກທ່ອງທ່ຽວ</summary>
     public required string VisitorName { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ผู้มาเยือน</summary>
+    /// <summary>ເບີໂທລະສັບຂອງຜູ້ເຂົ້າຊົມ</summary>
     public string? VisitorPhone { get; set; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทางของผู้มาเยือน สำหรับบันทึกความปลอดภัย</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນຂອງຜູ້ເຂົ້າຊົມ ເພື່ອບັນທຶກຄວາມປອດໄພ</summary>
     public string? IdNumber { get; set; }
 
-    /// <summary>วัตถุประสงค์การมาเยือน</summary>
+    /// <summary>ຈຸດປະສົງຂອງການຢ້ຽມຢາມ</summary>
     public string? Purpose { get; set; }
 
-    /// <summary>เวลาที่เข้าหอพัก</summary>
+    /// <summary>ເວລາເຂົ້າຫໍພັກ</summary>
     public DateTimeOffset CheckInAt { get; set; }
 
-    /// <summary>สถานะของผู้มาเยือน</summary>
+    /// <summary>ສະຖານະນັກທ່ອງທ່ຽວ</summary>
     public VisitorStatus Status { get; set; } = VisitorStatus.CheckedIn;
 
-    /// <summary>เวลาที่ออกจากหอพัก เป็น null เมื่อยังไม่ออก</summary>
+    /// <summary>ເວລາອອກຈາກຫໍພັກ null ໃນເວລາທີ່ມັນຍັງບໍ່ທັນອອກ</summary>
     public DateTimeOffset? CheckOutAt { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

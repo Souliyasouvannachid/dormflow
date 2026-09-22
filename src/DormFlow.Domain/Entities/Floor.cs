@@ -3,21 +3,21 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Domain.Entities;
 
-/// <summary>ชั้นหนึ่งของอาคาร</summary>
+/// <summary>ຊັ້ນທໍາອິດຂອງອາຄານ</summary>
 public class Floor : TenantEntity
 {
-    /// <summary>อาคารที่ชั้นนี้สังกัด</summary>
+    /// <summary>ອາຄານທີ່ຊັ້ນນີ້ຂຶ້ນກັບ</summary>
     public Guid BuildingId { get; set; }
 
-    /// <summary>ลำดับชั้น</summary>
+    /// <summary>ລຳດັບ</summary>
     public int FloorNumber { get; set; }
 
-    /// <summary>ชื่อชั้น สำหรับแสดงผล เช่น "ชั้น G"</summary>
+    /// <summary>ຊື່ຊັ້ນສໍາລັບການສະແດງ, ເຊັ່ນ: "ຊັ້ນ G"</summary>
     public string? Name { get; set; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>สถานะของชั้น</summary>
+    /// <summary>ສະຖານະຊັ້ນ</summary>
     public FloorStatus Status { get; set; } = FloorStatus.Active;
 }

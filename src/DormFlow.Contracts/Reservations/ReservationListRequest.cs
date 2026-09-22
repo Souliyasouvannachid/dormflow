@@ -2,18 +2,18 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Reservations;
 
-/// <summary>พารามิเตอร์การค้นหารายการจอง</summary>
+/// <summary>ຕົວກໍານົດການການຊອກຫາການຈອງ</summary>
 public class ReservationListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะการจองของหอพักที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງພຽງແຕ່ການຈອງຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะการจองของห้องที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະການຈອງຫ້ອງທີ່ລະບຸໄວ້</summary>
     public Guid? RoomId { get; set; }
 
-    /// <summary>กรองเฉพาะการจองของผู้เช่าที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະການຈອງຂອງຜູ້ເຊົ່າທີ່ລະບຸໄວ້ເທົ່ານັ້ນ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>กรองเฉพาะการจองที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະການຈອງທີ່ສະຖານະກົງກັບທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

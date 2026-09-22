@@ -13,12 +13,12 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Maintenance;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลงานแจ้งซ่อมบำรุง
+/// Use Case ໂມດູນການແຈ້ງເຕືອນການບຳລຸງຮັກສາທັງໝົດ
 /// </summary>
 /// <remarks>
-/// การมอบหมายช่าง (<see cref="AssignAsync"/>) แยกออกจากการเปลี่ยนสถานะทั่วไป (<see cref="ChangeStatusAsync"/>)
-/// โดยตั้งใจ เพราะต้องผ่านการตรวจสอบว่าผู้ใช้ที่ระบุเป็นช่างซ่อมบำรุงของหอพักนี้จริง
-/// และสิทธิ์ที่ใช้ก็ต่างกัน (maintenance.assign เทียบกับ maintenance.update-status)
+/// ການແຕ່ງຕັ້ງນັກວິຊາການ (<see cref="AssignAsync"/>) ແຍກອອກຈາກການຫັນປ່ຽນຂອງລັດທົ່ວໄປ (<see cref="ChangeStatusAsync"/>)
+/// ນີ້ແມ່ນຄວາມຕັ້ງໃຈເພາະວ່າມັນຕ້ອງໄດ້ຮັບການກວດສອບວ່າຜູ້ໃຊ້ທີ່ລະບຸນັ້ນແມ່ນຊ່າງສ້ອມແປງຫໍພັກແທ້ໆ
+/// ແລະສິດທີ່ໃຊ້ແມ່ນແຕກຕ່າງກັນ (maintenance.assign ປຽບທຽບກັບ maintenance.update-status)
 /// </remarks>
 public sealed class MaintenanceRequestService(
     IMaintenanceRequestRepository repository,
@@ -70,6 +70,22 @@ public sealed class MaintenanceRequestService(
     }
 
     /// <inheritdoc />
+    public Task<IReadOnlyDictionary<MaintenanceStatus, int>> GetStatusCountsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        MaintenanceRequestListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
+            DormitoryId: null,
+            RoomId: null,
+            Status: null,
+            Priority: null,
+            AssignedTechnicianId: null,
+            TenantScope.GetDormitoryRestrictionForListing(_currentUser));
+
+        return _repository.GetStatusCountsAsync(filter, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<MaintenanceRequestResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => ToResponse(await FindAccessibleAsync(id, cancellationToken));
 
@@ -82,17 +98,17 @@ public sealed class MaintenanceRequestService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         if (room.Status == RoomStatus.Inactive)
         {
-            throw new ConflictException("ห้องนี้ปิดใช้งานอยู่ ไม่สามารถแจ้งซ่อมได้");
+            throw new ConflictException("ຫ້ອງນີ້ປິດໃຊ້ງານຢູ່ ບໍ່ສາມາດແຈ້ງສ້ອມແປງໄດ້");
         }
 
         MaintenanceRequest maintenanceRequest = new()
@@ -131,7 +147,7 @@ public sealed class MaintenanceRequestService(
 
         if (maintenanceRequest.Status is MaintenanceStatus.Completed or MaintenanceStatus.Cancelled)
         {
-            throw new ConflictException("งานนี้ปิดแล้ว ไม่สามารถมอบหมายช่างได้");
+            throw new ConflictException("ງານນີ້ປິດແລ້ວ ບໍ່ສາມາດມອບໝາຍຊ່າງໄດ້");
         }
 
         bool isEligibleTechnician = await _userAdministrationRepository.HasRoleForDormitoryAsync(
@@ -143,7 +159,7 @@ public sealed class MaintenanceRequestService(
 
         if (!isEligibleTechnician)
         {
-            throw new ValidationFailedException("ไม่พบช่างซ่อมบำรุงที่ระบุ หรือช่างไม่ได้รับมอบหมายดูแลหอพักนี้");
+            throw new ValidationFailedException("ບໍ່ພົບຊ່າງສ້ອມແປງທີ່ລະບຸ ຫຼືຊ່າງບໍ່ໄດ້ຮັບມອບໝາຍໃຫ້ດູແລຫໍພັກນີ້");
         }
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
@@ -182,12 +198,12 @@ public sealed class MaintenanceRequestService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out MaintenanceStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         if (newStatus == MaintenanceStatus.Assigned)
         {
-            throw new ValidationFailedException("ต้องมอบหมายช่างผ่าน Endpoint มอบหมายงานเท่านั้น");
+            throw new ValidationFailedException("ຕ້ອງມອບໝາຍຊ່າງຜ່ານ Endpoint ມອບໝາຍງານເທົ່ານັ້ນ");
         }
 
         MaintenanceRequest maintenanceRequest = await FindAccessibleAsync(id, cancellationToken);
@@ -195,7 +211,7 @@ public sealed class MaintenanceRequestService(
         if (!IsAllowedTransition(maintenanceRequest.Status, newStatus))
         {
             throw new ConflictException(
-                $"ไม่สามารถเปลี่ยนสถานะจาก {maintenanceRequest.Status} เป็น {newStatus} ได้");
+                $"ບໍ່ສາມາດປ່ຽນສະຖານະຈາກ {maintenanceRequest.Status} ເປັນ {newStatus} ໄດ້");
         }
 
         maintenanceRequest.Status = newStatus;
@@ -243,13 +259,13 @@ public sealed class MaintenanceRequestService(
     private async Task<MaintenanceRequest> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         MaintenanceRequest maintenanceRequest = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลงานแจ้งซ่อมบำรุงที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນງານແຈ້ງສ້ອມແປງທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             maintenanceRequest.OrganizationId,
             maintenanceRequest.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลงานแจ้งซ่อมบำรุงที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນງານແຈ້ງສ້ອມແປງທີ່ຕ້ອງການ");
 
         return maintenanceRequest;
     }

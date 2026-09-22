@@ -1,14 +1,14 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับเปลี่ยนรหัสผ่านของบัญชีที่เข้าสู่ระบบอยู่</summary>
+/// <summary>ຂໍ້ມູນສໍາລັບການປ່ຽນລະຫັດຜ່ານສໍາລັບບັນຊີທີ່ທ່ານເຂົ້າສູ່ລະບົບ</summary>
 public class ChangePasswordRequest
 {
-    /// <summary>รหัสผ่านปัจจุบัน</summary>
+    /// <summary>ລະຫັດຜ່ານປັດຈຸບັນ</summary>
     public string CurrentPassword { get; set; } = string.Empty;
 
-    /// <summary>รหัสผ่านใหม่</summary>
+    /// <summary>ລະຫັດຜ່ານໃໝ່</summary>
     public string NewPassword { get; set; } = string.Empty;
 
-    /// <summary>ยืนยันรหัสผ่านใหม่</summary>
+    /// <summary>ຢືນຢັນລະຫັດຜ່ານໃໝ່</summary>
     public string ConfirmPassword { get; set; } = string.Empty;
 }

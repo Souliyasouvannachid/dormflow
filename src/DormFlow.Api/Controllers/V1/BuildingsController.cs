@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการอาคาร</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງອາຄານ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/buildings")]
@@ -18,7 +18,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
 {
     private readonly IBuildingService _buildingService = buildingService;
 
-    /// <summary>ดึงรายการอาคารแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງຂໍ້ມູນລາຍຊື່ຕຶກອາຄານ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Buildings.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<BuildingResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลอาคารหนึ่งหลัง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບອາຄານ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Buildings.View)]
     [ProducesResponseType(typeof(ApiResponse<BuildingResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างอาคารใหม่</summary>
+    /// <summary>ສ້າງອາຄານໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Buildings.Create)]
     [ProducesResponseType(typeof(ApiResponse<BuildingResponse>), StatusCodes.Status200OK)]
@@ -58,7 +58,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลอาคาร</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນອາຄານ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.Buildings.Update)]
     [ProducesResponseType(typeof(ApiResponse<BuildingResponse>), StatusCodes.Status200OK)]
@@ -74,7 +74,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะอาคาร</summary>
+    /// <summary>ປ່ຽນສະຖານະການກໍ່ສ້າງ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Buildings.Update)]
     [ProducesResponseType(typeof(ApiResponse<BuildingResponse>), StatusCodes.Status200OK)]
@@ -93,7 +93,7 @@ public sealed class BuildingsController(IBuildingService buildingService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบอาคาร</summary>
+    /// <summary>ລຶບອາຄານ</summary>
     [HttpDelete("{id:guid}")]
     [RequirePermission(PermissionCodes.Buildings.Delete)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

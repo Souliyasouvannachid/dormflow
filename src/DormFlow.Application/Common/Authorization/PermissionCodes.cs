@@ -1,492 +1,509 @@
 namespace DormFlow.Application.Common.Authorization;
 
 /// <summary>
-/// รหัสสิทธิ์ทั้งหมดของระบบ
+/// ສິດທັງຝົດຂອງລະບົບ
 /// </summary>
 /// <remarks>
-/// ไฟล์นี้คือแหล่งความจริงเดียวของรายการสิทธิ์
-/// ตาราง permissions ในฐานข้อมูลถูก Seed จากรายการนี้ ไม่ได้ให้ผู้ใช้เพิ่มเอง
-/// เพราะทุกรหัสต้องมีจุดที่ตรวจสอบอยู่ในโค้ดจริง มิฉะนั้นจะเป็นสิทธิ์ที่ไม่มีผลใด ๆ
+/// ໄຟລ໌ນີ້ແມ່ນແຫຼ່ງຄວາມຈິງອັນດຽວສຳລັບລາຍຊື່ການອະນຸຍາດ
+/// ໂຕະ permissions ໃນຖານຂໍ້ມູນ Seed ຈາກບັນຊີລາຍຊື່ນີ້, ຜູ້ໃຊ້ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເພີ່ມມັນດ້ວຍຕົນເອງ
+/// ເພາະທຸກລະຫັດຕ້ອງມີຈຸດກວດກາຢູ່ໃນລະຫັດຕົວຈິງ. ຖ້າບໍ່ດັ່ງນັ້ນ, ມັນເປັນສິດທີ່ບໍ່ມີຜົນກະທົບ
 /// </remarks>
 public static class PermissionCodes
 {
-    /// <summary>สิทธิ์เกี่ยวกับองค์กร</summary>
+    /// <summary>ສິດການຈັດຕັ້ງ</summary>
     public static class Organizations
     {
-        /// <summary>ดูข้อมูลองค์กร</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນອົງກອນ</summary>
         public const string View = "organizations.view";
 
-        /// <summary>สร้างองค์กรใหม่</summary>
+        /// <summary>ສ້າງອົງກອນໃຝ່</summary>
         public const string Create = "organizations.create";
 
-        /// <summary>แก้ไขข้อมูลองค์กร</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນອົງກອນ</summary>
         public const string Update = "organizations.update";
 
-        /// <summary>ลบองค์กร</summary>
+        /// <summary>ລຶບອົງກອນ</summary>
         public const string Delete = "organizations.delete";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับหอพัก</summary>
+    /// <summary>ສິດໃນຫໍພັກ</summary>
     public static class Dormitories
     {
-        /// <summary>ดูข้อมูลหอพัก</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນຫໍພັກ</summary>
         public const string View = "dormitories.view";
 
-        /// <summary>สร้างหอพักใหม่</summary>
+        /// <summary>ສ້າງຫໍພັກໃໝ່</summary>
         public const string Create = "dormitories.create";
 
-        /// <summary>แก้ไขข้อมูลหอพัก</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນຫໍພັກ</summary>
         public const string Update = "dormitories.update";
 
-        /// <summary>ลบหอพัก</summary>
+        /// <summary>ລຶບຫໍພັກ</summary>
         public const string Delete = "dormitories.delete";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับอาคาร</summary>
+    /// <summary>ສິດການກໍ່ສ້າງ</summary>
     public static class Buildings
     {
-        /// <summary>ดูข้อมูลอาคาร</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນອາຄານ</summary>
         public const string View = "buildings.view";
 
-        /// <summary>สร้างอาคารใหม่</summary>
+        /// <summary>ສ້າງອາຄານໃຝ່</summary>
         public const string Create = "buildings.create";
 
-        /// <summary>แก้ไขข้อมูลอาคาร</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນອາຄານ</summary>
         public const string Update = "buildings.update";
 
-        /// <summary>ลบอาคาร</summary>
+        /// <summary>ລຶບອາຄານ</summary>
         public const string Delete = "buildings.delete";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับชั้นของอาคาร</summary>
+    /// <summary>ສິດກ່ຽວກັບຊັ້ນຂອງອາຄານ</summary>
     public static class Floors
     {
-        /// <summary>ดูข้อมูลชั้น</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນຊັ້ນ</summary>
         public const string View = "floors.view";
 
-        /// <summary>สร้างชั้นใหม่</summary>
+        /// <summary>ສ້າງຊັ້ນຂໍ້ມູນໃໝ່</summary>
         public const string Create = "floors.create";
 
-        /// <summary>แก้ไขข้อมูลชั้น</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນຊັ້ນ</summary>
         public const string Update = "floors.update";
 
-        /// <summary>ลบชั้น</summary>
+        /// <summary>ລຶບຊັ້ນ</summary>
         public const string Delete = "floors.delete";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับประเภทห้อง</summary>
+    /// <summary>ສິດກ່ຽວກັບປະເພດຫ້ອງ</summary>
     public static class RoomTypes
     {
-        /// <summary>ดูข้อมูลประเภทห้อง</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນປະເພດຫ້ອງ</summary>
         public const string View = "room-types.view";
 
-        /// <summary>สร้างประเภทห้องใหม่</summary>
+        /// <summary>ສ້າງປະເພດຫ້ອງໃຝ່</summary>
         public const string Create = "room-types.create";
 
-        /// <summary>แก้ไขข้อมูลประเภทห้อง</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນປະເພດຫ້ອງ</summary>
         public const string Update = "room-types.update";
 
-        /// <summary>ลบประเภทห้อง</summary>
+        /// <summary>ລຶບປະເພດຫ້ອງ</summary>
         public const string Delete = "room-types.delete";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับห้องพัก</summary>
+    /// <summary>ສິດຫ້ອງ</summary>
     public static class Rooms
     {
-        /// <summary>ดูข้อมูลห้องพัก</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນຫ້ອງ</summary>
         public const string View = "rooms.view";
 
-        /// <summary>สร้างห้องพักใหม่</summary>
+        /// <summary>ສ້າງຫ້ອງໃຝ່</summary>
         public const string Create = "rooms.create";
 
-        /// <summary>แก้ไขข้อมูลห้องพัก</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນຫ້ອງ</summary>
         public const string Update = "rooms.update";
 
-        /// <summary>ลบห้องพัก</summary>
+        /// <summary>ລຶບຫ້ອງ</summary>
         public const string Delete = "rooms.delete";
 
-        /// <summary>เปลี่ยนสถานะห้องพัก</summary>
+        /// <summary>ປ່ຽນສະຖານະຫ້ອງ</summary>
         public const string ChangeStatus = "rooms.change-status";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับผู้เช่า</summary>
+    /// <summary>ສິດກ່ຽວກັບຜູ້ເຊົ່າ</summary>
     public static class Tenants
     {
-        /// <summary>ดูข้อมูลผู้เช่า</summary>
+        /// <summary>ເບິ່ງຂໍ້ມູນຜູ້ເຊົ່າ</summary>
         public const string View = "tenants.view";
 
-        /// <summary>สร้างข้อมูลผู้เช่าใหม่</summary>
+        /// <summary>ສ້າງຂໍ້ມູນຜູ້ເຊົ່າໃຝ່</summary>
         public const string Create = "tenants.create";
 
-        /// <summary>แก้ไขข้อมูลผู้เช่า</summary>
+        /// <summary>ແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ</summary>
         public const string Update = "tenants.update";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับการจองห้องพัก
+    /// ສິດກ່ຽວກັບການຈອງຫ້ອງ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Reservations ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Reservations ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Reservations
     {
-        /// <summary>ดูรายการจอง</summary>
+        /// <summary>ເບິ່ງລາຍຊື່ການຈອງ</summary>
         public const string View = "reservations.view";
 
-        /// <summary>สร้างการจองใหม่</summary>
+        /// <summary>ສ້າງການຈອງໃຝ່</summary>
         public const string Create = "reservations.create";
 
-        /// <summary>ยกเลิกการจอง</summary>
+        /// <summary>ຍົກເລີກການຈອງ</summary>
         public const string Cancel = "reservations.cancel";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับสัญญาเช่า</summary>
+    /// <summary>ສິດກ່ຽວກັບສັນຍາເຊົ່າ</summary>
     public static class Contracts
     {
-        /// <summary>ดูสัญญาเช่า</summary>
+        /// <summary>ເບິ່ງຂໍ້ຕົກລົງການເຊົ່າ</summary>
         public const string View = "contracts.view";
 
-        /// <summary>สร้างสัญญาเช่า</summary>
+        /// <summary>ສ້າງສັນຍາເຊົ່າ</summary>
         public const string Create = "contracts.create";
 
-        /// <summary>เปิดใช้งานสัญญาเช่า</summary>
+        /// <summary>ເປີດໃຊ້ຂໍ້ຕົກລົງການເຊົ່າ</summary>
         public const string Activate = "contracts.activate";
 
-        /// <summary>ยกเลิกหรือสิ้นสุดสัญญาเช่า</summary>
+        /// <summary>ຍົກເລີກ ຫຼືສິ້ນສຸດສັນຍາເຊົ່າ</summary>
         public const string Terminate = "contracts.terminate";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับการจดมิเตอร์</summary>
+    /// <summary>ສິດກ່ຽວກັບການລົງທະບຽນແມັດ</summary>
     public static class MeterReadings
     {
-        /// <summary>ดูค่ามิเตอร์</summary>
+        /// <summary>ເບິ່ງຄ່າແມັດ</summary>
         public const string View = "meter-readings.view";
 
-        /// <summary>บันทึกค่ามิเตอร์</summary>
+        /// <summary>ບັນທຶກຄ່າແມັດ</summary>
         public const string Create = "meter-readings.create";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับใบแจ้งหนี้</summary>
+    /// <summary>ສິດກ່ຽວກັບໃບແຈ້ງໜີ້</summary>
     public static class Invoices
     {
-        /// <summary>ดูใบแจ้งหนี้</summary>
+        /// <summary>ເບິ່ງໃບແຈ້ງໜີ້</summary>
         public const string View = "invoices.view";
 
-        /// <summary>สร้างใบแจ้งหนี้</summary>
+        /// <summary>ສ້າງໃບແຈ້ງໜີ້</summary>
         public const string Create = "invoices.create";
 
-        /// <summary>ออกใบแจ้งหนี้ให้ผู้เช่า</summary>
+        /// <summary>ອອກໃບແຈ້ງໜີ້ໃຫ້ຜູ້ເຊົ່າ</summary>
         public const string Issue = "invoices.issue";
 
-        /// <summary>ยกเลิกใบแจ้งหนี้</summary>
+        /// <summary>ຍົກເລີກໃບແຈ້ງໜີ້</summary>
         public const string Cancel = "invoices.cancel";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับการชำระเงิน</summary>
+    /// <summary>ສິດໃນການຊໍາລະເງິນ</summary>
     public static class Payments
     {
-        /// <summary>ดูรายการชำระเงิน</summary>
+        /// <summary>ເບິ່ງລາຍຊື່ການຈ່າຍເງິນ</summary>
         public const string View = "payments.view";
 
-        /// <summary>บันทึกการชำระเงิน</summary>
+        /// <summary>ບັນທຶກການຈ່າຍເງິນ</summary>
         public const string Create = "payments.create";
 
-        /// <summary>อนุมัติการชำระเงิน</summary>
+        /// <summary>ອະນຸມັດການຈ່າຍເງິນ</summary>
         public const string Approve = "payments.approve";
 
-        /// <summary>คืนเงิน</summary>
+        /// <summary>ເງິນຄືນ</summary>
         public const string Refund = "payments.refund";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับเงินมัดจำ
+    /// ສິດກ່ຽວກັບເງິນຝາກ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Deposits ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Deposits ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Deposits
     {
-        /// <summary>ดูรายการเงินมัดจำ</summary>
+        /// <summary>ເບິ່ງລາຍການເງິນຝາກ</summary>
         public const string View = "deposits.view";
 
-        /// <summary>บันทึกการรับเงินมัดจำ</summary>
+        /// <summary>ບັນທຶກການຮັບເງິນຝາກ</summary>
         public const string Collect = "deposits.collect";
 
-        /// <summary>คืนเงินมัดจำ</summary>
+        /// <summary>ຝາກເງິນຄືນ</summary>
         public const string Refund = "deposits.refund";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับใบเสร็จรับเงิน
+    /// ສິດກ່ຽວກັບໃບຮັບເງິນ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Receipts ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Receipts ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Receipts
     {
-        /// <summary>ดูใบเสร็จรับเงิน</summary>
+        /// <summary>ເບິ່ງໃບຮັບເງິນ</summary>
         public const string View = "receipts.view";
 
-        /// <summary>ออกใบเสร็จรับเงิน</summary>
+        /// <summary>ອອກໃບຮັບເງິນ</summary>
         public const string Issue = "receipts.issue";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับค่าใช้จ่ายในการดำเนินงาน
+    /// ສິດກ່ຽວກັບຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Expenses ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Expenses ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Expenses
     {
-        /// <summary>ดูรายการค่าใช้จ่าย</summary>
+        /// <summary>ເບິ່ງລາຍການຄ່າໃຊ້ຈ່າຍ</summary>
         public const string View = "expenses.view";
 
-        /// <summary>บันทึกค่าใช้จ่าย</summary>
+        /// <summary>ບັນທຶກຄ່າໃຊ້ຈ່າຍ</summary>
         public const string Create = "expenses.create";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับพัสดุ/ไปรษณีย์ของผู้เช่า
+    /// ສິດກ່ຽວກັບການ parcels/ຫ້ອງການໄປສະນີຂອງຜູ້ເຊົ່າ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Parcels ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Parcels ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Parcels
     {
-        /// <summary>ดูรายการพัสดุ</summary>
+        /// <summary>ເບິ່ງລາຍການ parcel</summary>
         public const string View = "parcels.view";
 
-        /// <summary>บันทึกพัสดุที่มาถึง</summary>
+        /// <summary>ບັນທຶກຊຸດທີ່ມາຮອດແລ້ວ</summary>
         public const string Log = "parcels.log";
 
-        /// <summary>บันทึกการรับพัสดุ</summary>
+        /// <summary>ບັນທຶກຂອງການຮັບການພັດທະນາ</summary>
         public const string Pickup = "parcels.pickup";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับผู้มาเยือน
+    /// ສິດກ່ຽວກັບນັກທ່ອງທ່ຽວ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Visitors ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Visitors ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Visitors
     {
-        /// <summary>ดูรายการผู้มาเยือน</summary>
+        /// <summary>ເບິ່ງລາຍຊື່ຜູ້ເຂົ້າຊົມ</summary>
         public const string View = "visitors.view";
 
-        /// <summary>บันทึกการเข้าของผู้มาเยือน</summary>
+        /// <summary>ບັນທຶກການເຂົ້າຂອງນັກທ່ອງທ່ຽວ</summary>
         public const string CheckIn = "visitors.checkin";
 
-        /// <summary>บันทึกการออกของผู้มาเยือน</summary>
+        /// <summary>ບັນທຶກຜູ້ເຂົ້າຊົມ</summary>
         public const string CheckOut = "visitors.checkout";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับการจดทะเบียนที่จอดรถ
+    /// ສິດກ່ຽວກັບການລົງທະບຽນບ່ອນຈອດລົດ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Parking ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Parking ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
     /// </remarks>
     public static class Parking
     {
-        /// <summary>ดูรายการจดทะเบียนที่จอดรถ</summary>
+        /// <summary>ເບິ່ງບັນຊີລາຍຊື່ການລົງທະບຽນບ່ອນຈອດລົດ</summary>
         public const string View = "parking.view";
 
-        /// <summary>จดทะเบียนที่จอดรถใหม่</summary>
+        /// <summary>ລົງທະບຽນບ່ອນຈອດລົດໃຝ່</summary>
         public const string Register = "parking.register";
 
-        /// <summary>สิ้นสุดการจดทะเบียนที่จอดรถ</summary>
+        /// <summary>ສິ້ນສຸດການລົງທະບຽນບ່ອນຈອດລົດ</summary>
         public const string Release = "parking.release";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับประกาศ
+    /// ສິດໃນການປະກາດ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Announcements ของ Phase 2
-    /// ตั้งชื่อตามรูปแบบเดียวกับสิทธิ์อื่นทั้งหมดเพื่อความสอดคล้อง
-    /// สิทธิ์ Publish ครอบคลุมทั้งการเผยแพร่และการเก็บเข้าคลัง (ไม่แยกสิทธิ์ Archive ต่างหาก)
-    /// เพราะทั้งสองเป็นการเปลี่ยนสถานะที่ทำโดยผู้มีอำนาจเผยแพร่ประกาศกลุ่มเดียวกันเสมอ
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Announcements ຂອງ Phase 2
+    /// ມີຊື່ໃນຮູບແບບດຽວກັນກັບການອະນຸຍາດອື່ນໆທັງຝົດເພື່ອຄວາມສອດຄ່ອງ
+    /// ສິດ Publish ກວມເອົາທັງການພິມເຜີຍແຜ່ແລະການເກັບຂໍ້ມູນ (ບໍ່ມີການແບ່ງແຍກສິດ Archive ແຍກຕ່າງຫາກ)
+    /// ເນື່ອງຈາກວ່າທັງສອງແມ່ນການປ່ຽນແປງສະຖານະທີ່ສະເຝີເຮັດໂດຍອໍານາດການພິມດຽວກັນ
     /// </remarks>
     public static class Announcements
     {
-        /// <summary>ดูรายการประกาศ</summary>
+        /// <summary>ເບິ່ງລາຍການປະກາດ</summary>
         public const string View = "announcements.view";
 
-        /// <summary>สร้างประกาศใหม่</summary>
+        /// <summary>ສ້າງການປະກາດໃຝ່</summary>
         public const string Create = "announcements.create";
 
-        /// <summary>เผยแพร่หรือเก็บประกาศเข้าคลัง</summary>
+        /// <summary>ເຜີຍແຜ່ ຫຼືຈັດເກັບການປະກາດ</summary>
         public const string Publish = "announcements.publish";
     }
 
     /// <summary>
-    /// สิทธิ์เกี่ยวกับการแจ้งเตือน
+    /// ສິດການແຈ້ງການ
     /// </summary>
     /// <remarks>
-    /// ไม่มีอยู่ในรายการสิทธิ์ต้นฉบับของ Phase 1 เพิ่มเข้ามาในขั้นตอนที่สร้างโมดูล Notifications ของ Phase 2
-    /// มีเฉพาะสิทธิ์ส่งเท่านั้น เพราะการดูและทำเครื่องหมายอ่านแล้วของการแจ้งเตือนตนเองเปิดให้ผู้ใช้ที่เข้าสู่ระบบ
-    /// ทุกคนทำได้เสมอ (เหมือน `GET /auth/me`) ไม่ผูกกับสิทธิ์ใด เพราะเป็นข้อมูลของตนเองโดยตรง
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1 ເພີ່ມໃນຂັ້ນຕອນການສ້າງໂມດູນ Notifications ຂອງ Phase 2
+    /// ມີພຽງແຕ່ສິດທີ່ຈະສົ່ງ. ເນື່ອງຈາກວ່າການເບິ່ງແລະຝາຍການອ່ານແຈ້ງການແມ່ນເປີດດ້ວຍຕົນເອງສໍາລັບການເຂົ້າສູ່ລະບົບຜູ້ໃຊ້
+    /// ທຸກຄົນສາມາດເຮັດໄດ້ສະເໝີ (ມັກ `GET /auth/me`) ບໍ່ໄດ້ຜູກມັດກັບສິດໃດໆເນື່ອງຈາກວ່າມັນເປັນຂໍ້ມູນຂອງເຂົາເຈົ້າເອງໂດຍກົງ
     /// </remarks>
     public static class Notifications
     {
-        /// <summary>ส่งการแจ้งเตือนถึงผู้ใช้</summary>
+        /// <summary>ສົ່ງການແຈ້ງເຕືອນໃຫ້ຜູ້ໃຊ້</summary>
         public const string Send = "notifications.send";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับงานซ่อมบำรุง</summary>
+    /// <summary>ສິດກ່ຽວກັບວຽກງານບໍາລຸງຮັກສາ</summary>
     public static class Maintenance
     {
-        /// <summary>ดูงานซ่อมบำรุง</summary>
+        /// <summary>ເບິ່ງວຽກບໍາລຸງຮັກສາ</summary>
         public const string View = "maintenance.view";
 
-        /// <summary>มอบหมายงานซ่อมบำรุง</summary>
+        /// <summary>ມອບວຽກບໍາລຸງຮັກສາ</summary>
         public const string Assign = "maintenance.assign";
 
-        /// <summary>อัปเดตสถานะงานซ่อมบำรุง</summary>
+        /// <summary>ອັບເດດສະຖານະການບຳລຸງຮັກສາ</summary>
         public const string UpdateStatus = "maintenance.update-status";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับรายงาน</summary>
+    /// <summary>ສິດໃນການລາຍງານ</summary>
     public static class Reports
     {
-        /// <summary>ดูรายงาน</summary>
+        /// <summary>ເບິ່ງບົດລາຍງານ</summary>
         public const string View = "reports.view";
 
-        /// <summary>ส่งออกรายงาน</summary>
+        /// <summary>ລາຍງານການສົ່ງອອກ</summary>
         public const string Export = "reports.export";
     }
 
-    /// <summary>สิทธิ์เกี่ยวกับการดูแลระบบ</summary>
+    /// <summary>ສິດການຄຸ້ມຄອງລະບົບ</summary>
     public static class Administration
     {
-        /// <summary>จัดการผู้ใช้งาน</summary>
+        /// <summary>ຈັດການຜູ້ໃຊ້</summary>
         public const string ManageUsers = "users.manage";
 
-        /// <summary>จัดการบทบาทและสิทธิ์</summary>
+        /// <summary>ຄຸ້ມຄອງບົດບາດແລະການອະນຸຍາດ</summary>
         public const string ManageRoles = "roles.manage";
 
-        /// <summary>จัดการค่าตั้งของระบบ</summary>
+        /// <summary>ຈັດການການຕັ້ງຄ່າລະບົບ</summary>
         public const string ManageSettings = "settings.manage";
 
-        /// <summary>ดู Audit Log</summary>
+        /// <summary>ສັງເກດເບິ່ງ Audit Log</summary>
         public const string ViewAuditLogs = "audit-logs.view";
     }
 
-    /// <summary>นิยามของสิทธิ์ทั้งหมด เรียงตามโมดูล</summary>
+    /// <summary>
+    /// ການອະນຸຍາດ Dashboard
+    /// </summary>
+    /// <remarks>
+    /// ມັນບໍ່ໄດ້ຢູ່ໃນບັນຊີລາຍຊື່ການອະນຸຍາດຕົ້ນສະບັບ Phase 1/2 ເພີ່ມໃນລະຫວ່າງການສ້າງ Endpoint ພາບລວມຂອງ Dashboard
+    /// ນີ້ແມ່ນສິດດຽວທີ່ມີຈຸດປະສົງເພື່ອໃຫ້ໄດ້ທຸກໜ້າທີ່ຂອງຕົວແທນ (ຍົກເວັ້ນ Tenant) ເນື່ອງຈາກວ່າ dashboard ໄດ້
+    /// ສົມທົບຂໍ້ມູນຈາກຫຼາຍໂມດູນທີ່ມີບົດບາດທີ່ແນ່ນອນ (ເຊັ່ນ Technician) ບໍ່ມີສິດໃນການເບິ່ງໂດຍກົງ (ເຊັ່ນ reports.view)
+    /// ແຕ່ທ່ານຍັງຈໍາເປັນຕ້ອງສາມາດເຫັນພາບລວມກ່ຽວກັບຕົວທ່ານເອງ
+    /// </remarks>
+    public static class Dashboard
+    {
+        /// <summary>ເບິ່ງພາບລວມຂອງ dashboard</summary>
+        public const string View = "dashboard.view";
+    }
+
+    /// <summary>ຄໍານິຍາມຂອງສິດທັງຝົດຈັດລຽງຕາມໂມດູນ</summary>
     public static IReadOnlyList<PermissionDefinition> All { get; } =
     [
-        new(Organizations.View, "ดูข้อมูลองค์กร", PermissionModules.Organizations),
-        new(Organizations.Create, "สร้างองค์กร", PermissionModules.Organizations),
-        new(Organizations.Update, "แก้ไขข้อมูลองค์กร", PermissionModules.Organizations),
-        new(Organizations.Delete, "ลบองค์กร", PermissionModules.Organizations),
+        new(Organizations.View, "ເບິ່ງຂໍ້ມູນອົງກອນ", PermissionModules.Organizations),
+        new(Organizations.Create, "ສ້າງອົງກອນ", PermissionModules.Organizations),
+        new(Organizations.Update, "ແກ້ໄຂຂໍ້ມູນອົງກອນ", PermissionModules.Organizations),
+        new(Organizations.Delete, "ລຶບອົງກອນ", PermissionModules.Organizations),
 
-        new(Dormitories.View, "ดูข้อมูลหอพัก", PermissionModules.Dormitories),
-        new(Dormitories.Create, "สร้างหอพัก", PermissionModules.Dormitories),
-        new(Dormitories.Update, "แก้ไขข้อมูลหอพัก", PermissionModules.Dormitories),
-        new(Dormitories.Delete, "ลบหอพัก", PermissionModules.Dormitories),
+        new(Dormitories.View, "ເບິ່ງຂໍ້ມູນຫໍພັກ", PermissionModules.Dormitories),
+        new(Dormitories.Create, "ສ້າງຫໍພັກ", PermissionModules.Dormitories),
+        new(Dormitories.Update, "ແກ້ໄຂຂໍ້ມູນຫໍພັກ", PermissionModules.Dormitories),
+        new(Dormitories.Delete, "ລຶບຫໍພັກ", PermissionModules.Dormitories),
 
-        new(Buildings.View, "ดูข้อมูลอาคาร", PermissionModules.Buildings),
-        new(Buildings.Create, "สร้างอาคาร", PermissionModules.Buildings),
-        new(Buildings.Update, "แก้ไขข้อมูลอาคาร", PermissionModules.Buildings),
-        new(Buildings.Delete, "ลบอาคาร", PermissionModules.Buildings),
+        new(Buildings.View, "ເບິ່ງຂໍ້ມູນອາຄານ", PermissionModules.Buildings),
+        new(Buildings.Create, "ສ້າງອາຄານ", PermissionModules.Buildings),
+        new(Buildings.Update, "ແກ້ໄຂຂໍ້ມູນອາຄານ", PermissionModules.Buildings),
+        new(Buildings.Delete, "ລຶບອາຄານ", PermissionModules.Buildings),
 
-        new(Floors.View, "ดูข้อมูลชั้น", PermissionModules.Floors),
-        new(Floors.Create, "สร้างชั้น", PermissionModules.Floors),
-        new(Floors.Update, "แก้ไขข้อมูลชั้น", PermissionModules.Floors),
-        new(Floors.Delete, "ลบชั้น", PermissionModules.Floors),
+        new(Floors.View, "ເບິ່ງຂໍ້ມູນຊັ້ນ", PermissionModules.Floors),
+        new(Floors.Create, "ສ້າງຊັ້ນ", PermissionModules.Floors),
+        new(Floors.Update, "ແກ້ໄຂຂໍ້ມູນຊັ້ນ", PermissionModules.Floors),
+        new(Floors.Delete, "ລຶບຊັ້ນ", PermissionModules.Floors),
 
-        new(RoomTypes.View, "ดูข้อมูลประเภทห้อง", PermissionModules.RoomTypes),
-        new(RoomTypes.Create, "สร้างประเภทห้อง", PermissionModules.RoomTypes),
-        new(RoomTypes.Update, "แก้ไขข้อมูลประเภทห้อง", PermissionModules.RoomTypes),
-        new(RoomTypes.Delete, "ลบประเภทห้อง", PermissionModules.RoomTypes),
+        new(RoomTypes.View, "ເບິ່ງຂໍ້ມູນປະເພດຫ້ອງ", PermissionModules.RoomTypes),
+        new(RoomTypes.Create, "ສ້າງປະເພດຫ້ອງ", PermissionModules.RoomTypes),
+        new(RoomTypes.Update, "ແກ້ໄຂຂໍ້ມູນປະເພດຫ້ອງ", PermissionModules.RoomTypes),
+        new(RoomTypes.Delete, "ລຶບປະເພດຫ້ອງ", PermissionModules.RoomTypes),
 
-        new(Rooms.View, "ดูข้อมูลห้องพัก", PermissionModules.Rooms),
-        new(Rooms.Create, "สร้างห้องพัก", PermissionModules.Rooms),
-        new(Rooms.Update, "แก้ไขข้อมูลห้องพัก", PermissionModules.Rooms),
-        new(Rooms.Delete, "ลบห้องพัก", PermissionModules.Rooms),
-        new(Rooms.ChangeStatus, "เปลี่ยนสถานะห้องพัก", PermissionModules.Rooms),
+        new(Rooms.View, "ເບິ່ງຂໍ້ມູນຫ້ອງພັກ", PermissionModules.Rooms),
+        new(Rooms.Create, "ສ້າງຫ້ອງພັກ", PermissionModules.Rooms),
+        new(Rooms.Update, "ແກ້ໄຂຂໍ້ມູນຫ້ອງພັກ", PermissionModules.Rooms),
+        new(Rooms.Delete, "ລຶບຫ້ອງພັກ", PermissionModules.Rooms),
+        new(Rooms.ChangeStatus, "ປ່ຽນສະຖານະຫ້ອງພັກ", PermissionModules.Rooms),
 
-        new(Tenants.View, "ดูข้อมูลผู้เช่า", PermissionModules.Tenants),
-        new(Tenants.Create, "สร้างข้อมูลผู้เช่า", PermissionModules.Tenants),
-        new(Tenants.Update, "แก้ไขข้อมูลผู้เช่า", PermissionModules.Tenants),
+        new(Tenants.View, "ເບິ່ງຂໍ້ມູນຜູ້ເຊົ່າ", PermissionModules.Tenants),
+        new(Tenants.Create, "ສ້າງຂໍ້ມູນຜູ້ເຊົ່າ", PermissionModules.Tenants),
+        new(Tenants.Update, "ແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ", PermissionModules.Tenants),
 
-        new(Reservations.View, "ดูรายการจอง", PermissionModules.Reservations),
-        new(Reservations.Create, "สร้างการจองใหม่", PermissionModules.Reservations),
-        new(Reservations.Cancel, "ยกเลิกการจอง", PermissionModules.Reservations),
+        new(Reservations.View, "ເບິ່ງລາຍການຈອງ", PermissionModules.Reservations),
+        new(Reservations.Create, "ສ້າງການຈອງໃໝ່", PermissionModules.Reservations),
+        new(Reservations.Cancel, "ຍົກເລີກການຈອງ", PermissionModules.Reservations),
 
-        new(Contracts.View, "ดูสัญญาเช่า", PermissionModules.Contracts),
-        new(Contracts.Create, "สร้างสัญญาเช่า", PermissionModules.Contracts),
-        new(Contracts.Activate, "เปิดใช้งานสัญญาเช่า", PermissionModules.Contracts),
-        new(Contracts.Terminate, "สิ้นสุดสัญญาเช่า", PermissionModules.Contracts),
+        new(Contracts.View, "ເບິ່ງສັນຍາເຊົ່າ", PermissionModules.Contracts),
+        new(Contracts.Create, "ສ້າງສັນຍາເຊົ່າ", PermissionModules.Contracts),
+        new(Contracts.Activate, "ເປີດໃຊ້ງານສັນຍາເຊົ່າ", PermissionModules.Contracts),
+        new(Contracts.Terminate, "ສິ້ນສຸດສັນຍາເຊົ່າ", PermissionModules.Contracts),
 
-        new(MeterReadings.View, "ดูค่ามิเตอร์", PermissionModules.MeterReadings),
-        new(MeterReadings.Create, "บันทึกค่ามิเตอร์", PermissionModules.MeterReadings),
+        new(MeterReadings.View, "ເບິ່ງຄ່າມິເຕີ", PermissionModules.MeterReadings),
+        new(MeterReadings.Create, "ບັນທຶກຄ່າມິເຕີ", PermissionModules.MeterReadings),
 
-        new(Invoices.View, "ดูใบแจ้งหนี้", PermissionModules.Invoices),
-        new(Invoices.Create, "สร้างใบแจ้งหนี้", PermissionModules.Invoices),
-        new(Invoices.Issue, "ออกใบแจ้งหนี้", PermissionModules.Invoices),
-        new(Invoices.Cancel, "ยกเลิกใบแจ้งหนี้", PermissionModules.Invoices),
+        new(Invoices.View, "ເບິ່ງໃບແຈ້ງໜີ້", PermissionModules.Invoices),
+        new(Invoices.Create, "ສ້າງໃບແຈ້ງໜີ້", PermissionModules.Invoices),
+        new(Invoices.Issue, "ອອກໃບແຈ້ງໜີ້", PermissionModules.Invoices),
+        new(Invoices.Cancel, "ຍົກເລີກໃບແຈ້ງໜີ້", PermissionModules.Invoices),
 
-        new(Payments.View, "ดูรายการชำระเงิน", PermissionModules.Payments),
-        new(Payments.Create, "บันทึกการชำระเงิน", PermissionModules.Payments),
-        new(Payments.Approve, "อนุมัติการชำระเงิน", PermissionModules.Payments),
-        new(Payments.Refund, "คืนเงิน", PermissionModules.Payments),
+        new(Payments.View, "ເບິ່ງລາຍການຊຳລະເງິນ", PermissionModules.Payments),
+        new(Payments.Create, "ບັນທຶກການຊຳລະເງິນ", PermissionModules.Payments),
+        new(Payments.Approve, "ອະນຸມັດການຊຳລະເງິນ", PermissionModules.Payments),
+        new(Payments.Refund, "ຄືນເງິນ", PermissionModules.Payments),
 
-        new(Deposits.View, "ดูรายการเงินมัดจำ", PermissionModules.Deposits),
-        new(Deposits.Collect, "บันทึกการรับเงินมัดจำ", PermissionModules.Deposits),
-        new(Deposits.Refund, "คืนเงินมัดจำ", PermissionModules.Deposits),
+        new(Deposits.View, "ເບິ່ງລາຍການເງິນມັດຈຳ", PermissionModules.Deposits),
+        new(Deposits.Collect, "ບັນທຶກການຮັບເງິນມັດຈຳ", PermissionModules.Deposits),
+        new(Deposits.Refund, "ຄືນເງິນມັດຈຳ", PermissionModules.Deposits),
 
-        new(Receipts.View, "ดูใบเสร็จรับเงิน", PermissionModules.Receipts),
-        new(Receipts.Issue, "ออกใบเสร็จรับเงิน", PermissionModules.Receipts),
+        new(Receipts.View, "ເບິ່ງໃບຮັບເງິນ", PermissionModules.Receipts),
+        new(Receipts.Issue, "ອອກໃບຮັບເງິນ", PermissionModules.Receipts),
 
-        new(Expenses.View, "ดูรายการค่าใช้จ่าย", PermissionModules.Expenses),
-        new(Expenses.Create, "บันทึกค่าใช้จ่าย", PermissionModules.Expenses),
+        new(Expenses.View, "ເບິ່ງລາຍການຄ່າໃຊ້ຈ່າຍ", PermissionModules.Expenses),
+        new(Expenses.Create, "ບັນທຶກຄ່າໃຊ້ຈ່າຍ", PermissionModules.Expenses),
 
-        new(Parcels.View, "ดูรายการพัสดุ", PermissionModules.Parcels),
-        new(Parcels.Log, "บันทึกพัสดุที่มาถึง", PermissionModules.Parcels),
-        new(Parcels.Pickup, "บันทึกการรับพัสดุ", PermissionModules.Parcels),
+        new(Parcels.View, "ເບິ່ງລາຍການພັດສະດຸ", PermissionModules.Parcels),
+        new(Parcels.Log, "ບັນທຶກພັດສະດຸທີ່ມາຮອດ", PermissionModules.Parcels),
+        new(Parcels.Pickup, "ບັນທຶກການຮັບພັດສະດຸ", PermissionModules.Parcels),
 
-        new(Visitors.View, "ดูรายการผู้มาเยือน", PermissionModules.Visitors),
-        new(Visitors.CheckIn, "บันทึกการเข้าของผู้มาเยือน", PermissionModules.Visitors),
-        new(Visitors.CheckOut, "บันทึกการออกของผู้มาเยือน", PermissionModules.Visitors),
+        new(Visitors.View, "ເບິ່ງລາຍການຜູ້ມາຢ້ຽມຢາມ", PermissionModules.Visitors),
+        new(Visitors.CheckIn, "ບັນທຶກການເຂົ້າຂອງຜູ້ມາຢ້ຽມຢາມ", PermissionModules.Visitors),
+        new(Visitors.CheckOut, "ບັນທຶກການອອກຂອງຜູ້ມາຢ້ຽມຢາມ", PermissionModules.Visitors),
 
-        new(Parking.View, "ดูรายการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
-        new(Parking.Register, "จดทะเบียนที่จอดรถใหม่", PermissionModules.Parking),
-        new(Parking.Release, "สิ้นสุดการจดทะเบียนที่จอดรถ", PermissionModules.Parking),
+        new(Parking.View, "ເບິ່ງລາຍການຈົດທະບຽນບ່ອນຈອດລົດ", PermissionModules.Parking),
+        new(Parking.Register, "ຈົດທະບຽນບ່ອນຈອດລົດໃໝ່", PermissionModules.Parking),
+        new(Parking.Release, "ສິ້ນສຸດການຈົດທະບຽນບ່ອນຈອດລົດ", PermissionModules.Parking),
 
-        new(Announcements.View, "ดูรายการประกาศ", PermissionModules.Announcements),
-        new(Announcements.Create, "สร้างประกาศใหม่", PermissionModules.Announcements),
-        new(Announcements.Publish, "เผยแพร่หรือเก็บประกาศเข้าคลัง", PermissionModules.Announcements),
+        new(Announcements.View, "ເບິ່ງລາຍການປະກາດ", PermissionModules.Announcements),
+        new(Announcements.Create, "ສ້າງປະກາດໃໝ່", PermissionModules.Announcements),
+        new(Announcements.Publish, "ເຜີຍແຜ່ ຫຼື ເກັບປະກາດເຂົ້າສາງ", PermissionModules.Announcements),
 
-        new(Notifications.Send, "ส่งการแจ้งเตือนถึงผู้ใช้", PermissionModules.Notifications),
+        new(Notifications.Send, "ສົ່ງການແຈ້ງເຕືອນຫາຜູ້ໃຊ້", PermissionModules.Notifications),
 
-        new(Maintenance.View, "ดูงานซ่อมบำรุง", PermissionModules.Maintenance),
-        new(Maintenance.Assign, "มอบหมายงานซ่อมบำรุง", PermissionModules.Maintenance),
-        new(Maintenance.UpdateStatus, "อัปเดตสถานะงานซ่อมบำรุง", PermissionModules.Maintenance),
+        new(Maintenance.View, "ເບິ່ງງານສ້ອມແປງ", PermissionModules.Maintenance),
+        new(Maintenance.Assign, "ມອບໝາຍງານສ້ອມແປງ", PermissionModules.Maintenance),
+        new(Maintenance.UpdateStatus, "ອັບເດດສະຖານະງານສ້ອມແປງ", PermissionModules.Maintenance),
 
-        new(Reports.View, "ดูรายงาน", PermissionModules.Reports),
-        new(Reports.Export, "ส่งออกรายงาน", PermissionModules.Reports),
+        new(Reports.View, "ເບິ່ງລາຍງານ", PermissionModules.Reports),
+        new(Reports.Export, "ສົ່ງອອກລາຍງານ", PermissionModules.Reports),
 
-        new(Administration.ManageUsers, "จัดการผู้ใช้งาน", PermissionModules.Administration),
-        new(Administration.ManageRoles, "จัดการบทบาทและสิทธิ์", PermissionModules.Administration),
-        new(Administration.ManageSettings, "จัดการค่าตั้งของระบบ", PermissionModules.Administration),
-        new(Administration.ViewAuditLogs, "ดู Audit Log", PermissionModules.Administration),
+        new(Administration.ManageUsers, "ຈັດການຜູ້ໃຊ້ງານ", PermissionModules.Administration),
+        new(Administration.ManageRoles, "ຈັດການບົດບາດ ແລະ ສິດ", PermissionModules.Administration),
+        new(Administration.ManageSettings, "ຈັດການການຕັ້ງຄ່າຂອງລະບົບ", PermissionModules.Administration),
+        new(Administration.ViewAuditLogs, "ເບິ່ງ Audit Log", PermissionModules.Administration),
+
+        new(Dashboard.View, "ເບິ່ງພາບລວມແດຊບອດ", PermissionModules.Dashboard),
     ];
 
-    /// <summary>รหัสสิทธิ์ทั้งหมดในรูปแบบชุดที่ค้นหาได้เร็ว</summary>
+    /// <summary>ລະຫັດໃບອະນຸຍາດທັງໝົດໃນຮູບແບບທີ່ສາມາດຊອກຫາໄດ້ໄວ</summary>
     public static IReadOnlySet<string> AllCodes { get; } =
         All.Select(permission => permission.Code).ToHashSet(StringComparer.Ordinal);
 
-    /// <summary>ตรวจว่ารหัสสิทธิ์ที่ระบุมีอยู่จริงในระบบหรือไม่</summary>
-    /// <param name="code">รหัสสิทธิ์ที่ต้องการตรวจ</param>
+    /// <summary>ກວດເບິ່ງວ່າລະຫັດການອະນຸຍາດທີ່ລະບຸນັ້ນມີຢູ່ໃນລະບົບຫຼືບໍ່</summary>
+    /// <param name="code">ລະຫັດການອະນຸຍາດທີ່ທ່ານຕ້ອງການກວດສອບ</param>
     public static bool Exists(string code) => AllCodes.Contains(code);
 }

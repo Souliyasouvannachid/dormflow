@@ -1,16 +1,16 @@
 namespace DormFlow.Infrastructure.Options;
 
 /// <summary>
-/// ค่าตั้งของ Background Job อ่านจาก configuration section ชื่อ BackgroundJobs
+/// ການຕັ້ງຄ່າ Background Job ອ່ານຈາກ configuration section ຊື່ BackgroundJobs
 /// </summary>
 public sealed class BackgroundJobOptions
 {
-    /// <summary>ชื่อ section ใน appsettings</summary>
+    /// <summary>ຊື່ section ໃນ appsettings</summary>
     public const string SectionName = "BackgroundJobs";
 
     /// <summary>
-    /// เปิดใช้งาน Background Job หรือไม่ (Dashboard และ Recurring Job ทั้งหมด)
-    /// ปิดได้โดยไม่ต้อง deploy ใหม่ เผื่อกรณีต้องการหยุดชั่วคราวเพื่อบำรุงรักษา
+    /// ເປີດໃຊ້ Background Job ຫຼືບໍ່ (Dashboard ແລະ Recurring Job ທັງໝົດ)
+    /// ສາມາດປິດໄດ້ໂດຍບໍ່ມີການ deploy ໃຝ່ໃນກໍລະນີທີ່ທ່ານຕ້ອງການທີ່ຈະຢຸດຊົ່ວຄາວສໍາລັບການບໍາລຸງຮັກສາ
     /// </summary>
     public bool Enabled { get; set; } = true;
 }

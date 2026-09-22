@@ -10,18 +10,18 @@ using FluentValidationException = FluentValidation.ValidationException;
 namespace DormFlow.Api.Middleware;
 
 /// <summary>
-/// ดักจับ Exception ทุกตัวที่หลุดออกมาจากไปป์ไลน์ แล้วแปลงเป็น API Response รูปแบบเดียวกันทั้งระบบ
+/// ກັບດັກ Exception ທຸກສິ່ງທຸກຢ່າງທີ່ອອກມາຈາກທໍ່ນັ້ນຖືກປ່ຽນເປັນ API Response ຮູບແບບດຽວກັນໃນທົ່ວລະບົບ
 /// </summary>
 /// <remarks>
-/// วางไว้เป็น Middleware ตัวแรกสุด เพื่อให้ครอบคลุมข้อผิดพลาดจาก Middleware ตัวอื่นด้วย
-/// ข้อความที่ตอบกลับผู้เรียกจะไม่มีรายละเอียดภายในระบบ ส่วนรายละเอียดจริงถูกบันทึกลง Log พร้อม TraceId
+/// ວາງໄວ້ເປັນ Middleware ອັນທໍາອິດແມ່ນເພື່ອກວມເອົາຄວາມຜິດພາດຈາກ Middleware ຄົນອື່ນຄືກັນ
+/// ຂໍ້ຄວາມທີ່ຕອບກັບຫາຜູ້ໂທຈະບໍ່ມີລາຍລະອຽດພາຍໃນໃດໆ. ລາຍລະອຽດຕົວຈິງໄດ້ຖືກບັນທຶກໄວ້ Log ພ້ອມ TraceId
 /// </remarks>
 public sealed class GlobalExceptionHandlingMiddleware(
     RequestDelegate next,
     ILogger<GlobalExceptionHandlingMiddleware> logger,
     IHostEnvironment environment)
 {
-    /// <summary>สถานะที่ใช้เมื่อผู้เรียกยกเลิกคำขอเอง ตามธรรมเนียมของ nginx</summary>
+    /// <summary>ສະຖານະທີ່ໃຊ້ເມື່ອຜູ້ໂທຍົກເລີກການຮ້ອງຂໍດ້ວຍຕົນເອງ. ຕາມປະເພນີຂອງ nginx</summary>
     private const int ClientClosedRequestStatusCode = 499;
 
     private static readonly JsonSerializerOptions SerializerOptions = DormFlowJsonSerializerOptions.Default;
@@ -30,8 +30,8 @@ public sealed class GlobalExceptionHandlingMiddleware(
     private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger = logger;
     private readonly IHostEnvironment _environment = environment;
 
-    /// <summary>ประมวลผลคำขอและดักจับข้อผิดพลาดที่เกิดขึ้น</summary>
-    /// <param name="context">บริบทของคำขอปัจจุบัน</param>
+    /// <summary>ຂະບວນການຮ້ອງຂໍແລະຈັບຄວາມຜິດພາດຍ້ອນວ່າເຂົາເຈົ້າເກີດຂຶ້ນ</summary>
+    /// <param name="context">ສະພາບການຂອງຄໍາຮ້ອງຂໍໃນປະຈຸບັນ</param>
     public async Task InvokeAsync(HttpContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -42,7 +42,7 @@ public sealed class GlobalExceptionHandlingMiddleware(
         }
         catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
         {
-            // ผู้เรียกปิดการเชื่อมต่อไปแล้ว ไม่ใช่ข้อผิดพลาดของระบบ จึงบันทึกเป็นระดับ Information
+            // ຜູ້ໂທໄດ້ປິດການເຊື່ອມຕໍ່. ມັນບໍ່ແມ່ນຄວາມຜິດພາດຂອງລະບົບ. ສະນັ້ນບັນທຶກເປັນລະດັບ Information
             ExceptionLog.RequestCancelledByCaller(_logger, context.Request.Method, context.Request.Path);
 
             if (!context.Response.HasStarted)
@@ -65,7 +65,7 @@ public sealed class GlobalExceptionHandlingMiddleware(
 
         if (context.Response.HasStarted)
         {
-            // เขียน Response ไปแล้วบางส่วน แก้อะไรไม่ได้นอกจากปล่อยให้การเชื่อมต่อจบลง
+            // ຂຽນ Response ບາງສ່ວນຂອງມັນໄດ້ຝົດແລ້ວ. ບໍ່ມີຫຍັງສາມາດແກ້ໄຂໄດ້ຍົກເວັ້ນການປ່ອຍໃຫ້ການເຊື່ອມຕໍ່ສິ້ນສຸດລົງ
             ExceptionLog.ResponseAlreadyStarted(_logger, traceId);
             return;
         }
@@ -95,8 +95,8 @@ public sealed class GlobalExceptionHandlingMiddleware(
                         traceId));
 
             case UnauthorizedAccessException unauthorized:
-                // ข้อความมาจาก Use Case โดยตรง เช่น "อีเมลหรือรหัสผ่านไม่ถูกต้อง" หรือ "Refresh Token หมดอายุแล้ว"
-                // ส่วนกรณีไม่ได้แนบ Token เลยหรือ Token ไม่ถูกต้อง ถูกดักไว้ที่ JwtBearerEvents.OnChallenge ก่อนถึงจุดนี้
+                // ຂໍ້ຄວາມມາຈາກ Use Case ໂດຍກົງ, ເຊັ່ນ "ອີເມວ ຫຼືລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ" ຫຼື "Refresh Token ໝົດອາຍຸແລ້ວ"
+                // ໃນກໍລະນີທີ່ມັນບໍ່ຕິດ Token ທັງຝົດ? Token ບໍ່ຖືກຕ້ອງ, ຕິດຢູ່ JwtBearerEvents.OnChallenge ກ່ອນຈຸດນີ້
                 return (StatusCodes.Status401Unauthorized, ApiResponse.Fail(unauthorized.Message, traceId));
 
             case ForbiddenAccessException forbidden:
@@ -118,7 +118,7 @@ public sealed class GlobalExceptionHandlingMiddleware(
                 return (StatusCodes.Status400BadRequest, ApiResponse.Fail(badRequest.Message, traceId));
 
             default:
-                // ไม่เปิดเผยรายละเอียดภายในให้ผู้เรียกใน Production
+                // ຢ່າເປີດເຜີຍລາຍລະອຽດພາຍໃນໃຫ້ຜູ້ໂທເຂົ້າມາ Production
                 return (
                     StatusCodes.Status500InternalServerError,
                     ApiResponse.Fail(
@@ -153,30 +153,30 @@ public sealed class GlobalExceptionHandlingMiddleware(
 }
 
 /// <summary>
-/// ข้อความ Log ของตัวดักจับข้อผิดพลาด
+/// ຂໍ້ຄວາມ Log ຂອງຕົວຈັບຄວາມຜິດພາດ
 /// </summary>
 /// <remarks>
-/// ใช้ LoggerMessage source generator เพื่อไม่ให้มีการ box ค่าและไม่ประเมินพารามิเตอร์
-/// เมื่อระดับ Log นั้นถูกปิดอยู่
+/// ໃຊ້ LoggerMessage source generator ໃນຄໍາສັ່ງທີ່ຈະບໍ່ມີ box ຄ່າແລະບໍ່ປະເມີນພາລາມິເຕີ
+/// ເມື່ອລະດັບ Log ປິດ
 /// </remarks>
 internal static partial class ExceptionLog
 {
     [LoggerMessage(
         EventId = 1000,
         Level = LogLevel.Information,
-        Message = "คำขอ {Method} {Path} ถูกยกเลิกโดยผู้เรียก")]
+        Message = "ຄຳຮ້ອງ {Method} {Path} ຖືກຍົກເລີກໂດຍຜູ້ເອີ້ນ")]
     public static partial void RequestCancelledByCaller(ILogger logger, string method, PathString path);
 
     [LoggerMessage(
         EventId = 1001,
         Level = LogLevel.Warning,
-        Message = "ไม่สามารถเขียน Error Response ได้เพราะเริ่มส่ง Response ไปแล้ว TraceId {TraceId}")]
+        Message = "ບໍ່ສາມາດຂຽນ Error Response ໄດ້ເພາະເລີ່ມສົ່ງ Response ໄປແລ້ວ TraceId {TraceId}")]
     public static partial void ResponseAlreadyStarted(ILogger logger, string traceId);
 
     [LoggerMessage(
         EventId = 1002,
         Level = LogLevel.Error,
-        Message = "เกิดข้อผิดพลาดที่ไม่คาดคิดขณะประมวลผล {Method} {Path} สถานะ {StatusCode} TraceId {TraceId}")]
+        Message = "ເກີດຂໍ້ຜິດພາດທີ່ບໍ່ຄາດຄິດຂະນະປະມວນຜົນ {Method} {Path} ສະຖານະ {StatusCode} TraceId {TraceId}")]
     public static partial void UnhandledException(
         ILogger logger,
         Exception exception,
@@ -188,7 +188,7 @@ internal static partial class ExceptionLog
     [LoggerMessage(
         EventId = 1003,
         Level = LogLevel.Warning,
-        Message = "คำขอ {Method} {Path} จบด้วยสถานะ {StatusCode} เพราะ {ExceptionType} TraceId {TraceId}")]
+        Message = "ຄຳຮ້ອງ {Method} {Path} ສິ້ນສຸດດ້ວຍສະຖານະ {StatusCode} ເພາະ {ExceptionType} TraceId {TraceId}")]
     public static partial void HandledException(
         ILogger logger,
         string method,

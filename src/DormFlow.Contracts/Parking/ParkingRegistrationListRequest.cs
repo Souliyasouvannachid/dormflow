@@ -2,15 +2,15 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Parking;
 
-/// <summary>พารามิเตอร์การค้นหารายการจดทะเบียนที่จอดรถ</summary>
+/// <summary>ຕົວກໍານົດການການຊອກຫາການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public class ParkingRegistrationListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการของผู้เช่าที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ລາຍການສໍາລັບຜູ້ເຊົ່າທີ່ລະບຸ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການທີ່ມີສະຖານະກົງກັບອັນທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

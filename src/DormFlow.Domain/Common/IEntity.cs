@@ -1,10 +1,10 @@
 namespace DormFlow.Domain.Common;
 
 /// <summary>
-/// สัญญาพื้นฐานของ Entity ทุกตัวในระบบ ใช้ UUID (<see cref="Guid"/>) เป็น Primary Key เสมอ
+/// ສັນຍາພື້ນຖານຂອງ Entity ທຸກຢ່າງໃນລະບົບໃຊ້ UUID (<see cref="Guid"/>) ແມ່ນ Primary Key ສະເໝີ
 /// </summary>
 public interface IEntity
 {
-    /// <summary>รหัสอ้างอิงหลักของ Entity</summary>
+    /// <summary>ລະຫັດການອ້າງອີງຫຼັກຂອງ Entity</summary>
     Guid Id { get; }
 }

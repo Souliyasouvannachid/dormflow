@@ -4,35 +4,35 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// การจองห้องพักหนึ่งครั้งก่อนทำสัญญาเช่าจริง
+/// ການຈອງຫ້ອງຜຶ່ງຄັ້ງກ່ອນທີ່ຈະເຮັດສັນຍາເຊົ່າຕົວຈິງ
 /// </summary>
 /// <remarks>
-/// การจองทำให้ห้องเปลี่ยนสถานะเป็น <see cref="RoomStatus.Reserved"/> ทันที
-/// เพื่อกันไม่ให้ถูกจองซ้ำระหว่างที่ผู้เช่ากำลังตัดสินใจหรือเตรียมเอกสารทำสัญญา
+/// ການຈອງເຮັດໃຫ້ຫ້ອງປ່ຽນສະຖານະເປັນ <see cref="RoomStatus.Reserved"/> ທັນທີ
+/// ເພື່ອປ້ອງກັນການຖືກຈອງອີກໃນຂະນະທີ່ຜູ້ເຊົ່າກໍາລັງຕັດສິນໃຈຫຼືກະກຽມເອກະສານສັນຍາ
 /// </remarks>
 public class Reservation : TenantEntity
 {
-    /// <summary>ห้องที่ถูกจอง</summary>
+    /// <summary>ຫ້ອງສະຫງວນ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่จอง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ຈອງແລ້ວ</summary>
     public Guid TenantId { get; set; }
 
-    /// <summary>วันที่ทำการจอง</summary>
+    /// <summary>ວັນທີຈອງ</summary>
     public DateTimeOffset ReservationDate { get; set; }
 
-    /// <summary>วันที่คาดว่าจะเข้าพัก</summary>
+    /// <summary>ວັນທີທີ່ຄາດວ່າຈະຢູ່</summary>
     public DateOnly MoveInDate { get; set; }
 
-    /// <summary>เวลาที่การกันห้องจะหมดอายุ ถ้ายังไม่ทำสัญญาก่อนเวลานี้ห้องจะถูกปล่อยว่างคืน</summary>
+    /// <summary>ໃນເວລາທີ່ຕັນຫ້ອງຈະຝົດອາຍຸຖ້າຫາກວ່າສັນຍາຍັງບໍ່ໄດ້ເຊັນກ່ອນເວລານີ້, ຫ້ອງຈະໄດ້ຮັບການປ່ອຍອອກມາເມື່ອຄືນ</summary>
     public DateTimeOffset ExpiresAt { get; set; }
 
-    /// <summary>ค่าจองห้อง</summary>
+    /// <summary>ຄ່າຈອງຫ້ອງ</summary>
     public decimal ReservationFee { get; set; }
 
-    /// <summary>สถานะของการจอง</summary>
+    /// <summary>ສະຖານະການຈອງ</summary>
     public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

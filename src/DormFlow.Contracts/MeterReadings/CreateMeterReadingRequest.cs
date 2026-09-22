@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.MeterReadings;
 
-/// <summary>คำขอบันทึกค่ามิเตอร์</summary>
+/// <summary>ຮ້ອງຂໍການບັນທຶກຄ່າແມັດ</summary>
 public class CreateMeterReadingRequest
 {
-    /// <summary>ห้องที่จดค่ามิเตอร์</summary>
+    /// <summary>ຫ້ອງທີ່ບັນທຶກການອ່ານແມັດ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ประเภทมิเตอร์ ("Water" หรือ "Electricity")</summary>
+    /// <summary>ປະເພດແມັດ ("Water" ຫຼື "Electricity")</summary>
     public string MeterType { get; set; } = string.Empty;
 
-    /// <summary>เดือนที่นำค่านี้ไปออกบิล ระบบจะปรับให้เป็นวันที่ 1 ของเดือนโดยอัตโนมัติ</summary>
+    /// <summary>ເດືອນທີ່ຄ່ານີ້ຖືກຮຽກເກັບ ລະບົບຈະປັບເປັນວັນທີ 1 ຂອງເດືອນອັດຕະໂນມັດ</summary>
     public DateOnly PeriodMonth { get; set; }
 
-    /// <summary>วันที่จดมิเตอร์จริง</summary>
+    /// <summary>ວັນທີລົງທະບຽນຕົວຈິງແມັດ</summary>
     public DateOnly ReadingDate { get; set; }
 
-    /// <summary>ค่ามิเตอร์ที่จดได้ในรอบนี้ ต้องไม่น้อยกว่าค่าครั้งก่อนหน้า</summary>
+    /// <summary>ຄ່າແມັດທີ່ບັນທຶກໄວ້ໃນຮອບນີ້ຕ້ອງບໍ່ໜ້ອຍກວ່າຄ່າກ່ອນໜ້າ</summary>
     public decimal CurrentReading { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

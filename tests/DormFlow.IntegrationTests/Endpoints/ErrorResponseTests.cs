@@ -5,26 +5,26 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ตรวจพฤติกรรมของไปป์ไลน์เมื่อเรียกเส้นทางที่ไม่มีอยู่จริง</summary>
+/// <summary>ກວດເບິ່ງພຶດຕິກໍາຂອງທໍ່ໃນເວລາທີ່ໂທຫາເສັ້ນທາງທີ່ບໍ່ມີຢູ່</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ErrorResponseTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task เส้นทางที่ไม่มีอยู่จริง_ต้องได้_404()
+    public async Task ເສັ້ນທາງທີ່ບໍ່ມີຢູ່ແທ້ໆ_ຕ້ອງໄດ້ຮັບ_404()
     {
         using HttpClient client = _factory.CreateClient();
 
         using HttpResponseMessage response = await client.GetAsync(
-            new Uri("/api/v1/ไม่มีเส้นทางนี้", UriKind.Relative),
+            new Uri("/api/v1/ບໍ່ມີເສັ້ນທາງນີ້", UriKind.Relative),
             TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]
-    public async Task คำขอที่ไม่ได้ระบุ_Origin_ต้องผ่านได้ตามปกติ()
+    public async Task ຄຳຮ້ອງຂໍທີ່ບໍ່ລະບຸ_Origin_ຕ້ອງສາມາດຜ່ານໄດ້ຕາມປົກກະຕິ()
     {
         using HttpClient client = _factory.CreateClient();
 

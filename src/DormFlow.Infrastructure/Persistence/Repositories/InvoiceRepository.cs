@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลใบแจ้งหนี้บน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນໃບແຈ້ງໜີ້ຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class InvoiceRepository(DormFlowDbContext dbContext) : IInvoiceRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -89,12 +89,19 @@ public sealed class InvoiceRepository(DormFlowDbContext dbContext) : IInvoiceRep
     /// <inheritdoc />
     public async Task<IReadOnlyList<Invoice>> GetOverdueCandidatesAsync(
         DateOnly asOfDate,
+        int batchSize,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Invoices
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(batchSize);
+
+        return await _dbContext.Invoices
             .Where(invoice =>
                 (invoice.Status == InvoiceStatus.Issued || invoice.Status == InvoiceStatus.PartiallyPaid)
                 && invoice.DueDate < asOfDate)
+            .OrderBy(invoice => invoice.DueDate)
+            .Take(batchSize)
             .ToListAsync(cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)

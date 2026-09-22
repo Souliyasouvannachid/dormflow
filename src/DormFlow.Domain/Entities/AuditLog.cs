@@ -4,51 +4,51 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// บันทึกเหตุการณ์สำคัญที่เกิดขึ้นในระบบ
+/// ບັນທຶກເຫດການສໍາຄັນທີ່ເກີດຂື້ນໃນລະບົບ
 /// </summary>
 /// <remarks>
-/// ตารางนี้เป็นแบบเขียนอย่างเดียว ไม่มีการแก้ไขและไม่มี Soft Delete
-/// จึงไม่สืบทอดจาก <see cref="BaseEntity"/> เพื่อไม่ให้มีคอลัมน์ที่ไม่มีวันถูกใช้
-/// และเพื่อไม่ให้ Global Query Filter มากรองข้อมูลที่ต้องตรวจสอบย้อนหลังได้เสมอ
+/// ຕາຕະລາງນີ້ແມ່ນຂຽນເທົ່ານັ້ນ. ບໍ່ມີການແກ້ໄຂແລະບໍ່ມີ Soft Delete
+/// ເພາະສະນັ້ນມັນບໍ່ໄດ້ຖືກສືບທອດມາຈາກ <see cref="BaseEntity"/> ເພື່ອຫຼີກເວັ້ນການມີຖັນທີ່ບໍ່ເຄີຍຖືກນໍາໃຊ້
+/// ແລະໃນຄໍາສັ່ງທີ່ຈະບໍ່ Global Query Filter ທ່ານສະເຝີສາມາດກັ່ນຕອງຂໍ້ມູນທີ່ຕ້ອງໄດ້ຮັບການກວດສອບຄືນ
 /// </remarks>
 public class AuditLog : IEntity
 {
     /// <inheritdoc />
     public Guid Id { get; init; } = Guid.CreateVersion7();
 
-    /// <summary>องค์กรที่เกี่ยวข้อง เป็น null สำหรับเหตุการณ์ระดับระบบ</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງແມ່ນ null ສໍາລັບເຫດການລະດັບລະບົບ</summary>
     public Guid? OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid? DormitoryId { get; init; }
 
-    /// <summary>ผู้ใช้ที่ก่อให้เกิดเหตุการณ์ เป็น null เมื่อยังไม่ผ่านการยืนยันตัวตน</summary>
+    /// <summary>ຜູ້ໃຊ້ທີ່ເຮັດໃຫ້ເກີດເຫດການແມ່ນ null ເມື່ອຕົວຕົນຂອງທ່ານຍັງບໍ່ທັນໄດ້ຮັບການຢັ້ງຢືນ</summary>
     public Guid? UserId { get; init; }
 
-    /// <summary>ประเภทของเหตุการณ์</summary>
+    /// <summary>ປະເພດເຫດການ</summary>
     public required AuditAction Action { get; init; }
 
-    /// <summary>ชื่อ Entity ที่ถูกกระทำ</summary>
+    /// <summary>ຊື່ Entity ໄດ້ເຮັດແລ້ວ</summary>
     public required string EntityName { get; init; }
 
-    /// <summary>รหัสของ Entity ที่ถูกกระทำ</summary>
+    /// <summary>ລະຫັດຂອງ Entity ໄດ້ເຮັດແລ້ວ</summary>
     public string? EntityId { get; init; }
 
-    /// <summary>ค่าเดิมก่อนแก้ไข เก็บเป็น jsonb</summary>
+    /// <summary>ຄ່າຕົ້ນສະບັບກ່ອນການແກ້ໄຂຈະຖືກເກັບໄວ້ເປັນ jsonb</summary>
     public string? OldValues { get; init; }
 
-    /// <summary>ค่าใหม่หลังแก้ไข เก็บเป็น jsonb</summary>
+    /// <summary>ຄ່າໃຝ່ຫຼັງຈາກການດັດແກ້ຈະຖືກເກັບໄວ້ເປັນ jsonb</summary>
     public string? NewValues { get; init; }
 
-    /// <summary>หมายเลข IP ต้นทาง</summary>
+    /// <summary>ເລກ IP ຕົ້ນກໍາເນີດ</summary>
     public string? IpAddress { get; init; }
 
-    /// <summary>User Agent ของคำขอ</summary>
+    /// <summary>User Agent ຂອງຄໍາຮ້ອງສະຝັກ</summary>
     public string? UserAgent { get; init; }
 
-    /// <summary>เส้นทางของคำขอที่ทำให้เกิดเหตุการณ์</summary>
+    /// <summary>ເສັ້ນທາງຂອງການຮ້ອງຂໍທີ່ເຮັດໃຫ້ເກີດເຫດການ</summary>
     public string? RequestPath { get; init; }
 
-    /// <summary>เวลาที่เกิดเหตุการณ์</summary>
+    /// <summary>ເວລາຂອງເຫດການ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

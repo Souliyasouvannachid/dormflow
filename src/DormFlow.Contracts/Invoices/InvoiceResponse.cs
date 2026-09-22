@@ -1,56 +1,56 @@
 namespace DormFlow.Contracts.Invoices;
 
-/// <summary>ข้อมูลใบแจ้งหนี้หนึ่งฉบับ</summary>
+/// <summary>ຂໍ້ມູນໃບແຈ້ງຜີ້</summary>
 public class InvoiceResponse
 {
-    /// <summary>รหัสอ้างอิงของใบแจ้งหนี้</summary>
+    /// <summary>ລະຫັດອ້າງອີງໃບເກັບເງິນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>สัญญาเช่าที่ใบแจ้งหนี้นี้อ้างอิงถึง</summary>
+    /// <summary>ສັນຍາເຊົ່າທີ່ໃບເກັບເງິນນີ້ຝາຍເຖິງ</summary>
     public Guid ContractId { get; init; }
 
-    /// <summary>เลขที่ใบแจ้งหนี้</summary>
+    /// <summary>ໝາຍເລກໃບເກັບເງິນ</summary>
     public string InvoiceNumber { get; init; } = string.Empty;
 
-    /// <summary>เดือนที่ออกบิล</summary>
+    /// <summary>ເດືອນຂອງໃບບິນ</summary>
     public DateOnly PeriodMonth { get; init; }
 
-    /// <summary>วันที่ออกใบแจ้งหนี้</summary>
+    /// <summary>ວັນທີອອກໃບແຈ້ງໜີ້</summary>
     public DateOnly IssueDate { get; init; }
 
-    /// <summary>วันที่ครบกำหนดชำระ</summary>
+    /// <summary>ວັນທີການຊໍາລະເງິນ</summary>
     public DateOnly DueDate { get; init; }
 
-    /// <summary>ค่าเช่ารายเดือน</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນ</summary>
     public decimal RentAmount { get; init; }
 
-    /// <summary>ค่าน้ำ</summary>
+    /// <summary>ໃບບິນຄ່ານໍ້າ</summary>
     public decimal WaterAmount { get; init; }
 
-    /// <summary>ค่าไฟ</summary>
+    /// <summary>ໃບບິນຄ່າໄຟຟ້າ</summary>
     public decimal ElectricityAmount { get; init; }
 
-    /// <summary>ค่าปรับชำระล่าช้า</summary>
+    /// <summary>ການລົງໂທດການຈ່າຍເງິນຊ້າ</summary>
     public decimal LateFeeAmount { get; init; }
 
-    /// <summary>ยอดรวมทั้งบิล</summary>
+    /// <summary>ລວມທັງໃບບິນຄ່າ</summary>
     public decimal TotalAmount { get; init; }
 
-    /// <summary>ยอดที่ชำระแล้วสะสม</summary>
+    /// <summary>ທັງໝົດທີ່ຈ່າຍ ແລະສະສົມ</summary>
     public decimal PaidAmount { get; init; }
 
-    /// <summary>สถานะของใบแจ้งหนี้</summary>
+    /// <summary>ສະຖານະໃບແຈ້ງໜີ້</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

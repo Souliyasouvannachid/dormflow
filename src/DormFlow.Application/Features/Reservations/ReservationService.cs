@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Reservations;
 
-/// <summary>Use Case ทั้งหมดของโมดูลการจอง</summary>
+/// <summary>Use Case ໂມດູນການຈອງທັງໝົດ</summary>
 public sealed class ReservationService(
     IReservationRepository repository,
     IRoomRepository roomRepository,
@@ -23,6 +23,7 @@ public sealed class ReservationService(
     IValidator<CreateReservationRequest> createValidator) : IReservationService
 {
     private const string AuditEntityName = "Reservation";
+    private const int ExpirationBatchSize = 500;
     private static readonly string[] AllowedSortFields = ["moveInDate", "expiresAt", "status", "createdAt"];
 
     private readonly IReservationRepository _repository = repository;
@@ -60,6 +61,22 @@ public sealed class ReservationService(
     }
 
     /// <inheritdoc />
+    public Task<int> GetPendingExpiringCountAsync(
+        DateTimeOffset expiresBeforeOrAt,
+        CancellationToken cancellationToken = default)
+    {
+        ReservationListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
+            DormitoryId: null,
+            RoomId: null,
+            TenantId: null,
+            Status: ReservationStatus.Pending,
+            TenantScope.GetDormitoryRestrictionForListing(_currentUser));
+
+        return _repository.GetPendingExpiringCountAsync(filter, expiresBeforeOrAt, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<ReservationResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => ToResponse(await FindAccessibleAsync(id, cancellationToken));
 
@@ -72,37 +89,37 @@ public sealed class ReservationService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         if (room.Status != RoomStatus.Available)
         {
-            throw new ConflictException("ห้องนี้ไม่ว่าง ไม่สามารถจองได้");
+            throw new ConflictException("ຫ້ອງນີ້ບໍ່ວ່າງ ບໍ່ສາມາດຈອງໄດ້");
         }
 
         Tenant tenant = await _tenantRepository.GetByIdAsync(request.TenantId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
 
         if (tenant.OrganizationId != room.OrganizationId)
         {
-            throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
         }
 
         if (tenant.Status == TenantStatus.Blacklisted)
         {
-            throw new ConflictException("ผู้เช่ารายนี้ถูกขึ้นบัญชีดำ ไม่สามารถทำการจองได้");
+            throw new ConflictException("ຜູ້ເຊົ່າລາຍນີ້ຖືກຂຶ້ນບັນຊີດຳ ບໍ່ສາມາດເຮັດການຈອງໄດ້");
         }
 
-        // ป้องกันการจองซ้ำซ้อนเมื่อมีคำขอสองคำขอเข้ามาพร้อมกันสำหรับห้องเดียวกัน
-        // การตรวจสถานะห้องด้านบนอย่างเดียวมีช่องโหว่ race condition ระหว่างสองคำขอที่เกือบพร้อมกัน
+        // ປ້ອງກັນການຈອງສອງຄັ້ງເມື່ອມີສອງຄໍາຮ້ອງຂໍເຂົ້າມາໃນເວລາດຽວກັນສໍາລັບຫ້ອງດຽວກັນ
+        // ພຽງແຕ່ກວດເບິ່ງສະຖານະຂອງຫ້ອງຂ້າງເທິງມີຊ່ອງຫວ່າງ race condition ລະຫວ່າງສອງຄໍາຮ້ອງຂໍເກືອບພ້ອມໆກັນ
         if (await _repository.HasPendingReservationAsync(room.Id, cancellationToken))
         {
-            throw new ConflictException("ห้องนี้มีการจองค้างอยู่แล้ว ไม่สามารถจองซ้ำได้");
+            throw new ConflictException("ຫ້ອງນີ້ມີການຈອງຄ້າງຢູ່ແລ້ວ ບໍ່ສາມາດຈອງຊ້ຳໄດ້");
         }
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
@@ -124,8 +141,8 @@ public sealed class ReservationService(
 
         await _repository.AddAsync(reservation, cancellationToken);
 
-        // เรียกครั้งเดียวเพื่อบันทึกทั้งการจองใหม่และการเปลี่ยนสถานะห้องในธุรกรรมเดียวกัน
-        // เพราะ Room และ Reservation ถูกติดตามอยู่ใน DbContext เดียวกันภายในคำขอนี้
+        // ໂທຫາຄັ້ງດຽວເພື່ອບັນທຶກການຈອງໃຝ່ແລະການປ່ຽນແປງສະຖານະຫ້ອງໃນທຸລະກໍາດຽວກັນ
+        // ເນື່ອງຈາກວ່າ Room ແລະ Reservation ຖືກຕິດຕາມໃນ DbContext ດຽວກັນຢູ່ໃນຄໍາຮ້ອງຂໍນີ້
         await _repository.SaveChangesAsync(cancellationToken);
 
         await _auditLogWriter.WriteAsync(
@@ -145,12 +162,12 @@ public sealed class ReservationService(
 
         if (reservation.Status != ReservationStatus.Pending)
         {
-            throw new ConflictException("ยกเลิกได้เฉพาะการจองที่ยังรอดำเนินการเท่านั้น");
+            throw new ConflictException("ຍົກເລີກໄດ້ສະເພາະການຈອງທີ່ຍັງລໍຖ້າດຳເນີນການເທົ່ານັ້ນ");
         }
 
         reservation.Status = ReservationStatus.Cancelled;
 
-        // ปล่อยห้องคืนเฉพาะเมื่อยังอยู่ในสถานะถูกจองอยู่ ถ้าถูกเปลี่ยนสถานะไปทางอื่นแล้วจะไม่แตะต้อง
+        // ພຽງແຕ່ປ່ອຍຫ້ອງຄືນຖ້າຫາກວ່າມັນຍັງຢູ່ໃນສະຖານະສະຫງວນ. ຖ້າມັນຖືກປ່ຽນເປັນລັດອື່ນ, ມັນຈະບໍ່ຖືກແຕະຕ້ອງ
         Room? room = await _roomRepository.GetByIdAsync(reservation.RoomId, cancellationToken);
         if (room is not null && room.Status == RoomStatus.Reserved)
         {
@@ -174,48 +191,67 @@ public sealed class ReservationService(
     public async Task<int> ExpirePastDueReservationsAsync(CancellationToken cancellationToken = default)
     {
         DateTimeOffset now = _dateTimeProvider.UtcNow;
+        int expiredCount = 0;
 
-        IReadOnlyList<Reservation> expiredReservations = await _repository.GetExpiredPendingAsync(now, cancellationToken);
-
-        foreach (Reservation reservation in expiredReservations)
+        while (true)
         {
-            reservation.Status = ReservationStatus.Expired;
+            IReadOnlyList<Reservation> expiredReservations = await _repository.GetExpiredPendingAsync(
+                now,
+                ExpirationBatchSize,
+                cancellationToken);
 
-            // ปล่อยห้องคืนเฉพาะเมื่อยังอยู่ในสถานะถูกจองอยู่ ถ้าถูกเปลี่ยนสถานะไปทางอื่นแล้วจะไม่แตะต้อง
-            // เหมือนกับตรรกะเดียวกันใน CancelAsync
-            Room? room = await _roomRepository.GetByIdAsync(reservation.RoomId, cancellationToken);
-            if (room is not null && room.Status == RoomStatus.Reserved)
+            if (expiredReservations.Count == 0)
             {
-                room.Status = RoomStatus.Available;
+                break;
             }
 
-            await _auditLogWriter.WriteAsync(
-                AuditAction.ChangeStatus,
-                AuditEntityName,
-                reservation.Id.ToString(),
-                organizationId: reservation.OrganizationId,
-                newValues: $$"""{"status":"{{ReservationStatus.Expired}}"}""",
-                cancellationToken: cancellationToken);
-        }
+            IReadOnlyDictionary<Guid, Room> rooms = await _roomRepository.GetByIdsAsync(
+                expiredReservations.Select(reservation => reservation.RoomId).Distinct().ToArray(),
+                cancellationToken);
 
-        if (expiredReservations.Count > 0)
-        {
+            foreach (Reservation reservation in expiredReservations)
+            {
+                reservation.Status = ReservationStatus.Expired;
+
+                // ພຽງແຕ່ປ່ອຍຫ້ອງຄືນຖ້າຫາກວ່າມັນຍັງຢູ່ໃນສະຖານະສະຫງວນ. ຖ້າມັນຖືກປ່ຽນເປັນລັດອື່ນ, ມັນຈະບໍ່ຖືກແຕະຕ້ອງ
+                // ຕາມເຫດຜົນດຽວກັນໃນ CancelAsync
+                if (rooms.TryGetValue(reservation.RoomId, out Room? room)
+                    && room.Status == RoomStatus.Reserved)
+                {
+                    room.Status = RoomStatus.Available;
+                }
+
+                await _auditLogWriter.WriteAsync(
+                    AuditAction.ChangeStatus,
+                    AuditEntityName,
+                    reservation.Id.ToString(),
+                    organizationId: reservation.OrganizationId,
+                    newValues: $$"""{"status":"{{ReservationStatus.Expired}}"}""",
+                    cancellationToken: cancellationToken);
+            }
+
             await _repository.SaveChangesAsync(cancellationToken);
+            expiredCount += expiredReservations.Count;
+
+            if (expiredReservations.Count < ExpirationBatchSize)
+            {
+                break;
+            }
         }
 
-        return expiredReservations.Count;
+        return expiredCount;
     }
 
     private async Task<Reservation> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Reservation reservation = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลการจองที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນການຈອງທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             reservation.OrganizationId,
             reservation.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลการจองที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນການຈອງທີ່ຕ້ອງການ");
 
         return reservation;
     }

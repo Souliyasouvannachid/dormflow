@@ -1,32 +1,32 @@
 namespace DormFlow.Contracts.Tenants;
 
-/// <summary>คำขอแก้ไขข้อมูลผู้เช่า</summary>
+/// <summary>ຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ</summary>
 public class UpdateTenantRequest
 {
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public string FirstName { get; set; } = string.Empty;
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public string LastName { get; set; } = string.Empty;
 
-    /// <summary>อีเมล</summary>
+    /// <summary>ອີເມວ</summary>
     public string? Email { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; set; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทาง</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນ</summary>
     public string? NationalId { get; set; }
 
-    /// <summary>วันเดือนปีเกิด</summary>
+    /// <summary>ວັນເດືອນປີເກີດ</summary>
     public DateOnly? DateOfBirth { get; set; }
 
-    /// <summary>ที่อยู่ตามทะเบียนบ้าน</summary>
+    /// <summary>ທີ່ຢູ່ ຕາມທະບຽນເຮືອນ</summary>
     public string? Address { get; set; }
 
-    /// <summary>ชื่อผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ຊື່ຂອງຜູ້ຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactName { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactPhone { get; set; }
 }

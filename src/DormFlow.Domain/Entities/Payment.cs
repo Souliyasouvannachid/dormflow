@@ -4,42 +4,42 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// รายการชำระเงินหนึ่งครั้งของใบแจ้งหนี้หนึ่งฉบับ
+/// ການຈ່າຍເງິນຜຶ່ງໃບແຈ້ງຜີ້
 /// </summary>
 /// <remarks>
-/// บันทึกเป็น <see cref="PaymentStatus.Pending"/> ก่อนเสมอ ยังไม่มีผลต่อยอดใบแจ้งหนี้
-/// จนกว่าจะถูกยืนยัน (<see cref="PaymentStatus.Confirmed"/>) ผ่านสิทธิ์ payments.approve
-/// เพื่อให้มีจุดตรวจสอบก่อนเงินเข้าระบบจริง โดยเฉพาะกรณีโอนเงิน/QR ที่ต้องเทียบกับใบนำฝากธนาคาร
+/// ບັນທຶກເປັນ <see cref="PaymentStatus.Pending"/> ທຳອິດສະເໝີ. ມັນບໍ່ມີຜົນຕໍ່ກັບຈຳນວນໃບແຈ້ງໜີ້
+/// ຈົນກ່ວາໄດ້ຮັບການຢືນຢັນ (<see cref="PaymentStatus.Confirmed"/>) ສິດຜ່ານ payments.approve
+/// ເພື່ອໃຫ້ມີຈຸດກວດກາກ່ອນເງິນເຂົ້າລະບົບຕົວຈິງ. ໂດຍສະເພາະໃນກໍລະນີຂອງການໂອນເງິນ/QR ຈະຕ້ອງປຽບທຽບກັບໃບຝາກເງິນຂອງທະນາຄານ
 /// </remarks>
 public class Payment : TenantEntity
 {
-    /// <summary>ใบแจ้งหนี้ที่ชำระ</summary>
+    /// <summary>ໃບແຈ້ງໜີ້ຖືກຈ່າຍ</summary>
     public Guid InvoiceId { get; set; }
 
-    /// <summary>จำนวนเงินที่ชำระ</summary>
+    /// <summary>ຈໍານວນການຈ່າຍເງິນ</summary>
     public decimal Amount { get; set; }
 
-    /// <summary>วันเวลาที่ชำระเงิน</summary>
+    /// <summary>ວັນທີແລະເວລາຂອງການຈ່າຍເງິນ</summary>
     public DateTimeOffset PaymentDate { get; set; }
 
-    /// <summary>ช่องทางการชำระเงิน</summary>
+    /// <summary>ຊ່ອງທາງການຈ່າຍເງິນ</summary>
     public PaymentMethod Method { get; set; }
 
-    /// <summary>เลขอ้างอิงการโอน/สลิป เป็น null เมื่อชำระด้วยเงินสด</summary>
+    /// <summary>ໝາຍເລກອ້າງອີງການໂອນ/ເລື່ອນແມ່ນ null ເມື່ອຈ່າຍດ້ວຍເງິນສົດ</summary>
     public string? ReferenceNumber { get; set; }
 
-    /// <summary>สถานะของรายการชำระเงิน</summary>
+    /// <summary>ສະຖານະຂອງລາຍການການຈ່າຍເງິນ</summary>
     public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
 
-    /// <summary>เวลาที่ยืนยันรายการนี้ เป็น null เมื่อยังไม่ยืนยัน</summary>
+    /// <summary>ເວລາທີ່ຈະຢືນຢັນລາຍການນີ້ແມ່ນ null ໃນເວລາທີ່ຍັງບໍ່ທັນໄດ້ຮັບການຢືນຢັນ</summary>
     public DateTimeOffset? ConfirmedAt { get; set; }
 
-    /// <summary>เวลาที่คืนเงิน เป็น null เมื่อยังไม่ถูกคืนเงิน</summary>
+    /// <summary>ເວລາຄືນເງິນແມ່ນ null ໃນເວລາທີ່ເງິນຍັງບໍ່ໄດ້ຄືນ</summary>
     public DateTimeOffset? RefundedAt { get; set; }
 
-    /// <summary>สาเหตุการคืนเงิน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບການຄືນເງິນ</summary>
     public string? RefundReason { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

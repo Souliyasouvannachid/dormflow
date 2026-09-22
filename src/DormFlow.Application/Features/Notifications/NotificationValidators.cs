@@ -3,21 +3,21 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Notifications;
 
-/// <summary>ตรวจสอบคำขอส่งการแจ้งเตือน</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍເພື່ອສົ່ງການແຈ້ງເຕືອນ</summary>
 public sealed class SendNotificationRequestValidator : AbstractValidator<SendNotificationRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public SendNotificationRequestValidator()
     {
         RuleFor(request => request.RecipientUserId)
-            .NotEmpty().WithMessage("กรุณาระบุผู้รับการแจ้งเตือน");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຜູ້ຮັບການແຈ້ງເຕືອນ");
 
         RuleFor(request => request.Title)
-            .NotEmpty().WithMessage("กรุณาระบุหัวข้อการแจ้งเตือน")
-            .MaximumLength(200).WithMessage("หัวข้อการแจ้งเตือนต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫົວຂໍ້ການແຈ້ງເຕືອນ")
+            .MaximumLength(200).WithMessage("ຫົວຂໍ້ການແຈ້ງເຕືອນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.Message)
-            .NotEmpty().WithMessage("กรุณาระบุเนื้อหาการแจ้งเตือน")
-            .MaximumLength(2000).WithMessage("เนื้อหาการแจ้งเตือนต้องยาวไม่เกิน 2000 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸເນື້ອຫາການແຈ້ງເຕືອນ")
+            .MaximumLength(2000).WithMessage("ເນື້ອຫາການແຈ້ງເຕືອນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 2000 ໂຕອັກສອນ");
     }
 }

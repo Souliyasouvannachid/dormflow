@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลอาคารบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການກໍ່ສ້າງໃນ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class BuildingRepository(DormFlowDbContext dbContext) : IBuildingRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -15,6 +15,21 @@ public sealed class BuildingRepository(DormFlowDbContext dbContext) : IBuildingR
     /// <inheritdoc />
     public Task<Building?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => _dbContext.Buildings.FirstOrDefaultAsync(building => building.Id == id, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<Guid, string>> GetNamesByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, string>();
+        }
+
+        return await _dbContext.Buildings.AsNoTracking()
+            .Where(building => ids.Contains(building.Id))
+            .ToDictionaryAsync(building => building.Id, building => building.Name, cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task<bool> ExistsByCodeAsync(

@@ -2,12 +2,12 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Buildings;
 
-/// <summary>พารามิเตอร์การค้นหารายการอาคาร</summary>
+/// <summary>ການສ້າງຕົວກໍານົດການຊອກຫາລາຍຊື່</summary>
 public class BuildingListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะอาคารของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ອາຄານຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะอาคารที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງສະເພາະອາຄານທີ່ສະຖານະກົງກັບທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

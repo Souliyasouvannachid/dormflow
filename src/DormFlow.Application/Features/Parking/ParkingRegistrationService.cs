@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Parking;
 
-/// <summary>Use Case ทั้งหมดของโมดูลจดทะเบียนที่จอดรถ</summary>
+/// <summary>Use Case ທັງຝົດຂອງໂມດູນການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public sealed class ParkingRegistrationService(
     IParkingRegistrationRepository repository,
     IRoomRepository roomRepository,
@@ -71,27 +71,27 @@ public sealed class ParkingRegistrationService(
         await _registerValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         Tenant tenant = await _tenantRepository.GetByIdAsync(request.TenantId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
 
         if (tenant.OrganizationId != room.OrganizationId)
         {
-            throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
         }
 
         string licensePlate = request.LicensePlate.Trim();
 
         if (await _repository.HasActiveByLicensePlateAsync(room.OrganizationId, licensePlate, cancellationToken))
         {
-            throw new ConflictException($"ทะเบียนรถ '{licensePlate}' มีการจดทะเบียนที่จอดรถที่ยังไม่สิ้นสุดอยู่แล้ว");
+            throw new ConflictException($"ປ້າຍທະບຽນລົດ '{licensePlate}' ມີການຈົດທະບຽນບ່ອນຈອດລົດທີ່ຍັງບໍ່ສິ້ນສຸດຢູ່ແລ້ວ");
         }
 
         ParkingRegistration registration = new()
@@ -129,7 +129,7 @@ public sealed class ParkingRegistrationService(
 
         if (registration.Status != ParkingRegistrationStatus.Active)
         {
-            throw new ConflictException("การจดทะเบียนนี้สิ้นสุดไปแล้ว");
+            throw new ConflictException("ການຈົດທະບຽນນີ້ສິ້ນສຸດໄປແລ້ວ");
         }
 
         registration.Status = ParkingRegistrationStatus.Ended;
@@ -151,13 +151,13 @@ public sealed class ParkingRegistrationService(
     private async Task<ParkingRegistration> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         ParkingRegistration registration = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลการจดทะเบียนที่จอดรถที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນການຈົດທະບຽນບ່ອນຈອດລົດທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             registration.OrganizationId,
             registration.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลการจดทะเบียนที่จอดรถที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນການຈົດທະບຽນບ່ອນຈອດລົດທີ່ຕ້ອງການ");
 
         return registration;
     }

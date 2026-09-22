@@ -1,50 +1,50 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>ประเภทของเหตุการณ์ที่บันทึกลง Audit Log</summary>
+/// <summary>ປະເພດຂອງເຫດການທີ່ບັນທຶກໄວ້ Audit Log</summary>
 public enum AuditAction
 {
-    /// <summary>สร้างข้อมูลใหม่</summary>
+    /// <summary>ສ້າງຂໍ້ມູນໃຝ່</summary>
     Create = 1,
 
-    /// <summary>แก้ไขข้อมูล</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນ</summary>
     Update = 2,
 
-    /// <summary>ลบข้อมูล</summary>
+    /// <summary>ລຶບຂໍ້ມູນ</summary>
     Delete = 3,
 
-    /// <summary>เปลี่ยนสถานะข้อมูล</summary>
+    /// <summary>ປ່ຽນສະຖານະຂໍ້ມູນ</summary>
     ChangeStatus = 4,
 
-    /// <summary>กำหนดบทบาทให้ผู้ใช้</summary>
+    /// <summary>ກໍານົດບົດບາດໃຫ້ຜູ້ໃຊ້</summary>
     AssignRole = 5,
 
-    /// <summary>มอบหมายหอพักให้ผู้ใช้</summary>
+    /// <summary>ມອບຫໍພັກໃຫ້ຜູ້ໃຊ້</summary>
     AssignDormitory = 6,
 
-    /// <summary>เข้าสู่ระบบสำเร็จ</summary>
+    /// <summary>ເຂົ້າສູ່ລະບົບສຳເລັດແລ້ວ</summary>
     Login = 7,
 
-    /// <summary>เข้าสู่ระบบไม่สำเร็จ</summary>
+    /// <summary>ເຂົ້າສູ່ລະບົບລົ້ມເຫຼວ</summary>
     LoginFailed = 8,
 
-    /// <summary>ออกจากระบบ</summary>
+    /// <summary>ອອກຈາກລະບົບ</summary>
     Logout = 9,
 
-    /// <summary>ต่ออายุ Access Token ด้วย Refresh Token</summary>
+    /// <summary>ຕໍ່ອາຍຸ Access Token ຄືກັນ Refresh Token</summary>
     RefreshToken = 10,
 
-    /// <summary>เพิกถอน Refresh Token</summary>
+    /// <summary>ຖອນຄືນ Refresh Token</summary>
     RevokeToken = 11,
 
-    /// <summary>ตรวจพบการนำ Refresh Token ที่ใช้ไปแล้วกลับมาใช้ซ้ำ</summary>
+    /// <summary>ກວດພົບການປະພຶດ Refresh Token ທີ່ໄດ້ຖືກນໍາໃຊ້ແລະຖືກນໍາໃຊ້ຄືນ</summary>
     RefreshTokenReuseDetected = 12,
 
-    /// <summary>เปลี่ยนรหัสผ่านด้วยตนเอง</summary>
+    /// <summary>ປ່ຽນລະຫັດຜ່ານຂອງທ່ານດ້ວຍຕົນເອງ</summary>
     ChangePassword = 13,
 
-    /// <summary>ขอลิงก์ตั้งรหัสผ่านใหม่</summary>
+    /// <summary>ຂໍລິ້ງເພື່ອຣີເຊັດລະຫັດຜ່ານຂອງທ່ານ</summary>
     ForgotPassword = 14,
 
-    /// <summary>ตั้งรหัสผ่านใหม่ด้วยโทเคนที่ได้รับ</summary>
+    /// <summary>ຕັ້ງລະຫັດຜ່ານໃໝ່ດ້ວຍໂທເຄັນທີ່ໄດ້ຮັບ</summary>
     ResetPassword = 15,
 }

@@ -12,11 +12,11 @@ using Xunit;
 namespace DormFlow.ArchitectureTests;
 
 /// <summary>
-/// บังคับทิศทางการพึ่งพาระหว่าง Layer ตามหลัก Clean Architecture
+/// ການຂື້ນກັບໂດຍກົງລະຫວ່າງ Layer ຕາມຫຼັກການ Clean Architecture
 /// </summary>
 /// <remarks>
-/// เทสต์ชุดนี้ทำให้การเผลอเพิ่ม ProjectReference ผิดทิศทางกลายเป็น build ที่ล้มเหลว
-/// แทนที่จะถูกพบตอน review หรือไม่ถูกพบเลย
+/// ຊຸດຂອງການທົດສອບນີ້ເພີ່ມຄວາມສ່ຽງຂອງການບໍ່ຕັ້ງໃຈ ProjectReference ກາຍເປັນໃນທິດທາງທີ່ບໍ່ຖືກຕ້ອງ build ລົ້ມເຫຼວ
+/// ແທນທີ່ຈະຖືກຄົ້ນພົບ review ຫຼືບໍ່ພົບເລີຍ
 /// </remarks>
 public class LayerDependencyTests
 {
@@ -33,7 +33,7 @@ public class LayerDependencyTests
     private const string ApiNamespace = "DormFlow.Api";
 
     [Fact]
-    public void Domain_ต้องไม่พึ่งพา_Layer_อื่นเลย()
+    public void Domain_ບໍ່ຕ້ອງຂຶ້ນກັບ_Layer_ບາງສິ່ງບາງຢ່າງອື່ນ()
     {
         TestResult result = Types.InAssembly(DomainAssembly)
             .ShouldNot()
@@ -44,7 +44,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Domain_ต้องไม่รู้จัก_Entity_Framework_หรือ_ASP_NET_Core()
+    public void Domain_ຕ້ອງບໍ່ຮູ້_Entity_Framework_ຫຼື_ASP_NET_Core()
     {
         TestResult result = Types.InAssembly(DomainAssembly)
             .ShouldNot()
@@ -55,7 +55,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Application_ต้องไม่พึ่งพา_Infrastructure_หรือ_Api()
+    public void Application_ບໍ່ຕ້ອງຂຶ້ນກັບ_Infrastructure_ຫຼື_Api()
     {
         TestResult result = Types.InAssembly(ApplicationAssembly)
             .ShouldNot()
@@ -66,7 +66,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Application_ต้องไม่รู้จัก_Entity_Framework_หรือ_ASP_NET_Core()
+    public void Application_ຕ້ອງບໍ່ຮູ້_Entity_Framework_ຫຼື_ASP_NET_Core()
     {
         TestResult result = Types.InAssembly(ApplicationAssembly)
             .ShouldNot()
@@ -77,7 +77,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Contracts_ต้องเป็นสัญญาล้วนและไม่พึ่งพา_Layer_ใด()
+    public void Contracts_ມັນຕ້ອງເປັນສັນຍາບໍລິສຸດແລະບໍ່ຂຶ້ນກັບ_Layer_ອັນໃດ()
     {
         TestResult result = Types.InAssembly(ContractsAssembly)
             .ShouldNot()
@@ -88,7 +88,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void Infrastructure_ต้องไม่พึ่งพา_Api()
+    public void Infrastructure_ບໍ່ຕ້ອງຂຶ້ນກັບ_Api()
     {
         TestResult result = Types.InAssembly(InfrastructureAssembly)
             .ShouldNot()
@@ -99,7 +99,7 @@ public class LayerDependencyTests
     }
 
     [Fact]
-    public void DbContext_ต้องอยู่ใน_Infrastructure_เท่านั้น()
+    public void DbContext_ຕ້ອງຢູ່ໃນ_Infrastructure_ເທົ່ານັ້ນ()
     {
         Assembly[] assembliesThatMustNotHaveDbContext = [DomainAssembly, ApplicationAssembly, ContractsAssembly, ApiAssembly];
 
@@ -111,7 +111,7 @@ public class LayerDependencyTests
                 .GetTypes();
 
             dbContextTypes.Should().BeEmpty(
-                "โปรเจกต์ {0} ต้องไม่มี DbContext เพราะการเข้าถึงฐานข้อมูลเป็นหน้าที่ของ Infrastructure เท่านั้น",
+                "ໂຄງການ {0} ບໍ່ຕ້ອງມີ DbContext ເນື່ອງຈາກວ່າການເຂົ້າເຖິງຖານຂໍ້ມູນແມ່ນຜ້າທີ່ຂອງ Infrastructure ເທົ່ານັ້ນ",
                 assembly.GetName().Name);
         }
     }
@@ -123,7 +123,7 @@ public class LayerDependencyTests
             : string.Join(", ", result.FailingTypeNames);
 
         result.IsSuccessful.Should().BeTrue(
-            "ชนิดต่อไปนี้ละเมิดกฎการพึ่งพาระหว่าง Layer{0}: {1}",
+            "ປະເພດຕໍ່ໄປນີ້ລະເມີດກົດລະບຽບການເພິ່ງພາອາໄສລະຫວ່າງ Layer{0}: {1}",
             context is null ? string.Empty : $" ({context})",
             failing);
     }

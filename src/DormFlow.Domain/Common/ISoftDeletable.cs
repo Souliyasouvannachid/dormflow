@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Common;
 
 /// <summary>
-/// Entity ที่ใช้ Soft Delete ระบบจะไม่ลบแถวจริง แต่ตั้งค่า <see cref="IsDeleted"/> เป็น true
-/// และถูกกรองออกอัตโนมัติด้วย Global Query Filter
+/// Entity ໃຊ້ Soft Delete ລະບົບບໍ່ໄດ້ລຶບແຖວ, ແຕ່ຕັ້ງພວກມັນ <see cref="IsDeleted"/> ແມ່ນ true
+/// ແລະຖືກກັ່ນຕອງອອກໂດຍອັດຕະໂນມັດ Global Query Filter
 /// </summary>
 public interface ISoftDeletable
 {
-    /// <summary>ถูกลบแล้วหรือไม่</summary>
+    /// <summary>ມັນຖືກລຶບແລ້ວບໍ?</summary>
     bool IsDeleted { get; set; }
 
-    /// <summary>เวลาที่ถูกลบ</summary>
+    /// <summary>ເວລາທີ່ລຶບ</summary>
     DateTimeOffset? DeletedAt { get; set; }
 
-    /// <summary>ผู้ที่ลบข้อมูล</summary>
+    /// <summary>ບຸກຄົນທີ່ລຶບຂໍ້ມູນ</summary>
     Guid? DeletedBy { get; set; }
 }

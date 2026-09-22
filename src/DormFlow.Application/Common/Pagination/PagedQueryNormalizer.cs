@@ -3,21 +3,21 @@ using DormFlow.Contracts.Common;
 namespace DormFlow.Application.Common.Pagination;
 
 /// <summary>
-/// แปลงพารามิเตอร์ดิบจาก Query String ให้เป็น <see cref="PagedQuery"/> ที่ปลอดภัยต่อการนำไปใช้
+/// ແປງຕົວກໍານົດການດິບຈາກ Query String ໃຫ້ມັນເປັນ <see cref="PagedQuery"/> ທີ່ປອດໄພໃນການນໍາໃຊ້
 /// </summary>
 /// <remarks>
-/// ปรับค่าแทนการโยนข้อผิดพลาด เพราะพารามิเตอร์การแบ่งหน้าที่เกินขอบเขต
-/// ไม่ใช่ความผิดพลาดของข้อมูลทางธุรกิจ แต่เป็นการใช้งานที่ระบบควรรองรับได้อย่างปลอดภัย
+/// ປັບຄ່າແທນທີ່ຈະຖິ້ມຄວາມຜິດພາດ. ເນື່ອງຈາກວ່າຕົວກໍານົດການແບ່ງຜ້າເກີນຂອບເຂດ
+/// ມັນບໍ່ແມ່ນຄວາມຜິດພາດໃນຂໍ້ມູນທຸລະກິດ. ແຕ່ມັນເປັນການນໍາໃຊ້ທີ່ລະບົບຄວນຈະສາມາດສະຜັບສະຜູນໄດ້ຢ່າງປອດໄພ
 /// </remarks>
 public static class PagedQueryNormalizer
 {
-    /// <summary>ปรับค่าพารามิเตอร์การแบ่งหน้าให้อยู่ในขอบเขตที่ยอมรับ</summary>
-    /// <param name="request">พารามิเตอร์ดิบจากผู้เรียก</param>
+    /// <summary>ປັບຕົວກໍານົດການ pagination ພາຍໃນຂອບເຂດຈໍາກັດທີ່ຍອມຮັບໄດ້</summary>
+    /// <param name="request">ຕົວກໍານົດການດິບຈາກຜູ້ໂທ</param>
     /// <param name="allowedSortFields">
-    /// รายชื่อฟิลด์ที่อนุญาตให้เรียงลำดับได้ ป้องกันการส่งชื่อฟิลด์ที่ไม่มีอยู่จริง
-    /// ส่ง null เมื่อยังไม่ต้องการจำกัด
+    /// ລາຍຊື່ຊ່ອງຂໍ້ມູນທີ່ອະນຸຍາດໃຫ້ຈັດຮຽງ ປ້ອງກັນບໍ່ໃຫ້ສົ່ງຊື່ຊ່ອງຂໍ້ມູນທີ່ບໍ່ມີຢູ່ແລ້ວ
+    /// ສົ່ງ null ໃນເວລາທີ່ທ່ານບໍ່ຕ້ອງການທີ່ຈະຈໍາກັດມັນເທື່ອ
     /// </param>
-    /// <param name="defaultSortBy">ฟิลด์เรียงลำดับเริ่มต้นเมื่อผู้เรียกไม่ระบุหรือระบุค่าที่ไม่อนุญาต</param>
+    /// <param name="defaultSortBy">ຊ່ອງຂໍ້ມູນການຈັດຮຽງເປັນຄ່າເລີ່ມຕົ້ນເມື່ອຜູ້ໂທບໍ່ໄດ້ລະບຸ ຫຼືລະບຸຄ່າທີ່ບໍ່ອະນຸຍາດ</param>
     public static PagedQuery Normalize(
         PagedQueryRequest request,
         IReadOnlyCollection<string>? allowedSortFields = null,
@@ -59,7 +59,7 @@ public static class PagedQueryNormalizer
             return trimmed;
         }
 
-        // เทียบแบบไม่สนตัวพิมพ์ แต่คืนค่าตามที่ประกาศไว้ในรายการที่อนุญาต
+        // ປຽບທຽບໂດຍບໍ່ມີການເອົາໃຈໃສ່ກັບກໍລະນີ. ແຕ່ມັນຟື້ນຟູມູນຄ່າຕາມທີ່ປະກາດໄວ້ໃນບັນຊີຂາວ
         foreach (string allowed in allowedSortFields)
         {
             if (string.Equals(allowed, trimmed, StringComparison.OrdinalIgnoreCase))

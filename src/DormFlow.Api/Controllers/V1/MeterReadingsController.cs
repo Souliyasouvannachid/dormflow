@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการค่ามิเตอร์</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງຄ່າແມັດ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/meter-readings")]
@@ -17,7 +17,7 @@ public sealed class MeterReadingsController(IMeterReadingService meterReadingSer
 {
     private readonly IMeterReadingService _meterReadingService = meterReadingService;
 
-    /// <summary>ดึงรายการค่ามิเตอร์แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງຄ່າແມັດ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.MeterReadings.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<MeterReadingResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class MeterReadingsController(IMeterReadingService meterReadingSer
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านค่ามิเตอร์หนึ่งรายการ</summary>
+    /// <summary>ການອ່ານຜຶ່ງແມັດ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.MeterReadings.View)]
     [ProducesResponseType(typeof(ApiResponse<MeterReadingResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class MeterReadingsController(IMeterReadingService meterReadingSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกค่ามิเตอร์ใหม่</summary>
+    /// <summary>ບັນທຶກຄ່າແມັດໃໝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.MeterReadings.Create)]
     [ProducesResponseType(typeof(ApiResponse<MeterReadingResponse>), StatusCodes.Status200OK)]

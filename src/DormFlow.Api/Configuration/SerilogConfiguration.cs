@@ -8,17 +8,17 @@ using Serilog.Events;
 namespace DormFlow.Api.Configuration;
 
 /// <summary>
-/// ตั้งค่า Serilog ทั้งตอนบูตและตอนบันทึก HTTP Request
+/// ຕັ້ງຄ່າ Serilog ທັງໃນລະຫວ່າງການ booting ແລະໃນລະຫວ່າງການບັນທຶກ HTTP Request
 /// </summary>
 /// <remarks>
-/// ระบบไม่บันทึก Request Body หรือ Response Body ลง Log เลย
-/// เพราะเส้นทางอย่าง login และ reset-password มีรหัสผ่านและโทเคนอยู่ในเนื้อหา
+/// ລະບົບບໍ່ໄດ້ບັນທຶກ Request Body ຫຼື Response Body ລົງ Log ເລີຍ
+/// ເນື່ອງຈາກວ່າເສັ້ນທາງເຊັ່ນ login ແລະ reset-password ມີລະຫັດຜ່ານແລະ token ໃນເນື້ອຫາ
 /// </remarks>
 public static class SerilogConfiguration
 {
     /// <summary>
-    /// สร้าง Logger ชั่วคราวก่อนอ่าน configuration
-    /// ใช้เพื่อให้ข้อผิดพลาดที่เกิดระหว่างการตั้งค่ายังถูกบันทึกไว้
+    /// ສ້າງ Logger ຊົ່ວຄາວກ່ອນອ່ານ configuration
+    /// ໃຊ້ເພື່ອໃຫ້ຂໍ້ຜິດພາດທີ່ເກີດຂື້ນໃນລະຫວ່າງການຕັ້ງກໍ່ຖືກບັນທຶກ
     /// </summary>
     public static void CreateBootstrapLogger()
     {
@@ -29,8 +29,8 @@ public static class SerilogConfiguration
             .CreateBootstrapLogger();
     }
 
-    /// <summary>ผูก Serilog เข้ากับ Host และอ่านค่าจาก configuration section ชื่อ Serilog</summary>
-    /// <param name="builder">ตัวสร้างแอปพลิเคชัน</param>
+    /// <summary>ຜູກ Serilog ເຝາະກັບ Host ແລະອ່ານມູນຄ່າຈາກ configuration section ຊື່ Serilog</summary>
+    /// <param name="builder">ຕົວສ້າງແອັບພລິເຄຊັນ</param>
     public static WebApplicationBuilder AddDormFlowSerilog(this WebApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -44,9 +44,9 @@ public static class SerilogConfiguration
     }
 
     /// <summary>
-    /// บันทึกสรุปหนึ่งบรรทัดต่อหนึ่งคำขอ พร้อมข้อมูลบริบทที่ใช้สืบค้นย้อนหลังได้
+    /// ສະຫຼຸບໜຶ່ງແຖວຕໍ່ຄຳຮ້ອງຂໍ. ກັບຂໍ້ມູນບໍລິບົດທີ່ສາມາດຖືກນໍາໃຊ້ເພື່ອຄົ້ນຫາຄືນ
     /// </summary>
-    /// <param name="app">ไปป์ไลน์ของแอปพลิเคชัน</param>
+    /// <param name="app">ທໍ່ຄໍາຮ້ອງສະຝັກ</param>
     public static IApplicationBuilder UseDormFlowRequestLogging(this IApplicationBuilder app)
     {
         ArgumentNullException.ThrowIfNull(app);
@@ -54,7 +54,7 @@ public static class SerilogConfiguration
         return app.UseSerilogRequestLogging(options =>
         {
             options.MessageTemplate =
-                "{RequestMethod} {RequestPath} ตอบกลับ {StatusCode} ใช้เวลา {Elapsed:0.0000} ms";
+                "{RequestMethod} {RequestPath} ຕອບກັບ {StatusCode} ໃຊ້ເວລາ {Elapsed:0.0000} ms";
 
             options.GetLevel = GetLogLevel;
             options.EnrichDiagnosticContext = EnrichDiagnosticContext;
@@ -62,8 +62,8 @@ public static class SerilogConfiguration
     }
 
     /// <summary>
-    /// ไม่บันทึกการเรียก Health Check ที่ผ่านฉลุยเป็นระดับ Information
-    /// เพราะ orchestrator เรียกถี่มากจนกลบ Log ที่มีความหมายจริง
+    /// ບໍ່ໄດ້ບັນທຶກການໂທ Health Check ທີ່ຜ່ານໄປຢ່າງຄ່ອງແຄ້ວເປັນລະດັບ Information
+    /// ເນື່ອງຈາກວ່າ orchestrator ໂທມາເລື້ອຍໆຈົນຈົມນໍ້າ Log ທີ່ມີຄວາມຝາຍທີ່ແທ້ຈິງ
     /// </summary>
     private static LogEventLevel GetLogLevel(HttpContext context, double elapsedMilliseconds, Exception? exception)
     {

@@ -2,18 +2,18 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Expenses;
 
-/// <summary>พารามิเตอร์การค้นหารายการค่าใช้จ่าย</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການຄ່າໃຊ້ຈ່າຍ</summary>
 public class ExpenseListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะหมวดหมู่ที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະປະເພດທີ່ລະບຸ</summary>
     public string? Category { get; set; }
 
-    /// <summary>กรองเฉพาะรายการตั้งแต่วันที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການຈາກວັນທີທີ່ລະບຸ</summary>
     public DateOnly? ExpenseDateFrom { get; set; }
 
-    /// <summary>กรองเฉพาะรายการจนถึงวันที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການຈົນຮອດວັນທີທີ່ກຳນົດ</summary>
     public DateOnly? ExpenseDateTo { get; set; }
 }

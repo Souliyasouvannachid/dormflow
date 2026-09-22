@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการการชำระเงิน</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງການຈ່າຍເງິນ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/payments")]
@@ -17,7 +17,7 @@ public sealed class PaymentsController(IPaymentService paymentService) : Control
 {
     private readonly IPaymentService _paymentService = paymentService;
 
-    /// <summary>ดึงรายการชำระเงินแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍການການຈ່າຍເງິນທີ່ໄດ້ວາງໄວ້</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Payments.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<PaymentResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class PaymentsController(IPaymentService paymentService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลรายการชำระเงินหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນກ່ຽວກັບໜຶ່ງລາຍການການຈ່າຍເງິນ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Payments.View)]
     [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class PaymentsController(IPaymentService paymentService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกรายการชำระเงินใหม่ในสถานะรอยืนยัน</summary>
+    /// <summary>ບັນທຶກການຈ່າຍເງິນໃໝ່ໃນສະຖານະການຢືນຢັນທີ່ຍັງຄ້າງຢູ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Payments.Create)]
     [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class PaymentsController(IPaymentService paymentService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>ยืนยันรายการชำระเงิน นำยอดไปหักใบแจ้งหนี้</summary>
+    /// <summary>ຢືນຢັນລາຍການການຈ່າຍເງິນ ເອົາຈໍານວນເພື່ອຫັກໃບແຈ້ງໜີ້</summary>
     [HttpPost("{id:guid}/confirm")]
     [RequirePermission(PermissionCodes.Payments.Approve)]
     [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status200OK)]
@@ -71,7 +71,7 @@ public sealed class PaymentsController(IPaymentService paymentService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>คืนเงิน</summary>
+    /// <summary>ເງິນຄືນ</summary>
     [HttpPost("{id:guid}/refund")]
     [RequirePermission(PermissionCodes.Payments.Refund)]
     [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status200OK)]

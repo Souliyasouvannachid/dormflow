@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลหอพักบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຫໍພັກຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class DormitoryRepository(DormFlowDbContext dbContext) : IDormitoryRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -15,6 +15,38 @@ public sealed class DormitoryRepository(DormFlowDbContext dbContext) : IDormitor
     /// <inheritdoc />
     public Task<Dormitory?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => _dbContext.Dormitories.FirstOrDefaultAsync(dormitory => dormitory.Id == id, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<Guid, Dormitory>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, Dormitory>();
+        }
+
+        return await _dbContext.Dormitories
+            .AsNoTracking()
+            .Where(dormitory => ids.Contains(dormitory.Id))
+            .ToDictionaryAsync(dormitory => dormitory.Id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<Guid, string>> GetNamesByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, string>();
+        }
+
+        return await _dbContext.Dormitories.AsNoTracking()
+            .Where(dormitory => ids.Contains(dormitory.Id))
+            .ToDictionaryAsync(dormitory => dormitory.Id, dormitory => dormitory.Name, cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task<bool> ExistsByCodeAsync(

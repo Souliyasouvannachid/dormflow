@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการผู้มาเยือน</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງນັກທ່ອງທ່ຽວ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/visitors")]
@@ -17,7 +17,7 @@ public sealed class VisitorsController(IVisitorService visitorService) : Control
 {
     private readonly IVisitorService _visitorService = visitorService;
 
-    /// <summary>ดึงรายการผู้มาเยือนแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ເຂົ້າຊົມທີ່ມີ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Visitors.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<VisitorResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class VisitorsController(IVisitorService visitorService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลผู้มาเยือนหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຂອງຜູ້ເຂົ້າຊົມ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Visitors.View)]
     [ProducesResponseType(typeof(ApiResponse<VisitorResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class VisitorsController(IVisitorService visitorService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกการเข้าของผู้มาเยือนใหม่</summary>
+    /// <summary>ບັນທຶກການເຂົ້າມາຂອງນັກທ່ອງທ່ຽວໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Visitors.CheckIn)]
     [ProducesResponseType(typeof(ApiResponse<VisitorResponse>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ public sealed class VisitorsController(IVisitorService visitorService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>บันทึกการออกของผู้มาเยือน</summary>
+    /// <summary>ບັນທຶກຜູ້ເຂົ້າຊົມ</summary>
     [HttpPost("{id:guid}/checkout")]
     [RequirePermission(PermissionCodes.Visitors.CheckOut)]
     [ProducesResponseType(typeof(ApiResponse<VisitorResponse>), StatusCodes.Status200OK)]

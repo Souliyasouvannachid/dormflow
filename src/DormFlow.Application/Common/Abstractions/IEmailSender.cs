@@ -2,11 +2,11 @@ using DormFlow.Application.Common.Models;
 
 namespace DormFlow.Application.Common.Abstractions;
 
-/// <summary>ส่งอีเมลออกจากระบบ</summary>
+/// <summary>ສົ່ງອີເມວຈາກລະບົບ</summary>
 public interface IEmailSender
 {
-    /// <summary>ส่งอีเมลหนึ่งฉบับ</summary>
-    /// <param name="message">ข้อความที่ต้องการส่ง</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ສົ່ງອີເມວຜຶ່ງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມທີ່ທ່ານຕ້ອງການສົ່ງ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task SendAsync(EmailMessage message, CancellationToken cancellationToken = default);
 }

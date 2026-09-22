@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Reservations;
 
-/// <summary>ตัวกรองสำหรับดึงรายการจองแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງການຈອງ paginated</summary>
 public sealed record ReservationListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -14,36 +14,43 @@ public sealed record ReservationListFilter(
     ReservationStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลการจองในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຈອງຢູ່ໃນຖານຂໍ້ມູນ</summary>
 public interface IReservationRepository
 {
-    /// <summary>อ่านการจองจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານການຈອງຈາກລະຫັດອ້າງອີງ</summary>
     Task<Reservation?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ตรวจว่าห้องที่ระบุมีการจองที่ยังไม่สิ้นสุด (Pending) ค้างอยู่หรือไม่
-    /// ใช้ป้องกันการจองห้องเดียวกันซ้ำซ้อนแม้ในกรณีที่มีคำขอเข้ามาพร้อมกัน
+    /// ກວດເບິ່ງວ່າຫ້ອງທີ່ລະບຸໄວ້ມີການຈອງທີ່ຫ້າວຫັນ (Pending) ລໍຖ້າຢູ່ຫຼືບໍ່?
+    /// ໃຊ້ເພື່ອປ້ອງກັນການຈອງສອງຄັ້ງຂອງຫ້ອງດຽວກັນເຖິງແມ່ນວ່າໃນກໍລະນີຂອງການຮ້ອງຂໍເຂົ້າມາໃນເວລາດຽວກັນ
     /// </summary>
     Task<bool> HasPendingReservationAsync(Guid roomId, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการจองแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ການຈອງທີ່ວາງໄວ້ຕາມຕົວກອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Reservation>> GetPagedAsync(
         ReservationListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ดึงรายการจองที่ยังเป็น Pending แต่หมดอายุการกันห้องแล้ว (ExpiresAt ผ่านไปแล้ว ณ เวลาที่ระบุ)
-    /// คืน Entity แบบติดตามการเปลี่ยนแปลง (ไม่ใช่ AsNoTracking) เพราะเรียกใช้เพื่อแก้ไขสถานะต่อทันที
-    /// ใช้โดย Background Job เท่านั้น ไม่ผ่านการกรองตามองค์กร/หอพัก เพราะทำงานข้ามทั้งระบบ
+    /// ດຶງເອົາການຈອງທີ່ຍັງຄົງຢູ່ Pending ແຕ່ການຈອງຫ້ອງພັກໝົດອາຍຸແລ້ວ (ExpiresAt ໄດ້ຜ່ານໄປໃນເວລາທີ່ກໍານົດໄວ້)
+    /// ກາງຄືນ Entity ປ່ຽນແບບຟອມການຕິດຕາມ (ບໍ່ AsNoTracking) ເນື່ອງຈາກວ່າມັນຖືກເອີ້ນວ່າສືບຕໍ່ແກ້ໄຂສະຖານະການທັນທີ
+    /// ໃຊ້ໂດຍ Background Job ເທົ່ານັ້ນ, ບໍ່ໄດ້ຖືກກັ່ນຕອງໂດຍອົງກອນ/ຫໍພັກເພາະວ່າພວກເຂົາເຮັດວຽກທົ່ວລະບົບທັງຝົດ
     /// </summary>
     Task<IReadOnlyList<Reservation>> GetExpiredPendingAsync(
         DateTimeOffset asOf,
+        int batchSize,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มการจองใหม่</summary>
+    /// <summary>ນັບການຈອງ Pending ທີ່ຈະໝົດອາຍຸຮອດເວລາກຳນົດດ້ວຍ query ດຽວ</summary>
+    Task<int> GetPendingExpiringCountAsync(
+        ReservationListFilter filter,
+        DateTimeOffset expiresBeforeOrAt,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ເພີ່ມການຈອງໃໝ່</summary>
     Task AddAsync(Reservation reservation, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล รวมถึงการเปลี่ยนแปลงของ Entity อื่นที่ถูกติดตามอยู่ในธุรกรรมเดียวกัน</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ. ລວມທັງການປ່ຽນແປງໃນ Entity ທຸລະກໍາທີ່ຕິດຕາມອື່ນແມ່ນຢູ່ໃນທຸລະກໍາດຽວກັນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

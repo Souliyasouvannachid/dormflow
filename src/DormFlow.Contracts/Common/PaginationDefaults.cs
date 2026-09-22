@@ -1,22 +1,22 @@
 namespace DormFlow.Contracts.Common;
 
 /// <summary>
-/// ค่าเริ่มต้นและขอบเขตของการแบ่งหน้าที่ใช้ร่วมกันทั้งระบบ
+/// ຄ່າເລີ່ມຕົ້ນຂອງ pagination ທົ່ວລະບົບ ແລະຂອບເຂດ
 /// </summary>
 public static class PaginationDefaults
 {
-    /// <summary>หมายเลขหน้าแรก</summary>
+    /// <summary>ໝາຍເລກຜ້າທໍາອິດ</summary>
     public const int FirstPage = 1;
 
-    /// <summary>จำนวนรายการต่อหน้าเมื่อผู้เรียกไม่ระบุ</summary>
+    /// <summary>ຈໍານວນລາຍການຕໍ່ຜ້າໃນເວລາທີ່ບໍ່ໄດ້ກໍານົດໂດຍຜູ້ໂທ</summary>
     public const int DefaultPageSize = 20;
 
-    /// <summary>จำนวนรายการต่อหน้าที่น้อยที่สุดที่ยอมรับ</summary>
+    /// <summary>ຍອມຮັບຈໍານວນລາຍການຂັ້ນຕ່ໍາຕໍ່ຜ້າ</summary>
     public const int MinPageSize = 1;
 
     /// <summary>
-    /// จำนวนรายการต่อหน้าที่มากที่สุดที่ยอมรับ
-    /// ป้องกันการดึงข้อมูลทั้งตารางในคำขอเดียวจนกระทบฐานข้อมูล
+    /// ຍອມຮັບຈໍານວນລາຍການສູງສຸດຕໍ່ຜ້າ
+    /// ປ້ອງກັນການດຶງຂໍ້ມູນຕາຕະລາງທັງຝົດໃນຄໍາຮ້ອງຂໍດຽວແລະຜົນກະທົບຕໍ່ຖານຂໍ້ມູນ
     /// </summary>
     public const int MaxPageSize = 200;
 }

@@ -4,37 +4,37 @@ using DormFlow.Domain.Entities;
 
 namespace DormFlow.Application.Features.Receipts;
 
-/// <summary>ตัวกรองสำหรับดึงรายการใบเสร็จรับเงินแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງໃບຮັບ</summary>
 public sealed record ReceiptListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? PaymentId,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลใบเสร็จรับเงินในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນໃບຮັບເງິນໃນຖານຂໍ້ມູນ</summary>
 public interface IReceiptRepository
 {
-    /// <summary>อ่านใบเสร็จรับเงินจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານໃບຮັບເງິນຈາກລະຫັດອ້າງອີງ</summary>
     Task<Receipt?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ารายการชำระเงินนี้ถูกออกใบเสร็จไปแล้วหรือยัง</summary>
+    /// <summary>ກວດເບິ່ງວ່າໃບຮັບເງິນໄດ້ຖືກອອກສໍາລັບການຈ່າຍເງິນນີ້ຫຼືບໍ່</summary>
     Task<bool> ExistsByPaymentIdAsync(Guid paymentId, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีใบเสร็จที่ใช้เลขที่นี้อยู่แล้วในองค์กรเดียวกันหรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າມີໃບຮັບເງິນທີ່ໃຊ້ຕົວເລກນີ້ຢູ່ໃນອົງກອນດຽວກັນຫຼືບໍ່</summary>
     Task<bool> ExistsByReceiptNumberAsync(
         Guid organizationId,
         string receiptNumber,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการใบเสร็จรับเงินแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບຮັບເງິນທີ່ໄດ້ວາງໄວ້ຕາມຕົວກອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Receipt>> GetPagedAsync(
         ReceiptListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มใบเสร็จรับเงินใหม่</summary>
+    /// <summary>ເພີ່ມໃບຮັບເງິນໃໝ່</summary>
     Task AddAsync(Receipt receipt, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

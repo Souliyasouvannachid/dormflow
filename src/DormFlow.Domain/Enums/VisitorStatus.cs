@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของผู้มาเยือน</summary>
+/// <summary>ສະຖານະນັກທ່ອງທ່ຽວ</summary>
 public enum VisitorStatus
 {
-    /// <summary>เข้าหอพักแล้ว ยังไม่ออก</summary>
+    /// <summary>ຂ້ອຍເຂົ້າໄປໃນຫໍພັກແລະບໍ່ໄດ້ອອກໄປ</summary>
     CheckedIn = 1,
 
-    /// <summary>ออกจากหอพักแล้ว</summary>
+    /// <summary>ອອກຈາກຫໍພັກ</summary>
     CheckedOut = 2,
 }

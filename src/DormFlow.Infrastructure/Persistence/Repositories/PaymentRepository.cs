@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลการชำระเงินบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຈ່າຍເງິນໃນ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class PaymentRepository(DormFlowDbContext dbContext) : IPaymentRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -55,6 +55,42 @@ public sealed class PaymentRepository(DormFlowDbContext dbContext) : IPaymentRep
         payments = ApplySort(payments, query);
 
         return payments.ToPagedResultAsync(query, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<int> CountAsync(PaymentListFilter filter, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        IQueryable<Payment> payments = _dbContext.Payments.AsNoTracking();
+
+        if (filter.OrganizationId.HasValue)
+        {
+            payments = payments.Where(payment => payment.OrganizationId == filter.OrganizationId.Value);
+        }
+
+        if (filter.DormitoryId.HasValue)
+        {
+            payments = payments.Where(payment => payment.DormitoryId == filter.DormitoryId.Value);
+        }
+
+        if (filter.InvoiceId.HasValue)
+        {
+            payments = payments.Where(payment => payment.InvoiceId == filter.InvoiceId.Value);
+        }
+
+        if (filter.Status.HasValue)
+        {
+            payments = payments.Where(payment => payment.Status == filter.Status.Value);
+        }
+
+        if (filter.RestrictToDormitoryIds is not null)
+        {
+            payments = payments.Where(payment =>
+                payment.DormitoryId != null && filter.RestrictToDormitoryIds.Contains(payment.DormitoryId.Value));
+        }
+
+        return payments.CountAsync(cancellationToken);
     }
 
     /// <inheritdoc />

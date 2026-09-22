@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>ระดับความสำคัญของงานซ่อมบำรุง</summary>
+/// <summary>ລະດັບຄວາມສໍາຄັນຂອງວຽກງານບໍາລຸງຮັກສາ</summary>
 public enum MaintenancePriority
 {
-    /// <summary>ต่ำ</summary>
+    /// <summary>ຕໍ່າ</summary>
     Low = 1,
 
-    /// <summary>ปานกลาง</summary>
+    /// <summary>ຂະຜາດກາງ</summary>
     Medium = 2,
 
-    /// <summary>สูง</summary>
+    /// <summary>ສູງ</summary>
     High = 3,
 
-    /// <summary>เร่งด่วน</summary>
+    /// <summary>ດ່ວນ</summary>
     Urgent = 4,
 }

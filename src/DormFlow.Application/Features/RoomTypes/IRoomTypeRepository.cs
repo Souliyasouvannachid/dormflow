@@ -5,38 +5,42 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.RoomTypes;
 
-/// <summary>ตัวกรองสำหรับดึงรายการประเภทห้องแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງປະເພດຫ້ອງ</summary>
 public sealed record RoomTypeListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
     RoomTypeStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลประเภทห้องในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນປະເພດຫ້ອງໃນຖານຂໍ້ມູນ</summary>
 public interface IRoomTypeRepository
 {
-    /// <summary>อ่านประเภทห้องจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານປະເພດຫ້ອງຈາກລະຫັດອ້າງອີງ</summary>
     Task<RoomType?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีประเภทห้องที่ใช้รหัสนี้อยู่แล้วในหอพักเดียวกันหรือไม่</summary>
+    /// <summary>ດຶງເອົາຊື່ປະເພດຫ້ອງເປັນຄູ່ (ລະຫັດ, ຊື່) ອີງ ຕາມ ບັນ ຊີ ລາຍ ຊື່ ລະ ຫັດ ສໍາ ລັບ ການ ສະ ແດງ ໂດຍ ບໍ່ ມີ ການ join</summary>
+    Task<IReadOnlyDictionary<Guid, string>> GetNamesByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
+
+    /// <summary>ກວດເບິ່ງວ່າມີປະເພດຫ້ອງທີ່ມີລະຫັດນີ້ຢູ່ໃນຫໍພັກດຽວກັນ</summary>
     Task<bool> ExistsByCodeAsync(
         Guid dormitoryId,
         string code,
         Guid? excludeRoomTypeId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการประเภทห้องแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ປະເພດຫ້ອງທີ່ມີ paginated ໂດຍອີງຕາມຕົວກອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<RoomType>> GetPagedAsync(
         RoomTypeListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มประเภทห้องใหม่</summary>
+    /// <summary>ເພີ່ມປະເພດຫ້ອງໃຝ່</summary>
     Task AddAsync(RoomType roomType, CancellationToken cancellationToken = default);
 
-    /// <summary>ทำเครื่องหมายลบประเภทห้อง ระบบจะแปลงเป็น Soft Delete ให้อัตโนมัติตอนบันทึก</summary>
+    /// <summary>ໝາຍປະເພດຫ້ອງລຶບ ລະບົບຈະປ່ຽນເປັນ Soft Delete ອັດຕະໂນມັດເມື່ອບັນທຶກ</summary>
     void Remove(RoomType roomType);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

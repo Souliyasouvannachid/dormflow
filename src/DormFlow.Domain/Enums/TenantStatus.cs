@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของผู้เช่า</summary>
+/// <summary>ສະຖານະຜູ້ເຊົ່າ</summary>
 public enum TenantStatus
 {
-    /// <summary>ใช้งานได้ตามปกติ</summary>
+    /// <summary>ສາມາດໃຊ້ໄດ້ຕາມປົກກະຕິ</summary>
     Active = 1,
 
-    /// <summary>ปิดใช้งานชั่วคราว เช่น ไม่มีสัญญาที่ยังใช้งานอยู่</summary>
+    /// <summary>ປິດການໃຊ້ງານຊົ່ວຄາວ, ສໍາລັບການຍົກຕົວຢ່າງ, ບໍ່ມີສັນຍາທີ່ມີການເຄື່ອນໄຫວ</summary>
     Inactive = 2,
 
-    /// <summary>ขึ้นบัญชีดำ ห้ามทำสัญญาเช่าใหม่</summary>
+    /// <summary>ບັນຊີດໍາ, ຫ້າມບໍ່ໃຫ້ເຮັດສັນຍາເຊົ່າໃຝ່</summary>
     Blacklisted = 3,
 }

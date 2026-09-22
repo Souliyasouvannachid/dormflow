@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.RoomTypes;
 
-/// <summary>Use Case ทั้งหมดของโมดูลประเภทห้อง</summary>
+/// <summary>Use Case ໂມດູນປະເພດຫ້ອງທັງຝົດ</summary>
 public sealed class RoomTypeService(
     IRoomTypeRepository repository,
     IDormitoryRepository dormitoryRepository,
@@ -70,15 +70,15 @@ public sealed class RoomTypeService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Dormitory dormitory = await _dormitoryRepository.GetByIdAsync(request.DormitoryId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบหอพักที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
-        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ไม่พบหอพักที่ระบุ");
+        TenantScope.EnsureDormitoryAccess(_currentUser, dormitory.OrganizationId, dormitory.Id, "ບໍ່ພົບຫໍພັກທີ່ລະບຸ");
 
         string code = request.Code.Trim();
 
         if (await _repository.ExistsByCodeAsync(dormitory.Id, code, null, cancellationToken))
         {
-            throw new ConflictException($"รหัสประเภทห้อง '{code}' ถูกใช้ในหอพักนี้แล้ว");
+            throw new ConflictException($"ລະຫັດປະເພດຫ້ອງ '{code}' ຖືກໃຊ້ໃນຫໍພັກນີ້ແລ້ວ");
         }
 
         RoomType roomType = new()
@@ -122,7 +122,7 @@ public sealed class RoomTypeService(
         if (await _repository.ExistsByCodeAsync(
                 roomType.DormitoryId.GetValueOrDefault(), code, roomType.Id, cancellationToken))
         {
-            throw new ConflictException($"รหัสประเภทห้อง '{code}' ถูกใช้ในหอพักนี้แล้ว");
+            throw new ConflictException($"ລະຫັດປະເພດຫ້ອງ '{code}' ຖືກໃຊ້ໃນຫໍພັກນີ້ແລ້ວ");
         }
 
         roomType.Code = code;
@@ -153,7 +153,7 @@ public sealed class RoomTypeService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out RoomTypeStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         RoomType roomType = await FindAccessibleAsync(id, cancellationToken);
@@ -191,13 +191,13 @@ public sealed class RoomTypeService(
     private async Task<RoomType> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         RoomType roomType = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลประเภทห้องที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນປະເພດຫ້ອງທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             roomType.OrganizationId,
             roomType.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลประเภทห้องที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນປະເພດຫ້ອງທີ່ຕ້ອງການ");
 
         return roomType;
     }

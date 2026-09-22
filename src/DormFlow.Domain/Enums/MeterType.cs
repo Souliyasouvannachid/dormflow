@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>ประเภทของมิเตอร์ที่จดค่าได้</summary>
+/// <summary>ປະເພດຂອງແມັດທີ່ສາມາດບັນທຶກມູນຄ່າ</summary>
 public enum MeterType
 {
-    /// <summary>มิเตอร์น้ำ</summary>
+    /// <summary>ເຄື່ອງວັດແທກນໍ້າ</summary>
     Water = 1,
 
-    /// <summary>มิเตอร์ไฟฟ้า</summary>
+    /// <summary>ເຄື່ອງວັດແທກໄຟຟ້າ</summary>
     Electricity = 2,
 }

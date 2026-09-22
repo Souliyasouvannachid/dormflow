@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Notifications;
 
-/// <summary>Use Case ทั้งหมดของโมดูลการแจ้งเตือน</summary>
+/// <summary>Use Case ໂມດູນການແຈ້ງເຕືອນທັງໝົດ</summary>
 public sealed class NotificationService(
     INotificationRepository repository,
     IUserAdministrationRepository userAdministrationRepository,
@@ -57,11 +57,11 @@ public sealed class NotificationService(
         Guid recipientUserId = RequireAuthenticatedUserId();
 
         Notification notification = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบการแจ้งเตือนที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບການແຈ້ງເຕືອນທີ່ຕ້ອງການ");
 
         if (notification.RecipientUserId != recipientUserId)
         {
-            throw new NotFoundException("ไม่พบการแจ้งเตือนที่ต้องการ");
+            throw new NotFoundException("ບໍ່ພົບການແຈ້ງເຕືອນທີ່ຕ້ອງການ");
         }
 
         if (!notification.IsRead)
@@ -86,11 +86,11 @@ public sealed class NotificationService(
         UserSecurityProfile recipient = await _userAdministrationRepository.GetByIdAsync(
                 request.RecipientUserId,
                 cancellationToken)
-            ?? throw new NotFoundException("ไม่พบผู้ใช้ที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຜູ້ໃຊ້ທີ່ລະບຸ");
 
         if (!_currentUser.IsSuperAdmin && recipient.OrganizationId != _currentUser.OrganizationId)
         {
-            throw new NotFoundException("ไม่พบผู้ใช้ที่ระบุ");
+            throw new NotFoundException("ບໍ່ພົບຜູ້ໃຊ້ທີ່ລະບຸ");
         }
 
         Notification notification = new()
@@ -115,7 +115,7 @@ public sealed class NotificationService(
     }
 
     private Guid RequireAuthenticatedUserId()
-        => _currentUser.UserId ?? throw new UnauthorizedAccessException("กรุณาเข้าสู่ระบบก่อนใช้งานคำสั่งนี้");
+        => _currentUser.UserId ?? throw new UnauthorizedAccessException("ກະລຸນາເຂົ້າສູ່ລະບົບກ່ອນໃຊ້ງານຄຳສັ່ງນີ້");
 
     private static NotificationResponse ToResponse(Notification notification) => new()
     {

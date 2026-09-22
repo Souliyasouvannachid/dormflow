@@ -12,10 +12,10 @@ using FluentValidation;
 namespace DormFlow.Application.Features.MeterReadings;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลค่ามิเตอร์
+/// Use Case ໂມດູນຄ່າແມັດທັງໝົດ
 /// </summary>
 /// <remarks>
-/// ไม่มี Use Case แก้ไขหรือลบโดยตั้งใจ ดูเหตุผลเพิ่มเติมที่ <see cref="Domain.Entities.MeterReading"/>
+/// ບໍ່ມີ Use Case ແກ້ໄຂຫຼືລຶບໂດຍບັງເອີນ ເບິ່ງເຫດຜົນເພີ່ມເຕີມຢູ່ <see cref="Domain.Entities.MeterReading"/>
 /// </remarks>
 public sealed class MeterReadingService(
     IMeterReadingRepository repository,
@@ -72,20 +72,20 @@ public sealed class MeterReadingService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         MeterType meterType = Enum.Parse<MeterType>(request.MeterType, ignoreCase: true);
         DateOnly periodMonth = NormalizeToFirstOfMonth(request.PeriodMonth);
 
         if (await _repository.ExistsForPeriodAsync(room.Id, meterType, periodMonth, cancellationToken))
         {
-            throw new ConflictException("ห้องนี้ถูกจดค่ามิเตอร์ประเภทนี้ของเดือนที่ระบุไปแล้ว");
+            throw new ConflictException("ຫ້ອງນີ້ຖືກຈົດຄ່າມິເຕີປະເພດນີ້ຂອງເດືອນທີ່ລະບຸໄປແລ້ວ");
         }
 
         MeterReading? previous = await _repository.GetLatestBeforePeriodAsync(
@@ -95,7 +95,7 @@ public sealed class MeterReadingService(
         if (request.CurrentReading < previousReading)
         {
             throw new ValidationFailedException(
-                $"ค่ามิเตอร์ที่จดได้ ({request.CurrentReading}) ต้องไม่น้อยกว่าค่าครั้งก่อนหน้า ({previousReading})");
+                $"ຄ່າມິເຕີທີ່ຈົດໄດ້ ({request.CurrentReading}) ຕ້ອງບໍ່ໜ້ອຍກວ່າຄ່າຄັ້ງກ່ອນໜ້າ ({previousReading})");
         }
 
         MeterReading meterReading = new()
@@ -128,13 +128,13 @@ public sealed class MeterReadingService(
     private async Task<MeterReading> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         MeterReading meterReading = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลค่ามิเตอร์ที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຄ່າມິເຕີທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             meterReading.OrganizationId,
             meterReading.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลค่ามิเตอร์ที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຄ່າມິເຕີທີ່ຕ້ອງການ");
 
         return meterReading;
     }

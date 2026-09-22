@@ -19,9 +19,9 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบวงจรชีวิตของการเช่าห้องพักทั้งสายผ่าน HTTP จริง
-/// Tenant -> Reservation -> Contract (สร้าง/เปิดใช้งาน/สิ้นสุด)
-/// เพราะ Contract สามารถสร้างได้สองทาง (ผ่านการจอง หรือทำสัญญาตรง) จึงครอบคลุมทั้งสองเส้นทาง
+/// ທົດສອບວົງຈອນຊີວິດຂອງສາຍການເຊົ່າຫ້ອງທັງໝົດຜ່ານ HTTP ຄວາມຈິງ
+/// Tenant -> Reservation -> Contract (ສ້າງ/ເປີດໃຊ້/ສິ້ນສຸດ)
+/// ເນື່ອງຈາກວ່າ Contract ສາມາດສ້າງໄດ້ໃນສອງວິທີ (ໂດຍຜ່ານການຈອງຫຼືສັນຍາໂດຍກົງ) ດັ່ງນັ້ນຈຶ່ງກວມເອົາທັງສອງເສັ້ນທາງ
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
@@ -29,7 +29,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task จองห้องแล้วแปลงเป็นสัญญา_เปิดใช้งาน_แล้วสิ้นสุดสัญญา_ต้องทำงานครบวงจร()
+    public async Task ຈອງຫ້ອງແລະປ່ຽນເປັນສັນຍາ_ເປີດໃຊ້_ຫຼັງຈາກນັ້ນສັນຍາສິ້ນສຸດລົງ_ຕ້ອງເຮັດວຽກຢູ່ໃນວົງເຕັມ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -39,17 +39,17 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             await CreatePropertyHierarchyAsync(client);
         TenantResponse tenant = await CreateTenantAsync(client, organization.Id);
 
-        // จองห้อง -> ห้องต้องเปลี่ยนเป็น Reserved ทันที
+        // ຈອງຫ້ອງ -> ຫ້ອງຕ້ອງໄດ້ຮັບການປ່ຽນເປັນ Reserved ທັນທີ
         ReservationResponse reservation = await CreateReservationAsync(client, room.Id, tenant.Id);
         (await GetRoomAsync(client, room.Id)).Status.Should().Be("Reserved");
 
-        // แปลงการจองเป็นสัญญา -> ห้องยังคง Reserved อยู่ (ยังไม่เช็คอิน) สัญญาอยู่ในสถานะ Draft
+        // ປ່ຽນການຈອງເປັນສັນຍາ -> ຫ້ອງແມ່ນຍັງ Reserved ຢູ່ (ຍັງບໍ່ໄດ້ເຊັກອິນເທື່ອ) ສັນຍາແມ່ນຢູ່ໃນສະຖານະ Draft
         ContractResponse contract = await CreateContractFromReservationAsync(client, room.Id, tenant.Id, reservation.Id);
         contract.Status.Should().Be("Draft");
         contract.ReservationId.Should().Be(reservation.Id);
         (await GetRoomAsync(client, room.Id)).Status.Should().Be("Reserved");
 
-        // การจองเดิมต้องถูกทำเครื่องหมายว่าถูกแปลงเป็นสัญญาแล้ว
+        // ການຈອງຕົ້ນສະບັບຈະຕ້ອງຖືກໝາຍວ່າປ່ຽນເປັນສັນຍາ
         using HttpResponseMessage reservationAfterResponse = await client.GetAsync(
             new Uri($"/api/v1/reservations/{reservation.Id}", UriKind.Relative),
             TestContext.Current.CancellationToken);
@@ -57,7 +57,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<ReservationResponse>>(TestContext.Current.CancellationToken);
         reservationAfterBody!.Data!.Status.Should().Be("ConvertedToContract");
 
-        // เปิดใช้งานสัญญา (เช็คอิน) -> ห้องต้องเปลี่ยนเป็น Occupied
+        // ເປີດໃຊ້ສັນຍາ (ເຊັກອິນ) -> ຫ້ອງຕ້ອງໄດ້ຮັບການປ່ຽນເປັນ Occupied
         using HttpResponseMessage activateResponse = await client.PostAsync(
             new Uri($"/api/v1/contracts/{contract.Id}/activate", UriKind.Relative),
             content: null,
@@ -70,10 +70,10 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
         activatedBody.Data.SignedAt.Should().NotBeNull();
         (await GetRoomAsync(client, room.Id)).Status.Should().Be("Occupied");
 
-        // สิ้นสุดสัญญา (เช็คเอาท์) -> ห้องต้องเปลี่ยนเป็น Cleaning
+        // ສິ້ນສຸດສັນຍາ (ກວດເບິ່ງ) -> ຫ້ອງຕ້ອງໄດ້ຮັບການປ່ຽນເປັນ Cleaning
         using HttpResponseMessage terminateResponse = await client.PostAsJsonAsync(
             new Uri($"/api/v1/contracts/{contract.Id}/terminate", UriKind.Relative),
-            new TerminateContractRequest { Reason = "ครบกำหนดสัญญา" },
+            new TerminateContractRequest { Reason = "ສັນຍາຄົບກຳນົດ" },
             TestContext.Current.CancellationToken);
         terminateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -81,12 +81,12 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<ContractResponse>>(TestContext.Current.CancellationToken);
         terminatedBody!.Data!.Status.Should().Be("Terminated");
         terminatedBody.Data.TerminatedAt.Should().NotBeNull();
-        terminatedBody.Data.TerminationReason.Should().Be("ครบกำหนดสัญญา");
+        terminatedBody.Data.TerminationReason.Should().Be("ສັນຍາຄົບກຳນົດ");
         (await GetRoomAsync(client, room.Id)).Status.Should().Be("Cleaning");
     }
 
     [Fact]
-    public async Task จองห้องที่ไม่ว่างซ้ำ_ต้องได้_409()
+    public async Task ຈອງຫ້ອງທີ່ບໍ່ມີຫ້ອງຄືນໃໝ່_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -114,7 +114,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ทำสัญญาตรงโดยไม่ผ่านการจอง_ต้องสร้างสำเร็จและกันห้องไว้()
+    public async Task ສັນຍາໂດຍກົງໂດຍບໍ່ມີການຈອງ_ຕ້ອງໄດ້ຮັບການກໍ່ສ້າງຢ່າງສໍາເລັດຜົນແລະສະຫງວນຫ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -145,7 +145,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ผู้เช่าที่ถูกขึ้นบัญชีดำ_ต้องจองห้องไม่ได้()
+    public async Task ຜູ້ເຊົ່າບັນຊີດຳ_ບໍ່ສາມາດຈອງຫ້ອງໄດ້()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -181,7 +181,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -193,7 +193,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -205,14 +205,14 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -224,7 +224,7 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -259,8 +259,8 @@ public class LeasingLifecycleEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organizationId,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

@@ -1,38 +1,38 @@
 namespace DormFlow.Contracts.Tenants;
 
-/// <summary>คำขอสร้างข้อมูลผู้เช่าใหม่</summary>
+/// <summary>ຮ້ອງຂໍການສ້າງຂໍ້ມູນຜູ້ເຊົ່າໃຝ່</summary>
 public class CreateTenantRequest
 {
     /// <summary>
-    /// องค์กรที่ผู้เช่าจะสังกัด มีผลเฉพาะเมื่อผู้เรียกเป็น SuperAdmin
-    /// ผู้ใช้อื่นถูกบังคับให้สร้างในองค์กรของตนเองเสมอไม่ว่าจะระบุค่านี้หรือไม่
+    /// ອົງກອນທີ່ຜູ້ເຊົ່າຈະເປັນຂອງ Effective ພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin
+    /// ຜູ້ໃຊ້ອື່ນຖືກບັງຄັບໃຫ້ສ້າງຢູ່ໃນອົງກອນຂອງພວກເຂົາສະເຝີວ່າຄ່ານີ້ຖືກກໍານົດຫຼືບໍ່
     /// </summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public string FirstName { get; set; } = string.Empty;
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public string LastName { get; set; } = string.Empty;
 
-    /// <summary>อีเมล</summary>
+    /// <summary>ອີເມວ</summary>
     public string? Email { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; set; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทาง</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນ</summary>
     public string? NationalId { get; set; }
 
-    /// <summary>วันเดือนปีเกิด</summary>
+    /// <summary>ວັນເດືອນປີເກີດ</summary>
     public DateOnly? DateOfBirth { get; set; }
 
-    /// <summary>ที่อยู่ตามทะเบียนบ้าน</summary>
+    /// <summary>ທີ່ຢູ່ ຕາມທະບຽນເຮືອນ</summary>
     public string? Address { get; set; }
 
-    /// <summary>ชื่อผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ຊື່ຂອງຜູ້ຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactName { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactPhone { get; set; }
 }

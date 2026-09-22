@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Invoices;
 
-/// <summary>ตัวกรองสำหรับดึงรายการใบแจ้งหนี้แบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງໃບແຈ້ງຜີ້</summary>
 public sealed record InvoiceListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -14,43 +14,44 @@ public sealed record InvoiceListFilter(
     DateOnly? PeriodMonth,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลใบแจ้งหนี้ในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນໃບແຈ້ງໜີ້ໃນຖານຂໍ້ມູນ</summary>
 public interface IInvoiceRepository
 {
-    /// <summary>อ่านใบแจ้งหนี้จากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານໃບແຈ້ງໜີ້ຈາກລະຫັດອ້າງອີງ</summary>
     Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีใบแจ้งหนี้ที่ใช้เลขที่นี้อยู่แล้วในองค์กรเดียวกันหรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າມີໃບແຈ້ງໜີ້ທີ່ໃຊ້ເບີນີ້ຢູ່ໃນອົງກອນດຽວກັນຫຼືບໍ່</summary>
     Task<bool> ExistsByInvoiceNumberAsync(
         Guid organizationId,
         string invoiceNumber,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่าสัญญาเช่านี้ถูกออกบิลของเดือนที่ระบุไปแล้วหรือยัง</summary>
+    /// <summary>ກວດເບິ່ງວ່າສັນຍາການເຊົ່ານີ້ໄດ້ຖືກ invoice ສໍາລັບເດືອນທີ່ລະບຸໄວ້ຫຼືບໍ່</summary>
     Task<bool> ExistsForContractPeriodAsync(
         Guid contractId,
         DateOnly periodMonth,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการใบแจ้งหนี้แบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບເກັບເງິນທີ່ຕັ້ງໄວ້ຕາມຕົວກອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Invoice>> GetPagedAsync(
         InvoiceListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ดึงรายการใบแจ้งหนี้ที่ยังไม่ถูกทำเครื่องหมายว่าเกินกำหนด (Issued/PartiallyPaid)
-    /// แต่วันครบกำหนดชำระผ่านไปแล้วก่อนวันที่ระบุ
-    /// คืน Entity แบบติดตามการเปลี่ยนแปลง (ไม่ใช่ AsNoTracking) เพราะเรียกใช้เพื่อแก้ไขสถานะต่อทันที
-    /// ใช้โดย Background Job เท่านั้น ไม่ผ่านการกรองตามองค์กร/หอพัก เพราะทำงานข้ามทั้งระบบ
+    /// ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ຍັງບໍ່ທັນໄດ້ໝາຍວ່າໝົດກຳນົດ (Issued/PartiallyPaid)
+    /// ແຕ່ວັນທີ່ກໍານົດການຊໍາລະໄດ້ຜ່ານໄປກ່ອນວັນທີທີ່ກໍານົດໄວ້
+    /// ກາງຄືນ Entity ປ່ຽນແບບຟອມການຕິດຕາມ (ບໍ່ AsNoTracking) ເນື່ອງຈາກວ່າມັນຖືກເອີ້ນວ່າສືບຕໍ່ແກ້ໄຂສະຖານະການທັນທີ
+    /// ໃຊ້ໂດຍ Background Job ເທົ່ານັ້ນ, ບໍ່ໄດ້ຖືກກັ່ນຕອງໂດຍອົງກອນ/ຫໍພັກເພາະວ່າພວກເຂົາເຮັດວຽກທົ່ວລະບົບທັງຝົດ
     /// </summary>
     Task<IReadOnlyList<Invoice>> GetOverdueCandidatesAsync(
         DateOnly asOfDate,
+        int batchSize,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มใบแจ้งหนี้ใหม่</summary>
+    /// <summary>ເພີ່ມໃບແຈ້ງໜີ້ໃໝ່</summary>
     Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล รวมถึงการเปลี่ยนแปลงของ Entity อื่นที่ถูกติดตามอยู่ในธุรกรรมเดียวกัน</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ. ລວມທັງການປ່ຽນແປງໃນ Entity ທຸລະກໍາທີ່ຕິດຕາມອື່ນແມ່ນຢູ່ໃນທຸລະກໍາດຽວກັນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

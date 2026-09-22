@@ -15,14 +15,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการเข้า-ออกของผู้มาเยือนผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບເຂົ້າ-ທາງອອກຂອງນັກທ່ອງທ່ຽວທີ່ຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class VisitorsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task บันทึกการเข้าของผู้มาเยือนใหม่_ต้องได้สถานะ_CheckedIn()
+    public async Task ບັນທຶກການເຂົ້າມາຂອງນັກທ່ອງທ່ຽວໃຝ່_ຕ້ອງໄດ້ຮັບການສະຖານະ_CheckedIn()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -35,9 +35,9 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
             new CheckInVisitorRequest
             {
                 RoomId = room.Id,
-                VisitorName = "สมหญิง มาเยือน",
+                VisitorName = "Somying ມາຢ້ຽມຢາມ",
                 VisitorPhone = "0891234567",
-                Purpose = "เยี่ยมเพื่อน",
+                Purpose = "ຢ້ຽມຢາມຝູ່ເພື່ອນ",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -46,12 +46,12 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<VisitorResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         visitor.Status.Should().Be("CheckedIn");
-        visitor.VisitorName.Should().Be("สมหญิง มาเยือน");
+        visitor.VisitorName.Should().Be("Somying ມາຢ້ຽມຢາມ");
         visitor.CheckOutAt.Should().BeNull();
     }
 
     [Fact]
-    public async Task บันทึกการออกของผู้มาเยือน_ต้องได้สถานะ_CheckedOut()
+    public async Task ບັນທຶກຜູ້ເຂົ້າຊົມ_ຕ້ອງໄດ້ຮັບການສະຖານະ_CheckedOut()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -74,7 +74,7 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task บันทึกการออกของผู้มาเยือนที่ออกไปแล้วซ้ำ_ต้องได้_409()
+    public async Task ບັນທຶກການອອກຂອງຜູ້ເຂົ້າຊົມຊ້ຳຜູ້ທີ່ໄດ້ອອກໄປແລ້ວ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -100,7 +100,7 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/visitors", UriKind.Relative),
-            new CheckInVisitorRequest { RoomId = roomId, VisitorName = "ทดสอบ" },
+            new CheckInVisitorRequest { RoomId = roomId, VisitorName = "ການທົດສອບ" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -114,7 +114,7 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -126,7 +126,7 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -138,14 +138,14 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -157,7 +157,7 @@ public class VisitorsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

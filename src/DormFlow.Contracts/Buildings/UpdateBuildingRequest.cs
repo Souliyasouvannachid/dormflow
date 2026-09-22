@@ -1,18 +1,18 @@
 namespace DormFlow.Contracts.Buildings;
 
-/// <summary>คำขอแก้ไขข้อมูลอาคาร</summary>
-/// <remarks>ไม่มีฟิลด์ DormitoryId เพราะการย้ายอาคารข้ามหอพักไม่ใช่การแก้ไขข้อมูลปกติ</remarks>
+/// <summary>ຮ້ອງຂໍການແກ້ໄຂຂໍ້ມູນອາຄານ</summary>
+/// <remarks>ບໍ່ມີພາກສະຜາມ DormitoryId ເນື່ອງຈາກວ່າການຍ້າຍອາຄານໃນທົ່ວຫໍພັກບໍ່ແມ່ນການແກ້ໄຂຂໍ້ມູນປົກກະຕິ</remarks>
 public class UpdateBuildingRequest
 {
-    /// <summary>รหัสอาคาร ไม่ซ้ำกันภายในหอพักเดียวกัน</summary>
+    /// <summary>ລະຫັດອາຄານແມ່ນເປັນເອກະລັກພາຍໃນຫໍພັກດຽວກັນ</summary>
     public string Code { get; set; } = string.Empty;
 
-    /// <summary>ชื่ออาคาร</summary>
+    /// <summary>ຊື່ອາຄານ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>จำนวนชั้นทั้งหมดของอาคาร</summary>
+    /// <summary>ຈໍານວນຊັ້ນທັງຝົດຂອງອາຄານ</summary>
     public int TotalFloors { get; set; } = 1;
 }

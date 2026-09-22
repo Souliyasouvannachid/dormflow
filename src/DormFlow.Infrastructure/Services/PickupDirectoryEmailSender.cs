@@ -9,13 +9,13 @@ using Microsoft.Extensions.Options;
 namespace DormFlow.Infrastructure.Services;
 
 /// <summary>
-/// เขียนอีเมลขาออกลงไฟล์ในโฟลเดอร์ที่กำหนดแทนการส่งผ่าน SMTP
+/// ຂຽນອີເມວຂາອອກໄປຫາໄຟລ໌ໃນໂຟນເດີທີ່ກໍານົດແທນທີ່ຈະສົ່ງຜ່ານ SMTP
 /// </summary>
 /// <remarks>
-/// เลือกวิธีนี้เพราะระบบยังไม่ได้ผูกกับผู้ให้บริการอีเมลใด
-/// การเขียนลงไฟล์ทำให้ทดสอบเส้นทางลืมรหัสผ่านได้จริงตั้งแต่ตอนนี้
-/// และไม่ทำให้โทเคนตั้งรหัสผ่านใหม่หลุดไปอยู่ใน Log ของแอปพลิเคชัน
-/// เมื่อเชื่อมต่อ SMTP แล้วให้เปลี่ยนการลงทะเบียนใน DependencyInjection เป็นตัวส่งจริงแทน
+/// ເລືອກວິທີນີ້ເພາະວ່າລະບົບຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ກັບຜູ້ໃຫ້ບໍລິການອີເມວໃດໆ
+/// ການຂຽນໄຟລ໌ຊ່ວຍໃຫ້ທ່ານສາມາດທົດສອບເສັ້ນທາງລະຫັດຜ່ານທີ່ລືມຂອງເຈົ້າໄດ້ໃນຕອນນີ້
+/// ແລະບໍ່ໄດ້ເຮັດໃຫ້ token ການຕັ້ງລະຫັດຜ່ານໃຝ່ສູນເສຍໄປໃນ Log ຂອງຄໍາຮ້ອງສະຝັກ
+/// ເມື່ອເຊື່ອມຕໍ່ SMTP ຫຼັງຈາກນັ້ນ, ມີການປ່ຽນແປງການລົງທະບຽນໃນ DependencyInjection ມັນແມ່ນຜູ້ສົ່ງຕົວຈິງແທນ
 /// </remarks>
 public sealed class PickupDirectoryEmailSender(
     IOptions<EmailOptions> emailOptions,
@@ -25,7 +25,7 @@ public sealed class PickupDirectoryEmailSender(
         LoggerMessage.Define<string>(
             LogLevel.Information,
             new EventId(3000, "EmailWritten"),
-            "เขียนอีเมลขาออกลงไฟล์ {FilePath} แล้ว");
+            "ຂຽນອີເມວຂາອອກລົງໄຟລ໌ {FilePath} ແລ້ວ");
 
     private readonly EmailOptions _emailOptions = emailOptions.Value;
     private readonly ILogger<PickupDirectoryEmailSender> _logger = logger;
@@ -58,7 +58,7 @@ public sealed class PickupDirectoryEmailSender(
 
         await File.WriteAllTextAsync(filePath, content.ToString(), Encoding.UTF8, cancellationToken);
 
-        // บันทึกเฉพาะที่อยู่ของไฟล์ ไม่บันทึกเนื้อหาเพราะมีโทเคนตั้งรหัสผ่านใหม่อยู่ข้างใน
+        // ບັນທຶກພຽງແຕ່ທີ່ຢູ່ໄຟລ໌. ເນື້ອຫາບໍ່ໄດ້ຖືກບັນທຶກເນື່ອງຈາກມີລະຫັດປ່ຽນລະຫັດລັບພາຍໃນ
         EmailWrittenCallback(_logger, filePath, null);
     }
 }

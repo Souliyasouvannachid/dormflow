@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการเงินมัดจำ</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງເງິນຝາກ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/deposits")]
@@ -17,7 +17,7 @@ public sealed class DepositsController(IDepositService depositService) : Control
 {
     private readonly IDepositService _depositService = depositService;
 
-    /// <summary>ดึงรายการเงินมัดจำแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ເງິນຝາກທີ່ແບ່ງອອກເປັນໜ້າ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Deposits.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<DepositResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class DepositsController(IDepositService depositService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลเงินมัดจำหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນເງິນຝາກຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Deposits.View)]
     [ProducesResponseType(typeof(ApiResponse<DepositResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class DepositsController(IDepositService depositService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>บันทึกการรับเงินมัดจำใหม่</summary>
+    /// <summary>ບັນທຶກການຮັບເງິນຝາກໃໝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Deposits.Collect)]
     [ProducesResponseType(typeof(ApiResponse<DepositResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class DepositsController(IDepositService depositService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>คืนเงินมัดจำ</summary>
+    /// <summary>ຝາກເງິນຄືນ</summary>
     [HttpPost("{id:guid}/refund")]
     [RequirePermission(PermissionCodes.Deposits.Refund)]
     [ProducesResponseType(typeof(ApiResponse<DepositResponse>), StatusCodes.Status200OK)]

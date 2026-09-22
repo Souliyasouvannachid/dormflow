@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูล Audit Log บน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນ Audit Log ສຸດ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class AuditLogRepository(DormFlowDbContext dbContext) : IAuditLogRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

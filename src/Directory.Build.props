@@ -1,12 +1,12 @@
 <Project>
 
-  <!-- สืบทอดค่าจาก Directory.Build.props ที่ root -->
+  <!-- ສືບທອດມູນຄ່າຈາກ Directory.Build.props ທີ່ root -->
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
     <!--
-      เปิด TreatWarningsAsErrors เฉพาะโค้ด Production เท่านั้น
-      โปรเจกต์เทสต์ไม่เปิด เพราะ analyzer ของ test framework มักเตือนในกรณีที่ยอมรับได้
+      ເປີດ TreatWarningsAsErrors ລະຫັດເທົ່ານັ້ນ Production ເທົ່ານັ້ນ
+      ການທົດສອບໂຄງການບໍ່ໄດ້ເປີດເນື່ອງຈາກວ່າ analyzer ຂອງ test framework ເຕືອນສະເຝີໃນກໍລະນີທີ່ຍອມຮັບໄດ້
     -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsNotAsErrors></WarningsNotAsErrors>

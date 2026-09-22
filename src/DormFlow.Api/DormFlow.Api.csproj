@@ -7,10 +7,10 @@
     <UserSecretsId>dormflow-api-2f0b6a1c-9d3e-4a75-8c21-0f5b7d9e4a13</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <!--
-      AV0029 แนะนำให้ลงทะเบียน OpenAPI ผ่าน AddApiVersioning().AddOpenApi() เท่านั้น
-      แต่ source generator ของ .NET 10 ที่ดึง XML Comments เข้าเอกสาร ทำงานด้วยการ intercept
-      การเรียก services.AddOpenApi(...) ในโค้ดของเราโดยตรง ถ้าลบการเรียกนั้นออก เอกสารจะไม่มีคำอธิบายจาก XML Comments
-      จึงเรียกทั้งสองแบบและปิดคำเตือนนี้ไว้
+      AV0029 ແນະນໍາໃຫ້ລົງທະບຽນ OpenAPI ຜ່ານ AddApiVersioning().AddOpenApi() ເທົ່ານັ້ນ
+      ແຕ່ source generator ຂອງ .NET 10 ເຄື່ອງດຶງ XML Comments ໃສ່ເອກະສານແລະເຮັດວຽກກັບ intercept
+      ໂທ services.AddOpenApi(...) ໂດຍ ກົງ ໃນ ລະ ຫັດ ຂອງ ພວກ ເຮົາ ຖ້າ ຫາກ ວ່າ ການ ໂທ ອອກ ເອ ກະ ສານ ຈະ ບໍ່ ລວມ ມີ ລາຍ ລະ ອຽດ ຈາກ XML Comments
+      ດັ່ງນັ້ນໂທຫາທັງສອງປະເພດແລະປິດການເຕືອນນີ້
     -->
     <NoWarn>$(NoWarn);AV0029</NoWarn>
   </PropertyGroup>
@@ -21,6 +21,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <!-- ຈໍາເປັນໂດຍ dotnet ef ເມື່ອ API ເປັນ startup project ຂອງ migration -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Asp.Versioning.Mvc" />

@@ -1,44 +1,44 @@
 namespace DormFlow.Contracts.RoomTypes;
 
-/// <summary>ข้อมูลประเภทห้องหนึ่งแบบ</summary>
+/// <summary>ປະເພດຂອງຂໍ້ມູນຫ້ອງ</summary>
 public class RoomTypeResponse
 {
-    /// <summary>รหัสอ้างอิงของประเภทห้อง</summary>
+    /// <summary>ລະຫັດອ້າງອີງປະເພດຫ້ອງ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของประเภทห้อง</summary>
+    /// <summary>ອົງກອນເຈົ້າຂອງຫ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่ประเภทห้องนี้สังกัด</summary>
+    /// <summary>ຫໍພັກທີ່ປະເພດຫ້ອງນີ້ຂຶ້ນກັບ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>รหัสประเภทห้อง</summary>
+    /// <summary>ລະຫັດປະເພດຫ້ອງ</summary>
     public string Code { get; init; } = string.Empty;
 
-    /// <summary>ชื่อประเภทห้อง</summary>
+    /// <summary>ຊື່ປະເພດຫ້ອງ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>ค่าเช่ารายเดือน</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນ</summary>
     public decimal MonthlyRent { get; init; }
 
-    /// <summary>ค่าเช่ารายวัน</summary>
+    /// <summary>ຄ່າເຊົ່າປະຈໍາວັນ</summary>
     public decimal? DailyRent { get; init; }
 
-    /// <summary>ค่ามัดจำ</summary>
+    /// <summary>ຝາກ</summary>
     public decimal DepositAmount { get; init; }
 
-    /// <summary>จำนวนผู้เข้าพักสูงสุด</summary>
+    /// <summary>ຈຳນວນແຂກສູງສຸດ</summary>
     public int MaximumOccupants { get; init; }
 
-    /// <summary>สถานะของประเภทห้อง</summary>
+    /// <summary>ສະຖານະປະເພດຫ້ອງ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

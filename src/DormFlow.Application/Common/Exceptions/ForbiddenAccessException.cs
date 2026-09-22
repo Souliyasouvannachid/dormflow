@@ -1,26 +1,26 @@
 namespace DormFlow.Application.Common.Exceptions;
 
 /// <summary>
-/// ผู้ใช้ยืนยันตัวตนแล้วแต่ไม่มีสิทธิ์ทำรายการนี้ ชั้น API จะแปลงเป็น HTTP 403
+/// ຜູ້ໃຊ້ໄດ້ຢັ້ງຢືນຕົວຕົນຂອງເຂົາເຈົ້າແຕ່ບໍ່ໄດ້ຮັບອະນຸຍາດໃຫ້ເຮັດທຸລະກໍານີ້ API ຈະປ່ຽນເປັນ HTTP 403
 /// </summary>
 public class ForbiddenAccessException : Exception
 {
-    /// <summary>สร้าง Exception พร้อมข้อความเริ่มต้น</summary>
+    /// <summary>ສ້າງ Exception ດ້ວຍຂໍ້ຄວາມເບື້ອງຕົ້ນ</summary>
     public ForbiddenAccessException()
-        : base("คุณไม่มีสิทธิ์ทำรายการนี้")
+        : base("ທ່ານບໍ່ມີສິດເຮັດລາຍການນີ້")
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความที่กำหนดเอง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມທີ່ກໍາຜົດເອງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
     public ForbiddenAccessException(string message)
         : base(message)
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความและ Exception ต้นทาง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
-    /// <param name="innerException">Exception ต้นทาง</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມແລະ Exception ຕົ້ນກໍາເນີດ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
+    /// <param name="innerException">Exception ຕົ້ນກໍາເນີດ</param>
     public ForbiddenAccessException(string message, Exception innerException)
         : base(message, innerException)
     {

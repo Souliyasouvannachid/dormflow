@@ -7,31 +7,31 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace DormFlow.Api.Configuration;
 
 /// <summary>
-/// ตั้งค่า Health Check ของ API และ PostgreSQL
+/// ຕັ້ງຄ່າ Health Check ຂອງ API ແລະ PostgreSQL
 /// </summary>
 /// <remarks>
-/// แยกเป็นสามเส้นทางตามการใช้งานของ orchestrator
-/// live ใช้ตัดสินว่าควรรีสตาร์ตคอนเทนเนอร์หรือไม่ จึงต้องไม่ขึ้นกับฐานข้อมูล
-/// ready ใช้ตัดสินว่าควรส่งทราฟฟิกเข้ามาหรือยัง จึงต้องตรวจฐานข้อมูลด้วย
+/// ແຍກອອກເປັນສາມເສັ້ນທາງຕາມການນໍາໃຊ້ orchestrator
+/// live ໃຊ້ເພື່ອຕັດສິນໃຈວ່າຖັງຄວນປິດເປີດໃໝ່ຫຼືບໍ່. ດັ່ງນັ້ນ, ມັນຕ້ອງເປັນເອກະລາດຂອງຖານຂໍ້ມູນ
+/// ready ໃຊ້ເພື່ອຕັດສິນໃຈວ່າການຈະລາຈອນຄວນຈະຖືກສົ່ງຫຼືບໍ່. ດັ່ງນັ້ນ, ຖານຂໍ້ມູນຕ້ອງໄດ້ຮັບການກວດສອບເຊັ່ນດຽວກັນ
 /// </remarks>
 public static class HealthCheckConfiguration
 {
-    /// <summary>แท็กของการตรวจสอบที่ใช้ตัดสินความพร้อมรับทราฟฟิก</summary>
+    /// <summary>ປ້າຍກວດກາທີ່ໃຊ້ເພື່ອກໍານົດຄວາມພ້ອມຂອງການຈະລາຈອນ</summary>
     public const string ReadyTag = "ready";
 
-    /// <summary>แท็กของการตรวจสอบที่ใช้ตัดสินว่ากระบวนการยังมีชีวิตอยู่</summary>
+    /// <summary>ແທັກ checksum ທີ່ໃຊ້ເພື່ອກໍານົດວ່າຂະບວນການມີຊີວິດຢູ່ຫຼືບໍ່</summary>
     public const string LiveTag = "live";
 
     private static readonly JsonSerializerOptions SerializerOptions = DormFlowJsonSerializerOptions.Default;
 
-    /// <summary>ลงทะเบียนรายการตรวจสอบสุขภาพของระบบ</summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
+    /// <summary>ລົງທະບຽນສໍາລັບລາຍການກວດສຸຂະພາບຂອງລະບົບ</summary>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddDormFlowHealthChecks(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy("API ทำงานอยู่"), tags: [LiveTag])
+            .AddCheck("self", () => HealthCheckResult.Healthy("API ກຳລັງເຮັດວຽກ"), tags: [LiveTag])
             .AddDbContextCheck<DormFlowDbContext>(
                 name: "postgresql",
                 failureStatus: HealthStatus.Unhealthy,
@@ -40,8 +40,8 @@ public static class HealthCheckConfiguration
         return services;
     }
 
-    /// <summary>เปิดเส้นทาง /health, /health/ready และ /health/live</summary>
-    /// <param name="app">แอปพลิเคชันที่สร้างแล้ว</param>
+    /// <summary>ເສັ້ນທາງເປີດ /health, /health/ready ແລະ /health/live</summary>
+    /// <param name="app">ແອັບພລິເຄຊັນທີ່ສ້າງຂຶ້ນ</param>
     public static WebApplication MapDormFlowHealthChecks(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);
@@ -68,8 +68,8 @@ public static class HealthCheckConfiguration
     }
 
     /// <summary>
-    /// เขียนผลการตรวจสอบเป็น JSON
-    /// ไม่ส่งข้อความของ Exception ออกไป เพราะอาจมีรายละเอียดการเชื่อมต่อฐานข้อมูลปนอยู่
+    /// ຂຽນຜົນການກວດກາເປັນ JSON
+    /// ຢ່າສົ່ງຂໍ້ຄວາມ Exception ໄປເພາະວ່າອາດຈະມີລາຍລະອຽດການເຊື່ອມຕໍ່ຖານຂໍ້ມູນປະສົມຢູ່ໃນ
     /// </summary>
     private static Task WriteResponseAsync(HttpContext context, HealthReport report)
     {

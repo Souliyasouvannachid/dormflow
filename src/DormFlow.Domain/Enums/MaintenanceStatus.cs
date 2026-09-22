@@ -1,20 +1,20 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของงานซ่อมบำรุง</summary>
+/// <summary>ສະຖານະຂອງວຽກງານບໍາລຸງຮັກສາ</summary>
 public enum MaintenanceStatus
 {
-    /// <summary>แจ้งซ่อมแล้ว ยังไม่ได้มอบหมายช่าง</summary>
+    /// <summary>ການສ້ອມແປງໄດ້ຖືກລາຍງານແລ້ວ, ແຕ່ຍັງບໍ່ມີນາຍຊ່າງໃດໄດ້ຮັບການແຕ່ງຕັ້ງ</summary>
     Reported = 1,
 
-    /// <summary>มอบหมายช่างซ่อมบำรุงแล้ว</summary>
+    /// <summary>ຊ່າງສ້ອມແປງໄດ້ຖືກມອບໝາຍໃຫ້</summary>
     Assigned = 2,
 
-    /// <summary>กำลังดำเนินการซ่อม</summary>
+    /// <summary>ກຳລັງສ້ອມແປງຢູ່</summary>
     InProgress = 3,
 
-    /// <summary>ซ่อมเสร็จแล้ว</summary>
+    /// <summary>ການສ້ອມແປງສໍາເລັດ</summary>
     Completed = 4,
 
-    /// <summary>ยกเลิก</summary>
+    /// <summary>ຍົກເລີກ</summary>
     Cancelled = 5,
 }

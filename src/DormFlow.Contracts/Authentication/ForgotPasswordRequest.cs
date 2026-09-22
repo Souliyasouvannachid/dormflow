@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับขอลิงก์ตั้งรหัสผ่านใหม่</summary>
+/// <summary>ຂໍ້ມູນສໍາລັບການຮ້ອງຂໍການເຊື່ອມຕໍ່ເພື່ອປັບລະຫັດຜ່ານຂອງທ່ານ</summary>
 public class ForgotPasswordRequest
 {
-    /// <summary>อีเมลของบัญชีที่ลืมรหัสผ่าน</summary>
+    /// <summary>ທີ່ຢູ່ອີເມວຂອງບັນຊີລືມລະຫັດຜ່ານ</summary>
     public string Email { get; set; } = string.Empty;
 }

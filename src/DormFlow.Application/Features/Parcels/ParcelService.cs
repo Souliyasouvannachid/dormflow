@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Parcels;
 
-/// <summary>Use Case ทั้งหมดของโมดูลพัสดุ</summary>
+/// <summary>Use Case ທັງຝົດຂອງໂມດູນ parcel</summary>
 public sealed class ParcelService(
     IParcelRepository repository,
     IRoomRepository roomRepository,
@@ -61,6 +61,19 @@ public sealed class ParcelService(
     }
 
     /// <inheritdoc />
+    public Task<int> GetCountAsync(ParcelStatus status, CancellationToken cancellationToken = default)
+    {
+        ParcelListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
+            DormitoryId: null,
+            RoomId: null,
+            status,
+            TenantScope.GetDormitoryRestrictionForListing(_currentUser));
+
+        return _repository.CountAsync(filter, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<ParcelResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => ToResponse(await FindAccessibleAsync(id, cancellationToken));
 
@@ -73,22 +86,22 @@ public sealed class ParcelService(
         await _logValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         if (request.TenantId.HasValue)
         {
             Tenant tenant = await _tenantRepository.GetByIdAsync(request.TenantId.Value, cancellationToken)
-                ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+                ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
 
             if (tenant.OrganizationId != room.OrganizationId)
             {
-                throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+                throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
             }
         }
 
@@ -131,7 +144,7 @@ public sealed class ParcelService(
 
         if (parcel.Status != ParcelStatus.Received)
         {
-            throw new ConflictException("พัสดุนี้ถูกรับไปแล้ว");
+            throw new ConflictException("ພັດສະດຸນີ້ຖືກຮັບໄປແລ້ວ");
         }
 
         parcel.Status = ParcelStatus.PickedUp;
@@ -154,13 +167,13 @@ public sealed class ParcelService(
     private async Task<Parcel> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Parcel parcel = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลพัสดุที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນພັດສະດຸທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             parcel.OrganizationId,
             parcel.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลพัสดุที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນພັດສະດຸທີ່ຕ້ອງການ");
 
         return parcel;
     }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับบริหารจัดการบัญชีผู้ใช้งาน</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງບັນຊີຜູ້ໃຊ້</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/users")]
@@ -19,7 +19,7 @@ public sealed class UsersController(IUserManagementService userManagementService
 {
     private readonly IUserManagementService _userManagementService = userManagementService;
 
-    /// <summary>ดึงรายการผู้ใช้แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ໃຊ້ທີ່ຕັ້ງໄວ້ແລ້ວ</summary>
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<UserResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<PagedResult<UserResponse>>>> GetList(
@@ -30,7 +30,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลผู้ใช้หนึ่งบัญชี</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຂອງບັນຊີຜູ້ໃຊ້ຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
@@ -40,7 +40,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างบัญชีผู้ใช้ใหม่</summary>
+    /// <summary>ສ້າງບັນຊີໃຝ່</summary>
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -53,7 +53,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลโปรไฟล์ของผู้ใช้</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນໂປຣໄຟລ໌ຜູ້ໃຊ້</summary>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -67,7 +67,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะบัญชีผู้ใช้</summary>
+    /// <summary>ປ່ຽນສະຖານະບັນຊີຜູ້ໃຊ້</summary>
     [HttpPatch("{id:guid}/status")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -85,7 +85,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>กำหนดบทบาทให้ผู้ใช้ แทนที่บทบาทเดิมทั้งหมด</summary>
+    /// <summary>ມອບໝາຍໜ້າທີ່ໃຫ້ຜູ້ໃຊ້ແທນໜ້າທີ່ທັງໝົດກ່ອນໜ້ານີ້</summary>
     [HttpPost("{id:guid}/roles")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -99,7 +99,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>มอบหมายให้ผู้ใช้ดูแลหอพักหนึ่งแห่ง</summary>
+    /// <summary>ມອບໝາຍໃຫ້ຜູ້ໃຊ້ຈັດການໜຶ່ງຫໍພັກ</summary>
     [HttpPost("{id:guid}/dormitories")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
@@ -114,7 +114,7 @@ public sealed class UsersController(IUserManagementService userManagementService
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ถอนการมอบหมายหอพักออกจากผู้ใช้</summary>
+    /// <summary>ເອົາການມອບໝາຍຫໍພັກອອກຈາກຜູ້ໃຊ້</summary>
     [HttpDelete("{id:guid}/dormitories/{dormitoryId:guid}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]

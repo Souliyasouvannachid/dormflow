@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับออกจากระบบ</summary>
+/// <summary>ຂໍ້ມູນສໍາລັບການອອກຈາກລະບົບ</summary>
 public class LogoutRequest
 {
-    /// <summary>Refresh Token ที่ต้องการเพิกถอน</summary>
+    /// <summary>Refresh Token ທີ່ທ່ານຕ້ອງການຖອນຄືນ</summary>
     public string RefreshToken { get; set; } = string.Empty;
 }

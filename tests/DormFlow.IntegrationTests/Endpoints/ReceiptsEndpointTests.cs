@@ -19,14 +19,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการออกใบเสร็จรับเงินผ่าน HTTP จริง</summary>
+/// <summary>ຜ່ານການທົດສອບສໍາລັບການອອກໃບຮັບເງິນ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ReceiptsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task ออกใบเสร็จให้รายการชำระเงินที่ยืนยันแล้ว_ต้องสำเร็จ()
+    public async Task ອອກໃບຮັບເງິນສໍາລັບການຈ່າຍເງິນທີ່ຢືນຢັນ_ຕ້ອງປະສົບຜົນສໍາເລັດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -49,7 +49,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ออกใบเสร็จซ้ำให้รายการชำระเงินเดิม_ต้องได้_409()
+    public async Task ອອກໃບຮັບເງິນຊໍ້າກັນສໍາລັບລາຍການການຈ່າຍເງິນດຽວກັນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -71,7 +71,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ออกใบเสร็จให้รายการชำระเงินที่ยังไม่ยืนยัน_ต้องได้_409()
+    public async Task ອອກໃບຮັບເງິນສໍາລັບການຈ່າຍເງິນທີ່ບໍ່ໄດ້ຢືນຢັນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -95,7 +95,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ออกใบเสร็จให้รายการชำระเงินที่ถูกคืนเงินไปแล้ว_ต้องได้_409()
+    public async Task ອອກໃບຮັບເງິນສໍາລັບການຈ່າຍເງິນຄືນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -105,7 +105,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
 
         await client.PostAsJsonAsync(
             new Uri($"/api/v1/payments/{payment.Id}/refund", UriKind.Relative),
-            new RefundPaymentRequest { Reason = "ชำระผิดยอด" },
+            new RefundPaymentRequest { Reason = "ຈ່າຍເງິນຜິດ" },
             TestContext.Current.CancellationToken);
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(
@@ -166,7 +166,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -178,7 +178,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -190,14 +190,14 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -209,7 +209,7 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -239,8 +239,8 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

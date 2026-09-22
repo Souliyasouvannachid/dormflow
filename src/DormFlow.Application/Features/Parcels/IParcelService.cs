@@ -1,25 +1,29 @@
 using DormFlow.Contracts.Common;
 using DormFlow.Contracts.Parcels;
+using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Parcels;
 
-/// <summary>Use Case ทั้งหมดของโมดูลพัสดุ</summary>
+/// <summary>Use Case ທັງຝົດຂອງໂມດູນ parcel</summary>
 public interface IParcelService
 {
-    /// <summary>ดึงรายการพัสดุแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງ parcels</summary>
     Task<PagedResult<ParcelResponse>> GetPagedAsync(
         ParcelListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลพัสดุจากรหัสอ้างอิง</summary>
+    /// <summary>ນັບ parcel ຕາມສະຖານະ</summary>
+    Task<int> GetCountAsync(ParcelStatus status, CancellationToken cancellationToken = default);
+
+    /// <summary>ອ່ານຂໍ້ມູນ parcel ຈາກລະຫັດອ້າງອີງ</summary>
     Task<ParcelResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกพัสดุที่มาถึงใหม่</summary>
+    /// <summary>ບັນທຶກການມາເຖິງ parcel ໃຝ່</summary>
     Task<ParcelResponse> LogAsync(
         LogParcelRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการรับพัสดุ ทำได้เฉพาะพัสดุที่ยังไม่ถูกรับเท่านั้น</summary>
+    /// <summary>ບັນທຶກການຮັບ parcel ນີ້ສາມາດເຮັດໄດ້ພຽງແຕ່ສໍາລັບ parcel ທີ່ຍັງບໍ່ທັນໄດ້ຮັບ</summary>
     Task<ParcelResponse> PickupAsync(
         Guid id,
         PickupParcelRequest request,

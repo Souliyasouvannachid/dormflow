@@ -10,14 +10,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการจัดการบทบาทและสิทธิ์ผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບບົດບາດແລະການຄຸ້ມຄອງການອະນຸຍາດໂດຍຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task GetPermissions_ต้องได้รายการสิทธิ์ที่ถูกSeedไว้ทั้งหมด()
+    public async Task GetPermissions_ທ່ານຕ້ອງໄດ້ຮັບບັນຊີລາຍຊື່ທີ່ຖືກຕ້ອງຂອງການອະນຸຍາດSeedທັງໝົດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -36,7 +36,7 @@ public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task สร้างบทบาทใหม่_กำหนดสิทธิ์_แล้วลบได้()
+    public async Task ສ້າງບົດບາດໃຝ່_ກໍານົດການອະນຸຍາດ_ຈາກນັ້ນທ່ານສາມາດລຶບມັນໄດ້()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -46,7 +46,7 @@ public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/roles", UriKind.Relative),
-            new CreateRoleRequest { Name = roleName, Description = "บทบาททดสอบ" },
+            new CreateRoleRequest { Name = roleName, Description = "ບົດບາດການທົດສອບ" },
             TestContext.Current.CancellationToken);
         createResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -74,7 +74,7 @@ public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ลบบทบาทมาตรฐานของระบบ_ต้องได้_409()
+    public async Task ລຶບບົດບາດລະບົບມາດຕະຖານ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -98,7 +98,7 @@ public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เปลี่ยนชื่อบทบาทมาตรฐานของระบบ_ต้องได้_409()
+    public async Task ປ່ຽນຊື່ບົດບາດລະບົບມາດຕະຖານ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -114,7 +114,7 @@ public class RolesPermissionsEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             new Uri($"/api/v1/roles/{technicianRole.Id}", UriKind.Relative),
-            new UpdateRoleRequest { Name = "ช่างเทคนิค", Description = "เปลี่ยนชื่อ" },
+            new UpdateRoleRequest { Name = "ນັກວິຊາການ", Description = "ປ່ຽນຊື່" },
             TestContext.Current.CancellationToken);
 
         updateResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);

@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Parcels;
 
-/// <summary>คำขอบันทึกการรับพัสดุ</summary>
+/// <summary>ການຮ້ອງຂໍເພື່ອບັນທຶກການຮັບການພັດທະນາ</summary>
 public class PickupParcelRequest
 {
-    /// <summary>ชื่อผู้มารับพัสดุจริง</summary>
+    /// <summary>ຊື່ແທ້ຂອງຜູ້ທີ່ໄດ້ຮັບຊຸດ</summary>
     public string? PickedUpByName { get; set; }
 }

@@ -3,24 +3,24 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Announcements;
 
-/// <summary>ตรวจสอบคำขอสร้างประกาศใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງການປະກາດໃຝ່</summary>
 public sealed class CreateAnnouncementRequestValidator : AbstractValidator<CreateAnnouncementRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateAnnouncementRequestValidator()
     {
         RuleFor(request => request.DormitoryId)
-            .NotEmpty().WithMessage("กรุณาระบุหอพักที่ประกาศนี้เกี่ยวข้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫໍພັກທີ່ປະກາດນີ້ກ່ຽວຂ້ອງ");
 
         RuleFor(request => request.Title)
-            .NotEmpty().WithMessage("กรุณาระบุหัวข้อประกาศ")
-            .MaximumLength(200).WithMessage("หัวข้อประกาศต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫົວຂໍ້ປະກາດ")
+            .MaximumLength(200).WithMessage("ຫົວຂໍ້ປະກາດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.Content)
-            .NotEmpty().WithMessage("กรุณาระบุเนื้อหาประกาศ")
-            .MaximumLength(5000).WithMessage("เนื้อหาประกาศต้องยาวไม่เกิน 5000 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸເນື້ອຫາປະກາດ")
+            .MaximumLength(5000).WithMessage("ເນື້ອຫາປະກາດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 5000 ໂຕອັກສອນ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

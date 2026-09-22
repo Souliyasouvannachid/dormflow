@@ -4,20 +4,20 @@ using Scalar.AspNetCore;
 
 namespace DormFlow.Api.Configuration;
 
-/// <summary>ตั้งค่าเอกสาร OpenAPI และหน้าเอกสารแบบโต้ตอบ</summary>
+/// <summary>ຕັ້ງຄ່າເອກະສານ OpenAPI ແລະໜ້າເອກະສານແບບໂຕ້ຕອບ</summary>
 public static class OpenApiConfiguration
 {
-    /// <summary>ชื่อเอกสารของ API เวอร์ชัน 1</summary>
+    /// <summary>ຊື່ເອກະສານຂອງ API ຮຸ່ນ 1</summary>
     public const string V1DocumentName = "v1";
 
-    /// <summary>ลงทะเบียนการสร้างเอกสาร OpenAPI</summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
+    /// <summary>ລົງທະບຽນການສ້າງເອກະສານ OpenAPI</summary>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
     public static IServiceCollection AddDormFlowOpenApi(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        // การเรียก services.AddOpenApi(...) โดยตรงจำเป็นต่อการดึง XML Comments เข้าเอกสาร
-        // เพราะ source generator ของ .NET 10 ทำงานด้วยการ intercept การเรียกนี้ในโค้ดของแอปพลิเคชันเอง
+        // ໂທ services.AddOpenApi(...) ໂດຍກົງທີ່ຈໍາເປັນເພື່ອດຶງ XML Comments ໃສ່ເອກະສານ
+        // ເນື່ອງຈາກວ່າ source generator ຂອງ .NET 10 ເຮັດວຽກໂດຍ intercept ໂທຫານີ້ໃນລະຫັດຄໍາຮ້ອງສະຝັກຕົວມັນເອງ
         services.AddOpenApi(V1DocumentName, options =>
         {
             options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
@@ -27,12 +27,12 @@ public static class OpenApiConfiguration
     }
 
     /// <summary>
-    /// เปิดเส้นทางเอกสาร OpenAPI และหน้าเอกสารแบบโต้ตอบ
+    /// ເປີດເສັ້ນທາງເອກະສານ OpenAPI ແລະໜ້າເອກະສານແບບໂຕ້ຕອບ
     /// </summary>
-    /// <param name="app">แอปพลิเคชันที่สร้างแล้ว</param>
+    /// <param name="app">ແອັບພລິເຄຊັນທີ່ສ້າງຂຶ້ນ</param>
     /// <remarks>
-    /// เปิดเฉพาะสภาพแวดล้อมที่ไม่ใช่ Production
-    /// หากต้องการเปิดใน Production ให้ป้องกันด้วยการยืนยันตัวตนก่อนเสมอ
+    /// ສະພາບແວດລ້ອມເປີດເທົ່ານັ້ນທີ່ບໍ່ມີ Production
+    /// ເພື່ອເປີດໃນ Production ປົກປ້ອງຕົນເອງສະເໝີໂດຍການຢັ້ງຢືນຕົວຕົນຂອງທ່ານກ່ອນ
     /// </remarks>
     public static WebApplication UseDormFlowOpenApi(this WebApplication app)
     {
@@ -43,6 +43,7 @@ public static class OpenApiConfiguration
             return app;
         }
 
+        app.MapGet("/", () => Results.Redirect("/scalar/")).AllowAnonymous();
         app.MapOpenApi().WithDocumentPerVersion();
 
         ApiOptions apiOptions = app.Services

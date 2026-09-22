@@ -7,7 +7,7 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Application.Authentication;
 
-/// <summary>ตรวจกฎการตรวจสอบข้อมูลของ Endpoint การยืนยันตัวตน</summary>
+/// <summary>ກວດເບິ່ງກົດລະບຽບການກວດສອບຂໍ້ມູນຂອງ Endpoint ການລະບຸຕົວຕົນ</summary>
 public class AuthenticationValidatorsTests
 {
     private readonly LoginRequestValidator _loginValidator = new();
@@ -15,7 +15,7 @@ public class AuthenticationValidatorsTests
     private readonly ResetPasswordRequestValidator _resetPasswordValidator = new();
 
     [Fact]
-    public void Login_อีเมลว่าง_ต้องไม่ผ่าน()
+    public void Login_ອີເມວມີໃຫ້_ບໍ່ຕ້ອງຜ່ານ()
     {
         TestValidationResult<LoginRequest> result = _loginValidator.TestValidate(
             new LoginRequest { Email = string.Empty, Password = "P@ssw0rd1" });
@@ -24,7 +24,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void Login_รูปแบบอีเมลผิด_ต้องไม่ผ่าน()
+    public void Login_ຮູບແບບອີເມວຜິດ_ບໍ່ຕ້ອງຜ່ານ()
     {
         TestValidationResult<LoginRequest> result = _loginValidator.TestValidate(
             new LoginRequest { Email = "not-an-email", Password = "P@ssw0rd1" });
@@ -33,7 +33,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void Login_ข้อมูลถูกต้อง_ต้องผ่าน()
+    public void Login_ຂໍ້ມູນແມ່ນຖືກຕ້ອງ_ຕ້ອງຜ່ານ()
     {
         TestValidationResult<LoginRequest> result = _loginValidator.TestValidate(
             new LoginRequest { Email = "user@dormflow.local", Password = "anything" });
@@ -46,7 +46,7 @@ public class AuthenticationValidatorsTests
     [InlineData("alllowercase1")]
     [InlineData("ALLUPPERCASE1")]
     [InlineData("NoDigitsHere")]
-    public void ChangePassword_รหัสผ่านใหม่ไม่ผ่านนโยบาย_ต้องไม่ผ่าน(string newPassword)
+    public void ChangePassword_ລະຫັດຜ່ານໃໝ່ບໍ່ຜ່ານນະໂຍບາຍ_ບໍ່ຕ້ອງຜ່ານ(string newPassword)
     {
         TestValidationResult<ChangePasswordRequest> result = _changePasswordValidator.TestValidate(
             new ChangePasswordRequest
@@ -60,7 +60,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void ChangePassword_รหัสผ่านใหม่ซ้ำกับรหัสผ่านปัจจุบัน_ต้องไม่ผ่าน()
+    public void ChangePassword_ລະຫັດຜ່ານໃໝ່ແມ່ນຄືກັນກັບລະຫັດຜ່ານປັດຈຸບັນ_ບໍ່ຕ້ອງຜ່ານ()
     {
         TestValidationResult<ChangePasswordRequest> result = _changePasswordValidator.TestValidate(
             new ChangePasswordRequest
@@ -74,7 +74,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void ChangePassword_ยืนยันรหัสผ่านไม่ตรงกัน_ต้องไม่ผ่าน()
+    public void ChangePassword_ຢືນຢັນລະຫັດຜ່ານບໍ່ກົງກັນ_ບໍ່ຕ້ອງຜ່ານ()
     {
         TestValidationResult<ChangePasswordRequest> result = _changePasswordValidator.TestValidate(
             new ChangePasswordRequest
@@ -88,7 +88,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void ChangePassword_ข้อมูลถูกต้องครบถ้วน_ต้องผ่าน()
+    public void ChangePassword_ຂໍ້ມູນແມ່ນຖືກຕ້ອງແລະຄົບຖ້ວນ_ຕ້ອງຜ່ານ()
     {
         TestValidationResult<ChangePasswordRequest> result = _changePasswordValidator.TestValidate(
             new ChangePasswordRequest
@@ -102,7 +102,7 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void ResetPassword_โทเคนว่าง_ต้องไม่ผ่าน()
+    public void ResetPassword_ໂທເຄັນຫວ່າງເປົ່າ_ບໍ່ຕ້ອງຜ່ານ()
     {
         TestValidationResult<ResetPasswordRequest> result = _resetPasswordValidator.TestValidate(
             new ResetPasswordRequest
@@ -117,10 +117,10 @@ public class AuthenticationValidatorsTests
     }
 
     [Fact]
-    public void ValidationFailure_ข้อความ_ต้องเป็นภาษาไทยที่กำหนดไว้()
+    public void ValidationFailure_ຂໍ້ຄວາມ_ຕ້ອງເປັນພາສາລາວທີ່ລະບຸ()
     {
         ValidationResult result = _loginValidator.Validate(new LoginRequest { Email = string.Empty, Password = "x" });
 
-        result.Errors.Should().Contain(failure => failure.ErrorMessage == "กรุณาระบุอีเมล");
+        result.Errors.Should().Contain(failure => failure.ErrorMessage == "ກະລຸນາລະບຸອີເມວ");
     }
 }

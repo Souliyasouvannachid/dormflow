@@ -1,29 +1,29 @@
 namespace DormFlow.Application.Common.Abstractions;
 
 /// <summary>
-/// ชื่อ Claim ที่ DormFlow ใส่ไว้ใน Access Token
-/// ใช้ชุดเดียวกันทั้งตอนออกโทเคนและตอนอ่านข้อมูลผู้ใช้ปัจจุบัน
+/// ຊື່ Claim ທີ່ DormFlow ເອົາໃສ່ໃນ Access Token
+/// ໃຊ້ຊຸດດຽວກັນທັງໃນເວລາທີ່ອອກ tokens ແລະໃນເວລາທີ່ອ່ານຂໍ້ມູນຜູ້ໃຊ້ໃນປະຈຸບັນ
 /// </summary>
 public static class DormFlowClaimTypes
 {
-    /// <summary>รหัสผู้ใช้</summary>
+    /// <summary>ID ຜູ້ໃຊ້</summary>
     public const string UserId = "sub";
 
-    /// <summary>องค์กรที่ผู้ใช้สังกัด</summary>
+    /// <summary>ອົງກອນທີ່ຜູ້ໃຊ້ເປັນເຈົ້າຂອງ</summary>
     public const string OrganizationId = "org_id";
 
-    /// <summary>หอพักที่ผู้ใช้ถูกมอบหมาย ปรากฏได้หลายครั้งในโทเคนเดียว</summary>
+    /// <summary>ຫໍພັກທີ່ຜູ້ໃຊ້ຖືກມອບໝາຍສາມາດປາກົດຫຼາຍຄັ້ງໃນໂທເຄັນດຽວ</summary>
     public const string DormitoryId = "dorm_id";
 
-    /// <summary>รหัสสิทธิ์ ปรากฏได้หลายครั้งในโทเคนเดียว</summary>
+    /// <summary>ລະຫັດການອະນຸຍາດສາມາດປາກົດຫຼາຍຄັ້ງໃນ token ດຽວ</summary>
     public const string Permission = "perm";
 
-    /// <summary>ชื่อของผู้ใช้</summary>
+    /// <summary>ຊື່ຜູ້ໃຊ້</summary>
     public const string FirstName = "given_name";
 
-    /// <summary>นามสกุลของผู้ใช้</summary>
+    /// <summary>ນາມສະກຸນຜູ້ໃຊ້</summary>
     public const string LastName = "family_name";
 
-    /// <summary>รหัสอ้างอิงของ Access Token ใช้ผูกกับ Refresh Token</summary>
+    /// <summary>ລະຫັດອ້າງອີງຂອງ Access Token ໃຊ້ເພື່ອຜູກມັດກັບ Refresh Token</summary>
     public const string JwtId = "jti";
 }

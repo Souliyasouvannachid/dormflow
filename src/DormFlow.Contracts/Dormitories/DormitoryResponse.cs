@@ -1,74 +1,74 @@
 namespace DormFlow.Contracts.Dormitories;
 
-/// <summary>ข้อมูลหอพักหนึ่งแห่ง</summary>
+/// <summary>ຂໍ້ມູນຫໍພັກຜຶ່ງ</summary>
 public class DormitoryResponse
 {
-    /// <summary>รหัสอ้างอิงของหอพัก</summary>
+    /// <summary>ລະຫັດອ້າງອີງຫໍພັກ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของหอพัก</summary>
+    /// <summary>ອົງກອນເຈົ້າຂອງຫໍພັກ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>รหัสหอพัก</summary>
+    /// <summary>ລະຫັດຫໍພັກ</summary>
     public string Code { get; init; } = string.Empty;
 
-    /// <summary>ชื่อหอพัก</summary>
+    /// <summary>ຊື່ຫໍພັກ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>เบอร์โทรศัพท์ติดต่อ</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່</summary>
     public string? Phone { get; init; }
 
-    /// <summary>อีเมลติดต่อ</summary>
+    /// <summary>ອີເມວຕິດຕໍ່</summary>
     public string? Email { get; init; }
 
-    /// <summary>ที่อยู่</summary>
+    /// <summary>ທີ່ຢູ່</summary>
     public string? Address { get; init; }
 
-    /// <summary>จังหวัด</summary>
+    /// <summary>ແຂວງ</summary>
     public string? Province { get; init; }
 
-    /// <summary>อำเภอ/เขต</summary>
+    /// <summary>ເມືອງ/ພື້ນທີ່</summary>
     public string? District { get; init; }
 
-    /// <summary>ตำบล/แขวง</summary>
+    /// <summary>ເມືອງ/ເມືອງ</summary>
     public string? Subdistrict { get; init; }
 
-    /// <summary>รหัสไปรษณีย์</summary>
+    /// <summary>ລະຫັດໄປສະນີ</summary>
     public string? PostalCode { get; init; }
 
-    /// <summary>ละติจูด</summary>
+    /// <summary>ເສັ້ນຂະໜານ</summary>
     public decimal? Latitude { get; init; }
 
-    /// <summary>ลองจิจูด</summary>
+    /// <summary>ເສັ້ນແວງ</summary>
     public decimal? Longitude { get; init; }
 
-    /// <summary>วันที่ในแต่ละเดือนที่ออกใบแจ้งหนี้</summary>
+    /// <summary>ວັນທີໃນແຕ່ລະເດືອນໃບແຈ້ງໜີ້ຖືກອອກ</summary>
     public int BillingDay { get; init; }
 
-    /// <summary>วันที่ครบกำหนดชำระในแต่ละเดือน</summary>
+    /// <summary>ວັນທີການຊໍາລະເງິນໃນແຕ່ລະເດືອນ</summary>
     public int PaymentDueDay { get; init; }
 
-    /// <summary>รูปแบบการคิดค่าปรับชำระล่าช้า</summary>
+    /// <summary>ຮູບແບບການຄິດໄລ່ຄ່າທຳນຽມການຈ່າຍເງິນຊ້າ</summary>
     public string LateFeeType { get; init; } = string.Empty;
 
-    /// <summary>จำนวนค่าปรับชำระล่าช้า</summary>
+    /// <summary>ຈໍານວນການລົງໂທດການຈ່າຍເງິນຊ້າ</summary>
     public decimal LateFeeAmount { get; init; }
 
-    /// <summary>อัตราค่าน้ำต่อหน่วย</summary>
+    /// <summary>ອັດຕານໍ້າຕໍ່ຫົວໜ່ວຍ</summary>
     public decimal WaterRatePerUnit { get; init; }
 
-    /// <summary>อัตราค่าไฟต่อหน่วย</summary>
+    /// <summary>ອັດຕາຄ່າໄຟຟ້າຕໍ່ຫົວໜ່ວຍ</summary>
     public decimal ElectricityRatePerUnit { get; init; }
 
-    /// <summary>สถานะของหอพัก</summary>
+    /// <summary>ສະຖານະຫໍພັກ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

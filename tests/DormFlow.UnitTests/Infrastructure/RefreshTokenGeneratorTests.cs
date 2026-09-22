@@ -5,16 +5,16 @@ using Xunit;
 namespace DormFlow.UnitTests.Infrastructure;
 
 /// <summary>
-/// ตรวจการสร้างและแฮชค่าของ Refresh Token
+/// ຢືນຢັນການສ້າງແລະຄ່າ hash ຂອງ Refresh Token
 /// </summary>
 /// <remarks>
-/// จุดสำคัญที่ต้องคุมคือค่าที่สร้างต้องสุ่มจริงและแฮชต้องคำนวณซ้ำได้ตรงกันทุกครั้ง
-/// เพราะการต่ออายุโทเคนอาศัยการค้นหาด้วยค่าแฮชในฐานข้อมูล
+/// ຈຸດສໍາຄັນໃນການຄວບຄຸມແມ່ນວ່າຄ່າທີ່ສ້າງຂຶ້ນຕ້ອງເປັນແບບສຸ່ມຢ່າງແທ້ຈິງແລະ hashes ຕ້ອງໄດ້ຮັບການຄິດໄລ່ຄືນໃຝ່ເພື່ອໃຫ້ສອດຄ່ອງທຸກໆຄັ້ງ
+/// ນີ້ແມ່ນຍ້ອນວ່າການຕໍ່ອາຍຸ token ແມ່ນອີງໃສ່ການຊອກຫາຄ່າ hash ໃນຖານຂໍ້ມູນ
 /// </remarks>
 public class RefreshTokenGeneratorTests
 {
     [Fact]
-    public void CreateToken_ต้องไม่คืนค่าว่าง()
+    public void CreateToken_ບໍ່ຕ້ອງກັບຄືນnull()
     {
         string token = RefreshTokenGenerator.CreateToken();
 
@@ -22,7 +22,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void CreateToken_เรียกสองครั้ง_ต้องได้ค่าไม่ซ้ำกัน()
+    public void CreateToken_ໂທສອງຄັ້ງ_ຕ້ອງມີຄຸນຄ່າທີ່ເປັນເອກະລັກ()
     {
         string first = RefreshTokenGenerator.CreateToken();
         string second = RefreshTokenGenerator.CreateToken();
@@ -31,7 +31,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void CreateToken_ต้องไม่มีอักขระที่ต้องหลบหลีกใน_URL()
+    public void CreateToken_ຈະຕ້ອງບໍ່ມີຕົວລະຄອນທີ່ຕ້ອງໄດ້ຮັບການmaneuveredໃນ_URL()
     {
         string token = RefreshTokenGenerator.CreateToken();
 
@@ -39,7 +39,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void ComputeHash_ค่าเดิม_ต้องได้แฮชเดิมทุกครั้ง()
+    public void ComputeHash_ມູນຄ່າຕົ້ນສະບັບ_ທ່ານຕ້ອງໄດ້ຮັບhashດຽວກັນທຸກຄັ້ງ()
     {
         string token = RefreshTokenGenerator.CreateToken();
 
@@ -50,7 +50,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void ComputeHash_ค่าต่างกัน_ต้องได้แฮชต่างกัน()
+    public void ComputeHash_ຄຸນຄ່າທີ່ແຕກຕ່າງກັນ_ທ່ານຕ້ອງໄດ້ຮັບhashesທີ່ແຕກຕ່າງກັນ()
     {
         string firstToken = RefreshTokenGenerator.CreateToken();
         string secondToken = RefreshTokenGenerator.CreateToken();
@@ -60,7 +60,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void ComputeHash_ต้องคืนค่าเป็นเลขฐานสิบหกตัวพิมพ์เล็กความยาว_64_ตัวอักษร()
+    public void ComputeHash_ຕ້ອງສົ່ງຄ່າເປັນຕົວເລກເລກຖານສິບຫົກຕົວພິມນ້ອຍ_64_ຈົດໝາຍ()
     {
         string token = RefreshTokenGenerator.CreateToken();
 
@@ -71,7 +71,7 @@ public class RefreshTokenGeneratorTests
     }
 
     [Fact]
-    public void ComputeHash_ต้องไม่รับค่าว่าง()
+    public void ComputeHash_ບໍ່ຕ້ອງຍອມຮັບຄ່າທໍານຽມເປົ່າ()
     {
         Action act = () => RefreshTokenGenerator.ComputeHash(string.Empty);
 

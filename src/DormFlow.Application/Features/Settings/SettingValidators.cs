@@ -3,14 +3,14 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Settings;
 
-/// <summary>ตรวจสอบคำขอสร้างหรือแก้ไขค่าตั้ง</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍເພື່ອສ້າງ ຫຼືແກ້ໄຂການຕັ້ງຄ່າ</summary>
 public sealed class UpsertSettingRequestValidator : AbstractValidator<UpsertSettingRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpsertSettingRequestValidator()
     {
         RuleFor(request => request.Value)
-            .NotEmpty().WithMessage("กรุณาระบุค่าของค่าตั้ง")
-            .MaximumLength(2000).WithMessage("ค่าของค่าตั้งต้องยาวไม่เกิน 2000 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຄ່າຂອງການຕັ້ງຄ່າ")
+            .MaximumLength(2000).WithMessage("ຄ່າຂອງການຕັ້ງຄ່າຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 2000 ໂຕອັກສອນ");
     }
 }

@@ -10,7 +10,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Settings;
 
-/// <summary>Use Case ทั้งหมดของโมดูลค่าตั้ง</summary>
+/// <summary>Use Case ການຕັ້ງຄ່າໂມດູນທັງຝົດ</summary>
 public sealed class SettingService(
     ISettingRepository repository,
     ICurrentUser currentUser,
@@ -57,7 +57,7 @@ public sealed class SettingService(
         string normalizedKey = RequireValidKey(key);
 
         Setting setting = await _repository.GetByKeyAsync(resolvedOrganizationId, normalizedKey, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบค่าตั้งที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບການຕັ້ງຄ່າທີ່ຕ້ອງການ");
 
         return ToResponse(setting);
     }
@@ -112,7 +112,7 @@ public sealed class SettingService(
         string normalizedKey = RequireValidKey(key);
 
         Setting setting = await _repository.GetByKeyAsync(resolvedOrganizationId, normalizedKey, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบค่าตั้งที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບການຕັ້ງຄ່າທີ່ຕ້ອງການ");
 
         _repository.Remove(setting);
         await _repository.SaveChangesAsync(cancellationToken);
@@ -129,13 +129,13 @@ public sealed class SettingService(
     {
         if (string.IsNullOrWhiteSpace(key))
         {
-            throw new ValidationFailedException("กรุณาระบุคีย์ของค่าตั้ง");
+            throw new ValidationFailedException("ກະລຸນາລະບຸຄີຂອງການຕັ້ງຄ່າ");
         }
 
         string trimmed = key.Trim();
         if (trimmed.Length > MaxKeyLength)
         {
-            throw new ValidationFailedException($"คีย์ของค่าตั้งต้องยาวไม่เกิน {MaxKeyLength} ตัวอักษร");
+            throw new ValidationFailedException($"ຄີຂອງການຕັ້ງຄ່າຕ້ອງມີຄວາມຍາວບໍ່ເກີນ {MaxKeyLength} ໂຕອັກສອນ");
         }
 
         return trimmed;

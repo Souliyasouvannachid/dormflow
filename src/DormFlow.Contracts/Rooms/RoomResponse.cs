@@ -1,47 +1,71 @@
 namespace DormFlow.Contracts.Rooms;
 
-/// <summary>ข้อมูลห้องพักหนึ่งห้อง</summary>
+/// <summary>ຂໍ້ມູນຫ້ອງຜຶ່ງ</summary>
 public class RoomResponse
 {
-    /// <summary>รหัสอ้างอิงของห้องพัก</summary>
+    /// <summary>ລະຫັດອ້າງອີງຫ້ອງ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของห้องพัก</summary>
+    /// <summary>ອົງກອນເຈົ້າຂອງຫ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่ห้องนี้สังกัด</summary>
+    /// <summary>ຫໍພັກທີ່ຫ້ອງນີ້ເປັນຂອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>อาคารที่ห้องนี้สังกัด</summary>
+    /// <summary>ຊື່ຂອງຫໍພັກຫ້ອງນີ້ເປັນຂອງ</summary>
+    public string DormitoryName { get; init; } = string.Empty;
+
+    /// <summary>ອາຄານທີ່ຫ້ອງນີ້ຂຶ້ນກັບ</summary>
     public Guid BuildingId { get; init; }
 
-    /// <summary>ชั้นที่ห้องนี้สังกัด</summary>
+    /// <summary>ຊື່ຂອງອາຄານທີ່ຫ້ອງນີ້ຂຶ້ນກັບ</summary>
+    public string BuildingName { get; init; } = string.Empty;
+
+    /// <summary>ຊັ້ນທີ່ຫ້ອງນີ້ເປັນຂອງ</summary>
     public Guid FloorId { get; init; }
 
-    /// <summary>ประเภทของห้อง</summary>
+    /// <summary>ຊື່ຂອງຊັ້ນທີ່ຫ້ອງນີ້ຂຶ້ນກັບ</summary>
+    public string FloorName { get; init; } = string.Empty;
+
+    /// <summary>ປະເພດຫ້ອງ</summary>
     public Guid RoomTypeId { get; init; }
 
-    /// <summary>เลขห้อง</summary>
+    /// <summary>ຊື່ປະເພດຫ້ອງ</summary>
+    public string RoomTypeName { get; init; } = string.Empty;
+
+    /// <summary>ໝາຍເລກຫ້ອງ</summary>
     public string RoomNumber { get; init; } = string.Empty;
 
-    /// <summary>ค่าเช่ารายเดือนของห้องนี้</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນຂອງຫ້ອງນີ້</summary>
     public decimal MonthlyRent { get; init; }
 
-    /// <summary>ค่ามัดจำของห้องนี้</summary>
+    /// <summary>ຝາກຫ້ອງນີ້</summary>
     public decimal DepositAmount { get; init; }
 
-    /// <summary>จำนวนผู้เข้าพักสูงสุดของห้องนี้</summary>
+    /// <summary>ຈໍານວນຄົນສູງສຸດຂອງຫ້ອງນີ້</summary>
     public int MaximumOccupants { get; init; }
 
-    /// <summary>สถานะของห้อง</summary>
+    /// <summary>ສະຖານະຫ້ອງ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ຕໍາແໜ່ງ X ຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຂອງຄວາມກວ້າງຂອງແຜນວາດ) ບໍ່ມີມູນຄ່າຖ້າຕໍາແຜ່ງບໍ່ໄດ້ຮັບການສ້າງຕັ້ງຂຶ້ນ</summary>
+    public decimal? FloorPlanX { get; init; }
+
+    /// <summary>ຕໍາແໜ່ງ Y ຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຄວາມສູງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanY { get; init; }
+
+    /// <summary>ຄວາມກວ້າງຂອງຈຸດຄລິກໃນແຜນການກໍ່ສ້າງ (% ຂອງຄວາມກວ້າງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanWidth { get; init; }
+
+    /// <summary>ຄວາມສູງຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຄວາມສູງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanHeight { get; init; }
+
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

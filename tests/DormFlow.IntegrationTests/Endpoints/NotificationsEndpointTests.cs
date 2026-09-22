@@ -11,14 +11,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบวงจรชีวิตของการแจ้งเตือนผ่าน HTTP จริง</summary>
+/// <summary>ທົດສອບວົງຈອນຊີວິດຂອງການແຈ້ງເຕືອນຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class NotificationsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task ส่งการแจ้งเตือนถึงผู้ใช้_ต้องปรากฏในรายการแจ้งเตือนของผู้รับ()
+    public async Task ສົ່ງການແຈ້ງເຕືອນໃຫ້ຜູ້ໃຊ້_ຕ້ອງປາກົດຢູ່ໃນລາຍຊື່ການແຈ້ງເຕືອນຂອງຜູ້ຮັບ()
     {
         using HttpClient senderClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -32,8 +32,8 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
             new SendNotificationRequest
             {
                 RecipientUserId = recipientUserId,
-                Title = "แจ้งเตือนทดสอบ",
-                Message = "นี่คือเนื้อหาการแจ้งเตือนทดสอบ",
+                Title = "ການແຈ້ງເຕືອນການທົດສອບ",
+                Message = "ນີ້ແມ່ນເນື້ອໃນການແຈ້ງເຕືອນການທົດສອບ",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -47,12 +47,12 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<PagedResult<NotificationResponse>>>(TestContext.Current.CancellationToken))!.Data!;
 
         result.Items.Should().ContainSingle();
-        result.Items[0].Title.Should().Be("แจ้งเตือนทดสอบ");
+        result.Items[0].Title.Should().Be("ການແຈ້ງເຕືອນການທົດສອບ");
         result.Items[0].IsRead.Should().BeFalse();
     }
 
     [Fact]
-    public async Task ทำเครื่องหมายอ่านการแจ้งเตือนของตนเอง_ต้องได้_IsRead_true()
+    public async Task ໝາຍການແຈ້ງເຕືອນຂອງຕົນເອງວ່າອ່ານແລ້ວ_ຕ້ອງໄດ້ຮັບ_IsRead_true()
     {
         using HttpClient senderClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -77,7 +77,7 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ทำเครื่องหมายอ่านการแจ้งเตือนของผู้อื่น_ต้องได้_404()
+    public async Task Markອ່ານການແຈ້ງເຕືອນຂອງຄົນອື່ນ_ຕ້ອງໄດ້ຮັບ_404()
     {
         using HttpClient senderClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -98,7 +98,7 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ส่งการแจ้งเตือนถึงผู้ใช้ต่างองค์กร_ต้องได้_404()
+    public async Task ສົ່ງການແຈ້ງເຕືອນໃຫ້ຜູ້ໃຊ້ໃນອົງກອນຕ່າງໆ_ຕ້ອງໄດ້ຮັບ_404()
     {
         using HttpClient superAdminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -119,8 +119,8 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
             new SendNotificationRequest
             {
                 RecipientUserId = recipientInOtherOrgId,
-                Title = "ทดสอบข้ามองค์กร",
-                Message = "ต้องไม่สำเร็จ",
+                Title = "ການທົດສອບໃນທົ່ວອົງກອນ",
+                Message = "ຈະຕ້ອງບໍ່ສໍາເລັດ",
             },
             TestContext.Current.CancellationToken);
 
@@ -135,8 +135,8 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
             new SendNotificationRequest
             {
                 RecipientUserId = recipientUserId,
-                Title = "แจ้งเตือนทดสอบ",
-                Message = "เนื้อหาทดสอบ",
+                Title = "ການແຈ້ງເຕືອນການທົດສອບ",
+                Message = "ເນື້ອໃນການທົດສອບ",
             },
             TestContext.Current.CancellationToken);
 
@@ -167,7 +167,7 @@ public class NotificationsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await superAdminClient.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;

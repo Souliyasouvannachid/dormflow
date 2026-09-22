@@ -3,26 +3,26 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Common.Abstractions;
 
-/// <summary>บันทึกเหตุการณ์ลง Audit Log</summary>
+/// <summary>ບັນທຶກເຫດການ Audit Log</summary>
 public interface IAuditLogWriter
 {
-    /// <summary>บันทึกเหตุการณ์ที่เตรียมไว้แล้ว</summary>
-    /// <param name="auditLog">เหตุการณ์ที่ต้องการบันทึก</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ບັນທຶກເຫດການທີ່ກຽມໄວ້</summary>
+    /// <param name="auditLog">ເຫດການທີ່ທ່ານຕ້ອງການທີ່ຈະບັນທຶກ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task WriteAsync(AuditLog auditLog, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// บันทึกเหตุการณ์โดยเติมข้อมูลบริบทของคำขอปัจจุบันให้อัตโนมัติ
-    /// ได้แก่ ผู้ใช้ องค์กร หมายเลข IP, User Agent, เส้นทางของคำขอ และเวลา
+    /// ການບັນທຶກເຫດການອັດຕະໂນມັດເພີ່ມບໍລິບົດຂອງຄໍາຮ້ອງຂໍໃນປະຈຸບັນ
+    /// ລວມທັງຜູ້ໃຊ້, ອົງກອນ, ຈໍານວນ IP, User Agent, ຮ້ອງຂໍເສັ້ນທາງແລະເວລາ
     /// </summary>
-    /// <param name="action">ประเภทของเหตุการณ์</param>
-    /// <param name="entityName">ชื่อ Entity ที่ถูกกระทำ</param>
-    /// <param name="entityId">รหัสของ Entity ที่ถูกกระทำ</param>
-    /// <param name="userId">ผู้ใช้ที่ก่อให้เกิดเหตุการณ์ ระบุเมื่อยังไม่มีข้อมูลใน Claim เช่น ตอนเข้าสู่ระบบ</param>
-    /// <param name="organizationId">องค์กรที่เกี่ยวข้อง ระบุเมื่อยังไม่มีข้อมูลใน Claim</param>
-    /// <param name="oldValues">ค่าเดิมก่อนแก้ไขในรูปแบบ JSON</param>
-    /// <param name="newValues">ค่าใหม่หลังแก้ไขในรูปแบบ JSON</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <param name="action">ປະເພດເຫດການ</param>
+    /// <param name="entityName">ຊື່ Entity ໄດ້ເຮັດແລ້ວ</param>
+    /// <param name="entityId">ລະຫັດຂອງ Entity ໄດ້ເຮັດແລ້ວ</param>
+    /// <param name="userId">ຜູ້ໃຊ້ທີ່ເຮັດໃຫ້ເກີດເຫດການ ລະບຸໃນເວລາທີ່ບໍ່ມີຂໍ້ມູນໃນ Claim ຕົວຢ່າງ, ເມື່ອເຂົ້າສູ່ລະບົບ</param>
+    /// <param name="organizationId">ອົງກອນທີ່ກ່ຽວຂ້ອງລະບຸໃນເວລາທີ່ບໍ່ມີຂໍ້ມູນໃນ Claim</param>
+    /// <param name="oldValues">ຄ່າຕົ້ນສະບັບກ່ອນທີ່ຈະແກ້ໄຂໃນຮູບແບບ JSON</param>
+    /// <param name="newValues">ຄ່າໃຝ່ຫຼັງຈາກການແກ້ໄຂໃນຮູບແບບ JSON</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task WriteAsync(
         AuditAction action,
         string entityName,

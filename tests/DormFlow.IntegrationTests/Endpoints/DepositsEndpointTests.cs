@@ -18,8 +18,8 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบวงจรชีวิตของเงินมัดจำผ่าน HTTP จริง
-/// Collect (ต้องมีสัญญาที่ยังไม่สิ้นสุด) -> Terminate สัญญา -> Refund (เต็ม/บางส่วน/ริบทั้งหมด)
+/// ທົດສອບວົງຈອນຊີວິດຂອງເງິນຝາກຜ່ານ HTTP ຄວາມຈິງ
+/// Collect (ຕ້ອງມີສັນຍາທີ່ຍັງບໍ່ທັນສໍາເລັດ) -> Terminate ສັນຍາ -> Refund (ເຕັມ/ບາງ/ປະຖິ້ມທັງຝົດ)
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class DepositsEndpointTests(DormFlowApiFactory factory)
@@ -27,7 +27,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task รับเงินมัดจำแล้วคืนเต็มจำนวนหลังสัญญาสิ้นสุด_ต้องทำงานครบวงจร()
+    public async Task ໄດ້ຮັບເງິນຝາກແລະສົ່ງຄືນມັນຢ່າງເຕັມທີ່ຫຼັງຈາກສັນຍາສິ້ນສຸດລົງ_ຕ້ອງເຮັດວຽກຢູ່ໃນວົງເຕັມ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -55,7 +55,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task คืนเงินมัดจำบางส่วนพร้อมเหตุผล_ต้องได้สถานะคืนบางส่วน()
+    public async Task ການຄືນເງິນເງິນຝາກບາງສ່ວນທີ່ມີເຫດຜົນ_ຕ້ອງໄດ້ຮັບການຟື້ນຟູບາງສະຖານະ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -68,7 +68,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
         decimal partialAmount = deposit.Amount / 2;
         using HttpResponseMessage refundResponse = await client.PostAsJsonAsync(
             new Uri($"/api/v1/deposits/{deposit.Id}/refund", UriKind.Relative),
-            new RefundDepositRequest { RefundAmount = partialAmount, DeductionReason = "ค่าทำความสะอาดห้อง" },
+            new RefundDepositRequest { RefundAmount = partialAmount, DeductionReason = "ຄ່າທຳຄວາມສະອາດຫ້ອງ" },
             TestContext.Current.CancellationToken);
         refundResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -76,11 +76,11 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<DepositResponse>>(TestContext.Current.CancellationToken))!.Data!;
         refunded.Status.Should().Be("PartiallyRefunded");
         refunded.RefundedAmount.Should().Be(partialAmount);
-        refunded.DeductionReason.Should().Be("ค่าทำความสะอาดห้อง");
+        refunded.DeductionReason.Should().Be("ຄ່າທຳຄວາມສະອາດຫ້ອງ");
     }
 
     [Fact]
-    public async Task ริบเงินมัดจำทั้งหมด_ต้องได้สถานะริบ()
+    public async Task ຍົກເລີກເງິນຝາກທັງໝົດ_ຕ້ອງໄດ້ຮັບສະຖານະການປະຕິບັດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -92,7 +92,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage refundResponse = await client.PostAsJsonAsync(
             new Uri($"/api/v1/deposits/{deposit.Id}/refund", UriKind.Relative),
-            new RefundDepositRequest { RefundAmount = 0, DeductionReason = "ค่าเสียหายเกินวงเงินมัดจำ" },
+            new RefundDepositRequest { RefundAmount = 0, DeductionReason = "ຄວາມເສຍຫາຍເກີນຂອບເຂດຈໍາກັດເງິນຝາກ" },
             TestContext.Current.CancellationToken);
         refundResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -103,7 +103,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task รับเงินมัดจำซ้ำสำหรับสัญญาเดิม_ต้องได้_409()
+    public async Task ໄດ້ຮັບເງິນຝາກທີ່ຊ້ໍາກັນສໍາລັບສັນຍາດຽວກັນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -121,7 +121,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task คืนเงินมัดจำก่อนสัญญาสิ้นสุด_ต้องได้_409()
+    public async Task ຈ່າຍຄືນເງິນຝາກກ່ອນສັນຍາສິ້ນສຸດລົງ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -139,7 +139,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task คืนเงินเกินจำนวนที่รับไว้_ต้องได้_400()
+    public async Task ການຄືນເງິນເກີນຈໍານວນທີ່ໄດ້ຮັບ_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -158,7 +158,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task คืนบางส่วนโดยไม่ระบุเหตุผลของส่วนที่หัก_ต้องได้_400()
+    public async Task ການຄືນເງິນບາງສ່ວນໂດຍບໍ່ໄດ້ລະບຸເຫດຜົນສໍາລັບສ່ວນທີ່ແຕກຫັກ_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -177,7 +177,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task คืนเงินมัดจำที่คืนไปแล้วซ้ำ_ต้องได้_409()
+    public async Task ຈ່າຍຄືນເງິນທີ່ຝາກໄວ້ແລ້ວ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -217,7 +217,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri($"/api/v1/contracts/{contractId}/terminate", UriKind.Relative),
-            new TerminateContractRequest { Reason = "ครบกำหนดสัญญา" },
+            new TerminateContractRequest { Reason = "ສັນຍາຄົບກຳນົດ" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -228,7 +228,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -240,7 +240,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -252,14 +252,14 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -271,7 +271,7 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -301,8 +301,8 @@ public class DepositsEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

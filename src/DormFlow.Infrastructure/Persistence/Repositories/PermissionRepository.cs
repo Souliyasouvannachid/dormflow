@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงรายการสิทธิ์บน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງລາຍຊື່ການອະນຸຍາດທີ່ເປີດ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class PermissionRepository(DormFlowDbContext dbContext) : IPermissionRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

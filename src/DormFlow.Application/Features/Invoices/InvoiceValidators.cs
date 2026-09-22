@@ -3,16 +3,16 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Invoices;
 
-/// <summary>ตรวจสอบคำขอสร้างใบแจ้งหนี้</summary>
+/// <summary>ກວດເບິ່ງຄຳຮ້ອງຂໍການສ້າງໃບແຈ້ງໜີ້</summary>
 public sealed class CreateInvoiceRequestValidator : AbstractValidator<CreateInvoiceRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateInvoiceRequestValidator()
     {
         RuleFor(request => request.ContractId)
-            .NotEmpty().WithMessage("กรุณาระบุสัญญาเช่าที่ต้องการออกบิล");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸສັນຍາເຊົ່າທີ່ຕ້ອງການອອກໃບແຈ້ງໜີ້");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

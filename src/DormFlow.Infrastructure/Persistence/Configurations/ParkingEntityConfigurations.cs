@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางการจดทะเบียนที่จอดรถ</summary>
+/// <summary>ກໍານົດຕາຕະລາງການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public sealed class ParkingRegistrationConfiguration : IEntityTypeConfiguration<ParkingRegistration>
 {
     /// <inheritdoc />

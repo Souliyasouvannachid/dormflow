@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Payments;
 
-/// <summary>คำขอบันทึกรายการชำระเงิน</summary>
+/// <summary>ຄຳຮ້ອງຂໍບັນທຶກການຈ່າຍເງິນ</summary>
 public class CreatePaymentRequest
 {
-    /// <summary>ใบแจ้งหนี้ที่ชำระ</summary>
+    /// <summary>ໃບແຈ້ງໜີ້ຖືກຈ່າຍ</summary>
     public Guid InvoiceId { get; set; }
 
-    /// <summary>จำนวนเงินที่ชำระ</summary>
+    /// <summary>ຈໍານວນການຈ່າຍເງິນ</summary>
     public decimal Amount { get; set; }
 
-    /// <summary>วันเวลาที่ชำระเงิน ถ้าไม่ระบุใช้เวลาปัจจุบัน</summary>
+    /// <summary>ວັນທີ ແລະເວລາຈ່າຍເງິນ ຖ້າບໍ່ໄດ້ລະບຸ, ໃຫ້ໃຊ້ເວລາປັດຈຸບັນ</summary>
     public DateTimeOffset? PaymentDate { get; set; }
 
-    /// <summary>ช่องทางการชำระเงิน ("Cash", "BankTransfer", "QrCode", "Other")</summary>
+    /// <summary>ຊ່ອງທາງການຈ່າຍເງິນ ("Cash", "BankTransfer", "QrCode", "Other")</summary>
     public string Method { get; set; } = string.Empty;
 
-    /// <summary>เลขอ้างอิงการโอน/สลิป</summary>
+    /// <summary>ໝາຍເລກອ້າງອີງການໂອນ/ເລື່ອນ</summary>
     public string? ReferenceNumber { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

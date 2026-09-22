@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของประกาศ</summary>
+/// <summary>ສະຖານະປະກາດ</summary>
 public enum AnnouncementStatus
 {
-    /// <summary>ร่าง ยังไม่เผยแพร่</summary>
+    /// <summary>ຮ່າງດັ່ງກ່າວຍັງບໍ່ທັນໄດ້ຮັບການພິມເຜີຍແຜ່</summary>
     Draft = 1,
 
-    /// <summary>เผยแพร่แล้ว</summary>
+    /// <summary>ຈັດພີມມາ</summary>
     Published = 2,
 
-    /// <summary>เก็บเข้าคลัง ไม่แสดงอีกต่อไป</summary>
+    /// <summary>ເກັບໄວ້ແລ້ວ, ບໍ່ໄດ້ສະແດງອີກຕໍ່ໄປ</summary>
     Archived = 3,
 }

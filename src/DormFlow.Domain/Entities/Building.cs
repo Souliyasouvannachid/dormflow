@@ -3,21 +3,21 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Domain.Entities;
 
-/// <summary>อาคารหนึ่งหลังภายในหอพัก</summary>
+/// <summary>ອາຄານຫຼັງໜຶ່ງພາຍໃນຫໍພັກ</summary>
 public class Building : TenantEntity
 {
-    /// <summary>รหัสอาคาร ไม่ซ้ำกันภายในหอพักเดียวกัน</summary>
+    /// <summary>ລະຫັດອາຄານແມ່ນເປັນເອກະລັກພາຍໃນຫໍພັກດຽວກັນ</summary>
     public required string Code { get; set; }
 
-    /// <summary>ชื่ออาคาร</summary>
+    /// <summary>ຊື່ອາຄານ</summary>
     public required string Name { get; set; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>จำนวนชั้นทั้งหมดของอาคาร</summary>
+    /// <summary>ຈໍານວນຊັ້ນທັງຝົດຂອງອາຄານ</summary>
     public int TotalFloors { get; set; } = 1;
 
-    /// <summary>สถานะของอาคาร</summary>
+    /// <summary>ສະຖານະຂອງອາຄານ</summary>
     public BuildingStatus Status { get; set; } = BuildingStatus.Active;
 }

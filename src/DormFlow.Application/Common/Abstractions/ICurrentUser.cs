@@ -1,46 +1,46 @@
 namespace DormFlow.Application.Common.Abstractions;
 
 /// <summary>
-/// ข้อมูลผู้ใช้ของคำขอปัจจุบัน อ่านจาก Claim ของ JWT
-/// ใช้เป็นแหล่งความจริงเดียวสำหรับการกรองข้อมูลตามองค์กรและหอพัก
+/// ຂໍ້ມູນຜູ້ໃຊ້ຂອງຄໍາຮ້ອງຂໍໃນປະຈຸບັນແມ່ນອ່ານຈາກ Claim ຂອງ JWT
+/// ໃຊ້ມັນເປັນແຫຼ່ງດຽວຂອງຄວາມຈິງສໍາລັບການກັ່ນຕອງຂໍ້ມູນໂດຍອົງກອນແລະຫໍພັກ
 /// </summary>
 public interface ICurrentUser
 {
-    /// <summary>รหัสผู้ใช้ เป็น null เมื่อคำขอยังไม่ผ่านการยืนยันตัวตน</summary>
+    /// <summary>User ID ແມ່ນ null ໃນເວລາທີ່ຄໍາຮ້ອງຂໍຍັງບໍ່ທັນໄດ້ຮັບການຢັ້ງຢືນ</summary>
     Guid? UserId { get; }
 
-    /// <summary>องค์กรที่ผู้ใช้สังกัด เป็น null สำหรับ SuperAdmin ที่ไม่ผูกกับองค์กรใด</summary>
+    /// <summary>ອົງກອນທີ່ຜູ້ໃຊ້ຂຶ້ນກັບແມ່ນ null ສໍາລັບ SuperAdmin ທີ່ບໍ່ໄດ້ຕິດພັນກັບອົງກອນ</summary>
     Guid? OrganizationId { get; }
 
-    /// <summary>ผู้ใช้ผ่านการยืนยันตัวตนแล้วหรือไม่</summary>
+    /// <summary>ຜູ້ໃຊ້ໄດ້ຮັບການຢືນຢັນແລ້ວບໍ?</summary>
     bool IsAuthenticated { get; }
 
-    /// <summary>ผู้ใช้เป็น SuperAdmin ที่เข้าถึงข้อมูลข้ามองค์กรได้หรือไม่</summary>
+    /// <summary>ຜູ້ໃຊ້ແມ່ນ SuperAdmin ການເຂົ້າເຖິງຂໍ້ມູນທົ່ວອົງກອນເປັນໄປໄດ້ບໍ?</summary>
     bool IsSuperAdmin { get; }
 
-    /// <summary>รายชื่อบทบาทของผู้ใช้</summary>
+    /// <summary>ລາຍຊື່ບົດບາດຂອງຜູ້ໃຊ້</summary>
     IReadOnlyCollection<string> Roles { get; }
 
-    /// <summary>รายการหอพักที่ผู้ใช้ถูกมอบหมายให้ดูแล</summary>
+    /// <summary>ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ຜູ້ໃຊ້ຖືກມອບຝາຍໃຫ້ເບິ່ງແຍງ</summary>
     IReadOnlyCollection<Guid> DormitoryIds { get; }
 
-    /// <summary>รายการรหัสสิทธิ์ที่ผู้ใช้มี เช่น rooms.create</summary>
+    /// <summary>ບັນຊີລາຍຊື່ຂອງລະຫັດສິດພິເສດທີ່ຜູ້ໃຊ້ມີ, e.g rooms.create</summary>
     IReadOnlyCollection<string> Permissions { get; }
 
-    /// <summary>หมายเลข IP ต้นทางของคำขอ ใช้บันทึกใน Audit Log และ Refresh Token</summary>
+    /// <summary>ເລກ IP ຕົ້ນກໍາເນີດຂອງຄໍາຮ້ອງຂໍໄດ້ຖືກບັນທຶກໄວ້ໃນ Audit Log ແລະ Refresh Token</summary>
     string? IpAddress { get; }
 
-    /// <summary>User Agent ของคำขอ ใช้บันทึกใน Audit Log และ Refresh Token</summary>
+    /// <summary>User Agent ຂອງການຮ້ອງຂໍ, ໃຊ້ມັນເພື່ອບັນທຶກໃນ Audit Log ແລະ Refresh Token</summary>
     string? UserAgent { get; }
 
-    /// <summary>เส้นทางของคำขอปัจจุบัน ใช้บันทึกใน Audit Log</summary>
+    /// <summary>ເສັ້ນທາງຂອງຄໍາຮ້ອງຂໍປະຈຸບັນຖືກນໍາໃຊ້ເພື່ອບັນທຶກມັນຢູ່ໃນ Audit Log</summary>
     string? RequestPath { get; }
 
-    /// <summary>ตรวจว่าผู้ใช้มีสิทธิ์ที่ระบุหรือไม่ SuperAdmin ถือว่ามีทุกสิทธิ์เสมอ</summary>
-    /// <param name="permissionCode">รหัสสิทธิ์ เช่น rooms.change-status</param>
+    /// <summary>ກວດເບິ່ງວ່າຜູ້ໃຊ້ມີການອະນຸຍາດທີ່ລະບຸ SuperAdmin ຖືວ່າເຈົ້າມີສິດສະເໝີ</summary>
+    /// <param name="permissionCode">ລະຫັດການອະນຸຍາດເຊັ່ນ rooms.change-status</param>
     bool HasPermission(string permissionCode);
 
-    /// <summary>ตรวจว่าผู้ใช้เข้าถึงข้อมูลของหอพักที่ระบุได้หรือไม่</summary>
-    /// <param name="dormitoryId">รหัสหอพัก</param>
+    /// <summary>ກວດເບິ່ງວ່າຜູ້ໃຊ້ສາມາດເຂົ້າເຖິງຂໍ້ມູນຂອງຫໍພັກທີ່ລະບຸ</summary>
+    /// <param name="dormitoryId">ລະຫັດຫໍພັກ</param>
     bool CanAccessDormitory(Guid dormitoryId);
 }

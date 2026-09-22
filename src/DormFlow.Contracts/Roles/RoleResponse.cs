@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Roles;
 
-/// <summary>ข้อมูลบทบาทหนึ่งบทบาท</summary>
+/// <summary>ຂໍ້ມູນບົດບາດຜຶ່ງ</summary>
 public class RoleResponse
 {
-    /// <summary>รหัสอ้างอิงของบทบาท</summary>
+    /// <summary>ລະຫັດການສົ່ງຕໍ່ບົດບາດ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>ชื่อบทบาท</summary>
+    /// <summary>ຊື່ບົດບາດ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายบทบาท</summary>
+    /// <summary>ລາຍລະອຽດບົດບາດ</summary>
     public string? Description { get; init; }
 
     /// <summary>
-    /// เป็นบทบาทมาตรฐานของระบบหรือไม่
-    /// บทบาทมาตรฐานเปลี่ยนชื่อและลบไม่ได้ แต่ปรับสิทธิ์ได้ตามปกติ
+    /// ນີ້ແມ່ນບົດບາດມາດຕະຖານສໍາລັບລະບົບບໍ?
+    /// ບົດບາດມາດຕະຖານບໍ່ສາມາດຖືກປ່ຽນຊື່ ແລະລຶບອອກໄດ້. ແຕ່ທ່ານສາມາດປັບສິດຂອງທ່ານໄດ້ຕາມປົກກະຕິ
     /// </summary>
     public bool IsSystemRole { get; init; }
 
-    /// <summary>รหัสสิทธิ์ทั้งหมดที่บทบาทนี้มี</summary>
+    /// <summary>ລະຫັດການອະນຸຍາດທັງໝົດທີ່ບົດບາດນີ້ມີ</summary>
     public IReadOnlyList<string> Permissions { get; init; } = [];
 }

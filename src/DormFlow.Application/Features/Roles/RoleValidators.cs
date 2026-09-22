@@ -4,44 +4,44 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Roles;
 
-/// <summary>ตรวจสอบคำขอสร้างบทบาทใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງບົດບາດໃຝ່</summary>
 public sealed class CreateRoleRequestValidator : AbstractValidator<CreateRoleRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateRoleRequestValidator()
     {
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อบทบาท")
-            .MaximumLength(100).WithMessage("ชื่อบทบาทต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ບົດບາດ")
+            .MaximumLength(100).WithMessage("ຊື່ບົດບາດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Description)
-            .MaximumLength(256).WithMessage("คำอธิบายต้องยาวไม่เกิน 256 ตัวอักษร");
+            .MaximumLength(256).WithMessage("ຄຳອະທິບາຍຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 256 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลบทบาท</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນບົດບາດ</summary>
 public sealed class UpdateRoleRequestValidator : AbstractValidator<UpdateRoleRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpdateRoleRequestValidator()
     {
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อบทบาท")
-            .MaximumLength(100).WithMessage("ชื่อบทบาทต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ບົດບາດ")
+            .MaximumLength(100).WithMessage("ຊື່ບົດບາດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Description)
-            .MaximumLength(256).WithMessage("คำอธิบายต้องยาวไม่เกิน 256 ตัวอักษร");
+            .MaximumLength(256).WithMessage("ຄຳອະທິບາຍຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 256 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอกำหนดสิทธิ์ให้บทบาท</summary>
+/// <summary>ກວດເບິ່ງການຮ້ອງຂໍການອະນຸຍາດບົດບາດ</summary>
 public sealed class AssignRolePermissionsRequestValidator : AbstractValidator<AssignRolePermissionsRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public AssignRolePermissionsRequestValidator()
     {
         RuleForEach(request => request.Permissions)
             .Must(PermissionCodes.Exists)
-            .WithMessage("พบรหัสสิทธิ์ที่ไม่มีอยู่ในระบบ");
+            .WithMessage("ພົບລະຫັດສິດທີ່ບໍ່ມີຢູ່ໃນລະບົບ");
     }
 }

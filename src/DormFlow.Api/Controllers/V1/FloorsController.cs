@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการชั้นของอาคาร</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງຊັ້ນຂອງອາຄານ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/floors")]
@@ -18,7 +18,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
 {
     private readonly IFloorService _floorService = floorService;
 
-    /// <summary>ดึงรายการชั้นแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງຂໍ້ມູນລາຍຊື່ຊັ້ນໜ້າຂອງຊັ້ນຂໍ້ມູນ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Floors.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<FloorResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลชั้นหนึ่งชั้น</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຊັ້ນຮຽນທໍາອິດ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Floors.View)]
     [ProducesResponseType(typeof(ApiResponse<FloorResponse>), StatusCodes.Status200OK)]
@@ -41,7 +41,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างชั้นใหม่</summary>
+    /// <summary>ສ້າງຊັ້ນຂໍ້ມູນໃໝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Floors.Create)]
     [ProducesResponseType(typeof(ApiResponse<FloorResponse>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>แก้ไขข้อมูลชั้น</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນຊັ້ນ</summary>
     [HttpPut("{id:guid}")]
     [RequirePermission(PermissionCodes.Floors.Update)]
     [ProducesResponseType(typeof(ApiResponse<FloorResponse>), StatusCodes.Status200OK)]
@@ -72,7 +72,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
         return Ok(ApiResponse.Ok(result, ApiMessages.Updated));
     }
 
-    /// <summary>เปลี่ยนสถานะชั้น</summary>
+    /// <summary>ປ່ຽນສະຖານະຊັ້ນຮຽນ</summary>
     [HttpPatch("{id:guid}/status")]
     [RequirePermission(PermissionCodes.Floors.Update)]
     [ProducesResponseType(typeof(ApiResponse<FloorResponse>), StatusCodes.Status200OK)]
@@ -87,7 +87,7 @@ public sealed class FloorsController(IFloorService floorService) : ControllerBas
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ลบชั้น</summary>
+    /// <summary>ລຶບຊັ້ນ</summary>
     [HttpDelete("{id:guid}")]
     [RequirePermission(PermissionCodes.Floors.Delete)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]

@@ -3,29 +3,29 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Visitors;
 
-/// <summary>ตรวจสอบคำขอบันทึกการเข้าของผู้มาเยือน</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍບັນທຶກຂອງແຂກ</summary>
 public sealed class CheckInVisitorRequestValidator : AbstractValidator<CheckInVisitorRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CheckInVisitorRequestValidator()
     {
         RuleFor(request => request.RoomId)
-            .NotEmpty().WithMessage("กรุณาระบุห้องที่ผู้มาเยือนมาเยี่ยม");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫ້ອງທີ່ຜູ້ມາຢ້ຽມຢາມມາຢ້ຽມ");
 
         RuleFor(request => request.VisitorName)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อผู้มาเยือน")
-            .MaximumLength(200).WithMessage("ชื่อผู้มาเยือนต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ຜູ້ມາຢ້ຽມຢາມ")
+            .MaximumLength(200).WithMessage("ຊື່ຜູ້ມາຢ້ຽມຢາມຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.VisitorPhone)
-            .MaximumLength(30).WithMessage("เบอร์โทรศัพท์ต้องยาวไม่เกิน 30 ตัวอักษร");
+            .MaximumLength(30).WithMessage("ເບີໂທລະສັບຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 30 ໂຕອັກສອນ");
 
         RuleFor(request => request.IdNumber)
-            .MaximumLength(20).WithMessage("เลขบัตรประจำตัวต้องยาวไม่เกิน 20 ตัวอักษร");
+            .MaximumLength(20).WithMessage("ເລກບັດປະຈຳຕົວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 20 ໂຕອັກສອນ");
 
         RuleFor(request => request.Purpose)
-            .MaximumLength(500).WithMessage("วัตถุประสงค์ต้องยาวไม่เกิน 500 ตัวอักษร");
+            .MaximumLength(500).WithMessage("ຈຸດປະສົງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 500 ໂຕອັກສອນ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

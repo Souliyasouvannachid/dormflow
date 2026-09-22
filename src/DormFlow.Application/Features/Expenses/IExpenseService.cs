@@ -3,18 +3,18 @@ using DormFlow.Contracts.Expenses;
 
 namespace DormFlow.Application.Features.Expenses;
 
-/// <summary>Use Case ทั้งหมดของโมดูลค่าใช้จ่าย</summary>
+/// <summary>Use Case ຄ່າໃຊ້ຈ່າຍຂອງໂມດູນທັງຝົດ</summary>
 public interface IExpenseService
 {
-    /// <summary>ดึงรายการค่าใช้จ่ายแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຈ່າຍທີ່ເປັນ paginated</summary>
     Task<PagedResult<ExpenseResponse>> GetPagedAsync(
         ExpenseListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลค่าใช้จ่ายจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຄ່າໃຊ້ຈ່າຍຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<ExpenseResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกค่าใช้จ่ายใหม่</summary>
+    /// <summary>ບັນທຶກຄ່າໃຊ້ຈ່າຍໃຝ່</summary>
     Task<ExpenseResponse> CreateAsync(
         CreateExpenseRequest request,
         CancellationToken cancellationToken = default);

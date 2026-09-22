@@ -5,11 +5,11 @@ using DormFlow.Application.Common.Abstractions;
 namespace DormFlow.Api.Services;
 
 /// <summary>
-/// อ่านข้อมูลผู้ใช้ปัจจุบันจาก Claim ของคำขอที่กำลังทำงานอยู่
+/// ອ່ານຂໍ້ມູນຜູ້ໃຊ້ປະຈຸບັນຈາກ Claim ຂອງການຮ້ອງຂໍທີ່ກໍາລັງດໍາເນີນການໃນປັດຈຸບັນ
 /// </summary>
 /// <remarks>
-/// ค่าทั้งหมดมาจาก Access Token ที่ผ่านการตรวจลายเซ็นแล้วเท่านั้น
-/// จึงไม่รับค่าองค์กรหรือหอพักจาก Header หรือ Body ของผู้เรียกเด็ดขาด
+/// ຄ່າທັງຝົດມາຈາກ Access Token ສະເພາະຜູ້ທີ່ຜ່ານການຢັ້ງຢືນລາຍເຊັນເທົ່ານັ້ນ
+/// ດັ່ງນັ້ນ, ພວກເຮົາບໍ່ຍອມຮັບຄ່າທໍານຽມຂອງອົງກອນຫຼືຫໍພັກຈາກ Header ຫຼື Body ຢ່າງແທ້ຈິງຂອງຜູ້ໂທ
 /// </remarks>
 public sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICurrentUser
 {
@@ -90,7 +90,7 @@ public sealed class CurrentUser(IHttpContextAccessor httpContextAccessor) : ICur
             return false;
         }
 
-        // SuperAdmin ถือว่ามีทุกสิทธิ์ จึงไม่ต้องใส่ Permission Claim ทั้งหมดลงในโทเคน
+        // SuperAdmin ຖືວ່າມີສິດທຸກຢ່າງ ສະນັ້ນເຈົ້າບໍ່ຕ້ອງໃສ່ມັນ Permission Claim ທັງຝົດເຂົ້າໄປໃນ tokens
         return IsSuperAdmin
             || Principal?.HasClaim(DormFlowClaimTypes.Permission, permissionCode) == true;
     }

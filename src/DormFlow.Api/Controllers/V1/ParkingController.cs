@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการการจดทะเบียนที่จอดรถ</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/parking")]
@@ -17,7 +17,7 @@ public sealed class ParkingController(IParkingRegistrationService parkingRegistr
 {
     private readonly IParkingRegistrationService _parkingRegistrationService = parkingRegistrationService;
 
-    /// <summary>ดึงรายการจดทะเบียนที่จอดรถแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງລາຍຊື່ບ່ອນຈອດລົດທີ່ລົງທະບຽນ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Parking.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ParkingRegistrationResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class ParkingController(IParkingRegistrationService parkingRegistr
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลการจดทะเบียนที่จอดรถหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນການລົງທະບຽນບ່ອນຈອດລົດ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Parking.View)]
     [ProducesResponseType(typeof(ApiResponse<ParkingRegistrationResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class ParkingController(IParkingRegistrationService parkingRegistr
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>จดทะเบียนที่จอดรถใหม่</summary>
+    /// <summary>ລົງທະບຽນບ່ອນຈອດລົດໃຝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Parking.Register)]
     [ProducesResponseType(typeof(ApiResponse<ParkingRegistrationResponse>), StatusCodes.Status200OK)]
@@ -58,7 +58,7 @@ public sealed class ParkingController(IParkingRegistrationService parkingRegistr
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>สิ้นสุดการจดทะเบียนที่จอดรถ</summary>
+    /// <summary>ສິ້ນສຸດການລົງທະບຽນບ່ອນຈອດລົດ</summary>
     [HttpPost("{id:guid}/release")]
     [RequirePermission(PermissionCodes.Parking.Release)]
     [ProducesResponseType(typeof(ApiResponse<ParkingRegistrationResponse>), StatusCodes.Status200OK)]

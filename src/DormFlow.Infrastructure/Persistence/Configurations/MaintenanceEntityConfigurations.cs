@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางงานแจ้งซ่อมบำรุง</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການເຮັດວຽກຂອງການແຈ້ງເຕືອນການບໍາລຸງຮັກສາ</summary>
 public sealed class MaintenanceRequestConfiguration : IEntityTypeConfiguration<MaintenanceRequest>
 {
     /// <inheritdoc />

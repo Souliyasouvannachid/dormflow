@@ -19,14 +19,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบรายงานสรุปรายได้และรายงานใบแจ้งหนี้ค้างชำระผ่าน HTTP จริง</summary>
+/// <summary>ທົດສອບບົດລາຍງານສະຫຼຸບລາຍຮັບແລະບົດລາຍງານໃບແຈ້ງຜີ້ທີ່ຍັງຄ້າງໂດຍຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ReportsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task รายงานสรุปรายได้_ต้องรวมยอดออกบิลและยอดเก็บเงินได้ถูกต้อง()
+    public async Task ບົດລາຍງານສະຫຼຸບລາຍຮັບ_ຕ້ອງລວມເອົາໃບເກັບເງິນທີ່ຖືກຕ້ອງແລະຈໍານວນການເກັບເງິນ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -48,8 +48,8 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
             content: null,
             TestContext.Current.CancellationToken);
 
-        // กรองด้วย dormitoryId ของสัญญานี้โดยเฉพาะ เพราะเรียกในฐานะ SuperAdmin ซึ่งไม่ถูกจำกัดด้วยองค์กร
-        // ถ้าไม่กรอง รายงานจะรวมข้อมูลของ Test อื่นที่สร้างใบแจ้งหนี้ในเดือนเดียวกันไว้ในฐานข้อมูลที่ใช้ร่วมกันด้วย
+        // ການກັ່ນຕອງດ້ວຍ dormitoryId ຂອງສັນຍານີ້ໂດຍສະເພາະເນື່ອງຈາກວ່າເອີ້ນວ່າເປັນ SuperAdmin ທີ່ບໍ່ຈໍາກັດໂດຍອົງກອນ
+        // ຖ້າບໍ່ຖືກກັ່ນຕອງ, ບົດລາຍງານຈະປະກອບມີຂໍ້ມູນສໍາລັບ Test ໃບເກັບເງິນອື່ນທີ່ສ້າງຂຶ້ນໃນເດືອນດຽວກັນຍັງຖືກເກັບໄວ້ໃນຖານຂໍ້ມູນທີ່ແບ່ງປັນ
         using HttpResponseMessage response = await client.GetAsync(
             new Uri(
                 $"/api/v1/reports/revenue?periodFrom=2026-03-01&periodTo=2026-03-31&dormitoryId={contract.DormitoryId}",
@@ -68,7 +68,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task รายงานใบแจ้งหนี้ค้างชำระ_ต้องแสดงยอดคงเหลือและจำนวนวันเกินกำหนดถูกต้อง()
+    public async Task ລາຍງານໃບແຈ້ງໜີ້ທີ່ຍັງບໍ່ໄດ້ຈ່າຍ_ຍອດຄົງເຫຼືອແລະຈໍານວນມື້ທີ່ຜ່ານໄປຕ້ອງຖືກສະແດງຢ່າງຖືກຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -76,7 +76,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
 
         (_, ContractResponse contract) = await CreateActiveContractAsync(client);
 
-        // ตั้ง IssueDate ย้อนหลัง 60 วัน เพื่อให้ DueDate (คำนวณจาก IssueDate + PaymentDueDay) เลยกำหนดไปแล้วแน่นอน
+        // ຕັ້ງ IssueDate ທີ່ຜ່ານມາ 60 ມື້ນັ້ນ DueDate (ຄິດໄລ່ຈາກ IssueDate + PaymentDueDay) ມັນໝົດກຳນົດແນ່ນອນ
         DateOnly issueDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-60);
         using HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/invoices", UriKind.Relative),
@@ -108,7 +108,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ส่งออกรายงานสรุปรายได้เป็น_CSV_ต้องได้ไฟล์ที่มีข้อมูลถูกต้อง()
+    public async Task ບົດລາຍງານສະຫຼຸບລາຍຮັບສົ່ງອອກເປັນ_CSV_ທ່ານຕ້ອງໄດ້ຮັບໄຟລ໌ທີ່ມີຂໍ້ມູນທີ່ຖືກຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -117,7 +117,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
         (_, ContractResponse contract) = await CreateActiveContractAsync(client);
         await CreateAndIssueInvoiceAsync(client, contract.Id, new DateOnly(2026, 4, 1));
 
-        // กรองด้วย dormitoryId ของสัญญานี้โดยเฉพาะ ด้วยเหตุผลเดียวกับ Test สรุปรายได้ด้านบน
+        // ການກັ່ນຕອງດ້ວຍ dormitoryId ຂອງສັນຍາສະບັບນີ້ໂດຍສະເພາະສໍາລັບເຫດຜົນດຽວກັນ Test ສະຫຼຸບລາຍຮັບຂ້າງເທິງ
         using HttpResponseMessage response = await client.GetAsync(
             new Uri(
                 $"/api/v1/reports/revenue/export?periodFrom=2026-04-01&periodTo=2026-04-30&dormitoryId={contract.DormitoryId}",
@@ -128,12 +128,12 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
         response.Content.Headers.ContentType?.MediaType.Should().Be("text/csv");
 
         string csv = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        csv.Should().StartWith("PeriodFrom,PeriodTo,InvoiceCount");
+        csv.Should().StartWith("ເລີ່ມງວດ,ສິ້ນສຸດງວດ,ຈຳນວນໃບແຈ້ງໜີ້");
         csv.Should().Contain("2026-04-01,2026-04-30,1");
     }
 
     [Fact]
-    public async Task ส่งออกรายงานใบแจ้งหนี้ค้างชำระเป็น_CSV_ต้องได้ไฟล์ที่มีข้อมูลถูกต้อง()
+    public async Task ສົ່ງອອກບົດລາຍງານໃບເກັບເງິນທີ່ຍັງຄ້າງຄາເປັນ_CSV_ທ່ານຕ້ອງໄດ້ຮັບໄຟລ໌ທີ່ມີຂໍ້ມູນທີ່ຖືກຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -150,7 +150,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
         response.Content.Headers.ContentType?.MediaType.Should().Be("text/csv");
 
         string csv = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        csv.Should().StartWith("InvoiceNumber,ContractId,DueDate");
+        csv.Should().StartWith("ເລກທີໃບແຈ້ງໜີ້,ລະຫັດສັນຍາ,ວັນຄົບກຳນົດ");
         csv.Should().Contain(invoice.InvoiceNumber);
     }
 
@@ -180,7 +180,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -192,7 +192,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -204,14 +204,14 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -223,7 +223,7 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -253,8 +253,8 @@ public class ReportsEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DormFlow.Infrastructure.Identity;
 
-/// <summary>เข้าถึงและจัดการบทบาทบน ASP.NET Core Identity</summary>
+/// <summary>ເຂົ້າເຖິງ ແລະຈັດການບົດບາດໃນ ASP.NET Core Identity</summary>
 public sealed class RoleRepository(
     RoleManager<ApplicationRole> roleManager,
     DormFlowDbContext dbContext) : IRoleRepository
@@ -90,7 +90,7 @@ public sealed class RoleRepository(
 
         return result.Succeeded
             ? RoleOperationResult.Success(role.Id)
-            : RoleOperationResult.Failed([.. result.Errors.Select(error => error.Description)]);
+            : RoleOperationResult.Failed([.. result.Errors.Select(IdentityErrorTranslator.Translate)]);
     }
 
     /// <inheritdoc />
@@ -155,13 +155,13 @@ public sealed class RoleRepository(
 
         if (permissionIds.Count != permissionCodes.Distinct(StringComparer.Ordinal).Count())
         {
-            // มีรหัสสิทธิ์ที่ระบุมาไม่ตรงกับที่มีอยู่จริงในฐานข้อมูล
+            // ລະຫັດການອະນຸຍາດທີ່ລະບຸບໍ່ກົງກັບສິ່ງທີ່ມີຢູ່ໃນຖານຂໍ້ມູນ
             return false;
         }
 
-        // ลบสิทธิ์เดิมและเพิ่มสิทธิ์ใหม่ต้องสำเร็จหรือล้มเหลวไปด้วยกัน ไม่เช่นนั้นบทบาทจะเหลือสิทธิ์ว่างชั่วขณะ
-        // ต้องครอบด้วย IExecutionStrategy ไม่ใช่ BeginTransactionAsync ตรง ๆ
-        // เพราะ EnableRetryOnFailure ทำให้ Npgsql ใช้ Retrying Execution Strategy ซึ่งไม่รองรับธุรกรรมที่ผู้เรียกเปิดเอง
+        // ການລຶບສິດເກົ່າ ແລະເພີ່ມການອະນຸຍາດໃໝ່ຕ້ອງສຳເລັດ ຫຼືລົ້ມເຫຼວຮ່ວມກັນ. ຖ້າບໍ່ດັ່ງນັ້ນ, ບົດບາດຈະຫວ່າງຊົ່ວຄາວ
+        // ຈະຕ້ອງກວມເອົາເຊັ່ນດຽວກັນ IExecutionStrategy ບໍ່ BeginTransactionAsync ກົງ
+        // ເນື່ອງຈາກວ່າ EnableRetryOnFailure ເຮັດ Npgsql ໃຊ້ Retrying Execution Strategy ມັນບໍ່ຮອງຮັບການເຮັດທຸລະກໍາທີ່ເປີດໂດຍຜູ້ໂທເອງ
         IExecutionStrategy executionStrategy = _dbContext.Database.CreateExecutionStrategy();
 
         await executionStrategy.ExecuteAsync(async () =>

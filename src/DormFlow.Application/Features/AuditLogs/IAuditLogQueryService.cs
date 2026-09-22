@@ -3,10 +3,10 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Application.Features.AuditLogs;
 
-/// <summary>Use Case ทั้งหมดของโมดูล Audit Log</summary>
+/// <summary>Use Case ໂມດູນທັງໝົດ Audit Log</summary>
 public interface IAuditLogQueryService
 {
-    /// <summary>ดึงรายการ Audit Log แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍການ Audit Log ປະເພດການແບ່ງໜ້າ</summary>
     Task<PagedResult<AuditLogResponse>> GetPagedAsync(
         AuditLogListRequest request,
         CancellationToken cancellationToken = default);

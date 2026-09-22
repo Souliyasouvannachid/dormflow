@@ -2153,6 +2153,11 @@ namespace DormFlow.Infrastructure.Migrations
                     b.HasIndex("RoomId")
                         .HasDatabaseName("ix_reservations_room_id");
 
+                    b.HasIndex("RoomId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_reservations_one_pending_per_room")
+                        .HasFilter("status = 'Pending' AND is_deleted = false");
+
                     b.HasIndex("Status")
                         .HasDatabaseName("ix_reservations_status");
 
@@ -2236,6 +2241,26 @@ namespace DormFlow.Infrastructure.Migrations
                     b.Property<Guid>("FloorId")
                         .HasColumnType("uuid")
                         .HasColumnName("floor_id");
+
+                    b.Property<decimal?>("FloorPlanHeight")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("floor_plan_height");
+
+                    b.Property<decimal?>("FloorPlanWidth")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("floor_plan_width");
+
+                    b.Property<decimal?>("FloorPlanX")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("floor_plan_x");
+
+                    b.Property<decimal?>("FloorPlanY")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("floor_plan_y");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
@@ -2642,6 +2667,11 @@ namespace DormFlow.Infrastructure.Migrations
                     b.HasIndex("UserId", "DormitoryId")
                         .IsUnique()
                         .HasDatabaseName("ix_user_dormitories_user_id_dormitory_id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_dormitories_one_primary_per_user")
+                        .HasFilter("is_primary = true");
 
                     b.ToTable("user_dormitories", (string)null);
                 });

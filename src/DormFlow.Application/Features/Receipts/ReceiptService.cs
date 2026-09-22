@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Receipts;
 
-/// <summary>Use Case ทั้งหมดของโมดูลใบเสร็จรับเงิน</summary>
+/// <summary>Use Case ໂມດູນໃບຮັບເງິນທັງໝົດ</summary>
 public sealed class ReceiptService(
     IReceiptRepository repository,
     IPaymentRepository paymentRepository,
@@ -23,7 +23,7 @@ public sealed class ReceiptService(
 {
     private const string AuditEntityName = "Receipt";
 
-    /// <summary>จำนวนครั้งสูงสุดที่ลองสุ่มเลขที่ใบเสร็จใหม่เมื่อชนกับที่มีอยู่แล้ว</summary>
+    /// <summary>ຈຳນວນຄັ້ງສູງສຸດເພື່ອລອງໃຊ້ເລກຮັບໃໝ່ແບບສຸ່ມເມື່ອມີການຕຳກັນກັບອັນທີ່ມີຢູ່ແລ້ວ</summary>
     private const int MaxReceiptNumberAttempts = 5;
 
     private static readonly string[] AllowedSortFields = ["receiptNumber", "issuedAt", "createdAt"];
@@ -72,22 +72,22 @@ public sealed class ReceiptService(
         await _issueValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Payment payment = await _paymentRepository.GetByIdAsync(request.PaymentId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบรายการชำระเงินที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບລາຍການຊຳລະເງິນທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             payment.OrganizationId,
             payment.DormitoryId.GetValueOrDefault(),
-            "ไม่พบรายการชำระเงินที่ระบุ");
+            "ບໍ່ພົບລາຍການຊຳລະເງິນທີ່ລະບຸ");
 
         if (payment.Status != PaymentStatus.Confirmed)
         {
-            throw new ConflictException("ออกใบเสร็จได้เฉพาะรายการชำระเงินที่ยืนยันแล้วเท่านั้น");
+            throw new ConflictException("ສາມາດອອກໃບຮັບເງິນໄດ້ສະເພາະລາຍການຊຳລະເງິນທີ່ຢືນຢັນແລ້ວເທົ່ານັ້ນ");
         }
 
         if (await _repository.ExistsByPaymentIdAsync(payment.Id, cancellationToken))
         {
-            throw new ConflictException("รายการชำระเงินนี้ถูกออกใบเสร็จไปแล้ว");
+            throw new ConflictException("ລາຍການຊຳລະເງິນນີ້ຖືກອອກໃບຮັບເງິນໄປແລ້ວ");
         }
 
         string receiptNumber = await GenerateUniqueReceiptNumberAsync(payment.OrganizationId, cancellationToken);
@@ -130,19 +130,19 @@ public sealed class ReceiptService(
             }
         }
 
-        throw new InvalidOperationException("ไม่สามารถสุ่มเลขที่ใบเสร็จที่ไม่ซ้ำกันได้ กรุณาลองใหม่อีกครั้ง");
+        throw new InvalidOperationException("ບໍ່ສາມາດສຸ່ມເລກທີໃບຮັບເງິນທີ່ບໍ່ຊ້ຳກັນໄດ້ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ");
     }
 
     private async Task<Receipt> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Receipt receipt = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลใบเสร็จรับเงินที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນໃບຮັບເງິນທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             receipt.OrganizationId,
             receipt.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลใบเสร็จรับเงินที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນໃບຮັບເງິນທີ່ຕ້ອງການ");
 
         return receipt;
     }

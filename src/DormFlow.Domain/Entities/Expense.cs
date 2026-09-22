@@ -4,29 +4,29 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// ค่าใช้จ่ายในการดำเนินงานหนึ่งรายการ (ค่าน้ำ-ไฟส่วนกลาง, ค่าซ่อมบำรุง, เงินเดือน ฯลฯ)
+/// ຄ່າໃຊ້ຈ່າຍປະຕິບັດການຜຶ່ງ (ໃບບິນຄ່ານໍ້າ-ແສງກາງ, ຄ່າໃຊ້ຈ່າຍໃນການບໍາລຸງຮັກສາ, ເງິນເດືອນ ແລະ ອື່ນໆ)
 /// </summary>
 /// <remarks>
-/// เป็นบันทึกฝั่งรายจ่ายของหอพัก แยกจาก Invoice/Payment ที่เป็นฝั่งรายรับจากผู้เช่าโดยสิ้นเชิง
-/// ไม่มีสถานะหรือ Workflow อนุมัติ เพราะเป็นเพียงสมุดบันทึกรายจ่าย ไม่ใช่รายรับที่ต้องกระทบยอดใบแจ้งหนี้ใด
+/// ມັນເປັນການບັນທຶກຄ່າໃຊ້ຈ່າຍຂອງຫໍພັກ, ແຍກອອກຈາກ Invoice/Payment ເຊິ່ງທັງໝົດແມ່ນຢູ່ໃນດ້ານລາຍຮັບຈາກຜູ້ເຊົ່າ
+/// ບໍ່ມີສະຖານະບໍ? Workflow ອະນຸມັດເນື່ອງຈາກວ່າມັນເປັນພຽງແຕ່ປື້ມບັນທຶກຄ່າໃຊ້ຈ່າຍ. ມັນບໍ່ແມ່ນລາຍຮັບທີ່ຕ້ອງໄດ້ຮັບການຄືນດີກັບໃບເກັບເງິນໃດໆ
 /// </remarks>
 public class Expense : TenantEntity
 {
-    /// <summary>หมวดหมู่ของค่าใช้จ่าย</summary>
+    /// <summary>ປະເພດຂອງຄ່າໃຊ້ຈ່າຍ</summary>
     public ExpenseCategory Category { get; set; }
 
-    /// <summary>จำนวนเงิน</summary>
+    /// <summary>ຈໍານວນເງິນ</summary>
     public decimal Amount { get; set; }
 
-    /// <summary>วันที่จ่ายค่าใช้จ่าย</summary>
+    /// <summary>ວັນທີຈ່າຍຄ່າໃຊ້ຈ່າຍ</summary>
     public DateOnly ExpenseDate { get; set; }
 
-    /// <summary>คำอธิบายรายการ</summary>
+    /// <summary>ລາຍລະອຽດລາຍການ</summary>
     public required string Description { get; set; }
 
-    /// <summary>ผู้รับเงิน/ร้านค้า/ผู้ให้บริการ</summary>
+    /// <summary>ຜູ້ຮັບເງິນ/ຮ້ານ/ຜູ້ໃຫ້ບໍລິການ</summary>
     public string? PaidTo { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

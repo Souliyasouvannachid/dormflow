@@ -3,26 +3,26 @@ using DormFlow.Contracts.Settings;
 
 namespace DormFlow.Application.Features.Settings;
 
-/// <summary>Use Case ทั้งหมดของโมดูลค่าตั้ง</summary>
+/// <summary>Use Case ການຕັ້ງຄ່າໂມດູນທັງຝົດ</summary>
 public interface ISettingService
 {
-    /// <summary>ดึงรายการค่าตั้งแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງການຕັ້ງຄ່າ</summary>
     Task<PagedResult<SettingResponse>> GetPagedAsync(
         SettingListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านค่าตั้งจากคีย์</summary>
+    /// <summary>ອ່ານການຕັ້ງຄ່າຈາກຄີ</summary>
     Task<SettingResponse> GetByKeyAsync(
         string key,
         Guid? organizationId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างหรือแก้ไขค่าตั้งตามคีย์ที่ระบุ</summary>
+    /// <summary>ສ້າງ ຫຼືແກ້ໄຂການຕັ້ງຄ່າໂດຍອີງໃສ່ລະຫັດທີ່ລະບຸ</summary>
     Task<SettingResponse> UpsertAsync(
         string key,
         UpsertSettingRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ลบค่าตั้งตามคีย์ที่ระบุ</summary>
+    /// <summary>ລຶບການຕັ້ງຄ່າໂດຍອີງໃສ່ລະຫັດທີ່ລະບຸ</summary>
     Task DeleteAsync(string key, Guid? organizationId, CancellationToken cancellationToken = default);
 }

@@ -3,43 +3,43 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Buildings;
 
-/// <summary>ตรวจสอบคำขอสร้างอาคารใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍສໍາລັບອາຄານໃຝ່</summary>
 public sealed class CreateBuildingRequestValidator : AbstractValidator<CreateBuildingRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateBuildingRequestValidator()
     {
         RuleFor(request => request.DormitoryId)
-            .NotEmpty().WithMessage("กรุณาระบุหอพักที่อาคารนี้สังกัด");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫໍພັກທີ່ອາຄານນີ້ສັງກັດ");
 
         RuleFor(request => request.Code)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสอาคาร")
-            .MaximumLength(50).WithMessage("รหัสอาคารต้องยาวไม่เกิน 50 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດອາຄານ")
+            .MaximumLength(50).WithMessage("ລະຫັດອາຄານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่ออาคาร")
-            .MaximumLength(200).WithMessage("ชื่ออาคารต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ອາຄານ")
+            .MaximumLength(200).WithMessage("ຊື່ອາຄານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.TotalFloors)
-            .GreaterThan(0).WithMessage("จำนวนชั้นต้องมากกว่า 0");
+            .GreaterThan(0).WithMessage("ຈຳນວນຊັ້ນຕ້ອງຫຼາຍກວ່າ 0");
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลอาคาร</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍການແກ້ໄຂຂໍ້ມູນອາຄານ</summary>
 public sealed class UpdateBuildingRequestValidator : AbstractValidator<UpdateBuildingRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpdateBuildingRequestValidator()
     {
         RuleFor(request => request.Code)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสอาคาร")
-            .MaximumLength(50).WithMessage("รหัสอาคารต้องยาวไม่เกิน 50 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດອາຄານ")
+            .MaximumLength(50).WithMessage("ລະຫັດອາຄານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่ออาคาร")
-            .MaximumLength(200).WithMessage("ชื่ออาคารต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ອາຄານ")
+            .MaximumLength(200).WithMessage("ຊື່ອາຄານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.TotalFloors)
-            .GreaterThan(0).WithMessage("จำนวนชั้นต้องมากกว่า 0");
+            .GreaterThan(0).WithMessage("ຈຳນວນຊັ້ນຕ້ອງຫຼາຍກວ່າ 0");
     }
 }

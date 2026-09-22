@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลประกาศบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນປະກາດຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class AnnouncementRepository(DormFlowDbContext dbContext) : IAnnouncementRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

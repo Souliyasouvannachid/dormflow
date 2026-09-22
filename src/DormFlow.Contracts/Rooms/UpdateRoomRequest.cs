@@ -1,27 +1,39 @@
 namespace DormFlow.Contracts.Rooms;
 
-/// <summary>คำขอแก้ไขข้อมูลห้องพัก</summary>
-/// <remarks>ไม่มีฟิลด์ BuildingId เพราะการย้ายห้องข้ามอาคารไม่ใช่การแก้ไขข้อมูลปกติ</remarks>
+/// <summary>ຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນຫ້ອງ</summary>
+/// <remarks>ບໍ່ມີພາກສະຜາມ BuildingId ເນື່ອງຈາກວ່າການຍ້າຍຫ້ອງໃນທົ່ວອາຄານບໍ່ແມ່ນການແກ້ໄຂຂໍ້ມູນປົກກະຕິ</remarks>
 public class UpdateRoomRequest
 {
-    /// <summary>ชั้นที่ห้องนี้จะสังกัด ต้องอยู่ในอาคารเดียวกับห้องนี้</summary>
+    /// <summary>ຊັ້ນທີ່ຫ້ອງນີ້ຈະເປັນຂອງຈະຕ້ອງຢູ່ໃນອາຄານດຽວກັນກັບຫ້ອງນີ້</summary>
     public Guid FloorId { get; set; }
 
-    /// <summary>ประเภทของห้อง ต้องอยู่ในหอพักเดียวกับห้องนี้</summary>
+    /// <summary>ປະເພດຫ້ອງຕ້ອງຢູ່ໃນຫໍພັກດຽວກັນກັບຫ້ອງນີ້</summary>
     public Guid RoomTypeId { get; set; }
 
-    /// <summary>เลขห้อง ไม่ซ้ำกันภายในอาคารเดียวกัน</summary>
+    /// <summary>ຕົວເລກຫ້ອງແມ່ນເປັນເອກະລັກພາຍໃນອາຄານດຽວກັນ</summary>
     public string RoomNumber { get; set; } = string.Empty;
 
-    /// <summary>ค่าเช่ารายเดือนของห้องนี้</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນຂອງຫ້ອງນີ້</summary>
     public decimal MonthlyRent { get; set; }
 
-    /// <summary>ค่ามัดจำของห้องนี้</summary>
+    /// <summary>ຝາກຫ້ອງນີ້</summary>
     public decimal DepositAmount { get; set; }
 
-    /// <summary>จำนวนผู้เข้าพักสูงสุดของห้องนี้</summary>
+    /// <summary>ຈໍານວນຄົນສູງສຸດຂອງຫ້ອງນີ້</summary>
     public int MaximumOccupants { get; set; } = 1;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
+
+    /// <summary>ຕໍາແໜ່ງ X ຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຂອງຄວາມກວ້າງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanX { get; set; }
+
+    /// <summary>ຕໍາແໜ່ງ Y ຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຄວາມສູງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanY { get; set; }
+
+    /// <summary>ຄວາມກວ້າງຂອງຈຸດຄລິກໃນແຜນການກໍ່ສ້າງ (% ຂອງຄວາມກວ້າງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanWidth { get; set; }
+
+    /// <summary>ຄວາມສູງຂອງຈຸດຄລິກກ່ຽວກັບແຜນການກໍ່ສ້າງ (% ຄວາມສູງຂອງແຜນວາດ)</summary>
+    public decimal? FloorPlanHeight { get; set; }
 }

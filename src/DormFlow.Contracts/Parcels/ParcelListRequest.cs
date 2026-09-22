@@ -2,15 +2,15 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Parcels;
 
-/// <summary>พารามิเตอร์การค้นหารายการพัสดุ</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການ parcel</summary>
 public class ParcelListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการของห้องที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫ້ອງທີ່ລະບຸໄວ້</summary>
     public Guid? RoomId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການທີ່ມີສະຖານະກົງກັບອັນທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

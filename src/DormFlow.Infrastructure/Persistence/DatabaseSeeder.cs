@@ -12,12 +12,12 @@ using Microsoft.Extensions.Options;
 namespace DormFlow.Infrastructure.Persistence;
 
 /// <summary>
-/// สร้างข้อมูลตั้งต้นที่ระบบต้องมีจึงจะทำงานได้ ได้แก่ สิทธิ์ บทบาท และบัญชีผู้ดูแลระบบ
+/// ສ້າງຂໍ້ມູນເລີ່ມຕົ້ນທີ່ລະບົບຈະຕ້ອງເຮັດວຽກ, ລວມທັງການອະນຸຍາດ, ບົດບາດ, ແລະບັນຊີຜູ້ເບິ່ງແຍງລະບົບ
 /// </summary>
 /// <remarks>
-/// ทำงานได้หลายรอบโดยไม่สร้างข้อมูลซ้ำ จึงเรียกทุกครั้งที่แอปพลิเคชันเริ่มทำงานได้อย่างปลอดภัย
-/// สิทธิ์ที่ถูกถอนออกจากบทบาทโดยผู้ดูแลจะไม่ถูกเพิ่มกลับ เพราะระบบเพิ่มสิทธิ์เริ่มต้น
-/// เฉพาะตอนที่บทบาทนั้นเพิ่งถูกสร้างขึ้นใหม่เท่านั้น
+/// ສາມາດເຮັດວຽກໄດ້ຫຼາຍຄັ້ງໂດຍບໍ່ຕ້ອງຊໍ້າກັນຂໍ້ມູນ. ມັນຖືກເອີ້ນວ່າດັ່ງນັ້ນທຸກຄັ້ງທີ່ຄໍາຮ້ອງສະຝັກໄດ້ຖືກເລີ່ມຕົ້ນຢ່າງປອດໄພ
+/// ການອະນຸຍາດທີ່ຖືກເອົາອອກຈາກບົດບາດໂດຍຜູ້ເບິ່ງແຍງລະບົບຈະບໍ່ຖືກເພີ່ມຄືນ. ເນື່ອງຈາກວ່າລະບົບເພີ່ມການອະນຸຍາດເລີ່ມຕົ້ນ
+/// ພຽງແຕ່ໃນເວລາທີ່ບົດບາດໄດ້ຖືກສ້າງຕັ້ງຂື້ນໃຝ່
 /// </remarks>
 public sealed class DatabaseSeeder(
     DormFlowDbContext dbContext,
@@ -27,36 +27,38 @@ public sealed class DatabaseSeeder(
     IOptions<SeedOptions> seedOptions,
     ILogger<DatabaseSeeder> logger)
 {
+    private const string SeedAdvisoryLockName = "dormflow:database-seeder";
+
     private static readonly Action<ILogger, int, Exception?> PermissionsSeededCallback =
         LoggerMessage.Define<int>(
             LogLevel.Information,
             new EventId(4000, "PermissionsSeeded"),
-            "เพิ่มสิทธิ์ใหม่ {Count} รายการลงฐานข้อมูล");
+            "ເພີ່ມສິດໃໝ່ {Count} ລາຍການລົງຖານຂໍ້ມູນ");
 
     private static readonly Action<ILogger, string, Exception?> RoleCreatedCallback =
         LoggerMessage.Define<string>(
             LogLevel.Information,
             new EventId(4001, "RoleCreated"),
-            "สร้างบทบาท {RoleName} พร้อมสิทธิ์เริ่มต้นแล้ว");
+            "ສ້າງບົດບາດ {RoleName} ພ້ອມສິດເລີ່ມຕົ້ນແລ້ວ");
 
     private static readonly Action<ILogger, Exception?> AdminSkippedCallback =
         LoggerMessage.Define(
             LogLevel.Warning,
             new EventId(4002, "AdminSeedSkipped"),
-            $"ข้ามการสร้างบัญชีผู้ดูแลระบบเพราะยังไม่ได้กำหนด {SeedOptions.AdminEmailVariable} " +
-            $"และ {SeedOptions.AdminPasswordVariable}");
+            $"ຂ້າມການສ້າງບັນຊີຜູ້ດູແລລະບົບ ເນື່ອງຈາກຍັງບໍ່ໄດ້ກຳນົດ {SeedOptions.AdminEmailVariable} " +
+            $"ແລະ {SeedOptions.AdminPasswordVariable}");
 
     private static readonly Action<ILogger, Exception?> AdminCreatedCallback =
         LoggerMessage.Define(
             LogLevel.Information,
             new EventId(4003, "AdminCreated"),
-            "สร้างบัญชีผู้ดูแลระบบเริ่มต้นเรียบร้อยแล้ว");
+            "ສ້າງບັນຊີຜູ້ດູແລລະບົບເລີ່ມຕົ້ນຮຽບຮ້ອຍແລ້ວ");
 
     private static readonly Action<ILogger, string, Exception?> AdminCreationFailedCallback =
         LoggerMessage.Define<string>(
             LogLevel.Error,
             new EventId(4004, "AdminCreationFailed"),
-            "สร้างบัญชีผู้ดูแลระบบไม่สำเร็จ {Errors}");
+            "ສ້າງບັນຊີຜູ້ດູແລລະບົບບໍ່ສຳເລັດ {Errors}");
 
     private readonly DormFlowDbContext _dbContext = dbContext;
     private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
@@ -65,21 +67,52 @@ public sealed class DatabaseSeeder(
     private readonly SeedOptions _seedOptions = seedOptions.Value;
     private readonly ILogger<DatabaseSeeder> _logger = logger;
 
-    /// <summary>สร้างข้อมูลตั้งต้นทั้งหมด</summary>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ສ້າງຂໍ້ມູນເບື້ອງຕົ້ນທັງໝົດ</summary>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        await SeedPermissionsAsync(cancellationToken);
-        await SeedRolesAsync(cancellationToken);
-        await SeedSuperAdminAsync(cancellationToken);
+        await _dbContext.Database.OpenConnectionAsync(cancellationToken);
+
+        try
+        {
+            await _dbContext.Database.ExecuteSqlRawAsync(
+                "SELECT pg_advisory_lock(hashtext({0}))",
+                new object[] { SeedAdvisoryLockName },
+                cancellationToken);
+
+            await SeedPermissionsAsync(cancellationToken);
+            await SeedRolesAsync(cancellationToken);
+            await SeedSuperAdminAsync(cancellationToken);
+        }
+        finally
+        {
+            try
+            {
+                await _dbContext.Database.ExecuteSqlRawAsync(
+                    "SELECT pg_advisory_unlock(hashtext({0}))",
+                    new object[] { SeedAdvisoryLockName },
+                    CancellationToken.None);
+            }
+            finally
+            {
+                await _dbContext.Database.CloseConnectionAsync();
+            }
+        }
     }
 
-    /// <summary>เพิ่มสิทธิ์ที่ยังไม่มีในฐานข้อมูล</summary>
+    /// <summary>ເພີ່ມການອະນຸຍາດທີ່ບໍ່ມີຢູ່ໃນຖານຂໍ້ມູນ</summary>
     private async Task SeedPermissionsAsync(CancellationToken cancellationToken)
     {
-        HashSet<string> existingCodes = await _dbContext.Permissions
+        Dictionary<string, PermissionDefinition> definitionsByCode = PermissionCodes.All
+            .ToDictionary(definition => definition.Code, StringComparer.Ordinal);
+
+        List<Permission> existingPermissions = await _dbContext.Permissions
+            .Where(permission => definitionsByCode.Keys.Contains(permission.Code))
+            .ToListAsync(cancellationToken);
+
+        HashSet<string> existingCodes = existingPermissions
             .Select(permission => permission.Code)
-            .ToHashSetAsync(StringComparer.Ordinal, cancellationToken);
+            .ToHashSet(StringComparer.Ordinal);
 
         List<Permission> newPermissions =
         [
@@ -94,18 +127,42 @@ public sealed class DatabaseSeeder(
                 }),
         ];
 
-        if (newPermissions.Count == 0)
+        bool existingPermissionsChanged = false;
+        foreach (Permission permission in existingPermissions)
+        {
+            PermissionDefinition definition = definitionsByCode[permission.Code];
+            if (permission.Name == definition.Name
+                && permission.Description == definition.Description
+                && permission.Module == definition.Module)
+            {
+                continue;
+            }
+
+            permission.Name = definition.Name;
+            permission.Description = definition.Description;
+            permission.Module = definition.Module;
+            existingPermissionsChanged = true;
+        }
+
+        if (newPermissions.Count > 0)
+        {
+            _dbContext.Permissions.AddRange(newPermissions);
+        }
+
+        if (newPermissions.Count == 0 && !existingPermissionsChanged)
         {
             return;
         }
 
-        _dbContext.Permissions.AddRange(newPermissions);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        PermissionsSeededCallback(_logger, newPermissions.Count, null);
+        if (newPermissions.Count > 0)
+        {
+            PermissionsSeededCallback(_logger, newPermissions.Count, null);
+        }
     }
 
-    /// <summary>สร้างบทบาทมาตรฐานพร้อมสิทธิ์เริ่มต้น</summary>
+    /// <summary>ສ້າງບົດບາດມາດຕະຖານດ້ວຍການອະນຸຍາດເລີ່ມຕົ້ນ</summary>
     private async Task SeedRolesAsync(CancellationToken cancellationToken)
     {
         Dictionary<string, Guid> permissionIdsByCode = await _dbContext.Permissions
@@ -117,14 +174,27 @@ public sealed class DatabaseSeeder(
 
         foreach (string roleName in DormFlowRoles.All)
         {
-            if (await _roleManager.RoleExistsAsync(roleName))
+            string roleDescription = GetRoleDescription(roleName);
+            ApplicationRole? existingRole = await _roleManager.FindByNameAsync(roleName);
+            if (existingRole is not null)
             {
+                if (existingRole.Description != roleDescription)
+                {
+                    existingRole.Description = roleDescription;
+                    IdentityResult updateResult = await _roleManager.UpdateAsync(existingRole);
+                    if (!updateResult.Succeeded)
+                    {
+                        throw new InvalidOperationException(
+                            $"ອັບເດດຄຳອະທິບາຍບົດບາດ {roleName} ບໍ່ສຳເລັດ: {string.Join(", ", updateResult.Errors.Select(IdentityErrorTranslator.Translate))}");
+                    }
+                }
+
                 continue;
             }
 
             ApplicationRole role = new(roleName)
             {
-                Description = $"บทบาทมาตรฐานของระบบ: {roleName}",
+                Description = roleDescription,
                 IsSystemRole = true,
             };
 
@@ -132,7 +202,7 @@ public sealed class DatabaseSeeder(
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException(
-                    $"สร้างบทบาท {roleName} ไม่สำเร็จ: {string.Join(", ", result.Errors.Select(error => error.Description))}");
+                    $"ສ້າງບົດບາດ {roleName} ບໍ່ສຳເລັດ: {string.Join(", ", result.Errors.Select(IdentityErrorTranslator.Translate))}");
             }
 
             await GrantDefaultPermissionsAsync(role, permissionIdsByCode, cancellationToken);
@@ -140,6 +210,18 @@ public sealed class DatabaseSeeder(
             RoleCreatedCallback(_logger, roleName, null);
         }
     }
+
+    private static string GetRoleDescription(string roleName) => roleName switch
+    {
+        DormFlowRoles.SuperAdmin => "ຜູ້ດູແລລະບົບຂັ້ນສູງ",
+        DormFlowRoles.Owner => "ເຈົ້າຂອງອົງກອນ",
+        DormFlowRoles.DormManager => "ຜູ້ຈັດການຫໍພັກ",
+        DormFlowRoles.Accountant => "ພະນັກງານບັນຊີ",
+        DormFlowRoles.Staff => "ພະນັກງານ",
+        DormFlowRoles.Technician => "ຊ່າງເຕັກນິກ",
+        DormFlowRoles.Tenant => "ຜູ້ເຊົ່າ",
+        _ => "ບົດບາດມາດຕະຖານຂອງລະບົບ",
+    };
 
     private async Task GrantDefaultPermissionsAsync(
         ApplicationRole role,
@@ -170,11 +252,11 @@ public sealed class DatabaseSeeder(
     }
 
     /// <summary>
-    /// สร้างบัญชีผู้ดูแลระบบเริ่มต้นจากค่าใน environment variable
+    /// ສ້າງບັນຊີຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນຈາກຄ່າໃນ environment variable
     /// </summary>
     /// <remarks>
-    /// ถ้าไม่ได้กำหนดค่าไว้ ระบบจะข้ามขั้นตอนนี้และบันทึกคำเตือน
-    /// จะไม่มีการสร้างบัญชีที่ฝังรหัสผ่านไว้ในโค้ดเด็ดขาด
+    /// ຖ້າບໍ່ໄດ້ຕັ້ງຄ່າ ລະບົບຈະຂ້າມຂັ້ນຕອນນີ້ ແລະບັນທຶກການເຕືອນ
+    /// ຢ່າສ້າງບັນຊີດ້ວຍລະຫັດຜ່ານທີ່ຝັງຢູ່ໃນລະຫັດ
     /// </remarks>
     private async Task SeedSuperAdminAsync(CancellationToken cancellationToken)
     {
@@ -196,11 +278,11 @@ public sealed class DatabaseSeeder(
             UserName = email,
             Email = email,
             EmailConfirmed = true,
-            FirstName = string.IsNullOrWhiteSpace(_seedOptions.AdminFirstName) ? "System" : _seedOptions.AdminFirstName.Trim(),
-            LastName = string.IsNullOrWhiteSpace(_seedOptions.AdminLastName) ? "Administrator" : _seedOptions.AdminLastName.Trim(),
+            FirstName = string.IsNullOrWhiteSpace(_seedOptions.AdminFirstName) ? "ລະບົບ" : _seedOptions.AdminFirstName.Trim(),
+            LastName = string.IsNullOrWhiteSpace(_seedOptions.AdminLastName) ? "ຜູ້ດູແລ" : _seedOptions.AdminLastName.Trim(),
             Status = UserStatus.Active,
 
-            // ผู้ดูแลระบบสูงสุดไม่ผูกกับองค์กรใด จึงเข้าถึงข้อมูลข้ามองค์กรได้
+            // ຜູ້ບໍລິຫານສູງສຸດບໍ່ໄດ້ຕິດພັນກັບອົງກອນໃດໆ. ດັ່ງນັ້ນ, ຂໍ້ມູນສາມາດເຂົ້າເຖິງທົ່ວອົງກອນ
             OrganizationId = null,
         };
 
@@ -210,7 +292,7 @@ public sealed class DatabaseSeeder(
         {
             AdminCreationFailedCallback(
                 _logger,
-                string.Join(", ", createResult.Errors.Select(error => error.Description)),
+                string.Join(", ", createResult.Errors.Select(IdentityErrorTranslator.Translate)),
                 null);
 
             return;
@@ -221,7 +303,7 @@ public sealed class DatabaseSeeder(
         if (!roleResult.Succeeded)
         {
             throw new InvalidOperationException(
-                $"เพิ่มบทบาท SuperAdmin ให้บัญชีผู้ดูแลไม่สำเร็จ: {string.Join(", ", roleResult.Errors.Select(error => error.Description))}");
+                $"ເພີ່ມບົດບາດ SuperAdmin ໃຫ້ບັນຊີຜູ້ດູແລບໍ່ສຳເລັດ: {string.Join(", ", roleResult.Errors.Select(IdentityErrorTranslator.Translate))}");
         }
 
         AdminCreatedCallback(_logger, null);

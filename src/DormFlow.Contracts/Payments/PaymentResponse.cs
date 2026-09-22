@@ -1,47 +1,47 @@
 namespace DormFlow.Contracts.Payments;
 
-/// <summary>ข้อมูลรายการชำระเงินหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນຜຶ່ງລາຍການການຈ່າຍເງິນ</summary>
 public class PaymentResponse
 {
-    /// <summary>รหัสอ้างอิงของรายการชำระเงิน</summary>
+    /// <summary>ລະຫັດອ້າງອີງການເຮັດທຸລະກໍາການຈ່າຍເງິນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ใบแจ้งหนี้ที่ชำระ</summary>
+    /// <summary>ໃບແຈ້ງໜີ້ຖືກຈ່າຍ</summary>
     public Guid InvoiceId { get; init; }
 
-    /// <summary>จำนวนเงินที่ชำระ</summary>
+    /// <summary>ຈໍານວນການຈ່າຍເງິນ</summary>
     public decimal Amount { get; init; }
 
-    /// <summary>วันเวลาที่ชำระเงิน</summary>
+    /// <summary>ວັນທີແລະເວລາຂອງການຈ່າຍເງິນ</summary>
     public DateTimeOffset PaymentDate { get; init; }
 
-    /// <summary>ช่องทางการชำระเงิน</summary>
+    /// <summary>ຊ່ອງທາງການຈ່າຍເງິນ</summary>
     public string Method { get; init; } = string.Empty;
 
-    /// <summary>เลขอ้างอิงการโอน/สลิป</summary>
+    /// <summary>ໝາຍເລກອ້າງອີງການໂອນ/ເລື່ອນ</summary>
     public string? ReferenceNumber { get; init; }
 
-    /// <summary>สถานะของรายการชำระเงิน</summary>
+    /// <summary>ສະຖານະຂອງລາຍການການຈ່າຍເງິນ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่ยืนยันรายการนี้</summary>
+    /// <summary>ເວລາທີ່ຈະຢືນຢັນລາຍການນີ້</summary>
     public DateTimeOffset? ConfirmedAt { get; init; }
 
-    /// <summary>เวลาที่คืนเงิน</summary>
+    /// <summary>ເວລາຄືນເງິນ</summary>
     public DateTimeOffset? RefundedAt { get; init; }
 
-    /// <summary>สาเหตุการคืนเงิน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບການຄືນເງິນ</summary>
     public string? RefundReason { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

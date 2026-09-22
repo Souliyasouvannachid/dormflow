@@ -1,27 +1,32 @@
 using DormFlow.Contracts.Common;
 using DormFlow.Contracts.Maintenance;
+using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Maintenance;
 
-/// <summary>Use Case ทั้งหมดของโมดูลงานแจ้งซ่อมบำรุง</summary>
+/// <summary>Use Case ໂມດູນການແຈ້ງເຕືອນການບຳລຸງຮັກສາທັງໝົດ</summary>
 public interface IMaintenanceRequestService
 {
-    /// <summary>ดึงรายการงานแจ้งซ่อมบำรุงแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງການແຈ້ງເຕືອນວຽກງານບໍາລຸງຮັກສາ</summary>
     Task<PagedResult<MaintenanceRequestResponse>> GetPagedAsync(
         MaintenanceRequestListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลงานแจ้งซ่อมบำรุงจากรหัสอ้างอิง</summary>
+    /// <summary>ນັບວຽກບຳລຸງຮັກສາຕາມສະຖານະສຳລັບ Dashboard</summary>
+    Task<IReadOnlyDictionary<MaintenanceStatus, int>> GetStatusCountsAsync(
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ອ່ານຂໍ້ມູນການແຈ້ງເຕືອນການບຳລຸງຮັກສາຈາກລະຫັດອ້າງອີງ</summary>
     Task<MaintenanceRequestResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>แจ้งซ่อมบำรุงใหม่</summary>
+    /// <summary>ແຈ້ງການບໍາລຸງຮັກສາໃຝ່</summary>
     Task<MaintenanceRequestResponse> CreateAsync(
         CreateMaintenanceRequestRequest request,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// มอบหมาย (หรือมอบหมายซ้ำ) ช่างซ่อมบำรุงให้กับงานนี้
-    /// ห้องจะเปลี่ยนเป็นสถานะซ่อมบำรุงถ้ายังว่างอยู่
+    /// ມອບໝາຍ (ຫຼືມອບໝາຍຄືນໃໝ່) ຊ່າງສ້ອມແປງສຳລັບວຽກນີ້
+    /// ຫ້ອງຈະຖືກປ່ຽນເປັນສະຖານະບໍາລຸງຮັກສາຖ້າມັນຍັງຫວ່າງຢູ່
     /// </summary>
     Task<MaintenanceRequestResponse> AssignAsync(
         Guid id,
@@ -29,7 +34,7 @@ public interface IMaintenanceRequestService
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// เปลี่ยนสถานะงานซ่อมบำรุงตามลำดับที่กำหนด (ไม่รวมการมอบหมายช่าง ต้องใช้ <see cref="AssignAsync"/> แทน)
+    /// ປ່ຽນສະຖານະວຽກບຳລຸງຮັກສາຕາມລຳດັບທີ່ກຳນົດໄວ້ (ບໍ່ລວມເອົາການມອບໝາຍນັກວິຊາການ. ຕ້ອງການ <see cref="AssignAsync"/> ແທນ)
     /// </summary>
     Task<MaintenanceRequestResponse> ChangeStatusAsync(
         Guid id,

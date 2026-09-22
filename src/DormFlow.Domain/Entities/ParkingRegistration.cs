@@ -4,46 +4,46 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// การจดทะเบียนที่จอดรถของผู้เช่าหนึ่งคันหนึ่งครั้ง
+/// ການລົງທະບຽນບ່ອນຈອດລົດຂອງຜູ້ເຊົ່າຄັ້ງດຽວ
 /// </summary>
 /// <remarks>
-/// ต่างจาก <see cref="Parcel"/>/<see cref="Visitor"/> ที่ผู้เช่าเป็นทางเลือก — ที่นี่ผู้เช่าเป็นข้อมูลบังคับ
-/// เพราะรถหนึ่งคันต้องมีเจ้าของที่ระบุตัวตนได้เสมอ ส่วนห้องยังคงเก็บไว้เพื่อขอบเขตองค์กร/หอพักเช่นเดิม
-/// ไม่มี Entity แม่ของ "ช่องจอดรถ" แยกต่างหาก (<see cref="ParkingSpotLabel"/> เป็นข้อความอิสระ) เพราะไม่มี
-/// ข้อกำหนดเรื่องการจัดการช่องจอดเป็นระบบจากเอกสารต้นฉบับ
+/// ແຕກຕ່າງຈາກ <see cref="Parcel"/>/<see cref="Visitor"/> ວ່າຜູ້ເຊົ່າມີທາງເລືອກ — ທີ່ນີ້ຜູ້ເຊົ່າແມ່ນຂໍ້ມູນບັງຄັບ
+/// ເພາະລົດຕ້ອງມີເຈົ້າຂອງທີ່ສາມາດລະບຸຕົວຕົນໄດ້ສະເໝີ. ສ່ວນຫ້ອງແມ່ນຍັງເກັບຮັກສາໄວ້ສໍາລັບຂອບເຂດຂອງອົງກອນ/ຫໍພັກຕາມປົກກະຕິ
+/// ບໍ່ມີ Entity ແມ່ຂອງ "ບ່ອນຈອດລົດ" ແຍກ (<see cref="ParkingSpotLabel"/> ເປັນຂໍ້ຄວາມຟຣີ) ເນື່ອງຈາກວ່າບໍ່ມີ
+/// ຄວາມຕ້ອງການການຄຸ້ມຄອງບ່ອນຈອດລົດທີ່ເປັນລະບົບຈາກເອກະສານຕົ້ນສະບັບ
 /// </remarks>
 public class ParkingRegistration : TenantEntity
 {
-    /// <summary>ห้องของผู้เช่าเจ้าของรถ</summary>
+    /// <summary>ຫ້ອງເຈົ້າຂອງລົດ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าเจ้าของรถ</summary>
+    /// <summary>ເຈົ້າຂອງລົດເຊົ່າ</summary>
     public Guid TenantId { get; set; }
 
-    /// <summary>ทะเบียนรถ</summary>
+    /// <summary>ທະບຽນລົດ</summary>
     public required string LicensePlate { get; set; }
 
-    /// <summary>ประเภทของยานพาหนะ</summary>
+    /// <summary>ປະເພດຍານພາຫະນະ</summary>
     public VehicleType VehicleType { get; set; }
 
-    /// <summary>ยี่ห้อ/รุ่นรถ</summary>
+    /// <summary>ຍີ່ຫໍ້/ຕົວແບບລົດ</summary>
     public string? Brand { get; set; }
 
-    /// <summary>สีรถ</summary>
+    /// <summary>ສີລົດ</summary>
     public string? Color { get; set; }
 
-    /// <summary>ป้ายช่องจอดรถ (ถ้ามีการกำหนด) เก็บเป็นข้อความอิสระ</summary>
+    /// <summary>ປ້າຍບ່ອນຈອດລົດ (ຖ້າມັນຖືກລະບຸ) ເກັບຮັກສາເປັນຂໍ້ຄວາມຟຣີ</summary>
     public string? ParkingSpotLabel { get; set; }
 
-    /// <summary>สถานะของการจดทะเบียน</summary>
+    /// <summary>ສະຖານະການລົງທະບຽນ</summary>
     public ParkingRegistrationStatus Status { get; set; } = ParkingRegistrationStatus.Active;
 
-    /// <summary>เวลาที่จดทะเบียน</summary>
+    /// <summary>ເວລາລົງທະບຽນ</summary>
     public DateTimeOffset RegisteredAt { get; set; }
 
-    /// <summary>เวลาที่สิ้นสุดการจดทะเบียน เป็น null เมื่อยังจดทะเบียนอยู่</summary>
+    /// <summary>ເວລາການລົງທະບຽນສິ້ນສຸດລົງ null ໃນເວລາທີ່ມັນຍັງລົງທະບຽນ</summary>
     public DateTimeOffset? EndedAt { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

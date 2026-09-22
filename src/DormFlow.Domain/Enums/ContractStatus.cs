@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของสัญญาเช่า</summary>
+/// <summary>ສະຖານະຂອງສັນຍາເຊົ່າ</summary>
 public enum ContractStatus
 {
-    /// <summary>ร่างสัญญา ยังไม่ได้เปิดใช้งาน ห้องถูกกันไว้รอการเข้าพัก</summary>
+    /// <summary>ຮ່າງສັນຍາດັ່ງກ່າວຍັງບໍ່ທັນໄດ້ຮັບການເປີດໃຊ້ເທື່ອ. ຫ້ອງໄດ້ຖືກສະຫງວນໄວ້ສໍາລັບການຢູ່</summary>
     Draft = 1,
 
-    /// <summary>เปิดใช้งานแล้ว ผู้เช่าเข้าพักอยู่</summary>
+    /// <summary>ເປີດໃຊ້ແລ້ວ ຜູ້ເຊົ່າກຳລັງພັກຢູ່</summary>
     Active = 2,
 
-    /// <summary>สิ้นสุดสัญญาแล้ว ผู้เช่าย้ายออกแล้ว</summary>
+    /// <summary>ສັນຍາໄດ້ສິ້ນສຸດລົງ. ຜູ້ເຊົ່າໄດ້ຍ້າຍອອກ</summary>
     Terminated = 3,
 
-    /// <summary>หมดอายุตามกำหนดในสัญญาโดยไม่มีการต่ออายุ</summary>
+    /// <summary>ໝົດອາຍຸຕາມທີ່ລະບຸໄວ້ໃນສັນຍາໂດຍບໍ່ມີການຕໍ່ອາຍຸ</summary>
     Expired = 4,
 }

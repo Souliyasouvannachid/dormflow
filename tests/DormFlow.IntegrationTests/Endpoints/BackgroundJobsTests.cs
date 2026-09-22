@@ -25,9 +25,9 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบตรรกะของ Background Job (หมดอายุการจอง, ทำเครื่องหมายใบแจ้งหนี้เกินกำหนดชำระ+คำนวณค่าปรับ)
-/// โดยตรงผ่าน Application Service ที่ Hangfire เรียกใช้จริง เพราะไม่มี HTTP Endpoint สำหรับสั่งงานนี้
-/// (เป็นการทำงานของระบบเอง ไม่ใช่คำสั่งที่ผู้ใช้เรียกได้) Hangfire Server เองถูกปิดไว้ในสภาพแวดล้อม Testing
+/// ທົດສອບເຫດຜົນຂອງທ່ານ Background Job (ການຈອງໝົດອາຍຸແລ້ວ, ໝາຍໃບແຈ້ງໜີ້ວ່າໝົດກຳນົດ+ຄິດໄລ່ຄ່າປັບໃໝ)
+/// ໂດຍກົງໂດຍຜ່ານການ Application Service ທີ່ Hangfire ຕົວຈິງແລ້ວໃຊ້ມັນເພາະວ່າບໍ່ມີ HTTP Endpoint ສໍາລັບການສັ່ງວຽກນີ້
+/// (ມັນເປັນການເຮັດວຽກຂອງລະບົບຕົວມັນເອງ. ມັນບໍ່ແມ່ນຄໍາສັ່ງທີ່ສາມາດເອີ້ນໄດ້ໂດຍຜູ້ໃຊ້) Hangfire Server ຕົວຂອງມັນເອງຖືກປິດໃນສະພາບແວດລ້ອມ Testing
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class BackgroundJobsTests(DormFlowApiFactory factory)
@@ -35,7 +35,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task การจองที่หมดอายุแล้ว_ต้องเปลี่ยนเป็น_Expired_และปล่อยห้องคืน()
+    public async Task ການຈອງໝົດອາຍຸ_ຕ້ອງປ່ຽນເປັນ_Expired_ແລະປ່ອຍຫ້ອງກັບຄືນໄປບ່ອນ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -55,7 +55,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task การจองที่ยังไม่หมดอายุ_ต้องไม่ถูกแตะต้อง()
+    public async Task ການຈອງທີ່ຍັງບໍ່ທັນໝົດອາຍຸ_ບໍ່ຕ້ອງແຕະຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -72,7 +72,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task การจองที่หมดอายุแต่ห้องถูกเปลี่ยนสถานะไปทางอื่นแล้ว_ต้องไม่แตะต้องห้อง()
+    public async Task ການຈອງໝົດອາຍຸແຕ່ຫ້ອງໄດ້ຖືກປ່ຽນເປັນສະຖານະອື່ນ_ບໍ່ຕ້ອງແຕະຫ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -97,7 +97,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ใบแจ้งหนี้ที่เลยกำหนดชำระ_แบบค่าปรับคงที่_ต้องเปลี่ยนเป็น_Overdue_พร้อมบวกค่าปรับ()
+    public async Task ໃບແຈ້ງໜີ້ທີ່ໝົດກຳນົດ_ການປັບຕົວຄົງທີ່_ຕ້ອງປ່ຽນເປັນ_Overdue_ພ້ອມທີ່ຈະເພີ່ມຄ່າປັບໃໝ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -118,7 +118,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ใบแจ้งหนี้ที่เลยกำหนดชำระ_แบบค่าปรับร้อยละ_ต้องคำนวณจากยอดคงเหลือ()
+    public async Task ໃບແຈ້ງໜີ້ທີ່ໝົດກຳນົດ_ຮູບແບບການລົງໂທດເປັນເປີເຊັນ_ຕ້ອງຄິດໄລ່ຈາກຍອດເງິນ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -139,7 +139,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ใบแจ้งหนี้ที่ยังไม่ถึงกำหนดชำระ_ต้องไม่ถูกแตะต้อง()
+    public async Task ໃບແຈ້ງໜີ້ທີ່ຍັງບໍ່ທັນຮອດກຳນົດສຳລັບການຈ່າຍເງິນ_ບໍ່ຕ້ອງແຕະຕ້ອງ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -168,7 +168,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task รัน_MarkOverdueInvoicesAsync_ซ้ำกับใบแจ้งหนี้ที่เกินกำหนดแล้ว_ต้องไม่บวกค่าปรับซ้ำ()
+    public async Task ແລ່ນ_MarkOverdueInvoicesAsync_ໃບເກັບເງິນຊ້ຳກັນທີ່ໝົດກຳນົດ_ບໍ່ຕ້ອງເພີ່ມຄ່າປັບໃໝເພີ່ມເຕີມ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -204,7 +204,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         return await invoiceService.MarkOverdueInvoicesAsync(TestContext.Current.CancellationToken);
     }
 
-    /// <summary>ตั้ง ExpiresAt ของการจองให้ผ่านไปแล้ว โดยเข้าถึง DbContext ตรง ๆ เพราะ API ไม่รองรับการระบุค่านี้เอง</summary>
+    /// <summary>ຕັ້ງ ExpiresAt ຂອງການຈອງໄດ້ຖືກເຮັດແລ້ວໂດຍການເຂົ້າເຖິງ DbContext ແທ້ເພາະວ່າ API ບໍ່ຮອງຮັບການລະບຸຄ່ານີ້ດ້ວຍຕົນເອງ</summary>
     private async Task BackdateReservationExpiryAsync(Guid reservationId, TimeSpan pastDue)
     {
         using IServiceScope scope = _factory.Services.CreateScope();
@@ -217,7 +217,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         await dbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
     }
 
-    /// <summary>สร้างและออกใบแจ้งหนี้ที่มีวันครบกำหนดชำระผ่านไปแล้ว ด้วยการระบุ IssueDate ย้อนหลังผ่าน API ปกติ</summary>
+    /// <summary>ສ້າງແລະອອກໃບເກັບເງິນທີ່ມີວັນກໍານົດທີ່ຜ່ານມາໂດຍການລະບຸ IssueDate ອະດີດທີ່ຜ່ານມາ API ປົກກະຕິ</summary>
     private static async Task<InvoiceResponse> CreateAndIssuePastDueInvoiceAsync(
         HttpClient client, Guid contractId, DateOnly periodMonth)
     {
@@ -299,8 +299,8 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organizationId,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);
@@ -317,7 +317,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -329,7 +329,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -341,14 +341,14 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -360,7 +360,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -427,7 +427,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -439,7 +439,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = lateFeeType,
@@ -454,14 +454,14 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -473,7 +473,7 @@ public class BackgroundJobsTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

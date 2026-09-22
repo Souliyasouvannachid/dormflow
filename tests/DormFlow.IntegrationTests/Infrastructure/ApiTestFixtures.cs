@@ -3,12 +3,12 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Infrastructure;
 
 /// <summary>
-/// รวมทุกเทสต์ที่ต้องใช้ Test Host เดียวกันไว้ในคอลเลกชันเดียว
-/// เพื่อให้สร้างคอนเทนเนอร์ PostgreSQL เพียงครั้งเดียวต่อการรันหนึ่งรอบ
+/// ລວມມີການທົດສອບທັງໝົດທີ່ຕ້ອງການ Test Host ດຽວກັນຢູ່ໃນຄໍເລັກຊັນດຽວ
+/// ເພື່ອສ້າງຖັງ PostgreSQL ພຽງແຕ່ຄັ້ງດຽວຕໍ່ການແລ່ນ
 /// </summary>
 [CollectionDefinition(Name)]
 public sealed class ApiTestFixtures : ICollectionFixture<DormFlowApiFactory>
 {
-    /// <summary>ชื่อคอลเลกชันที่ใช้กำกับคลาสเทสต์</summary>
+    /// <summary>ຊື່ຂອງຄໍເລັກຊັນທີ່ໃຊ້ເພື່ອຕິດປ້າຍຫ້ອງສອບເສັງ</summary>
     public const string Name = "DormFlow API";
 }

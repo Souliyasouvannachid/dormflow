@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
 /// <summary>
-/// ตั้งค่าตารางของ ASP.NET Core Identity
+/// ຕັ້ງຄ່າຕາຕະລາງຂອງ ASP.NET Core Identity
 /// </summary>
 /// <remarks>
-/// เปลี่ยนชื่อตารางจากค่าเริ่มต้น AspNetUsers, AspNetRoles ให้เป็น users, roles ตามข้อตกลงของระบบ
+/// ປ່ຽນຊື່ຕາຕະລາງຈາກຄ່າເລີ່ມຕົ້ນ AspNetUsers, AspNetRoles ໃຫ້ມັນເປັນ users, roles ອີງຕາມຂໍ້ຕົກລົງຂອງລະບົບ
 /// </remarks>
 public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
@@ -25,7 +25,7 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
         builder.Property(user => user.ProfileImage).HasMaxLength(512);
         builder.Property(user => user.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // ตั้งชื่อคอลัมน์ให้ตรงกับข้อตกลงของระบบแทนชื่อ phone_number ที่ Identity ใช้เป็นค่าเริ่มต้น
+        // ຕັ້ງຊື່ຖັນໃຫ້ກົງກັບສົນທິສັນຍາລະບົບແທນຊື່ phone_number ທີ່ Identity ໃຊ້ເປັນຄ່າເລີ່ມຕົ້ນ
         builder.Property(user => user.PhoneNumber).HasColumnName("phone").HasMaxLength(30);
 
         builder.HasIndex(user => user.OrganizationId);
@@ -38,7 +38,7 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
     }
 }
 
-/// <summary>ตั้งค่าตารางบทบาท</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງບົດບາດ</summary>
 public sealed class ApplicationRoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
 {
     /// <inheritdoc />
@@ -53,7 +53,7 @@ public sealed class ApplicationRoleConfiguration : IEntityTypeConfiguration<Appl
     }
 }
 
-/// <summary>ตั้งค่าตารางความสัมพันธ์ระหว่างผู้ใช้กับบทบาท</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການພົວພັນຂອງຜູ້ໃຊ້</summary>
 public sealed class IdentityUserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
 {
     /// <inheritdoc />
@@ -65,7 +65,7 @@ public sealed class IdentityUserRoleConfiguration : IEntityTypeConfiguration<Ide
     }
 }
 
-/// <summary>ตั้งค่าตาราง Claim ของผู้ใช้</summary>
+/// <summary>ຕາຕະລາງຕັ້ງ Claim ຂອງຜູ້ໃຊ້</summary>
 public sealed class IdentityUserClaimConfiguration : IEntityTypeConfiguration<IdentityUserClaim<Guid>>
 {
     /// <inheritdoc />
@@ -77,7 +77,7 @@ public sealed class IdentityUserClaimConfiguration : IEntityTypeConfiguration<Id
     }
 }
 
-/// <summary>ตั้งค่าตารางการเข้าสู่ระบบด้วยผู้ให้บริการภายนอก</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການເຂົ້າສູ່ລະບົບກັບຜູ້ໃຫ້ບໍລິການພາຍນອກ</summary>
 public sealed class IdentityUserLoginConfiguration : IEntityTypeConfiguration<IdentityUserLogin<Guid>>
 {
     /// <inheritdoc />
@@ -89,7 +89,7 @@ public sealed class IdentityUserLoginConfiguration : IEntityTypeConfiguration<Id
     }
 }
 
-/// <summary>ตั้งค่าตารางโทเคนของผู้ใช้ เช่น โทเคนสำหรับตั้งรหัสผ่านใหม่</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງຂອງ tokens ຜູ້ໃຊ້, ເຊັ່ນ: tokens reset ລະຫັດຜ່ານ</summary>
 public sealed class IdentityUserTokenConfiguration : IEntityTypeConfiguration<IdentityUserToken<Guid>>
 {
     /// <inheritdoc />
@@ -101,7 +101,7 @@ public sealed class IdentityUserTokenConfiguration : IEntityTypeConfiguration<Id
     }
 }
 
-/// <summary>ตั้งค่าตาราง Claim ของบทบาท</summary>
+/// <summary>ຕາຕະລາງຕັ້ງ Claim ບົດບາດ</summary>
 public sealed class IdentityRoleClaimConfiguration : IEntityTypeConfiguration<IdentityRoleClaim<Guid>>
 {
     /// <inheritdoc />

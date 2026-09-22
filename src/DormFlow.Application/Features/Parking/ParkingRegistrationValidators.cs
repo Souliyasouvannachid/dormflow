@@ -4,36 +4,36 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Parking;
 
-/// <summary>ตรวจสอบคำขอจดทะเบียนที่จอดรถ</summary>
+/// <summary>ກວດເບິ່ງການຮ້ອງຂໍການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public sealed class RegisterParkingRequestValidator : AbstractValidator<RegisterParkingRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public RegisterParkingRequestValidator()
     {
         RuleFor(request => request.RoomId)
-            .NotEmpty().WithMessage("กรุณาระบุห้องของผู้เช่าเจ้าของรถ");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫ້ອງຂອງຜູ້ເຊົ່າເຈົ້າຂອງລົດ");
 
         RuleFor(request => request.TenantId)
-            .NotEmpty().WithMessage("กรุณาระบุผู้เช่าเจ้าของรถ");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຜູ້ເຊົ່າເຈົ້າຂອງລົດ");
 
         RuleFor(request => request.LicensePlate)
-            .NotEmpty().WithMessage("กรุณาระบุทะเบียนรถ")
-            .MaximumLength(20).WithMessage("ทะเบียนรถต้องยาวไม่เกิน 20 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸປ້າຍທະບຽນລົດ")
+            .MaximumLength(20).WithMessage("ປ້າຍທະບຽນລົດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 20 ໂຕອັກສອນ");
 
         RuleFor(request => request.VehicleType)
             .Must(value => Enum.TryParse<VehicleType>(value, ignoreCase: true, out _))
-            .WithMessage("ประเภทยานพาหนะไม่ถูกต้อง ต้องเป็น Car, Motorcycle หรือ Other");
+            .WithMessage("ປະເພດພາຫະນະບໍ່ຖືກຕ້ອງ ຕ້ອງເປັນ Car, Motorcycle ຫຼື Other");
 
         RuleFor(request => request.Brand)
-            .MaximumLength(100).WithMessage("ยี่ห้อ/รุ่นรถต้องยาวไม่เกิน 100 ตัวอักษร");
+            .MaximumLength(100).WithMessage("ຍີ່ຫໍ້/ຮຸ່ນລົດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Color)
-            .MaximumLength(50).WithMessage("สีรถต้องยาวไม่เกิน 50 ตัวอักษร");
+            .MaximumLength(50).WithMessage("ສີລົດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.ParkingSpotLabel)
-            .MaximumLength(50).WithMessage("ป้ายช่องจอดรถต้องยาวไม่เกิน 50 ตัวอักษร");
+            .MaximumLength(50).WithMessage("ປ້າຍຊ່ອງຈອດລົດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

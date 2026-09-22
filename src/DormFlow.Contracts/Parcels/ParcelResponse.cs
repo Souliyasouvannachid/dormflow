@@ -1,47 +1,47 @@
 namespace DormFlow.Contracts.Parcels;
 
-/// <summary>ข้อมูลพัสดุหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນຜຶ່ງ parcel</summary>
 public class ParcelResponse
 {
-    /// <summary>รหัสอ้างอิงของพัสดุ</summary>
+    /// <summary>ລະຫັດອ້າງອິງ parcel</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องที่พัสดุนี้ส่งถึง</summary>
+    /// <summary>ຫ້ອງຊຸດນີ້ແມ່ນສົ່ງໃຫ້</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>ผู้เช่าที่พัสดุนี้ส่งถึง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ parcel ນີ້ຖືກແກ້ໄຂ</summary>
     public Guid? TenantId { get; init; }
 
-    /// <summary>บริษัทขนส่ง</summary>
+    /// <summary>ບໍລິສັດຂົນສົ່ງ</summary>
     public string? CourierName { get; init; }
 
-    /// <summary>เลขพัสดุ</summary>
+    /// <summary>ໝາຍເລກເຄື່ອງໝາຍ</summary>
     public string? TrackingNumber { get; init; }
 
-    /// <summary>คำอธิบายพัสดุเพิ่มเติม</summary>
+    /// <summary>ລາຍລະອຽດການພັດທະນາເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>เวลาที่รับพัสดุไว้ที่หอพัก</summary>
+    /// <summary>ເວລາໄປຮັບເຄື່ອງຢູ່ຫໍພັກ</summary>
     public DateTimeOffset ReceivedAt { get; init; }
 
-    /// <summary>สถานะของพัสดุ</summary>
+    /// <summary>ສະຖານະການຫຸ້ມຫໍ່</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่ผู้เช่ามารับพัสดุ</summary>
+    /// <summary>ເວລາຜູ້ເຊົ່າມາຮັບຊຸດ</summary>
     public DateTimeOffset? PickedUpAt { get; init; }
 
-    /// <summary>ชื่อผู้มารับพัสดุจริง</summary>
+    /// <summary>ຊື່ແທ້ຂອງຜູ້ທີ່ໄດ້ຮັບຊຸດ</summary>
     public string? PickedUpByName { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

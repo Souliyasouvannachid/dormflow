@@ -1,31 +1,34 @@
+using DormFlow.Application.Common.Abstractions;
 using DormFlow.Contracts.Reservations;
 using FluentValidation;
 
 namespace DormFlow.Application.Features.Reservations;
 
-/// <summary>ตรวจสอบคำขอจองห้องพัก</summary>
+/// <summary>ກວດເບິ່ງຄໍາຮ້ອງຂໍການຈອງຂອງທ່ານ</summary>
 public sealed class CreateReservationRequestValidator : AbstractValidator<CreateReservationRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
-    public CreateReservationRequestValidator()
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
+    public CreateReservationRequestValidator(IDateTimeProvider dateTimeProvider)
     {
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+
         RuleFor(request => request.RoomId)
-            .NotEmpty().WithMessage("กรุณาระบุห้องที่ต้องการจอง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫ້ອງທີ່ຕ້ອງການຈອງ");
 
         RuleFor(request => request.TenantId)
-            .NotEmpty().WithMessage("กรุณาระบุผู้เช่าที่จอง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຜູ້ເຊົ່າທີ່ຈອງ");
 
         RuleFor(request => request.MoveInDate)
-            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow))
-            .WithMessage("วันที่คาดว่าจะเข้าพักต้องไม่ใช่วันที่ผ่านมาแล้ว");
+            .GreaterThanOrEqualTo(_ => DateOnly.FromDateTime(dateTimeProvider.UtcNow.UtcDateTime))
+            .WithMessage("ວັນທີຄາດວ່າຈະເຂົ້າພັກຕ້ອງບໍ່ແມ່ນວັນທີທີ່ຜ່ານມາແລ້ວ");
 
         RuleFor(request => request.HoldDays)
-            .InclusiveBetween(1, 30).WithMessage("จำนวนวันที่กันห้องต้องอยู่ระหว่าง 1 ถึง 30 วัน");
+            .InclusiveBetween(1, 30).WithMessage("ຈຳນວນວັນທີ່ກັນຫ້ອງຕ້ອງຢູ່ລະຫວ່າງ 1 ຫາ 30 ວັນ");
 
         RuleFor(request => request.ReservationFee)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าจองห้องต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າຈອງຫ້ອງຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

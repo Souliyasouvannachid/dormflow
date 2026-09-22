@@ -3,77 +3,77 @@ using DormFlow.Application.Common.Models;
 namespace DormFlow.Application.Common.Abstractions;
 
 /// <summary>
-/// การดำเนินการกับบัญชีผู้ใช้ที่ต้องพึ่ง ASP.NET Core Identity
+/// ການດໍາເນີນງານກັບບັນຊີຜູ້ໃຊ້ທີ່ຂຶ້ນກັບ ASP.NET Core Identity
 /// </summary>
 /// <remarks>
-/// ชั้น Application เรียกผ่าน interface นี้เท่านั้น จึงไม่ต้องรู้จัก UserManager
-/// และไม่มีทางเผลอทำงานกับแฮชรหัสผ่านโดยตรง
+/// ຊັ້ນ Application ໂທຜ່ານ interface ພຽງແຕ່ນີ້, ສະນັ້ນທ່ານບໍ່ຈໍາເປັນຕ້ອງຮູ້ UserManager
+/// ແລະບໍ່ມີທາງທີ່ຈະເຮັດວຽກໂດຍບັງເອີນກັບ hashes ລະຫັດຜ່ານໂດຍກົງ
 /// </remarks>
 public interface IUserAccountService
 {
-    /// <summary>ตรวจสอบอีเมลและรหัสผ่าน พร้อมนับความพยายามที่ผิดพลาดเพื่อล็อกบัญชี</summary>
-    /// <param name="email">อีเมลที่ใช้เข้าสู่ระบบ</param>
-    /// <param name="password">รหัสผ่าน</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ຢືນຢັນອີເມວ ແລະລະຫັດຜ່ານ ບວກກັບຄວາມພະຍາຍາມລັອກບັນຊີທີ່ບໍ່ຖືກຕ້ອງຖືກນັບ</summary>
+    /// <param name="email">ອີເມວທີ່ໃຊ້ເພື່ອເຂົ້າສູ່ລະບົບ</param>
+    /// <param name="password">ລະຫັດຜ່ານ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<UserAuthenticationResult> AuthenticateAsync(
         string email,
         string password,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลผู้ใช้พร้อมบทบาทและสิทธิ์ทั้งหมด</summary>
-    /// <param name="userId">รหัสผู้ใช้</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
-    /// <returns>null เมื่อไม่พบผู้ใช้ หรือผู้ใช้ถูกลบไปแล้ว</returns>
+    /// <summary>ອ່ານຂໍ້ມູນຜູ້ໃຊ້ທີ່ມີບົດບາດແລະການອະນຸຍາດທັງຝົດ</summary>
+    /// <param name="userId">ID ຜູ້ໃຊ້</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
+    /// <returns>null ເມື່ອຜູ້ໃຊ້ບໍ່ພົບຫຼືຜູ້ໃຊ້ໄດ້ຖືກລຶບຖິ້ມ</returns>
     Task<UserSecurityProfile?> GetSecurityProfileAsync(
         Guid userId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลผู้ใช้จากอีเมล</summary>
-    /// <param name="email">อีเมลของบัญชี</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
-    /// <returns>null เมื่อไม่พบผู้ใช้ หรือผู้ใช้ถูกลบไปแล้ว</returns>
+    /// <summary>ອ່ານຂໍ້ມູນຜູ້ໃຊ້ຈາກອີເມວ</summary>
+    /// <param name="email">ອີເມວບັນຊີ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
+    /// <returns>null ເມື່ອຜູ້ໃຊ້ບໍ່ພົບຫຼືຜູ້ໃຊ້ໄດ້ຖືກລຶບຖິ້ມ</returns>
     Task<UserSecurityProfile?> GetSecurityProfileByEmailAsync(
         string email,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่าบัญชีและองค์กรของผู้ใช้ยังอยู่ในสถานะที่ใช้งานระบบได้</summary>
-    /// <param name="userId">รหัสผู้ใช้</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ກວດສອບວ່າບັນຊີ ແລະອົງກອນຂອງຜູ້ໃຊ້ຍັງເຮັດວຽກຢູ່</summary>
+    /// <param name="userId">ID ຜູ້ໃຊ້</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<bool> IsAccountUsableAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกเวลาเข้าสู่ระบบล่าสุด</summary>
-    /// <param name="userId">รหัสผู้ใช้</param>
-    /// <param name="loggedInAt">เวลาที่เข้าสู่ระบบ</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ບັນທຶກເວລາເຂົ້າສູ່ລະບົບຄັ້ງສຸດທ້າຍ</summary>
+    /// <param name="userId">ID ຜູ້ໃຊ້</param>
+    /// <param name="loggedInAt">ເວລາເຂົ້າສູ່ລະບົບ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task RecordSuccessfulLoginAsync(
         Guid userId,
         DateTimeOffset loggedInAt,
         CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างโทเคนสำหรับตั้งรหัสผ่านใหม่</summary>
-    /// <param name="email">อีเมลของบัญชี</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
-    /// <returns>null เมื่อไม่พบบัญชีนั้น ผู้เรียกต้องตอบข้อความเดิมเสมอเพื่อไม่ให้เดาได้ว่ามีอีเมลนี้อยู่จริง</returns>
+    /// <summary>ສ້າງ token ຣີເຊັດລະຫັດຜ່ານ</summary>
+    /// <param name="email">ອີເມວບັນຊີ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
+    /// <returns>null ເມື່ອບັນຊີນັ້ນບໍ່ພົບຜູ້ໂທຕ້ອງຕອບກັບຂໍ້ຄວາມດຽວກັນສະເໝີເພື່ອຫຼີກເວັ້ນການຄາດເດົາວ່າອີເມວນັ້ນມີຢູ່</returns>
     Task<string?> GeneratePasswordResetTokenAsync(
         string email,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ตั้งรหัสผ่านใหม่ด้วยโทเคนที่ได้รับ</summary>
-    /// <param name="email">อีเมลของบัญชี</param>
-    /// <param name="token">โทเคนที่ได้รับทางอีเมล</param>
-    /// <param name="newPassword">รหัสผ่านใหม่</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ຕັ້ງລະຫັດຜ່ານໃໝ່ດ້ວຍໂທເຄັນທີ່ໄດ້ຮັບ</summary>
+    /// <param name="email">ອີເມວບັນຊີ</param>
+    /// <param name="token">Token ໄດ້ຮັບຜ່ານທາງອີເມວ</param>
+    /// <param name="newPassword">ລະຫັດຜ່ານໃໝ່</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<PasswordOperationResult> ResetPasswordAsync(
         string email,
         string token,
         string newPassword,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนรหัสผ่านของบัญชีที่เข้าสู่ระบบอยู่</summary>
-    /// <param name="userId">รหัสผู้ใช้</param>
-    /// <param name="currentPassword">รหัสผ่านปัจจุบัน</param>
-    /// <param name="newPassword">รหัสผ่านใหม่</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ປ່ຽນລະຫັດຜ່ານສຳລັບບັນຊີທີ່ເຈົ້າເຂົ້າສູ່ລະບົບ</summary>
+    /// <param name="userId">ID ຜູ້ໃຊ້</param>
+    /// <param name="currentPassword">ລະຫັດຜ່ານປັດຈຸບັນ</param>
+    /// <param name="newPassword">ລະຫັດຜ່ານໃໝ່</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<PasswordOperationResult> ChangePasswordAsync(
         Guid userId,
         string currentPassword,

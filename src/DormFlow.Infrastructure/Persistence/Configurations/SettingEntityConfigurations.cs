@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางค่าตั้ง</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການຕັ້ງຄ່າ</summary>
 public sealed class SettingConfiguration : IEntityTypeConfiguration<Setting>
 {
     /// <inheritdoc />

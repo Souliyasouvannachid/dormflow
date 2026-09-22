@@ -2,8 +2,8 @@
 
   <!--
     Directory.Build.props (root)
-    ตั้งค่าที่ใช้ร่วมกันทุกโปรเจกต์ใน Solution
-    โปรเจกต์ใน src/ และ tests/ มี Directory.Build.props ของตัวเองที่ Import ไฟล์นี้ต่ออีกชั้น
+    ການຕັ້ງຄ່າທີ່ພົບເລື້ອຍກັບໂຄງການທັງຝົດໃນ Solution
+    ໂຄງການໃນ src/ ແລະ tests/ ມີ Directory.Build.props ຂອງຕົນເອງຢູ່ Import ໄຟລ໌ນີ້ຖືກສືບຕໍ່ໃນລະດັບອື່ນ
   -->
 
   <PropertyGroup>
@@ -21,8 +21,8 @@
     <AnalysisMode>Recommended</AnalysisMode>
     <!--
       CS1591 = Missing XML comment for publicly visible type or member
-      เปิด GenerateDocumentationFile ไว้เพื่อให้ OpenAPI ดึง XML Comments ได้
-      แต่ไม่บังคับให้ทุก member ต้องมี doc comment (ไม่งั้น build จะพังจากไฟล์ที่ยังไม่ได้เขียนคำอธิบาย)
+      ເປີດ GenerateDocumentationFile ໃຫ້ OpenAPI ດຶງ XML Comments ແມ່ນແລ້ວ
+      ແຕ່ມັນບໍ່ບັງຄັບສໍາລັບທຸກຄົນ member ຕ້ອງມີ doc comment (ຖ້າບໍ່ດັ່ງນັ້ນ build ມັນຈະຂັດຈາກໄຟລ໌ທີ່ຍັງບໍ່ໄດ້ຂຽນເປັນຄໍາອະທິບາຍເທື່ອ)
     -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>

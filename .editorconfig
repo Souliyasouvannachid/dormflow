@@ -191,26 +191,26 @@ dotnet_naming_rule.parameters_and_locals_must_be_camel_case.style = camel_case
 
 #### Analyzer severity overrides ####
 
-# CA2016 - ต้องส่งต่อ CancellationToken เสมอ
+# CA2016 - ຕ້ອງສົ່ງຕໍ່ CancellationToken ສະເໝີ
 dotnet_diagnostic.CA2016.severity = warning
 
-# CA2007 - ไม่บังคับ ConfigureAwait(false) ใน ASP.NET Core
+# CA2007 - ບໍ່ຈໍາເປັນ ConfigureAwait(false) ໃນ ASP.NET Core
 dotnet_diagnostic.CA2007.severity = none
 
-# CA1852 - ไม่บังคับให้ทุก type ต้องเป็น sealed
+# CA1852 - ບໍ່ໄດ້ບັງຄັບໃຫ້ທຸກຄົນ type ຕ້ອງເປັນ sealed
 dotnet_diagnostic.CA1852.severity = suggestion
 
-# CA1303 - อนุญาตข้อความ exception แบบ literal
+# CA1303 - ອະນຸຍາດຂໍ້ຄວາມ exception ຕົວແບບ literal
 dotnet_diagnostic.CA1303.severity = none
 
-# CA1711 - อนุญาตคำลงท้าย Permission เพราะเป็นคำศัพท์ทางธุรกิจของระบบ ไม่เกี่ยวกับ System.Security.Permissions
+# CA1711 - ອະນຸຍາດຄຳຕໍ່ທ້າຍ Permission ເນື່ອງຈາກວ່າມັນເປັນຄໍາສັບທຸລະກິດສໍາລັບລະບົບ, ບໍ່ກ່ຽວຂ້ອງກັບ System.Security.Permissions
 dotnet_code_quality.CA1711.allowed_suffixes = Permission
 
 [tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA2007.severity = none
 
-# ไฟล์ในโฟลเดอร์ Migrations ถูกสร้างโดย dotnet ef migrations add ไม่ใช่โค้ดที่เขียนเอง
-# CA1861 เตือนเรื่อง array literal ที่ EF Core scaffold ให้เองเป็นปกติ และไม่ควรบังคับให้แก้โค้ดที่ generate ใหม่ได้ทุกครั้ง
+# ໄຟລ໌ຢູ່ໃນໂຟນເດີ Migrations ສ້າງໂດຍ dotnet ef migrations add ມັນບໍ່ແມ່ນລະຫັດທີ່ເຈົ້າຂຽນເອງ
+# CA1861 ຄຳເຕືອນກ່ຽວກັບ array literal ທີ່ EF Core scaffold ໃຫ້ມັນກັບຕົວທ່ານເອງເປັນປົກກະຕິແລະບໍ່ຄວນຈະຖືກບັງຄັບໃຫ້ດັດແປງລະຫັດທີ່ generate ໃໝ່ທຸກຄັ້ງ
 [src/DormFlow.Infrastructure/Migrations/**.cs]
 dotnet_diagnostic.CA1861.severity = none

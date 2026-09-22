@@ -2,15 +2,15 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Payments;
 
-/// <summary>พารามิเตอร์การค้นหารายการชำระเงิน</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການການຈ່າຍເງິນ</summary>
 public class PaymentListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะรายการของหอพักที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ບັນຊີລາຍຊື່ຂອງຫໍພັກທີ່ລະບຸໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการของใบแจ้งหนี้ที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການໃບແຈ້ງໜີ້ທີ່ລະບຸໄວ້ເທົ່ານັ້ນ</summary>
     public Guid? InvoiceId { get; set; }
 
-    /// <summary>กรองเฉพาะรายการที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະລາຍການທີ່ມີສະຖານະກົງກັບອັນທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

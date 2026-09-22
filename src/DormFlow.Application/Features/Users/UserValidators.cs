@@ -4,88 +4,88 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Users;
 
-/// <summary>ตรวจสอบคำขอสร้างบัญชีผู้ใช้ใหม่</summary>
+/// <summary>ກວດເບິ່ງການຮ້ອງຂໍການສ້າງບັນຊີຜູ້ໃຊ້ໃຝ່</summary>
 public sealed class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateUserRequestValidator()
     {
         RuleFor(request => request.Email)
-            .NotEmpty().WithMessage("กรุณาระบุอีเมล")
-            .MaximumLength(256).WithMessage("อีเมลต้องยาวไม่เกิน 256 ตัวอักษร")
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸອີເມວ")
+            .MaximumLength(256).WithMessage("ອີເມວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 256 ໂຕອັກສອນ")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ");
 
         RuleFor(request => request.Password).SetValidator(new PasswordRuleValidator());
 
         RuleFor(request => request.FirstName)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อ")
-            .MaximumLength(100).WithMessage("ชื่อต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່")
+            .MaximumLength(100).WithMessage("ຊື່ຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("กรุณาระบุนามสกุล")
-            .MaximumLength(100).WithMessage("นามสกุลต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸນາມສະກຸນ")
+            .MaximumLength(100).WithMessage("ນາມສະກຸນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลโปรไฟล์ผู้ใช้</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນໂປຣໄຟລ໌ຜູ້ໃຊ້</summary>
 public sealed class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpdateUserRequestValidator()
     {
         RuleFor(request => request.FirstName)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อ")
-            .MaximumLength(100).WithMessage("ชื่อต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່")
+            .MaximumLength(100).WithMessage("ຊື່ຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.LastName)
-            .NotEmpty().WithMessage("กรุณาระบุนามสกุล")
-            .MaximumLength(100).WithMessage("นามสกุลต้องยาวไม่เกิน 100 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸນາມສະກຸນ")
+            .MaximumLength(100).WithMessage("ນາມສະກຸນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอกำหนดบทบาทให้ผู้ใช้</summary>
+/// <summary>ທົບທວນຄືນຄໍາຮ້ອງຂໍການມອບຝາຍບົດບາດຂອງຜູ້ໃຊ້</summary>
 public sealed class AssignUserRolesRequestValidator : AbstractValidator<AssignUserRolesRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public AssignUserRolesRequestValidator()
     {
         RuleFor(request => request.Roles)
-            .NotEmpty().WithMessage("กรุณาระบุบทบาทอย่างน้อยหนึ่งรายการ");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸບົດບາດຢ່າງໜ້ອຍໜຶ່ງລາຍການ");
 
         RuleForEach(request => request.Roles)
             .Must(DormFlowRoles.All.Contains)
-            .WithMessage("พบชื่อบทบาทที่ไม่มีอยู่ในระบบ");
+            .WithMessage("ພົບຊື່ບົດບາດທີ່ບໍ່ມີຢູ່ໃນລະບົບ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอมอบหมายหอพักให้ผู้ใช้</summary>
+/// <summary>ທົບທວນຄືນຄໍາຮ້ອງຂໍການມອບຝາຍຫໍພັກສໍາລັບຜູ້ໃຊ້</summary>
 public sealed class AssignUserDormitoryRequestValidator : AbstractValidator<AssignUserDormitoryRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public AssignUserDormitoryRequestValidator()
     {
         RuleFor(request => request.DormitoryId)
-            .NotEmpty().WithMessage("กรุณาระบุหอพักที่ต้องการมอบหมาย");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫໍພັກທີ່ຕ້ອງການມອບໝາຍ");
     }
 }
 
 /// <summary>
-/// กฎของรหัสผ่านที่ใช้ตอนสร้างบัญชีโดยผู้ดูแลระบบ
+/// ກົດລະບຽບລະຫັດຜ່ານທີ່ໃຊ້ໃນການສ້າງບັນຊີໂດຍຜູ້ບໍລິຫານ
 /// </summary>
 /// <remarks>
-/// แยกจาก PasswordRules ของโมดูล Authentication เพื่อไม่ให้ Features/Users ต้องอ้างอิงโมดูล Authentication
-/// แต่ใช้เกณฑ์ชุดเดียวกันทุกประการ
+/// ແຍກອອກຈາກ PasswordRules ຂອງໂມດູນ Authentication ໃນຄໍາສັ່ງທີ່ຈະບໍ່ Features/Users ໂມດູນຕ້ອງໄດ້ຮັບການອ້າງອີງ Authentication
+/// ແຕ່ການນໍາໃຊ້ແທ້ທີ່ກໍານົດໄວ້ຂອງມາດຕະຖານ
 /// </remarks>
 internal sealed class PasswordRuleValidator : AbstractValidator<string>
 {
     public PasswordRuleValidator()
     {
         RuleFor(password => password)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสผ่าน")
-            .MinimumLength(8).WithMessage("รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร")
-            .MaximumLength(128).WithMessage("รหัสผ่านต้องยาวไม่เกิน 128 ตัวอักษร")
-            .Matches("[A-Z]").WithMessage("รหัสผ่านต้องมีตัวอักษรพิมพ์ใหญ่อย่างน้อยหนึ่งตัว")
-            .Matches("[a-z]").WithMessage("รหัสผ่านต้องมีตัวอักษรพิมพ์เล็กอย่างน้อยหนึ่งตัว")
-            .Matches("[0-9]").WithMessage("รหัสผ่านต้องมีตัวเลขอย่างน้อยหนึ่งตัว");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດຜ່ານ")
+            .MinimumLength(8).WithMessage("ລະຫັດຜ່ານຕ້ອງມີຄວາມຍາວຢ່າງໜ້ອຍ 8 ໂຕອັກສອນ")
+            .MaximumLength(128).WithMessage("ລະຫັດຜ່ານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 128 ໂຕອັກສອນ")
+            .Matches("[A-Z]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕອັກສອນພິມໃຫຍ່ຢ່າງໜ້ອຍໜຶ່ງໂຕ")
+            .Matches("[a-z]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕອັກສອນພິມນ້ອຍຢ່າງໜ້ອຍໜຶ່ງໂຕ")
+            .Matches("[0-9]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕເລກຢ່າງໜ້ອຍໜຶ່ງໂຕ");
     }
 }

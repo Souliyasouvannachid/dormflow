@@ -1,20 +1,20 @@
 namespace DormFlow.Contracts.Announcements;
 
-/// <summary>คำขอสร้างประกาศใหม่ (สร้างเป็นสถานะร่างเสมอ)</summary>
+/// <summary>ຮ້ອງຂໍເພື່ອສ້າງການປະກາດໃຝ່ (ສ້າງຢູ່ໃນສະຖານະສະບັບຮ່າງສະເໝີ)</summary>
 public class CreateAnnouncementRequest
 {
-    /// <summary>หอพักที่ประกาศนี้เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ປະກາດນີ້ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; set; }
 
-    /// <summary>หัวข้อประกาศ</summary>
+    /// <summary>ຫົວຂໍ້ປະກາດ</summary>
     public string Title { get; set; } = string.Empty;
 
-    /// <summary>เนื้อหาประกาศ</summary>
+    /// <summary>ເນື້ອໃນປະກາດ</summary>
     public string Content { get; set; } = string.Empty;
 
-    /// <summary>เวลาที่ประกาศหมดอายุ ไม่ระบุได้</summary>
+    /// <summary>ເວລາປະກາດໝົດອາຍຸບໍ່ໄດ້ລະບຸ</summary>
     public DateTimeOffset? ExpiresAt { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

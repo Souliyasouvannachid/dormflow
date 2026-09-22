@@ -1,35 +1,37 @@
+using DormFlow.Api.Authorization;
 using DormFlow.Application.Features.Invoices;
 using DormFlow.Application.Features.Reservations;
 using DormFlow.Infrastructure.Options;
 using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace DormFlow.Api.Configuration;
 
-/// <summary>ตั้งค่า Background Job Server และ Recurring Job ทั้งหมด</summary>
+/// <summary>ຕັ້ງຄ່າ Background Job Server ແລະ Recurring Job ທັງໝົດ</summary>
 public static class BackgroundJobConfiguration
 {
-    /// <summary>รหัสของ Recurring Job ที่หมดอายุการจองอัตโนมัติ</summary>
+    /// <summary>ລະຫັດຂອງ Recurring Job ທີ່ໝົດອາຍຸອັດຕະໂນມັດ</summary>
     private const string ExpireReservationsJobId = "expire-reservations";
 
-    /// <summary>รหัสของ Recurring Job ที่ทำเครื่องหมายใบแจ้งหนี้เกินกำหนดชำระและคำนวณค่าปรับ</summary>
+    /// <summary>ລະຫັດຂອງ Recurring Job ທີ່ໝາຍວ່າໃບເກັບເງິນເກີນກຳນົດ ແລະຄຳນວນການລົງໂທດ</summary>
     private const string MarkOverdueInvoicesJobId = "mark-overdue-invoices";
 
-    /// <summary>ทุก 15 นาที เพราะเวลาหมดอายุการกันห้อง (ExpiresAt) มีความละเอียดระดับนาที</summary>
+    /// <summary>ທຸກໆ 15 ນາທີເພາະໝົດເວລາຈອງຫ້ອງ (ExpiresAt) ມີຄວາມລະອຽດນາທີ</summary>
     private const string ExpireReservationsCron = "*/15 * * * *";
 
     /// <summary>
-    /// ลงทะเบียน Background Job Server
+    /// ລົງທະບຽນ Background Job Server
     /// </summary>
     /// <remarks>
-    /// ข้ามการลงทะเบียนในสภาพแวดล้อม Testing หรือเมื่อปิดผ่านค่าตั้ง BackgroundJobs:Enabled
-    /// ด้วยเงื่อนไขเดียวกับที่ Infrastructure.AddBackgroundJobStorage ใช้ข้ามการลงทะเบียน Storage
-    /// (ต้องข้ามคู่กันเสมอ ไม่งั้น Server จะพยายาม resolve JobStorage ที่ไม่ได้ลงทะเบียนไว้)
+    /// ຂ້າມການລົງທະບຽນໃນສະພາບແວດລ້ອມ Testing ຫຼືເມື່ອປິດຜ່ານການຕັ້ງຄ່າ BackgroundJobs:Enabled
+    /// ດ້ວຍເງື່ອນໄຂດຽວກັນກັບ Infrastructure.AddBackgroundJobStorage ໃຊ້ການລົງທະບຽນ bypass Storage
+    /// (ພວກເຂົາຕ້ອງຂ້າມກັນແລະກັນ, ຖ້າບໍ່ດັ່ງນັ້ນ Server ຈະພະຍາຍາມ resolve JobStorage ທີ່ບໍ່ໄດ້ລົງທະບຽນ)
     /// </remarks>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
-    /// <param name="environment">สภาพแวดล้อมโฮสต์ของแอปพลิเคชัน</param>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="environment">ສະພາບແວດລ້ອມເຈົ້າພາບແອັບພລິເຄຊັນ</param>
     public static IServiceCollection AddDormFlowBackgroundJobs(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -51,15 +53,15 @@ public static class BackgroundJobConfiguration
     }
 
     /// <summary>
-    /// เปิดหน้า Dashboard และตั้งเวลา Recurring Job ทั้งหมด
+    /// ຫັນຜ້າ Dashboard ແລະກໍານົດເວລາ Recurring Job ທັງໝົດ
     /// </summary>
     /// <remarks>
-    /// ข้ามทั้งหมดในสภาพแวดล้อม Testing (Integration Test เตรียมฐานข้อมูลชั่วคราวของตัวเองอยู่แล้ว
-    /// ไม่จำเป็นต้องมี Hangfire Schema หรือ Worker ทำงานคู่ขนานระหว่างทดสอบ) และเมื่อปิดผ่านค่าตั้ง
-    /// BackgroundJobs:Enabled เอง — Dashboard เปิดเฉพาะสภาพแวดล้อมที่ไม่ใช่ Production เหมือนกับ OpenAPI/Scalar
-    /// หากต้องการเปิดใน Production ให้ป้องกันด้วยการยืนยันตัวตนก่อนเสมอ
+    /// ໃນທົ່ວສະພາບແວດລ້ອມ Testing (Integration Test ກະກຽມຖານຂໍ້ມູນຊົ່ວຄາວຂອງຂ້ອຍເອງແລ້ວ
+    /// ບໍ່ຈໍາເປັນຕ້ອງມີ Hangfire Schema ຫຼື Worker ເຮັດວຽກຂະຜານລະຫວ່າງການທົດສອບ) ແລະເມື່ອປິດຜ່ານການຕັ້ງຄ່າ
+    /// BackgroundJobs:Enabled ຕົນເອງ — Dashboard ສະພາບແວດລ້ອມເປີດເທົ່ານັ້ນທີ່ບໍ່ມີ Production ຄືກັນກັບ OpenAPI/Scalar
+    /// ເພື່ອເປີດໃນ Production ປົກປ້ອງຕົນເອງສະເໝີໂດຍການຢັ້ງຢືນຕົວຕົນຂອງທ່ານກ່ອນ
     /// </remarks>
-    /// <param name="app">แอปพลิเคชันที่สร้างแล้ว</param>
+    /// <param name="app">ແອັບພລິເຄຊັນທີ່ສ້າງຂຶ້ນ</param>
     public static WebApplication UseDormFlowBackgroundJobs(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);
@@ -77,15 +79,23 @@ public static class BackgroundJobConfiguration
 
         if (!app.Environment.IsProduction())
         {
-            app.MapHangfireDashboard();
+            app.MapHangfireDashboard(new DashboardOptions
+            {
+                Authorization = [new HangfireDashboardAuthorizationFilter()],
+            });
         }
 
-        RecurringJob.AddOrUpdate<IReservationService>(
+        // Hangfire ໄດ້ລົງທະບຽນຜ່ານ `AddHangfire(...)` ທີ່ໃຊ້ DI (ເບິ່ງ AddBackgroundJobStorage)
+        // ເຊິ່ງບໍ່ໄດ້ກຳນົດ singleton `JobStorage.Current` ແບບ static — ດັ່ງນັ້ນ recurring jobs ຕ້ອງ
+        // ກຳນົດຜ່ານ `IRecurringJobManager` ທີ່ inject ເຂົ້າມາ ບໍ່ແມ່ນ helper `RecurringJob` ແບບ static.
+        IRecurringJobManager recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+
+        recurringJobManager.AddOrUpdate<IReservationService>(
             ExpireReservationsJobId,
             service => service.ExpirePastDueReservationsAsync(CancellationToken.None),
             ExpireReservationsCron);
 
-        RecurringJob.AddOrUpdate<IInvoiceService>(
+        recurringJobManager.AddOrUpdate<IInvoiceService>(
             MarkOverdueInvoicesJobId,
             service => service.MarkOverdueInvoicesAsync(CancellationToken.None),
             Cron.Daily(1));

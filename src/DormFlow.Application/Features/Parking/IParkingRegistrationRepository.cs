@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Parking;
 
-/// <summary>ตัวกรองสำหรับดึงรายการจดทะเบียนที่จอดรถแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງເອົາການລົງທະບຽນບ່ອນຈອດລົດ paginated</summary>
 public sealed record ParkingRegistrationListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -13,27 +13,27 @@ public sealed record ParkingRegistrationListFilter(
     ParkingRegistrationStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลการจดทะเบียนที่จอดรถในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການລົງທະບຽນບ່ອນຈອດລົດໃນຖານຂໍ້ມູນ</summary>
 public interface IParkingRegistrationRepository
 {
-    /// <summary>อ่านการจดทะเบียนที่จอดรถจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານການລົງທະບຽນບ່ອນຈອດລົດຈາກລະຫັດອ້າງອີງ</summary>
     Task<ParkingRegistration?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่าทะเบียนรถนี้มีการจดทะเบียนที่ยังไม่สิ้นสุด (Active) อยู่ในองค์กรเดียวกันหรือไม่</summary>
+    /// <summary>ກວດສອບວ່າລົດຄັນນີ້ມີໃບທະບຽນທີ່ຍັງບໍ່ທັນຄົບຖ້ວນ (Active) ເຈົ້າຢູ່ໃນອົງກອນດຽວກັນບໍ?</summary>
     Task<bool> HasActiveByLicensePlateAsync(
         Guid organizationId,
         string licensePlate,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการจดทะเบียนที่จอดรถแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ການລົງທະບຽນບ່ອນຈອດລົດ paginated ໂດຍອີງໃສ່ການກັ່ນຕອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<ParkingRegistration>> GetPagedAsync(
         ParkingRegistrationListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มการจดทะเบียนที่จอดรถใหม่</summary>
+    /// <summary>ເພີ່ມທະບຽນບ່ອນຈອດລົດໃໝ່</summary>
     Task AddAsync(ParkingRegistration registration, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

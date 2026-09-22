@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>รูปแบบการคิดค่าปรับชำระล่าช้าของหอพัก</summary>
+/// <summary>ຮູບແບບການຄິດໄລ່ຄ່າທຳນຽມການຊຳລະຊ້າຂອງຫໍພັກ</summary>
 public enum LateFeeType
 {
-    /// <summary>คิดเป็นจำนวนเงินคงที่</summary>
+    /// <summary>ຄິດໄລ່ເປັນຈໍານວນຄົງທີ່</summary>
     Fixed = 1,
 
-    /// <summary>คิดเป็นร้อยละของยอดค้างชำระ</summary>
+    /// <summary>ຄິດໄລ່ເປັນເປີເຊັນຂອງຍອດຄົງຄ້າງ</summary>
     Percentage = 2,
 }

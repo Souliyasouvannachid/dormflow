@@ -1,26 +1,26 @@
 namespace DormFlow.Contracts.Notifications;
 
-/// <summary>ข้อมูลการแจ้งเตือนหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນການແຈ້ງການຜຶ່ງ</summary>
 public class NotificationResponse
 {
-    /// <summary>รหัสอ้างอิงของการแจ้งเตือน</summary>
+    /// <summary>ລະຫັດອ້າງອີງການແຈ້ງເຕືອນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>ผู้ใช้ที่เป็นผู้รับ</summary>
+    /// <summary>ຜູ້ໃຊ້ຜູ້ຮັບ</summary>
     public Guid RecipientUserId { get; init; }
 
-    /// <summary>หัวข้อการแจ้งเตือน</summary>
+    /// <summary>ຫົວຂໍ້ແຈ້ງການ</summary>
     public string Title { get; init; } = string.Empty;
 
-    /// <summary>เนื้อหาการแจ้งเตือน</summary>
+    /// <summary>ເນື້ອໃນການແຈ້ງເຕືອນ</summary>
     public string Message { get; init; } = string.Empty;
 
-    /// <summary>อ่านแล้วหรือยัง</summary>
+    /// <summary>ເຈົ້າໄດ້ອ່ານແລ້ວບໍ?</summary>
     public bool IsRead { get; init; }
 
-    /// <summary>เวลาที่อ่าน</summary>
+    /// <summary>ເວລາອ່ານ</summary>
     public DateTimeOffset? ReadAt { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

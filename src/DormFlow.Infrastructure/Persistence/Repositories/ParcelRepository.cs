@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลพัสดุบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນ parcel on PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ParcelRepository(DormFlowDbContext dbContext) : IParcelRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -55,6 +55,42 @@ public sealed class ParcelRepository(DormFlowDbContext dbContext) : IParcelRepos
         parcels = ApplySort(parcels, query);
 
         return parcels.ToPagedResultAsync(query, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<int> CountAsync(ParcelListFilter filter, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        IQueryable<Parcel> parcels = _dbContext.Parcels.AsNoTracking();
+
+        if (filter.OrganizationId.HasValue)
+        {
+            parcels = parcels.Where(parcel => parcel.OrganizationId == filter.OrganizationId.Value);
+        }
+
+        if (filter.DormitoryId.HasValue)
+        {
+            parcels = parcels.Where(parcel => parcel.DormitoryId == filter.DormitoryId.Value);
+        }
+
+        if (filter.RoomId.HasValue)
+        {
+            parcels = parcels.Where(parcel => parcel.RoomId == filter.RoomId.Value);
+        }
+
+        if (filter.Status.HasValue)
+        {
+            parcels = parcels.Where(parcel => parcel.Status == filter.Status.Value);
+        }
+
+        if (filter.RestrictToDormitoryIds is not null)
+        {
+            parcels = parcels.Where(parcel =>
+                parcel.DormitoryId != null && filter.RestrictToDormitoryIds.Contains(parcel.DormitoryId.Value));
+        }
+
+        return parcels.CountAsync(cancellationToken);
     }
 
     /// <inheritdoc />

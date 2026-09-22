@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Expenses;
 
-/// <summary>ตัวกรองสำหรับดึงรายการค่าใช้จ่ายแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຄ່າໃຊ້ຈ່າຍ</summary>
 public sealed record ExpenseListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -14,21 +14,21 @@ public sealed record ExpenseListFilter(
     DateOnly? ExpenseDateTo,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลค่าใช้จ่ายในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຄ່າໃຊ້ຈ່າຍໃນຖານຂໍ້ມູນ</summary>
 public interface IExpenseRepository
 {
-    /// <summary>อ่านค่าใช้จ่ายจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຄ່າໃຊ້ຈ່າຍຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Expense?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการค่าใช้จ่ายแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຈ່າຍທີ່ມີ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ກໍານົດໄວ້</summary>
     Task<PagedResult<Expense>> GetPagedAsync(
         ExpenseListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มค่าใช้จ่ายใหม่</summary>
+    /// <summary>ເພີ່ມຄ່າໃຊ້ຈ່າຍໃຝ່</summary>
     Task AddAsync(Expense expense, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

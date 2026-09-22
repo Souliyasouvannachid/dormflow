@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางผู้เช่า</summary>
+/// <summary>ຕັ້ງໂຕະຜູ້ເຊົ່າ</summary>
 public sealed class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {
     /// <inheritdoc />
@@ -27,7 +27,7 @@ public sealed class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.HasIndex(tenant => tenant.OrganizationId);
         builder.HasIndex(tenant => new { tenant.OrganizationId, tenant.Phone });
 
-        // เลขบัตรประชาชนไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบและระบุค่าไว้
+        // ໝາຍເລກບັດປະຈຳຕົວແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ. ພຽງແຕ່ແຖວທີ່ບໍ່ໄດ້ຖືກລຶບລ້າງແລະຄ່າທີ່ລະບຸ
         builder.HasIndex(tenant => new { tenant.OrganizationId, tenant.NationalId })
             .IsUnique()
             .HasFilter("is_deleted = false AND national_id IS NOT NULL");
@@ -39,7 +39,7 @@ public sealed class TenantConfiguration : IEntityTypeConfiguration<Tenant>
     }
 }
 
-/// <summary>ตั้งค่าตารางการจองห้องพัก</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການຈອງ</summary>
 public sealed class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
 {
     /// <inheritdoc />
@@ -56,6 +56,11 @@ public sealed class ReservationConfiguration : IEntityTypeConfiguration<Reservat
         builder.Property(reservation => reservation.Notes).HasMaxLength(1000);
 
         builder.HasIndex(reservation => reservation.RoomId);
+        // ໃຫ້ຖານຂໍ້ມູນເປັນຜູ້ປ້ອງກັນການຈອງຊ້ຳໃນກໍລະນີທີ່ request ເຂົ້າມາພ້ອມກັນ.
+        builder.HasIndex(reservation => reservation.RoomId)
+            .IsUnique()
+            .HasDatabaseName("ix_reservations_one_pending_per_room")
+            .HasFilter("status = 'Pending' AND is_deleted = false");
         builder.HasIndex(reservation => reservation.TenantId);
         builder.HasIndex(reservation => reservation.Status);
 
@@ -71,7 +76,7 @@ public sealed class ReservationConfiguration : IEntityTypeConfiguration<Reservat
     }
 }
 
-/// <summary>ตั้งค่าตารางสัญญาเช่า</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການເຊົ່າ</summary>
 public sealed class ContractConfiguration : IEntityTypeConfiguration<Contract>
 {
     /// <inheritdoc />
@@ -87,7 +92,7 @@ public sealed class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.Property(contract => contract.TerminationReason).HasMaxLength(500);
         builder.Property(contract => contract.Notes).HasMaxLength(1000);
 
-        // เลขที่สัญญาไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ຕົວເລກສັນຍາແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(contract => new { contract.OrganizationId, contract.ContractNumber })
             .IsUnique()
             .HasFilter("is_deleted = false");

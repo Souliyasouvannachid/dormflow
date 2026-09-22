@@ -3,34 +3,34 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Deposits;
 
-/// <summary>ตรวจสอบคำขอบันทึกการรับเงินมัดจำ</summary>
+/// <summary>ກວດສອບການຮ້ອງຂໍບັນທຶກການຮັບເງິນຝາກ</summary>
 public sealed class CollectDepositRequestValidator : AbstractValidator<CollectDepositRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CollectDepositRequestValidator()
     {
         RuleFor(request => request.ContractId)
-            .NotEmpty().WithMessage("กรุณาระบุสัญญาเช่าที่รับเงินมัดจำ");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸສັນຍາເຊົ່າທີ່ຮັບເງິນມັດຈຳ");
 
         RuleFor(request => request.Amount)
-            .GreaterThanOrEqualTo(0).WithMessage("จำนวนเงินมัดจำต้องไม่ติดลบ")
+            .GreaterThanOrEqualTo(0).WithMessage("ຈຳນວນເງິນມັດຈຳຕ້ອງບໍ່ຕິດລົບ")
             .When(request => request.Amount.HasValue);
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอคืนเงินมัดจำ</summary>
+/// <summary>ທົບທວນຄືນຄໍາຮ້ອງຂໍການຄືນເງິນເງິນຝາກຂອງທ່ານ</summary>
 public sealed class RefundDepositRequestValidator : AbstractValidator<RefundDepositRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public RefundDepositRequestValidator()
     {
         RuleFor(request => request.RefundAmount)
-            .GreaterThanOrEqualTo(0).WithMessage("จำนวนเงินที่คืนต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຈຳນວນເງິນທີ່ຄືນຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.DeductionReason)
-            .MaximumLength(500).WithMessage("เหตุผลของส่วนที่หักไว้ต้องยาวไม่เกิน 500 ตัวอักษร");
+            .MaximumLength(500).WithMessage("ເຫດຜົນຂອງສ່ວນທີ່ຫັກໄວ້ຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 500 ໂຕອັກສອນ");
     }
 }

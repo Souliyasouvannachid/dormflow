@@ -1,3 +1,4 @@
+using System.Net;
 using DormFlow.Api.Configuration;
 using DormFlow.Api.Middleware;
 using DormFlow.Api.Options;
@@ -7,24 +8,24 @@ using DormFlow.Infrastructure.Persistence;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
-// Logger ชั่วคราวสำหรับดักข้อผิดพลาดที่เกิดก่อนอ่าน configuration เสร็จ
+// Logger ຊົ່ວຄາວເພື່ອຈັບຄວາມຜິດພາດທີ່ເກີດຂຶ້ນກ່ອນທີ່ຈະອ່ານ configuration ສຳເລັດແລ້ວ
 SerilogConfiguration.CreateBootstrapLogger();
 
 try
 {
-    Log.Information("กำลังเริ่มต้น DormFlow API");
+    Log.Information("ກຳລັງເລີ່ມຕົ້ນ DormFlow API");
 
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
     builder.AddDormFlowSerilog();
 
-    // ชั้น API
+    // ຊັ້ນ API
     builder.Services.AddDormFlowApi(builder.Configuration);
     builder.Services.AddDormFlowCors(builder.Configuration, builder.Environment);
     builder.Services.AddDormFlowRateLimiting(builder.Configuration);
     builder.Services.AddDormFlowOpenApi();
 
-    // ชั้น Application และ Infrastructure
+    // ຊັ້ນ Application ແລະ Infrastructure
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 
@@ -34,19 +35,34 @@ try
 
     builder.Services.AddDormFlowBackgroundJobs(builder.Configuration, builder.Environment);
 
-    // รับค่า IP และ scheme จริงเมื่อรันหลัง reverse proxy หรือ ingress
+    // ໄດ້ຮັບມູນຄ່າ IP ແລະ scheme ເປັນຈິງໃນເວລາທີ່ແລ່ນຫຼັງ reverse proxy ຫຼື ingress
     builder.Services.Configure<ForwardedHeadersOptions>(options =>
     {
         options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-        options.KnownIPNetworks.Clear();
-        options.KnownProxies.Clear();
+
+        // ຮັບ forwarded headers ຈາກ proxy ທີ່ລະບຸໄວ້ເທົ່ານັ້ນ. ຢ່າລ້າງ KnownProxies/Networks
+        // ເພາະຈະເຮັດໃຫ້ client ປອມ X-Forwarded-For ໄດ້ ແລະຫຼົບ rate limit/audit IP.
+        string[] configuredProxies = builder.Configuration
+            .GetSection("ForwardedHeaders:KnownProxies")
+            .Get<string[]>() ?? [];
+
+        foreach (string proxy in configuredProxies.Where(value => !string.IsNullOrWhiteSpace(value)))
+        {
+            if (!IPAddress.TryParse(proxy, out IPAddress? address))
+            {
+                throw new InvalidOperationException(
+                    $"ForwardedHeaders:KnownProxies ມີ IP address ບໍ່ຖືກຕ້ອງ: '{proxy}'.");
+            }
+
+            options.KnownProxies.Add(address);
+        }
     });
 
     WebApplication app = builder.Build();
 
     app.UseForwardedHeaders();
 
-    // ต้องเป็นตัวแรกในไปป์ไลน์ เพื่อให้ครอบคลุมข้อผิดพลาดของ Middleware ที่เหลือทั้งหมด
+    // ຕ້ອງເປັນຄັ້ງທໍາອິດໃນທໍ່. ເພື່ອປົກປິດຄວາມຜິດພາດຂອງ Middleware ສ່ວນທີ່ເຫຼືອທັງຝົດ
     app.UseGlobalExceptionHandling();
 
     app.UseDormFlowRequestLogging();
@@ -56,16 +72,17 @@ try
         app.UseHsts();
     }
 
-    // ปิดการ redirect ไป HTTPS เมื่อรันในคอนเทนเนอร์ที่มี reverse proxy จัดการ TLS ให้แล้ว
+    // ປິດ redirect ໄປ HTTPS ໃນເວລາທີ່ແລ່ນຢູ່ໃນຖັງທີ່ມີ reverse proxy ຈັດການ TLS ມອບໃຫ້ແລ້ວ
     if (app.Configuration.GetValue("Https:EnableRedirection", defaultValue: true))
     {
         app.UseHttpsRedirection();
     }
 
     app.UseCors(CorsOptions.PolicyName);
-    app.UseRateLimiter();
 
     app.UseAuthentication();
+    // ໃຫ້ rate limiter ເຫັນ user principal ກ່ອນ ເພື່ອແບ່ງ quota ຕາມ user ໄດ້ຖືກຕ້ອງ.
+    app.UseRateLimiter();
     app.UseAuthorization();
 
     app.MapControllers();
@@ -73,8 +90,8 @@ try
     app.UseDormFlowOpenApi();
     app.UseDormFlowBackgroundJobs();
 
-    // ข้ามการปรับสคีมาและ Seed อัตโนมัติในสภาพแวดล้อม Testing
-    // เพราะ Integration Test เตรียมฐานข้อมูลของตัวเองผ่าน DormFlowApiFactory อยู่แล้ว
+    // ຂ້າມການປັບຕົວ schema ແລະ Seed ອັດຕະໂນມັດໃນສະພາບແວດລ້ອມ Testing
+    // ເນື່ອງຈາກວ່າ Integration Test ກະກຽມຖານຂໍ້ມູນຂອງທ່ານເອງໂດຍຜ່ານ DormFlowApiFactory ແລ້ວ
     if (!app.Environment.IsEnvironment("Testing"))
     {
         await using AsyncServiceScope initializationScope = app.Services.CreateAsyncScope();
@@ -84,7 +101,7 @@ try
     }
 
     Log.Information(
-        "DormFlow API พร้อมทำงานในสภาพแวดล้อม {Environment}",
+        "DormFlow API ພ້ອມເຮັດວຽກໃນສະພາບແວດລ້ອມ {Environment}",
         app.Environment.EnvironmentName);
 
     await app.RunAsync();
@@ -93,7 +110,7 @@ try
 }
 catch (Exception exception)
 {
-    Log.Fatal(exception, "DormFlow API หยุดทำงานเพราะข้อผิดพลาดที่ไม่คาดคิดระหว่างเริ่มต้นระบบ");
+    Log.Fatal(exception, "DormFlow API ຢຸດເຮັດວຽກເພາະຂໍ້ຜິດພາດທີ່ບໍ່ຄາດຄິດລະຫວ່າງເລີ່ມຕົ້ນລະບົບ");
     return 1;
 }
 finally
@@ -102,11 +119,11 @@ finally
 }
 
 /// <summary>
-/// จุดเริ่มต้นของแอปพลิเคชัน ประกาศเป็น partial เพื่อให้ Integration Test อ้างถึงได้ผ่าน WebApplicationFactory
+/// ຈຸດເລີ່ມຕົ້ນຂອງຄໍາຮ້ອງສະຝັກໄດ້ຖືກປະກາດເປັນ partial ດັ່ງນັ້ນ Integration Test ອ້າງເຖິງມັນໂດຍຜ່ານ WebApplicationFactory
 /// </summary>
 public partial class Program
 {
-    /// <summary>ป้องกันการสร้างอินสแตนซ์ คลาสนี้มีไว้เป็นจุดอ้างอิงของ Test Host เท่านั้น</summary>
+    /// <summary>ປ້ອງກັນບໍ່ໃຫ້ເກີດທັນທີ ຫ້ອງຮຽນນີ້ແມ່ນມີຈຸດປະສົງເປັນຈຸດອ້າງອີງ Test Host ເທົ່ານັ້ນ</summary>
     protected Program()
     {
     }

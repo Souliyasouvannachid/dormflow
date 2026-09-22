@@ -4,30 +4,30 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Expenses;
 
-/// <summary>ตรวจสอบคำขอบันทึกค่าใช้จ่าย</summary>
+/// <summary>ທົບທວນຄືນຄໍາຮ້ອງຂໍບັນທຶກຄ່າໃຊ້ຈ່າຍ</summary>
 public sealed class CreateExpenseRequestValidator : AbstractValidator<CreateExpenseRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateExpenseRequestValidator()
     {
         RuleFor(request => request.DormitoryId)
-            .NotEmpty().WithMessage("กรุณาระบุหอพักที่เกี่ยวข้องกับค่าใช้จ่ายนี้");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫໍພັກທີ່ກ່ຽວຂ້ອງກັບຄ່າໃຊ້ຈ່າຍນີ້");
 
         RuleFor(request => request.Category)
             .Must(value => Enum.TryParse<ExpenseCategory>(value, ignoreCase: true, out _))
-            .WithMessage("หมวดหมู่ค่าใช้จ่ายไม่ถูกต้อง");
+            .WithMessage("ໝວດໝູ່ຄ່າໃຊ້ຈ່າຍບໍ່ຖືກຕ້ອງ");
 
         RuleFor(request => request.Amount)
-            .GreaterThan(0).WithMessage("จำนวนเงินต้องมากกว่าศูนย์");
+            .GreaterThan(0).WithMessage("ຈຳນວນເງິນຕ້ອງຫຼາຍກວ່າສູນ");
 
         RuleFor(request => request.Description)
-            .NotEmpty().WithMessage("กรุณาระบุคำอธิบายรายการ")
-            .MaximumLength(500).WithMessage("คำอธิบายต้องยาวไม่เกิน 500 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຄຳອະທິບາຍລາຍການ")
+            .MaximumLength(500).WithMessage("ຄຳອະທິບາຍຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 500 ໂຕອັກສອນ");
 
         RuleFor(request => request.PaidTo)
-            .MaximumLength(200).WithMessage("ชื่อผู้รับเงินต้องยาวไม่เกิน 200 ตัวอักษร");
+            .MaximumLength(200).WithMessage("ຊື່ຜູ້ຮັບເງິນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }

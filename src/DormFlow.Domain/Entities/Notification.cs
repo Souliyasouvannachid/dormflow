@@ -3,29 +3,29 @@ using DormFlow.Domain.Common;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// การแจ้งเตือนหนึ่งรายการที่ส่งถึงผู้ใช้ในระบบหนึ่งคน
+/// ການແຈ້ງເຕືອນອັນໜຶ່ງຖືກສົ່ງໄປຫາຜູ້ໃຊ້ທ້ອງຖິ່ນຄົນໜຶ່ງ
 /// </summary>
 /// <remarks>
-/// ไม่สืบทอดจาก <see cref="TenantEntity"/> เพราะการแจ้งเตือนผูกกับผู้ใช้ผู้รับโดยตรง (RecipientUserId)
-/// ไม่ใช่ข้อมูลที่ต้องกรองด้วยหอพักแบบ List Endpoint ทั่วไป — ผู้ใช้ทุกคนเห็นได้เฉพาะการแจ้งเตือนของตนเองเสมอ
+/// ບໍ່ໄດ້ສືບທອດມາຈາກ <see cref="TenantEntity"/> ເນື່ອງຈາກວ່າການແຈ້ງເຕືອນໄດ້ຖືກຜູກມັດໂດຍກົງກັບຜູ້ໃຊ້ຜູ້ຮັບ (RecipientUserId)
+/// ມັນບໍ່ແມ່ນຂໍ້ມູນທີ່ຕ້ອງໄດ້ຮັບການກັ່ນຕອງຜ່ານຫໍພັກ List Endpoint ທົ່ວໄປ — ຜູ້ໃຊ້ທຸກຄົນສະເຝີເຫັນພຽງແຕ່ການແຈ້ງເຕືອນຂອງຕົນເອງ
 /// </remarks>
 public class Notification : BaseEntity
 {
-    /// <summary>องค์กรของผู้รับ เป็น null เมื่อผู้รับเป็น SuperAdmin ที่ไม่ผูกกับองค์กรใด</summary>
+    /// <summary>ອົງກອນຜູ້ຮັບແມ່ນ null ໃນເວລາທີ່ຜູ້ຮັບແມ່ນ SuperAdmin ທີ່ບໍ່ໄດ້ຕິດພັນກັບອົງກອນ</summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>ผู้ใช้ที่เป็นผู้รับการแจ้งเตือนนี้</summary>
+    /// <summary>ຜູ້ໃຊ້ທີ່ເປັນຜູ້ຮັບການແຈ້ງເຕືອນນີ້</summary>
     public Guid RecipientUserId { get; set; }
 
-    /// <summary>หัวข้อการแจ้งเตือน</summary>
+    /// <summary>ຫົວຂໍ້ແຈ້ງການ</summary>
     public required string Title { get; set; }
 
-    /// <summary>เนื้อหาการแจ้งเตือน</summary>
+    /// <summary>ເນື້ອໃນການແຈ້ງເຕືອນ</summary>
     public required string Message { get; set; }
 
-    /// <summary>อ่านแล้วหรือยัง</summary>
+    /// <summary>ເຈົ້າໄດ້ອ່ານແລ້ວບໍ?</summary>
     public bool IsRead { get; set; }
 
-    /// <summary>เวลาที่อ่าน เป็น null เมื่อยังไม่อ่าน</summary>
+    /// <summary>ເວລາອ່ານແມ່ນ null ເມື່ອເຈົ້າຍັງບໍ່ໄດ້ອ່ານມັນເທື່ອ</summary>
     public DateTimeOffset? ReadAt { get; set; }
 }

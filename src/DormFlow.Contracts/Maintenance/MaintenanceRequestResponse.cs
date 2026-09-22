@@ -1,44 +1,44 @@
 namespace DormFlow.Contracts.Maintenance;
 
-/// <summary>ข้อมูลงานแจ้งซ่อมบำรุงหนึ่งรายการ</summary>
+/// <summary>ລາຍການໜຶ່ງຂອງຂໍ້ມູນວຽກບຳລຸງຮັກສາ</summary>
 public class MaintenanceRequestResponse
 {
-    /// <summary>รหัสอ้างอิงของงานซ่อม</summary>
+    /// <summary>ສ້ອມແປງລະຫັດອ້າງອີງ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>ห้องที่แจ้งซ่อม</summary>
+    /// <summary>ລາຍງານຫ້ອງສໍາລັບການສ້ອມແປງ</summary>
     public Guid RoomId { get; init; }
 
-    /// <summary>หัวข้อของงานซ่อม</summary>
+    /// <summary>ຫົວຂໍ້ຂອງວຽກງານສ້ອມແປງ</summary>
     public string Title { get; init; } = string.Empty;
 
-    /// <summary>รายละเอียดเพิ่มเติมของปัญหา</summary>
+    /// <summary>ລາຍລະອຽດເພີ່ມເຕີມກ່ຽວກັບບັນຫາ</summary>
     public string? Description { get; init; }
 
-    /// <summary>ระดับความสำคัญ</summary>
+    /// <summary>ລະດັບບູລິມະສິດ</summary>
     public string Priority { get; init; } = string.Empty;
 
-    /// <summary>สถานะของงานซ่อม</summary>
+    /// <summary>ສະຖານະການສ້ອມແປງ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>ช่างซ่อมบำรุงที่ได้รับมอบหมาย</summary>
+    /// <summary>ຊ່າງສ້ອມແປງທີ່ຖືກແຕ່ງຕັ້ງ</summary>
     public Guid? AssignedTechnicianId { get; init; }
 
-    /// <summary>เวลาที่มอบหมายช่างล่าสุด</summary>
+    /// <summary>ເວລາຂອງການມອບໝາຍນັກວິຊາການຄັ້ງສຸດທ້າຍ</summary>
     public DateTimeOffset? AssignedAt { get; init; }
 
-    /// <summary>เวลาที่ซ่อมเสร็จ</summary>
+    /// <summary>ເວລາຂອງການສໍາເລັດການສ້ອມແປງ</summary>
     public DateTimeOffset? CompletedAt { get; init; }
 
-    /// <summary>บันทึกผลการซ่อม</summary>
+    /// <summary>ບັນທຶກຜົນການສ້ອມແປງ</summary>
     public string? ResolutionNotes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

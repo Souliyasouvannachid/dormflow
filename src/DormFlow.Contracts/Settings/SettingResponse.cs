@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Settings;
 
-/// <summary>ข้อมูลค่าตั้งหนึ่งรายการ</summary>
+/// <summary>ຂໍ້ມູນການຕັ້ງຄ່າຜຶ່ງ</summary>
 public class SettingResponse
 {
-    /// <summary>รหัสอ้างอิงของค่าตั้ง</summary>
+    /// <summary>ລະຫັດອ້າງອີງການຕັ້ງຄ່າ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของค่าตั้งนี้</summary>
+    /// <summary>ອົງກອນທີ່ເປັນເຈົ້າຂອງການຕັ້ງຄ່ານີ້</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>ชื่อคีย์ของค่าตั้ง</summary>
+    /// <summary>ການຕັ້ງຄ່າຊື່ຄີ</summary>
     public string Key { get; init; } = string.Empty;
 
-    /// <summary>ค่าของค่าตั้ง</summary>
+    /// <summary>ການຕັ້ງຄ່າ</summary>
     public string Value { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขล่าสุด</summary>
+    /// <summary>ເວລາດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

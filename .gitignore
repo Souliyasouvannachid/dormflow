@@ -24,15 +24,15 @@ project.fragment.lock.json
 *.swp
 *~
 
-## ระบบปฏิบัติการ
+## ລະບົບປະຕິບັດການ
 .DS_Store
 Thumbs.db
 
-## Log ของ Serilog
+## Log ຂອງ Serilog
 logs/
 *.log
 
-## ไฟล์ลับ ห้าม commit เด็ดขาด
+## ຫ້າມໄຟລ໌ລັບ commit ຢ່າງແທ້ຈິງ
 .env
 .env.*
 !.env.example

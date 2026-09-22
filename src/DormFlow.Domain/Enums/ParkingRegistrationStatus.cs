@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของการจดทะเบียนที่จอดรถ</summary>
+/// <summary>ສະຖານະການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public enum ParkingRegistrationStatus
 {
-    /// <summary>จดทะเบียนอยู่ ใช้พื้นที่จอดรถอยู่</summary>
+    /// <summary>ລົງທະບຽນການນໍາໃຊ້ບ່ອນຈອດລົດ</summary>
     Active = 1,
 
-    /// <summary>สิ้นสุดการจดทะเบียนแล้ว</summary>
+    /// <summary>ການລົງທະບຽນໄດ້ສິ້ນສຸດລົງ</summary>
     Ended = 2,
 }

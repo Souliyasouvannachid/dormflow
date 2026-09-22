@@ -1,23 +1,23 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของห้องพัก</summary>
+/// <summary>ສະຖານະຫ້ອງ</summary>
 public enum RoomStatus
 {
-    /// <summary>ว่าง พร้อมให้เช่า</summary>
+    /// <summary>ວ່າງ, ພ້ອມໃຫ້ເຊົ່າ</summary>
     Available = 1,
 
-    /// <summary>ถูกจองไว้แล้ว ยังไม่เข้าพัก</summary>
+    /// <summary>ຈອງແລ້ວ ບໍ່ໄດ້ຢູ່</summary>
     Reserved = 2,
 
-    /// <summary>มีผู้เช่าอยู่</summary>
+    /// <summary>ມີຄົນເຊົ່າ</summary>
     Occupied = 3,
 
-    /// <summary>อยู่ระหว่างทำความสะอาดก่อนให้เช่ารายต่อไป</summary>
+    /// <summary>ປະຈຸບັນທໍາຄວາມສະອາດກ່ອນການເຊົ່າຕໍ່ໄປ</summary>
     Cleaning = 4,
 
-    /// <summary>อยู่ระหว่างซ่อมบำรุง ให้เช่าไม่ได้ชั่วคราว</summary>
+    /// <summary>ພາຍໃຕ້ການບໍາລຸງຮັກສາບໍ່ມີການຊົ່ວຄາວສໍາລັບການເຊົ່າ</summary>
     Maintenance = 5,
 
-    /// <summary>ปิดใช้งาน ไม่นำออกให้เช่า</summary>
+    /// <summary>ຄົນພິການ, ບໍ່ມີໃຫ້ເຊົ່າ</summary>
     Inactive = 6,
 }

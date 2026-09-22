@@ -8,8 +8,8 @@ using Xunit;
 namespace DormFlow.UnitTests.Api;
 
 /// <summary>
-/// ตรวจตรรกะสิทธิ์ที่อ่านจาก Claim ของ Access Token
-/// นี่คือจุดที่ตัดสินว่าผู้ใช้เห็นข้อมูลขององค์กรและหอพักใดได้บ้าง จึงต้องมีเทสต์คุมทุกเส้นทาง
+/// ກວດເບິ່ງເຫດຜົນການອະນຸຍາດອ່ານຈາກ Claim ຂອງ Access Token
+/// ນີ້ແມ່ນບ່ອນທີ່ມັນຖືກກໍານົດວ່າອົງກອນແລະຜູ້ນໍາໃຊ້ຂໍ້ມູນຫໍພັກໃດສາມາດເບິ່ງໄດ້. ດັ່ງນັ້ນ, ຕ້ອງມີການທົດສອບເພື່ອຄວບຄຸມທຸກໆເສັ້ນທາງ
 /// </summary>
 public class CurrentUserTests
 {
@@ -19,7 +19,7 @@ public class CurrentUserTests
     private static readonly Guid OtherDormitoryId = Guid.CreateVersion7();
 
     [Fact]
-    public void ผู้ใช้ที่ยังไม่ยืนยันตัวตน_ต้องไม่มีสิทธิ์ใด()
+    public void ຜູ້ໃຊ້ທີ່ບໍ່ໄດ້ຢືນຢັນ_ຕ້ອງບໍ່ມີສິດໃດໆ()
     {
         ICurrentUser currentUser = CreateAnonymous();
 
@@ -34,7 +34,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void ผู้ใช้ที่ยืนยันตัวตนแล้ว_ต้องอ่าน_UserId_และ_OrganizationId_ได้()
+    public void ຢືນຢັນຜູ້ໃຊ້_ຕ້ອງອ່ານ_UserId_ແລະ_OrganizationId_ແມ່ນແລ້ວ()
     {
         ICurrentUser currentUser = CreateAuthenticated(DormFlowRoles.Staff);
 
@@ -44,7 +44,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void สิทธิ์ที่มีใน_Claim_เท่านั้นที่ต้องผ่าน()
+    public void ສິດທີ່ມີຢູ່ໃນ_Claim_ນັ້ນແມ່ນທັງຝົດທີ່ເຈົ້າຕ້ອງຜ່ານ()
     {
         ICurrentUser currentUser = CreateAuthenticated(
             DormFlowRoles.Staff,
@@ -57,7 +57,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void SuperAdmin_ต้องมีทุกสิทธิ์แม้ไม่มี_Permission_Claim()
+    public void SuperAdmin_ຕ້ອງມີສິດທຸກຢ່າງເຖິງແມ່ນວ່າເຈົ້າບໍ່ມີ_Permission_Claim()
     {
         ICurrentUser currentUser = CreateAuthenticated(DormFlowRoles.SuperAdmin);
 
@@ -67,7 +67,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void SuperAdmin_ต้องเข้าถึงได้ทุกหอพัก()
+    public void SuperAdmin_ຕ້ອງເຂົ້າໄດ້ທຸກຫໍພັກ()
     {
         ICurrentUser currentUser = CreateAuthenticated(DormFlowRoles.SuperAdmin);
 
@@ -75,7 +75,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void Owner_ต้องเข้าถึงได้ทุกหอพักในองค์กรของตน()
+    public void Owner_ຕ້ອງສາມາດເຂົ້າເຖິງທຸກຫໍພັກໃນອົງກອນຂອງພວກເຂົາ()
     {
         ICurrentUser currentUser = CreateAuthenticated(DormFlowRoles.Owner);
 
@@ -83,7 +83,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void เจ้าหน้าที่_ต้องเข้าถึงได้เฉพาะหอพักที่ได้รับมอบหมาย()
+    public void ທາງການ_ຕ້ອງມີການເຂົ້າເຖິງພຽງແຕ່ຫໍພັກທີ່ໄດ້ຮັບມອບຝາຍ()
     {
         ICurrentUser currentUser = CreateAuthenticated(
             DormFlowRoles.DormManager,
@@ -95,10 +95,10 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void Claim_หอพักที่ไม่ใช่_UUID_ต้องถูกข้ามไป()
+    public void Claim_ຫໍພັກທີ່ບໍ່ແມ່ນ_UUID_ຕ້ອງຂ້າມ()
     {
         ClaimsIdentity identity = CreateIdentity(DormFlowRoles.Staff);
-        identity.AddClaim(new Claim(DormFlowClaimTypes.DormitoryId, "ไม่ใช่ uuid"));
+        identity.AddClaim(new Claim(DormFlowClaimTypes.DormitoryId, "ບໍ່ uuid"));
         identity.AddClaim(new Claim(DormFlowClaimTypes.DormitoryId, AssignedDormitoryId.ToString()));
 
         ICurrentUser currentUser = CreateCurrentUser(new ClaimsPrincipal(identity));
@@ -107,7 +107,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void HasPermission_ต้องไม่รับรหัสสิทธิ์ที่ว่าง()
+    public void HasPermission_ທ່ານຕ້ອງບໍ່ຍອມຮັບລະຫັດການອະນຸຍາດຫວ່າງເປົ່າ()
     {
         ICurrentUser currentUser = CreateAuthenticated(DormFlowRoles.Staff);
 
@@ -117,7 +117,7 @@ public class CurrentUserTests
     }
 
     [Fact]
-    public void IpAddress_และ_UserAgent_ต้องอ่านจากคำขอปัจจุบัน()
+    public void IpAddress_ແລະ_UserAgent_ຕ້ອງໄດ້ຮັບການອ່ານຈາກຄໍາຮ້ອງຂໍໃນປະຈຸບັນ()
     {
         DefaultHttpContext context = new();
         context.User = new ClaimsPrincipal(CreateIdentity(DormFlowRoles.Staff));

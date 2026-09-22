@@ -3,6 +3,7 @@ using DormFlow.Application.Common.Authorization;
 using DormFlow.Application.Common.Exceptions;
 using DormFlow.Application.Common.Pagination;
 using DormFlow.Application.Features.Buildings;
+using DormFlow.Application.Features.Dormitories;
 using DormFlow.Application.Features.Floors;
 using DormFlow.Application.Features.RoomTypes;
 using DormFlow.Contracts.Common;
@@ -13,12 +14,13 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Rooms;
 
-/// <summary>Use Case ทั้งหมดของโมดูลห้องพัก</summary>
+/// <summary>Use Case ໂມດູນຫ້ອງທັງໝົດ</summary>
 public sealed class RoomService(
     IRoomRepository repository,
     IBuildingRepository buildingRepository,
     IFloorRepository floorRepository,
     IRoomTypeRepository roomTypeRepository,
+    IDormitoryRepository dormitoryRepository,
     ICurrentUser currentUser,
     IAuditLogWriter auditLogWriter,
     IValidator<CreateRoomRequest> createValidator,
@@ -31,6 +33,7 @@ public sealed class RoomService(
     private readonly IBuildingRepository _buildingRepository = buildingRepository;
     private readonly IFloorRepository _floorRepository = floorRepository;
     private readonly IRoomTypeRepository _roomTypeRepository = roomTypeRepository;
+    private readonly IDormitoryRepository _dormitoryRepository = dormitoryRepository;
     private readonly ICurrentUser _currentUser = currentUser;
     private readonly IAuditLogWriter _auditLogWriter = auditLogWriter;
     private readonly IValidator<CreateRoomRequest> _createValidator = createValidator;
@@ -79,7 +82,7 @@ public sealed class RoomService(
     public async Task<RoomResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         Room room = await FindAccessibleAsync(id, cancellationToken);
-        return ToResponse(room);
+        return await ToResponseAsync(room, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -91,35 +94,35 @@ public sealed class RoomService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Building building = await _buildingRepository.GetByIdAsync(request.BuildingId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบอาคารที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບອາຄານທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             building.OrganizationId,
             building.DormitoryId.GetValueOrDefault(),
-            "ไม่พบอาคารที่ระบุ");
+            "ບໍ່ພົບອາຄານທີ່ລະບຸ");
 
         Floor floor = await _floorRepository.GetByIdAsync(request.FloorId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบชั้นที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຊັ້ນທີ່ລະບຸ");
 
         if (floor.BuildingId != building.Id)
         {
-            throw new ValidationFailedException("ชั้นที่ระบุไม่ได้อยู่ในอาคารที่เลือก");
+            throw new ValidationFailedException("ຊັ້ນທີ່ລະບຸບໍ່ໄດ້ຢູ່ໃນອາຄານທີ່ເລືອກ");
         }
 
         RoomType roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบประเภทห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບປະເພດຫ້ອງທີ່ລະບຸ");
 
         if (roomType.DormitoryId != building.DormitoryId)
         {
-            throw new ValidationFailedException("ประเภทห้องที่ระบุไม่ได้อยู่ในหอพักเดียวกับอาคารที่เลือก");
+            throw new ValidationFailedException("ປະເພດຫ້ອງທີ່ລະບຸບໍ່ໄດ້ຢູ່ໃນຫໍພັກດຽວກັບອາຄານທີ່ເລືອກ");
         }
 
         string roomNumber = request.RoomNumber.Trim();
 
         if (await _repository.ExistsByRoomNumberAsync(building.Id, roomNumber, null, cancellationToken))
         {
-            throw new ConflictException($"เลขห้อง '{roomNumber}' ถูกใช้ในอาคารนี้แล้ว");
+            throw new ConflictException($"ເລກຫ້ອງ '{roomNumber}' ຖືກໃຊ້ໃນອາຄານນີ້ແລ້ວ");
         }
 
         Room room = new()
@@ -134,6 +137,10 @@ public sealed class RoomService(
             DepositAmount = request.DepositAmount,
             MaximumOccupants = request.MaximumOccupants,
             Description = request.Description,
+            FloorPlanX = request.FloorPlanX,
+            FloorPlanY = request.FloorPlanY,
+            FloorPlanWidth = request.FloorPlanWidth,
+            FloorPlanHeight = request.FloorPlanHeight,
         };
 
         await _repository.AddAsync(room, cancellationToken);
@@ -146,7 +153,7 @@ public sealed class RoomService(
             organizationId: room.OrganizationId,
             cancellationToken: cancellationToken);
 
-        return ToResponse(room);
+        return await ToResponseAsync(room, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -161,26 +168,26 @@ public sealed class RoomService(
         Room room = await FindAccessibleAsync(id, cancellationToken);
 
         Floor floor = await _floorRepository.GetByIdAsync(request.FloorId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบชั้นที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຊັ້ນທີ່ລະບຸ");
 
         if (floor.BuildingId != room.BuildingId)
         {
-            throw new ValidationFailedException("ชั้นที่ระบุไม่ได้อยู่ในอาคารเดียวกับห้องนี้");
+            throw new ValidationFailedException("ຊັ້ນທີ່ລະບຸບໍ່ໄດ້ຢູ່ໃນອາຄານດຽວກັບຫ້ອງນີ້");
         }
 
         RoomType roomType = await _roomTypeRepository.GetByIdAsync(request.RoomTypeId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบประเภทห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບປະເພດຫ້ອງທີ່ລະບຸ");
 
         if (roomType.DormitoryId != room.DormitoryId)
         {
-            throw new ValidationFailedException("ประเภทห้องที่ระบุไม่ได้อยู่ในหอพักเดียวกับห้องนี้");
+            throw new ValidationFailedException("ປະເພດຫ້ອງທີ່ລະບຸບໍ່ໄດ້ຢູ່ໃນຫໍພັກດຽວກັບຫ້ອງນີ້");
         }
 
         string roomNumber = request.RoomNumber.Trim();
 
         if (await _repository.ExistsByRoomNumberAsync(room.BuildingId, roomNumber, room.Id, cancellationToken))
         {
-            throw new ConflictException($"เลขห้อง '{roomNumber}' ถูกใช้ในอาคารนี้แล้ว");
+            throw new ConflictException($"ເລກຫ້ອງ '{roomNumber}' ຖືກໃຊ້ໃນອາຄານນີ້ແລ້ວ");
         }
 
         room.FloorId = floor.Id;
@@ -190,6 +197,10 @@ public sealed class RoomService(
         room.DepositAmount = request.DepositAmount;
         room.MaximumOccupants = request.MaximumOccupants;
         room.Description = request.Description;
+        room.FloorPlanX = request.FloorPlanX;
+        room.FloorPlanY = request.FloorPlanY;
+        room.FloorPlanWidth = request.FloorPlanWidth;
+        room.FloorPlanHeight = request.FloorPlanHeight;
 
         await _repository.SaveChangesAsync(cancellationToken);
 
@@ -200,7 +211,7 @@ public sealed class RoomService(
             organizationId: room.OrganizationId,
             cancellationToken: cancellationToken);
 
-        return ToResponse(room);
+        return await ToResponseAsync(room, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -211,7 +222,7 @@ public sealed class RoomService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out RoomStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Room room = await FindAccessibleAsync(id, cancellationToken);
@@ -227,7 +238,7 @@ public sealed class RoomService(
             newValues: $$"""{"status":"{{newStatus}}"}""",
             cancellationToken: cancellationToken);
 
-        return ToResponse(room);
+        return await ToResponseAsync(room, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -267,24 +278,21 @@ public sealed class RoomService(
             TenantScope.GetDormitoryRestrictionForListing(_currentUser));
 
         PagedResult<Room> result = await _repository.GetPagedAsync(filter, query, cancellationToken);
+        IReadOnlyList<RoomResponse> items = await ToResponsesAsync(result.Items, cancellationToken);
 
-        return PagedResult.Create(
-            (IReadOnlyList<RoomResponse>)[.. result.Items.Select(ToResponse)],
-            result.Page,
-            result.PageSize,
-            result.TotalItems);
+        return PagedResult.Create(items, result.Page, result.PageSize, result.TotalItems);
     }
 
     private async Task<Room> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Room room = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลห้องพักที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຫ້ອງພັກທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลห้องพักที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຫ້ອງພັກທີ່ຕ້ອງການ");
 
         return room;
     }
@@ -294,21 +302,59 @@ public sealed class RoomService(
             ? parsed
             : null;
 
-    private static RoomResponse ToResponse(Room room) => new()
+    private async Task<RoomResponse> ToResponseAsync(Room room, CancellationToken cancellationToken)
     {
-        Id = room.Id,
-        OrganizationId = room.OrganizationId,
-        DormitoryId = room.DormitoryId.GetValueOrDefault(),
-        BuildingId = room.BuildingId,
-        FloorId = room.FloorId,
-        RoomTypeId = room.RoomTypeId,
-        RoomNumber = room.RoomNumber,
-        MonthlyRent = room.MonthlyRent,
-        DepositAmount = room.DepositAmount,
-        MaximumOccupants = room.MaximumOccupants,
-        Status = room.Status.ToString(),
-        Description = room.Description,
-        CreatedAt = room.CreatedAt,
-        UpdatedAt = room.UpdatedAt,
-    };
+        IReadOnlyList<RoomResponse> responses = await ToResponsesAsync([room], cancellationToken);
+        return responses[0];
+    }
+
+    /// <summary>
+    /// ແປງ <see cref="Room"/> ແມ່ນ <see cref="RoomResponse"/> ກັບຊື່ຂອງຫໍພັກ/ອາຄານ/ຊັ້ນ/ປະເພດຫ້ອງ
+    /// ເນື່ອງຈາກວ່າ <see cref="Room"/> ຮັກສາລະຫັດການອ້າງອີງເທົ່ານັ້ນ (ບໍ່ມີ navigation property) ດັ່ງນັ້ນ, ຊື່ຕ້ອງໄດ້ຮັບການສະກັດແຍກຕ່າງຫາກ
+    /// query ແຕ່ເຮັດໃຫ້ພຽງແຕ່ຜຶ່ງ batch ຕໍ່ລາຍການ (ບໍ່ query ແຖວຕໍ່ແຖວ) ເພື່ອຫຼຸດຜ່ອນຈໍານວນຂອງຮອບກັບຖານຂໍ້ມູນ
+    /// </summary>
+    private async Task<IReadOnlyList<RoomResponse>> ToResponsesAsync(
+        IReadOnlyList<Room> rooms,
+        CancellationToken cancellationToken)
+    {
+        Guid[] dormitoryIds = [.. rooms.Select(room => room.DormitoryId.GetValueOrDefault()).Distinct()];
+        Guid[] buildingIds = [.. rooms.Select(room => room.BuildingId).Distinct()];
+        Guid[] floorIds = [.. rooms.Select(room => room.FloorId).Distinct()];
+        Guid[] roomTypeIds = [.. rooms.Select(room => room.RoomTypeId).Distinct()];
+
+        IReadOnlyDictionary<Guid, string> dormitoryNames =
+            await _dormitoryRepository.GetNamesByIdsAsync(dormitoryIds, cancellationToken);
+        IReadOnlyDictionary<Guid, string> buildingNames =
+            await _buildingRepository.GetNamesByIdsAsync(buildingIds, cancellationToken);
+        IReadOnlyDictionary<Guid, string> floorNames =
+            await _floorRepository.GetNamesByIdsAsync(floorIds, cancellationToken);
+        IReadOnlyDictionary<Guid, string> roomTypeNames =
+            await _roomTypeRepository.GetNamesByIdsAsync(roomTypeIds, cancellationToken);
+
+        return [.. rooms.Select(room => new RoomResponse
+        {
+            Id = room.Id,
+            OrganizationId = room.OrganizationId,
+            DormitoryId = room.DormitoryId.GetValueOrDefault(),
+            DormitoryName = dormitoryNames.GetValueOrDefault(room.DormitoryId.GetValueOrDefault(), string.Empty),
+            BuildingId = room.BuildingId,
+            BuildingName = buildingNames.GetValueOrDefault(room.BuildingId, string.Empty),
+            FloorId = room.FloorId,
+            FloorName = floorNames.GetValueOrDefault(room.FloorId, string.Empty),
+            RoomTypeId = room.RoomTypeId,
+            RoomTypeName = roomTypeNames.GetValueOrDefault(room.RoomTypeId, string.Empty),
+            RoomNumber = room.RoomNumber,
+            MonthlyRent = room.MonthlyRent,
+            DepositAmount = room.DepositAmount,
+            MaximumOccupants = room.MaximumOccupants,
+            Status = room.Status.ToString(),
+            Description = room.Description,
+            FloorPlanX = room.FloorPlanX,
+            FloorPlanY = room.FloorPlanY,
+            FloorPlanWidth = room.FloorPlanWidth,
+            FloorPlanHeight = room.FloorPlanHeight,
+            CreatedAt = room.CreatedAt,
+            UpdatedAt = room.UpdatedAt,
+        })];
+    }
 }

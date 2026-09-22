@@ -1,35 +1,35 @@
 namespace DormFlow.Contracts.Buildings;
 
-/// <summary>ข้อมูลอาคารหนึ่งหลัง</summary>
+/// <summary>ຂໍ້ມູນການກໍ່ສ້າງຜຶ່ງ</summary>
 public class BuildingResponse
 {
-    /// <summary>รหัสอ้างอิงของอาคาร</summary>
+    /// <summary>ລະຫັດອ້າງອີງອາຄານ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของอาคาร</summary>
+    /// <summary>ອົງກອນເຈົ້າຂອງການກໍ່ສ້າງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่อาคารนี้สังกัด</summary>
+    /// <summary>ຫໍພັກທີ່ຕຶກນີ້ເປັນຂອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>รหัสอาคาร</summary>
+    /// <summary>ລະຫັດອາຄານ</summary>
     public string Code { get; init; } = string.Empty;
 
-    /// <summary>ชื่ออาคาร</summary>
+    /// <summary>ຊື່ອາຄານ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>จำนวนชั้นทั้งหมดของอาคาร</summary>
+    /// <summary>ຈໍານວນຊັ້ນທັງຝົດຂອງອາຄານ</summary>
     public int TotalFloors { get; init; }
 
-    /// <summary>สถานะของอาคาร</summary>
+    /// <summary>ສະຖານະຂອງອາຄານ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

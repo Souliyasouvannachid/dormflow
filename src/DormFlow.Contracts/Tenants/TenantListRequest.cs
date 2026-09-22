@@ -2,12 +2,12 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Tenants;
 
-/// <summary>พารามิเตอร์การค้นหารายการผู้เช่า</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍຊື່ຜູ້ເຊົ່າ</summary>
 public class TenantListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะผู้เช่าขององค์กรที่ระบุ มีผลเฉพาะเมื่อผู้เรียกเป็น SuperAdmin</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ສໍາລັບຜູ້ເຊົ່າຂອງອົງກອນທີ່ລະບຸ. ມີປະສິດພາບພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin</summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>กรองเฉพาะผู้เช่าที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຜູ້ເຊົ່າທີ່ສະຖານະກົງກັບທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

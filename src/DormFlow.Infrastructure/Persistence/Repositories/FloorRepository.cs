@@ -1,3 +1,4 @@
+using System.Globalization;
 using DormFlow.Application.Common.Pagination;
 using DormFlow.Application.Features.Floors;
 using DormFlow.Contracts.Common;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลชั้นของอาคารบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຊັ້ນອາຄານ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class FloorRepository(DormFlowDbContext dbContext) : IFloorRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -15,6 +16,24 @@ public sealed class FloorRepository(DormFlowDbContext dbContext) : IFloorReposit
     /// <inheritdoc />
     public Task<Floor?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => _dbContext.Floors.FirstOrDefaultAsync(floor => floor.Id == id, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<Guid, string>> GetNamesByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, string>();
+        }
+
+        return await _dbContext.Floors.AsNoTracking()
+            .Where(floor => ids.Contains(floor.Id))
+            .ToDictionaryAsync(
+                floor => floor.Id,
+                floor => floor.Name ?? floor.FloorNumber.ToString(CultureInfo.InvariantCulture),
+                cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task<bool> ExistsByFloorNumberAsync(

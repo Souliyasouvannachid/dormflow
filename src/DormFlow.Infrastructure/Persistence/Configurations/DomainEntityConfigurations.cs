@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางองค์กร</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງອົງກອນ</summary>
 public sealed class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 {
     /// <inheritdoc />
@@ -23,15 +23,15 @@ public sealed class OrganizationConfiguration : IEntityTypeConfiguration<Organiz
         builder.Property(organization => organization.Address).HasMaxLength(500);
         builder.Property(organization => organization.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // รหัสองค์กรต้องไม่ซ้ำกันเฉพาะในกลุ่มที่ยังไม่ถูกลบ
-        // เพื่อให้นำรหัสเดิมกลับมาใช้ได้หลังลบองค์กรทิ้ง
+        // ID ອົງກອນຈະຕ້ອງເປັນເອກະລັກສະເພາະໃນບັນດາກຸ່ມທີ່ຍັງບໍ່ໄດ້ລຶບ
+        // ເພື່ອໃຫ້ສາມາດໃຊ້ລະຫັດເກົ່າຄືນໃຝ່ຫຼັງຈາກລຶບອົງກອນ
         builder.HasIndex(organization => organization.Code)
             .IsUnique()
             .HasFilter("is_deleted = false");
     }
 }
 
-/// <summary>ตั้งค่าตารางสิทธิ์</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການອະນຸຍາດ</summary>
 public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
     /// <inheritdoc />
@@ -51,7 +51,7 @@ public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permissio
     }
 }
 
-/// <summary>ตั้งค่าตารางความสัมพันธ์ระหว่างบทบาทกับสิทธิ์</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງຄວາມສໍາພັນຂອງບົດບາດການອະນຸຍາດ</summary>
 public sealed class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermission>
 {
     /// <inheritdoc />
@@ -70,7 +70,7 @@ public sealed class RolePermissionConfiguration : IEntityTypeConfiguration<RoleP
             .HasForeignKey(rolePermission => rolePermission.PermissionId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // ถอนบทบาททิ้งแล้วสิทธิ์ที่ผูกไว้ต้องหายไปด้วย ไม่เช่นนั้นจะเหลือแถวที่ชี้ไปยังบทบาทที่ไม่มีอยู่
+        // ຖອດຖອນບົດບາດແລະສິດທີ່ຕິດພັນກັບມັນຍັງຕ້ອງຫາຍໄປ. ຖ້າບໍ່ດັ່ງນັ້ນ, ແຖວຈະຖືກປະໄວ້ໂດຍຊີ້ໄປຫາບົດບາດທີ່ບໍ່ມີຢູ່ແລ້ວ
         builder.HasOne<ApplicationRole>()
             .WithMany()
             .HasForeignKey(rolePermission => rolePermission.RoleId)
@@ -80,7 +80,7 @@ public sealed class RolePermissionConfiguration : IEntityTypeConfiguration<RoleP
     }
 }
 
-/// <summary>ตั้งค่าตาราง Refresh Token</summary>
+/// <summary>ຕາຕະລາງຕັ້ງ Refresh Token</summary>
 public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {
     /// <inheritdoc />
@@ -97,7 +97,7 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
         builder.Property(token => token.UserAgent).HasMaxLength(512);
         builder.Property(token => token.ReasonRevoked).HasConversion<string>().HasMaxLength(40);
 
-        // ค้นหาโทเคนด้วยค่าแฮชในทุกครั้งที่มีการต่ออายุ จึงต้องมี index ที่ไม่ซ้ำกัน
+        // ຄົ້ນຫາ tokens ໂດຍຄ່າ hash ຂອງພວກເຂົາທຸກຄັ້ງທີ່ພວກມັນຖືກຕໍ່ໃຝ່, ດັ່ງນັ້ນຕ້ອງມີ index ເປັນເອກະລັກ
         builder.HasIndex(token => token.TokenHash).IsUnique();
         builder.HasIndex(token => new { token.UserId, token.ExpiresAt });
 
@@ -113,7 +113,7 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
     }
 }
 
-/// <summary>ตั้งค่าตาราง Audit Log</summary>
+/// <summary>ຕາຕະລາງຕັ້ງ Audit Log</summary>
 public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     /// <inheritdoc />
@@ -133,7 +133,7 @@ public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
         builder.Property(log => log.RequestPath).HasMaxLength(512);
         builder.Property(log => log.CreatedAt).IsRequired();
 
-        // เก็บค่าเดิมและค่าใหม่เป็น jsonb เพื่อให้ค้นหาภายในโครงสร้างข้อมูลได้จากฝั่งฐานข้อมูล
+        // ຮັກສາຄຸນຄ່າຕົ້ນສະບັບແລະໃຝ່ເປັນ jsonb ເພື່ອໃຫ້ສາມາດຄົ້ນຫາພາຍໃນໂຄງສ້າງຂໍ້ມູນຈາກດ້ານຖານຂໍ້ມູນ
         builder.Property(log => log.OldValues).HasColumnType("jsonb");
         builder.Property(log => log.NewValues).HasColumnType("jsonb");
 

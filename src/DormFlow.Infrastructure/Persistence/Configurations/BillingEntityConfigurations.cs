@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางค่ามิเตอร์</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງຄ່າແມັດ</summary>
 public sealed class MeterReadingConfiguration : IEntityTypeConfiguration<MeterReading>
 {
     /// <inheritdoc />
@@ -20,7 +20,7 @@ public sealed class MeterReadingConfiguration : IEntityTypeConfiguration<MeterRe
         builder.Property(reading => reading.ReadingDate).IsRequired();
         builder.Property(reading => reading.Notes).HasMaxLength(1000);
 
-        // ห้องหนึ่งห้องจดค่ามิเตอร์ประเภทเดียวกันได้เพียงครั้งเดียวต่อเดือน
+        // ຫ້ອງຜຶ່ງສາມາດບັນທຶກປະເພດດຽວກັນຂອງການອ່ານແມັດພຽງແຕ່ຜຶ່ງຄັ້ງຕໍ່ເດືອນ
         builder.HasIndex(reading => new { reading.RoomId, reading.MeterType, reading.PeriodMonth })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -32,7 +32,7 @@ public sealed class MeterReadingConfiguration : IEntityTypeConfiguration<MeterRe
     }
 }
 
-/// <summary>ตั้งค่าตารางใบแจ้งหนี้</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງໃບແຈ້ງໜີ້</summary>
 public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
 {
     /// <inheritdoc />
@@ -50,12 +50,12 @@ public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(invoice => invoice.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.Property(invoice => invoice.Notes).HasMaxLength(1000);
 
-        // เลขที่ใบแจ้งหนี้ไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ໝາຍເລກໃບແຈ້ງໜີ້ແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(invoice => new { invoice.OrganizationId, invoice.InvoiceNumber })
             .IsUnique()
             .HasFilter("is_deleted = false");
 
-        // สัญญาเช่าหนึ่งฉบับออกบิลของเดือนเดียวกันได้เพียงครั้งเดียว
+        // ສັນຍາເຊົ່າຜຶ່ງສາມາດຖືກເອີ້ນເກັບເງິນຄັ້ງດຽວສໍາລັບເດືອນດຽວກັນ
         builder.HasIndex(invoice => new { invoice.ContractId, invoice.PeriodMonth })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -69,7 +69,7 @@ public sealed class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
     }
 }
 
-/// <summary>ตั้งค่าตารางการชำระเงิน</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງການຈ່າຍເງິນ</summary>
 public sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 {
     /// <inheritdoc />

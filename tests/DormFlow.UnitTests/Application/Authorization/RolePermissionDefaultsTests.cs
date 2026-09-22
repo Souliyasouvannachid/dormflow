@@ -5,30 +5,30 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Application.Authorization;
 
-/// <summary>ตรวจว่าสิทธิ์เริ่มต้นของแต่ละบทบาทสอดคล้องกับรหัสสิทธิ์ที่มีอยู่จริง</summary>
+/// <summary>ກວດສອບວ່າການອະນຸຍາດເລີ່ມຕົ້ນຂອງແຕ່ລະບົດບາດສອດຄ່ອງກັບລະຫັດການອະນຸຍາດຕົວຈິງ</summary>
 public class RolePermissionDefaultsTests
 {
     [Fact]
-    public void ทุกบทบาทมาตรฐาน_ต้องมีนิยามสิทธิ์เริ่มต้น()
+    public void ບົດບາດມາດຕະຖານທັງຝົດ_ຕ້ອງການຄໍານິຍາມການອະນຸຍາດເລີ່ມຕົ້ນ()
     {
         RolePermissionDefaults.ByRole.Keys.Should().BeEquivalentTo(DormFlowRoles.All);
     }
 
     [Fact]
-    public void SuperAdmin_ต้องได้รับทุกสิทธิ์ที่มีอยู่ในระบบ()
+    public void SuperAdmin_ຕ້ອງໄດ້ຮັບສິດທັງຝົດທີ່ມີຢູ່ໃນລະບົບ()
     {
         RolePermissionDefaults.ForRole(DormFlowRoles.SuperAdmin)
             .Should().BeEquivalentTo(PermissionCodes.AllCodes);
     }
 
     [Fact]
-    public void Tenant_ต้องไม่มีสิทธิ์ฝั่งผู้ดูแลเลย()
+    public void Tenant_ຕ້ອງບໍ່ມີສິດຜູ້ເບິ່ງແຍງລະບົບເລີຍ()
     {
         RolePermissionDefaults.ForRole(DormFlowRoles.Tenant).Should().BeEmpty();
     }
 
     [Fact]
-    public void ทุกสิทธิ์ในทุกบทบาท_ต้องเป็นรหัสสิทธิ์ที่มีอยู่จริงในระบบ()
+    public void ທຸກໆສິດໃນທຸກໆບົດບາດ_ຕ້ອງເປັນລະຫັດການອະນຸຍາດທີ່ມີຢູ່ໃນລະບົບ()
     {
         IEnumerable<string> allAssignedPermissions = RolePermissionDefaults.ByRole.Values.SelectMany(codes => codes);
 
@@ -36,13 +36,13 @@ public class RolePermissionDefaultsTests
     }
 
     [Fact]
-    public void ForRole_เมื่อไม่พบบทบาท_ต้องคืนรายการว่าง()
+    public void ForRole_ເມື່ອບໍ່ພົບບົດບາດ_ລາຍການເປົ່າຕ້ອງຖືກສົ່ງຄືນ()
     {
         RolePermissionDefaults.ForRole("NotARealRole").Should().BeEmpty();
     }
 
     [Fact]
-    public void Owner_ต้องไม่มีสิทธิ์สร้างหรือลบองค์กร()
+    public void Owner_ຕ້ອງບໍ່ມີການອະນຸຍາດໃຫ້ສ້າງຫຼືລຶບອົງກອນ()
     {
         IReadOnlyList<string> ownerPermissions = RolePermissionDefaults.ForRole(DormFlowRoles.Owner);
 

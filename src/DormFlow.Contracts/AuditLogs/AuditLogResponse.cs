@@ -1,44 +1,44 @@
 namespace DormFlow.Contracts.AuditLogs;
 
-/// <summary>เหตุการณ์หนึ่งรายการที่ถูกบันทึกไว้ใน Audit Log</summary>
+/// <summary>ເຫດການໜຶ່ງທີ່ບັນທຶກໄວ້ໃນ Audit Log</summary>
 public class AuditLogResponse
 {
-    /// <summary>รหัสอ้างอิงของเหตุการณ์</summary>
+    /// <summary>ລະຫັດອ້າງອີງເຫດການ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid? OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid? DormitoryId { get; init; }
 
-    /// <summary>ผู้ใช้ที่ก่อให้เกิดเหตุการณ์</summary>
+    /// <summary>ຜູ້ໃຊ້ທີ່ເຮັດໃຫ້ເກີດເຫດການ</summary>
     public Guid? UserId { get; init; }
 
-    /// <summary>ประเภทของเหตุการณ์</summary>
+    /// <summary>ປະເພດເຫດການ</summary>
     public string Action { get; init; } = string.Empty;
 
-    /// <summary>ชื่อ Entity ที่ถูกกระทำ</summary>
+    /// <summary>ຊື່ Entity ໄດ້ເຮັດແລ້ວ</summary>
     public string EntityName { get; init; } = string.Empty;
 
-    /// <summary>รหัสของ Entity ที่ถูกกระทำ</summary>
+    /// <summary>ລະຫັດຂອງ Entity ໄດ້ເຮັດແລ້ວ</summary>
     public string? EntityId { get; init; }
 
-    /// <summary>ค่าเดิมก่อนแก้ไข</summary>
+    /// <summary>ຄ່າຕົ້ນສະບັບກ່ອນການແກ້ໄຂ</summary>
     public string? OldValues { get; init; }
 
-    /// <summary>ค่าใหม่หลังแก้ไข</summary>
+    /// <summary>ຄ່າໃຝ່ຫຼັງຈາກການແກ້ໄຂ</summary>
     public string? NewValues { get; init; }
 
-    /// <summary>หมายเลข IP ต้นทาง</summary>
+    /// <summary>ເລກ IP ຕົ້ນກໍາເນີດ</summary>
     public string? IpAddress { get; init; }
 
-    /// <summary>User Agent ของคำขอ</summary>
+    /// <summary>User Agent ຂອງຄໍາຮ້ອງສະຝັກ</summary>
     public string? UserAgent { get; init; }
 
-    /// <summary>เส้นทางของคำขอที่ทำให้เกิดเหตุการณ์</summary>
+    /// <summary>ເສັ້ນທາງຂອງການຮ້ອງຂໍທີ່ເຮັດໃຫ້ເກີດເຫດການ</summary>
     public string? RequestPath { get; init; }
 
-    /// <summary>เวลาที่เกิดเหตุการณ์</summary>
+    /// <summary>ເວລາຂອງເຫດການ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

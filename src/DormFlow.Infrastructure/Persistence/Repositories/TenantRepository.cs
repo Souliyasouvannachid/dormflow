@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลผู้เช่าบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຜູ້ເຊົ່າໃນ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class TenantRepository(DormFlowDbContext dbContext) : ITenantRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

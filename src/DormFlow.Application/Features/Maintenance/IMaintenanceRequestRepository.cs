@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Maintenance;
 
-/// <summary>ตัวกรองสำหรับดึงรายการงานแจ้งซ่อมบำรุงแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງການແຈ້ງເຕືອນວຽກງານບໍາລຸງຮັກສາ</summary>
 public sealed record MaintenanceRequestListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -15,30 +15,35 @@ public sealed record MaintenanceRequestListFilter(
     Guid? AssignedTechnicianId,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลงานแจ้งซ่อมบำรุงในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການບໍາລຸງຮັກສາໃນຖານຂໍ້ມູນ</summary>
 public interface IMaintenanceRequestRepository
 {
-    /// <summary>อ่านงานแจ้งซ่อมบำรุงจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານການແຈ້ງເຕືອນການບຳລຸງຮັກສາຈາກລະຫັດອ້າງອີງ</summary>
     Task<MaintenanceRequest?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ตรวจว่าห้องนี้ยังมีงานแจ้งซ่อมบำรุงอื่นที่ยังไม่ปิด (Reported/Assigned/InProgress) ค้างอยู่หรือไม่
-    /// ใช้ตัดสินว่าจะคืนสถานะห้องเป็นว่างได้หรือยัง ไม่นับรวมงานที่ระบุใน excludeRequestId
+    /// ກວດເບິ່ງວ່າຫ້ອງນີ້ຍັງມີວຽກບໍາລຸງຮັກສາອື່ນທີ່ຍັງບໍ່ໄດ້ປິດ (Reported/Assigned/InProgress) ລໍຖ້າຢູ່ຫຼືບໍ່?
+    /// ໃຊ້ເພື່ອຕັດສິນໃຈວ່າສະຖານະຂອງຫ້ອງສາມາດກັບຄືນໄປເປັນຟຣີຫຼືບໍ່. ບໍ່ລວມເອົາວຽກທີ່ລະບຸໄວ້ໃນ excludeRequestId
     /// </summary>
     Task<bool> HasOpenRequestForRoomAsync(
         Guid roomId,
         Guid excludeRequestId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการงานแจ้งซ่อมบำรุงแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງວຽກງານບໍາລຸງຮັກສາໂດຍອີງໃສ່ການກັ່ນຕອງທີ່ກໍານົດໄວ້</summary>
     Task<PagedResult<MaintenanceRequest>> GetPagedAsync(
         MaintenanceRequestListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มงานแจ้งซ่อมบำรุงใหม่</summary>
+    /// <summary>ນັບຈຳນວນວຽກແຍກຕາມສະຖານະດ້ວຍ query ດຽວ</summary>
+    Task<IReadOnlyDictionary<MaintenanceStatus, int>> GetStatusCountsAsync(
+        MaintenanceRequestListFilter filter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ເພີ່ມວຽກບໍາລຸງຮັກສາໃຝ່</summary>
     Task AddAsync(MaintenanceRequest maintenanceRequest, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล รวมถึงการเปลี่ยนแปลงของ Entity อื่นที่ถูกติดตามอยู่ในธุรกรรมเดียวกัน</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ. ລວມທັງການປ່ຽນແປງໃນ Entity ທຸລະກໍາທີ່ຕິດຕາມອື່ນແມ່ນຢູ່ໃນທຸລະກໍາດຽວກັນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

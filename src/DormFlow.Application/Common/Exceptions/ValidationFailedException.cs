@@ -4,43 +4,43 @@ using FluentValidation.Results;
 namespace DormFlow.Application.Common.Exceptions;
 
 /// <summary>
-/// ข้อมูลที่ส่งเข้ามาไม่ผ่านการตรวจสอบ ชั้น API จะแปลงเป็น HTTP 400 พร้อมรายละเอียดรายฟิลด์
+/// ຂໍ້ມູນທີ່ສົ່ງມາຍັງບໍ່ໄດ້ຮັບການຢືນຢັນ API ຈະປ່ຽນເປັນ HTTP 400 ມີລາຍລະອຽດຕໍ່ຊ່ອງຂໍ້ມູນ
 /// </summary>
 /// <remarks>
-/// ตั้งชื่อว่า ValidationFailedException เพื่อไม่ให้ชนกับ FluentValidation.ValidationException
-/// ซึ่งจะทำให้ต้องใส่ namespace เต็มทุกครั้งที่อ้างถึง
+/// ຊື່ມັນ ValidationFailedException ໃນຄໍາສັ່ງທີ່ຈະບໍ່ collide ກັບ FluentValidation.ValidationException
+/// ເຊິ່ງຈະຮຽກຮ້ອງໃຫ້ທ່ານເຂົ້າໄປໃນ namespace ເຕັມທີ່ທຸກຄັ້ງທີ່ກ່າວເຖິງ
 /// </remarks>
 public class ValidationFailedException : Exception
 {
     private static readonly IReadOnlyDictionary<string, string[]> NoErrors =
         new Dictionary<string, string[]>(StringComparer.Ordinal);
 
-    /// <summary>สร้าง Exception พร้อมข้อความเริ่มต้นและไม่มีรายละเอียดรายฟิลด์</summary>
+    /// <summary>ສ້າງ Exception ດ້ວຍຂໍ້ຄວາມເລີ່ມຕົ້ນ ແລະບໍ່ມີລາຍລະອຽດໃນຊ່ອງຂໍ້ມູນ</summary>
     public ValidationFailedException()
-        : base("ข้อมูลไม่ถูกต้อง")
+        : base("ຂໍ້ມູນບໍ່ຖືກຕ້ອງ")
     {
         Errors = NoErrors;
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความที่กำหนดเอง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມທີ່ກໍາຜົດເອງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
     public ValidationFailedException(string message)
         : base(message)
     {
         Errors = NoErrors;
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความและ Exception ต้นทาง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
-    /// <param name="innerException">Exception ต้นทาง</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມແລະ Exception ຕົ້ນກໍາເນີດ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
+    /// <param name="innerException">Exception ຕົ້ນກໍາເນີດ</param>
     public ValidationFailedException(string message, Exception innerException)
         : base(message, innerException)
     {
         Errors = NoErrors;
     }
 
-    /// <summary>สร้าง Exception จากผลการตรวจสอบของ FluentValidation</summary>
-    /// <param name="failures">รายการข้อผิดพลาดที่ตรวจพบ</param>
+    /// <summary>ສ້າງ Exception ຈາກຜົນການກວດກາຂອງ ສ FluentValidation</summary>
+    /// <param name="failures">ກວດພົບລາຍຊື່ຂໍ້ຜິດພາດ</param>
     public ValidationFailedException(IEnumerable<ValidationFailure> failures)
         : this()
     {
@@ -55,8 +55,8 @@ public class ValidationFailedException : Exception
     }
 
     /// <summary>
-    /// รายละเอียดข้อผิดพลาดรายฟิลด์
-    /// key คือชื่อฟิลด์แบบ camelCase ให้ตรงกับรูปแบบ JSON ที่ Client ส่งมา
+    /// ລາຍລະອຽດຄວາມຜິດພາດພາກສະຜາມໂດຍພາກສະຜາມ
+    /// key ແມ່ນຊື່ພາກສະຜາມເຊັ່ນ camelCase ເພື່ອໃຫ້ກົງກັບຮູບແບບ JSON ທີ່ Client ສົ່ງແລ້ວ
     /// </summary>
     public IReadOnlyDictionary<string, string[]> Errors { get; }
 
@@ -67,7 +67,7 @@ public class ValidationFailedException : Exception
             return propertyName;
         }
 
-        // รองรับชื่อซ้อน เช่น Address.PostalCode -> address.postalCode
+        // ສະຜັບສະຜູນຊື່ຄູ່, ເຊັ່ນ: Address.PostalCode -> address.postalCode
         string[] segments = propertyName.Split('.');
         for (int i = 0; i < segments.Length; i++)
         {

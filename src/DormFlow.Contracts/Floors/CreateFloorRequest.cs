@@ -1,17 +1,17 @@
 namespace DormFlow.Contracts.Floors;
 
-/// <summary>คำขอสร้างชั้นใหม่</summary>
+/// <summary>ຮ້ອງຂໍການສ້າງຊັ້ນໃຝ່</summary>
 public class CreateFloorRequest
 {
-    /// <summary>อาคารที่ชั้นนี้จะสังกัด</summary>
+    /// <summary>ອາຄານທີ່ຊັ້ນນີ້ຂຶ້ນກັບ</summary>
     public Guid BuildingId { get; set; }
 
-    /// <summary>ลำดับชั้น ไม่ซ้ำกันภายในอาคารเดียวกัน</summary>
+    /// <summary>ລໍາດັບຊັ້ນແມ່ນເປັນເອກະລັກພາຍໃນອາຄານດຽວກັນ</summary>
     public int FloorNumber { get; set; }
 
-    /// <summary>ชื่อชั้น สำหรับแสดงผล เช่น "ชั้น G"</summary>
+    /// <summary>ຊື່ຊັ້ນສໍາລັບການສະແດງ, ເຊັ່ນ: "ຊັ້ນ G"</summary>
     public string? Name { get; set; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 }

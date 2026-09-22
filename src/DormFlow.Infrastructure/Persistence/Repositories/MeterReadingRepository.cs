@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลค่ามิเตอร์บน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນກ່ຽວກັບແມັດ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class MeterReadingRepository(DormFlowDbContext dbContext) : IMeterReadingRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

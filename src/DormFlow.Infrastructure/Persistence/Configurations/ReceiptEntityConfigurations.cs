@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางใบเสร็จรับเงิน</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງໃບຮັບເງິນ</summary>
 public sealed class ReceiptConfiguration : IEntityTypeConfiguration<Receipt>
 {
     /// <inheritdoc />
@@ -19,12 +19,12 @@ public sealed class ReceiptConfiguration : IEntityTypeConfiguration<Receipt>
         builder.Property(receipt => receipt.IssuedAt).IsRequired();
         builder.Property(receipt => receipt.Notes).HasMaxLength(1000);
 
-        // เลขที่ใบเสร็จไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ໝາຍເລກໃບຮັບເງິນແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(receipt => new { receipt.OrganizationId, receipt.ReceiptNumber })
             .IsUnique()
             .HasFilter("is_deleted = false");
 
-        // รายการชำระเงินหนึ่งรายการออกใบเสร็จได้เพียงครั้งเดียว
+        // ສາມາດອອກໃບຮັບເງິນໄດ້ພຽງອັນດຽວສຳລັບທຸລະກຳການຈ່າຍເງິນອັນດຽວ
         builder.HasIndex(receipt => receipt.PaymentId)
             .IsUnique()
             .HasFilter("is_deleted = false");

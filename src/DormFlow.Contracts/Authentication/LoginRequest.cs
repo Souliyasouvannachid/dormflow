@@ -1,12 +1,12 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ข้อมูลสำหรับเข้าสู่ระบบ</summary>
+/// <summary>ຂໍ້ມູນການເຂົ້າສູ່ລະບົບ</summary>
 public class LoginRequest
 {
-    /// <summary>อีเมลที่ใช้เข้าสู่ระบบ</summary>
+    /// <summary>ອີເມວທີ່ໃຊ້ເພື່ອເຂົ້າສູ່ລະບົບ</summary>
     /// <example>admin@dormflow.local</example>
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>รหัสผ่าน</summary>
+    /// <summary>ລະຫັດຜ່ານ</summary>
     public string Password { get; set; } = string.Empty;
 }

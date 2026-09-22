@@ -1,17 +1,17 @@
 namespace DormFlow.Contracts.Maintenance;
 
-/// <summary>คำขอแจ้งซ่อมบำรุง</summary>
+/// <summary>ຮ້ອງຂໍໃຫ້ມີການແຈ້ງເຕືອນການບໍາລຸງຮັກສາ</summary>
 public class CreateMaintenanceRequestRequest
 {
-    /// <summary>ห้องที่แจ้งซ่อม</summary>
+    /// <summary>ລາຍງານຫ້ອງສໍາລັບການສ້ອມແປງ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>หัวข้อของงานซ่อม</summary>
+    /// <summary>ຫົວຂໍ້ຂອງວຽກງານສ້ອມແປງ</summary>
     public string Title { get; set; } = string.Empty;
 
-    /// <summary>รายละเอียดเพิ่มเติมของปัญหา</summary>
+    /// <summary>ລາຍລະອຽດເພີ່ມເຕີມກ່ຽວກັບບັນຫາ</summary>
     public string? Description { get; set; }
 
-    /// <summary>ระดับความสำคัญ ("Low", "Medium", "High", "Urgent")</summary>
+    /// <summary>ລະດັບບູລິມະສິດ ("Low", "Medium", "High", "Urgent")</summary>
     public string Priority { get; set; } = "Medium";
 }

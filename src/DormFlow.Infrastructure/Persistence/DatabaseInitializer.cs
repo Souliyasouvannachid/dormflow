@@ -6,12 +6,12 @@ using Microsoft.Extensions.Options;
 namespace DormFlow.Infrastructure.Persistence;
 
 /// <summary>
-/// เตรียมฐานข้อมูลให้พร้อมใช้งานตอนแอปพลิเคชันเริ่มทำงาน
+/// ກະກຽມຖານຂໍ້ມູນໃຫ້ພ້ອມສໍາລັບການນໍາໃຊ້ໃນເວລາທີ່ຄໍາຮ້ອງສະຝັກເລີ່ມຕົ້ນ
 /// </summary>
 /// <remarks>
-/// การรัน Migration อัตโนมัติถูกปิดไว้เป็นค่าเริ่มต้น
-/// เพราะบน Production ควรรัน Migration เป็นขั้นตอนแยกก่อน deploy
-/// เพื่อไม่ให้หลายอินสแตนซ์แย่งกันแก้สคีมาพร้อมกัน
+/// ແລ່ນ Migration ອັດຕະໂນມັດຖືກປິດໄວ້ຕາມຄ່າເລີ່ມຕົ້ນ
+/// ເນື່ອງຈາກວ່າ Production ຄວນດໍາເນີນການ Migration ມັນເປັນຂັ້ນຕອນແຍກຕ່າງຫາກທໍາອິດ deploy
+/// ນີ້ແມ່ນເພື່ອປ້ອງກັນຫຼາຍໆຕົວຢ່າງຈາກການແຂ່ງຂັນເພື່ອແກ້ໄຂ schema ໃນເວລາດຽວກັນ
 /// </remarks>
 public sealed class DatabaseInitializer(
     DormFlowDbContext dbContext,
@@ -23,21 +23,21 @@ public sealed class DatabaseInitializer(
         LoggerMessage.Define(
             LogLevel.Information,
             new EventId(4100, "ApplyingMigrations"),
-            "กำลังปรับสคีมาฐานข้อมูลให้ตรงกับ Migration ล่าสุด");
+            "ກຳລັງປັບສະຄີມາຖານຂໍ້ມູນໃຫ້ຕົງກັບ Migration ລ່າສຸດ");
 
     private static readonly Action<ILogger, Exception?> PendingMigrationsCallback =
         LoggerMessage.Define(
             LogLevel.Warning,
             new EventId(4101, "PendingMigrations"),
-            "ฐานข้อมูลมี Migration ที่ยังไม่ได้รัน แต่ Database:AutoMigrate ถูกปิดไว้ กรุณารัน dotnet ef database update ก่อนใช้งาน");
+            "ຖານຂໍ້ມູນມີ Migration ທີ່ຍັງບໍ່ໄດ້ຮັນ ແຕ່ Database:AutoMigrate ຖືກປິດໄວ້ ກະລຸນາຮັນ dotnet ef database update ກ່ອນໃຊ້ງານ");
 
     private readonly DormFlowDbContext _dbContext = dbContext;
     private readonly DatabaseSeeder _seeder = seeder;
     private readonly DatabaseOptions _databaseOptions = databaseOptions.Value;
     private readonly ILogger<DatabaseInitializer> _logger = logger;
 
-    /// <summary>ปรับสคีมาและสร้างข้อมูลตั้งต้นตามค่าที่ตั้งไว้</summary>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ປັບ schema ແລະສ້າງຂໍ້ມູນເລີ່ມຕົ້ນຕາມການຕັ້ງຄ່າ</summary>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         if (_databaseOptions.AutoMigrate)
@@ -45,9 +45,22 @@ public sealed class DatabaseInitializer(
             MigratingCallback(_logger, null);
             await _dbContext.Database.MigrateAsync(cancellationToken);
         }
-        else if ((await _dbContext.Database.GetPendingMigrationsAsync(cancellationToken)).Any())
+        else
         {
-            PendingMigrationsCallback(_logger, null);
+            string[] pendingMigrations = [.. await _dbContext.Database
+                .GetPendingMigrationsAsync(cancellationToken)];
+
+            if (pendingMigrations.Length > 0)
+            {
+                PendingMigrationsCallback(_logger, null);
+
+                if (_databaseOptions.FailOnPendingMigrations)
+                {
+                    throw new InvalidOperationException(
+                        $"Database has {pendingMigrations.Length} pending migration(s). " +
+                        "Run 'dotnet ef database update' before starting the application.");
+                }
+            }
         }
 
         if (_databaseOptions.SeedOnStartup)

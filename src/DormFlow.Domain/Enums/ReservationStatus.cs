@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของการจอง</summary>
+/// <summary>ສະຖານະການຈອງ</summary>
 public enum ReservationStatus
 {
-    /// <summary>รอดำเนินการทำสัญญา ห้องยังถูกกันไว้อยู่</summary>
+    /// <summary>ລໍຖ້າໃຫ້ສໍາເລັດສັນຍາຫ້ອງຍັງຖືກປິດກັ້ນ</summary>
     Pending = 1,
 
-    /// <summary>ถูกแปลงเป็นสัญญาเช่าแล้ว</summary>
+    /// <summary>ມັນໄດ້ຖືກປ່ຽນເປັນສັນຍາເຊົ່າ</summary>
     ConvertedToContract = 2,
 
-    /// <summary>ถูกยกเลิก</summary>
+    /// <summary>ຍົກເລີກ</summary>
     Cancelled = 3,
 
-    /// <summary>หมดอายุการกันห้องโดยไม่มีการทำสัญญา</summary>
+    /// <summary>ຕັນຫ້ອງໄດ້ຝົດອາຍຸໂດຍບໍ່ມີການເຮັດສັນຍາ</summary>
     Expired = 4,
 }

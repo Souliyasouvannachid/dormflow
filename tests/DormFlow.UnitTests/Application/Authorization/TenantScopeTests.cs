@@ -8,8 +8,8 @@ using Xunit;
 namespace DormFlow.UnitTests.Application.Authorization;
 
 /// <summary>
-/// ตรวจตรรกะกลางที่บังคับขอบเขตข้อมูลตามองค์กรและหอพัก
-/// เป็นจุดเดียวที่ทุกโมดูล (หอพัก, อาคาร, ชั้น, ประเภทห้อง, ห้องพัก, ผู้ใช้) พึ่งพาเพื่อกันข้อมูลข้ามองค์กร
+/// ກວດເບິ່ງເຫດຜົນສູນກາງທີ່ຄວບຄຸມຂອບເຂດຂໍ້ມູນໂດຍອົງກອນແລະຫໍພັກ
+/// ມັນເປັນຈຸດດຽວທີ່ທຸກໂມດູນ (ຫໍພັກ, ອາຄານ, ຊັ້ນ, ປະເພດຫ້ອງ, ຫ້ອງ, ຜູ້ໃຊ້) ອີງໃສ່ການປົກປ້ອງຂໍ້ມູນໃນທົ່ວອົງກອນ
 /// </summary>
 public class TenantScopeTests
 {
@@ -19,7 +19,7 @@ public class TenantScopeTests
     private static readonly Guid OtherDormitoryId = Guid.CreateVersion7();
 
     [Fact]
-    public void ResolveOrganizationIdForCreate_SuperAdmin_ต้องใช้ค่าที่ระบุมาในคำขอ()
+    public void ResolveOrganizationIdForCreate_SuperAdmin_ຄ່າທີ່ລະບຸໄວ້ໃນຄໍາຮ້ອງຂໍຕ້ອງຖືກນໍາໃຊ້()
     {
         ICurrentUser currentUser = CreateUser(isSuperAdmin: true);
 
@@ -29,7 +29,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void ResolveOrganizationIdForCreate_SuperAdmin_ที่ไม่ระบุองค์กร_ต้องโยนข้อผิดพลาดการตรวจสอบ()
+    public void ResolveOrganizationIdForCreate_SuperAdmin_ອົງກອນບໍ່ໄດ້ລະບຸ_ຕ້ອງຖິ້ມຄວາມຜິດພາດໃນການກວດສອບ()
     {
         ICurrentUser currentUser = CreateUser(isSuperAdmin: true);
 
@@ -39,18 +39,18 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void ResolveOrganizationIdForCreate_ผู้ใช้ทั่วไป_ต้องถูกบังคับใช้องค์กรของตนเองเสมอ()
+    public void ResolveOrganizationIdForCreate_ຜູ້ໃຊ້ທົ່ວໄປ_ອົງກອນຂອງຕົນເອງຕ້ອງໄດ້ຮັບການບັງຄັບໃຊ້ສະເຝີ()
     {
         ICurrentUser currentUser = CreateUser(organizationId: OrganizationId);
 
-        // แม้ส่งองค์กรอื่นมาในคำขอ ผลลัพธ์ต้องเป็นองค์กรของผู้ใช้เองเท่านั้น ป้องกัน Mass Assignment ข้ามองค์กร
+        // ເຖິງແມ່ນວ່າອົງກອນອື່ນຖືກສົ່ງໃນຄໍາຮ້ອງຂໍຜົນໄດ້ຮັບຈະຕ້ອງເປັນຂອງອົງກອນຂອງຜູ້ໃຊ້ເອງເທົ່ານັ້ນ Mass Assignment ໃນທົ່ວອົງກອນ
         Guid result = TenantScope.ResolveOrganizationIdForCreate(currentUser, OtherOrganizationId);
 
         result.Should().Be(OrganizationId);
     }
 
     [Fact]
-    public void ResolveOrganizationIdForCreate_ผู้ใช้ที่ไม่สังกัดองค์กรใด_ต้องถูกปฏิเสธ()
+    public void ResolveOrganizationIdForCreate_ຜູ້ໃຊ້ທີ່ບໍ່ກ່ຽວຂ້ອງກັບອົງກອນໃດໆ_ຕ້ອງໄດ້ຮັບການປະຕິເສດ()
     {
         ICurrentUser currentUser = CreateUser(organizationId: null);
 
@@ -60,7 +60,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void EnsureOrganizationAccess_SuperAdmin_ต้องเข้าถึงได้ทุกองค์กร()
+    public void EnsureOrganizationAccess_SuperAdmin_ຕ້ອງສາມາດເຂົ້າເຖິງທຸກອົງກອນ()
     {
         ICurrentUser currentUser = CreateUser(isSuperAdmin: true);
 
@@ -70,7 +70,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void EnsureOrganizationAccess_องค์กรตรงกับผู้ใช้_ต้องผ่าน()
+    public void EnsureOrganizationAccess_ອົງກອນພົບກັບຜູ້ໃຊ້_ຕ້ອງຜ່ານ()
     {
         ICurrentUser currentUser = CreateUser(organizationId: OrganizationId);
 
@@ -80,18 +80,18 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void EnsureOrganizationAccess_องค์กรต่างจากผู้ใช้_ต้องโยน_NotFoundException()
+    public void EnsureOrganizationAccess_ອົງກອນແມ່ນແຕກຕ່າງຈາກຜູ້ໃຊ້_ຕ້ອງຖິ້ມ_NotFoundException()
     {
         ICurrentUser currentUser = CreateUser(organizationId: OrganizationId);
 
-        Action act = () => TenantScope.EnsureOrganizationAccess(currentUser, OtherOrganizationId, "ไม่พบข้อมูล");
+        Action act = () => TenantScope.EnsureOrganizationAccess(currentUser, OtherOrganizationId, "ບໍ່ພົບຂໍ້ມູນ");
 
-        // ตอบเป็นไม่พบข้อมูล (404) แทนไม่มีสิทธิ์ (403) เพื่อไม่ให้เดาได้ว่ามีข้อมูลอยู่จริงในองค์กรอื่น
-        act.Should().Throw<NotFoundException>().WithMessage("ไม่พบข้อมูล");
+        // ຄໍາຕອບແມ່ນວ່າບໍ່ພົບຂໍ້ມູນໃດໆ (404) ແທນທີ່ຈະບໍ່ມີສິດ (403) ເພື່ອບໍ່ໃຫ້ຄາດເດົາວ່າຂໍ້ມູນນັ້ນມີຢູ່ໃນອົງກອນອື່ນ
+        act.Should().Throw<NotFoundException>().WithMessage("ບໍ່ພົບຂໍ້ມູນ");
     }
 
     [Fact]
-    public void EnsureDormitoryAccess_องค์กรตรงและเข้าถึงหอพักได้_ต้องผ่าน()
+    public void EnsureDormitoryAccess_ອົງກອນໂດຍກົງແລະຫໍພັກທີ່ສາມາດເຂົ້າເຖິງໄດ້_ຕ້ອງຜ່ານ()
     {
         ICurrentUser currentUser = CreateUser(organizationId: OrganizationId, canAccessDormitory: true);
 
@@ -101,7 +101,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void EnsureDormitoryAccess_องค์กรตรงแต่เข้าถึงหอพักไม่ได้_ต้องโยนข้อผิดพลาด()
+    public void EnsureDormitoryAccess_ອົງກອນໂດຍກົງແຕ່ບໍ່ສາມາດເຂົ້າເຖິງຫໍພັກໄດ້_ຕ້ອງຖິ້ມຄວາມຜິດພາດ()
     {
         ICurrentUser currentUser = CreateUser(organizationId: OrganizationId, canAccessDormitory: false);
 
@@ -111,10 +111,10 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void EnsureDormitoryAccess_เข้าถึงหอพักได้แต่ต่างองค์กร_ต้องโยนข้อผิดพลาด()
+    public void EnsureDormitoryAccess_ການເຂົ້າເຖິງຫໍພັກແມ່ນມີຢູ່ຈາກອົງກອນຕ່າງໆ_ຕ້ອງຖິ້ມຄວາມຜິດພາດ()
     {
-        // ครอบคลุมกรณีที่ CanAccessDormitory คืนค่า true (เช่น รายการ Claim หลุดมาผิด)
-        // แต่หอพักนั้นไม่ได้อยู่ในองค์กรที่ตรวจสอบ ต้องยังคงถูกปฏิเสธอยู่ดี
+        // ກວມເອົາກໍລະນີທີ່ CanAccessDormitory ຟື້ນຟູ true (ເຊັ່ນ: ລາຍການ Claim ມັນອອກມາຜິດ)
+        // ແຕ່ຫໍພັກບໍ່ໄດ້ລວມຢູ່ໃນອົງກອນກວດກາ. ຍັງຕ້ອງຖືກປະຕິເສດ
         ICurrentUser currentUser = CreateUser(organizationId: OtherOrganizationId, canAccessDormitory: true);
 
         Action act = () => TenantScope.EnsureDormitoryAccess(currentUser, OrganizationId, DormitoryId, "not found");
@@ -123,7 +123,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void GetDormitoryRestrictionForListing_SuperAdmin_ต้องไม่ถูกจำกัด()
+    public void GetDormitoryRestrictionForListing_SuperAdmin_ຕ້ອງບໍ່ໄດ້ຖືກຈໍາກັດ()
     {
         ICurrentUser currentUser = CreateUser(isSuperAdmin: true);
 
@@ -131,7 +131,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void GetDormitoryRestrictionForListing_Owner_ต้องไม่ถูกจำกัด()
+    public void GetDormitoryRestrictionForListing_Owner_ຕ້ອງບໍ່ໄດ້ຖືກຈໍາກັດ()
     {
         ICurrentUser currentUser = CreateUser(roles: [DormFlowRoles.Owner]);
 
@@ -139,7 +139,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void GetDormitoryRestrictionForListing_DormManager_ต้องจำกัดเฉพาะหอพักที่ได้รับมอบหมาย()
+    public void GetDormitoryRestrictionForListing_DormManager_ຕ້ອງຖືກຈຳກັດໃຫ້ຢູ່ໃນຫໍພັກທີ່ຖືກມອບໝາຍ()
     {
         ICurrentUser currentUser = CreateUser(
             roles: [DormFlowRoles.DormManager],
@@ -151,7 +151,7 @@ public class TenantScopeTests
     }
 
     [Fact]
-    public void GetDormitoryRestrictionForListing_ผู้ใช้ที่ยังไม่ได้รับมอบหมายหอพักใด_ต้องได้รายการว่าง()
+    public void GetDormitoryRestrictionForListing_ຜູ້ໃຊ້ທີ່ຍັງບໍ່ທັນໄດ້ຮັບການມອບຝາຍຫໍພັກໃດໆ_ທ່ານຕ້ອງໄດ້ຮັບບັນຊີລາຍຊື່ເປົ່າ()
     {
         ICurrentUser currentUser = CreateUser(roles: [DormFlowRoles.Staff], dormitoryIds: []);
 

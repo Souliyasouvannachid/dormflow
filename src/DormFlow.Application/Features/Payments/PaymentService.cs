@@ -12,11 +12,11 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Payments;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลการชำระเงิน
+/// Use Case ໂມດູນການຈ່າຍເງິນທັງຝົດ
 /// </summary>
 /// <remarks>
-/// รายการชำระเงินเริ่มต้นเป็น <see cref="PaymentStatus.Pending"/> เสมอและไม่มีผลต่อยอดใบแจ้งหนี้
-/// จนกว่าจะถูกยืนยันผ่าน <see cref="ConfirmAsync"/> ดูเหตุผลเพิ่มเติมที่ <see cref="Domain.Entities.Payment"/>
+/// ການຈ່າຍເງິນເລີ່ມຕົ້ນແມ່ນ <see cref="PaymentStatus.Pending"/> ສະເໝີ ແລະບໍ່ມີຜົນຕໍ່ຈຳນວນໃບແຈ້ງໜີ້
+/// ຈົນກ່ວາມັນໄດ້ຮັບການຢືນຢັນໂດຍຜ່ານ <see cref="ConfirmAsync"/> ເບິ່ງເຫດຜົນເພີ່ມເຕີມໄດ້ທີ່ <see cref="Domain.Entities.Payment"/>
 /// </remarks>
 public sealed class PaymentService(
     IPaymentRepository repository,
@@ -64,6 +64,19 @@ public sealed class PaymentService(
     }
 
     /// <inheritdoc />
+    public Task<int> GetCountAsync(PaymentStatus status, CancellationToken cancellationToken = default)
+    {
+        PaymentListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
+            DormitoryId: null,
+            InvoiceId: null,
+            status,
+            TenantScope.GetDormitoryRestrictionForListing(_currentUser));
+
+        return _repository.CountAsync(filter, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<PaymentResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => ToResponse(await FindAccessibleAsync(id, cancellationToken));
 
@@ -76,17 +89,17 @@ public sealed class PaymentService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Invoice invoice = await _invoiceRepository.GetByIdAsync(request.InvoiceId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบใบแจ้งหนี้ที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບໃບແຈ້ງໜີ້ທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             invoice.OrganizationId,
             invoice.DormitoryId.GetValueOrDefault(),
-            "ไม่พบใบแจ้งหนี้ที่ระบุ");
+            "ບໍ່ພົບໃບແຈ້ງໜີ້ທີ່ລະບຸ");
 
         if (invoice.Status is InvoiceStatus.Draft or InvoiceStatus.Cancelled or InvoiceStatus.Paid)
         {
-            throw new ConflictException("ใบแจ้งหนี้นี้ยังไม่ได้ออกให้ผู้เช่า หรือถูกยกเลิก/ชำระครบแล้ว ไม่สามารถรับชำระเพิ่มได้");
+            throw new ConflictException("ໃບແຈ້ງໜີ້ນີ້ຍັງບໍ່ໄດ້ອອກໃຫ້ຜູ້ເຊົ່າ ຫຼືຖືກຍົກເລີກ/ຊຳລະຄົບແລ້ວ ບໍ່ສາມາດຮັບຊຳລະເພີ່ມໄດ້");
         }
 
         Payment payment = new()
@@ -121,27 +134,28 @@ public sealed class PaymentService(
 
         if (payment.Status != PaymentStatus.Pending)
         {
-            throw new ConflictException("ยืนยันได้เฉพาะรายการที่ยังรอยืนยันเท่านั้น");
+            throw new ConflictException("ຢືນຢັນໄດ້ສະເພາະລາຍການທີ່ຍັງລໍຖ້າຢືນຢັນເທົ່ານັ້ນ");
         }
 
         Invoice invoice = await _invoiceRepository.GetByIdAsync(payment.InvoiceId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบใบแจ้งหนี้ของรายการชำระเงินนี้");
+            ?? throw new NotFoundException("ບໍ່ພົບໃບແຈ້ງໜີ້ຂອງລາຍການຊຳລະເງິນນີ້");
 
         decimal remainingBalance = invoice.TotalAmount - invoice.PaidAmount;
         if (payment.Amount > remainingBalance)
         {
             throw new ConflictException(
-                $"จำนวนเงินที่ยืนยัน ({payment.Amount}) เกินยอดคงเหลือของใบแจ้งหนี้ ({remainingBalance})");
+                $"ຈຳນວນເງິນທີ່ຢືນຢັນ ({payment.Amount}) ເກີນຍອດຄົງເຫຼືອຂອງໃບແຈ້ງໜີ້ ({remainingBalance})");
         }
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
         payment.Status = PaymentStatus.Confirmed;
         payment.ConfirmedAt = now;
 
-        ApplyPaymentToInvoice(invoice, payment.Amount);
+        DateOnly today = DateOnly.FromDateTime(now.UtcDateTime);
+        ApplyPaymentToInvoice(invoice, payment.Amount, today);
 
-        // เรียกครั้งเดียวเพื่อบันทึกทั้งรายการชำระเงินและยอด/สถานะใบแจ้งหนี้ในธุรกรรมเดียวกัน
-        // เพราะ Payment และ Invoice ถูกติดตามอยู่ใน DbContext เดียวกันภายในคำขอนี้
+        // ໂທຄັ້ງດຽວເພື່ອບັນທຶກທັງການຈ່າຍເງິນ ແລະຍອດທັງໝົດ/ສະຖານະໃບແຈ້ງໜີ້ໃນທຸລະກຳດຽວກັນ
+        // ເນື່ອງຈາກວ່າ Payment ແລະ Invoice ຖືກຕິດຕາມໃນ DbContext ດຽວກັນຢູ່ໃນຄໍາຮ້ອງຂໍນີ້
         await _repository.SaveChangesAsync(cancellationToken);
 
         await _auditLogWriter.WriteAsync(
@@ -168,18 +182,19 @@ public sealed class PaymentService(
 
         if (payment.Status != PaymentStatus.Confirmed)
         {
-            throw new ConflictException("คืนเงินได้เฉพาะรายการที่ยืนยันแล้วเท่านั้น");
+            throw new ConflictException("ຄືນເງິນໄດ້ສະເພາະລາຍການທີ່ຢືນຢັນແລ້ວເທົ່ານັ້ນ");
         }
 
         Invoice invoice = await _invoiceRepository.GetByIdAsync(payment.InvoiceId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบใบแจ้งหนี้ของรายการชำระเงินนี้");
+            ?? throw new NotFoundException("ບໍ່ພົບໃບແຈ້ງໜີ້ຂອງລາຍການຊຳລະເງິນນີ້");
 
         DateTimeOffset now = _dateTimeProvider.UtcNow;
         payment.Status = PaymentStatus.Refunded;
         payment.RefundedAt = now;
         payment.RefundReason = request.Reason;
 
-        ReverseInvoicePayment(invoice, payment.Amount);
+        DateOnly today = DateOnly.FromDateTime(now.UtcDateTime);
+        ReverseInvoicePayment(invoice, payment.Amount, today);
 
         await _repository.SaveChangesAsync(cancellationToken);
 
@@ -194,23 +209,25 @@ public sealed class PaymentService(
         return ToResponse(payment);
     }
 
-    private static void ApplyPaymentToInvoice(Invoice invoice, decimal amount)
+    private static void ApplyPaymentToInvoice(Invoice invoice, decimal amount, DateOnly asOfDate)
     {
         invoice.PaidAmount += amount;
-        RecomputeInvoiceStatus(invoice);
+        RecomputeInvoiceStatus(invoice, asOfDate);
     }
 
-    private static void ReverseInvoicePayment(Invoice invoice, decimal amount)
+    private static void ReverseInvoicePayment(Invoice invoice, decimal amount, DateOnly asOfDate)
     {
         invoice.PaidAmount = Math.Max(0, invoice.PaidAmount - amount);
-        RecomputeInvoiceStatus(invoice);
+        RecomputeInvoiceStatus(invoice, asOfDate);
     }
 
-    private static void RecomputeInvoiceStatus(Invoice invoice)
+    private static void RecomputeInvoiceStatus(Invoice invoice, DateOnly asOfDate)
     {
         invoice.Status = invoice.PaidAmount switch
         {
+            <= 0 when invoice.DueDate < asOfDate => InvoiceStatus.Overdue,
             <= 0 => InvoiceStatus.Issued,
+            _ when invoice.PaidAmount < invoice.TotalAmount && invoice.DueDate < asOfDate => InvoiceStatus.Overdue,
             _ when invoice.PaidAmount < invoice.TotalAmount => InvoiceStatus.PartiallyPaid,
             _ => InvoiceStatus.Paid,
         };
@@ -219,13 +236,13 @@ public sealed class PaymentService(
     private async Task<Payment> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Payment payment = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลการชำระเงินที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນການຊຳລະເງິນທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             payment.OrganizationId,
             payment.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลการชำระเงินที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນການຊຳລະເງິນທີ່ຕ້ອງການ");
 
         return payment;
     }

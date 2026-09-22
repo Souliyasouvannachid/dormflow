@@ -2,10 +2,10 @@ using DormFlow.Application.Common.Models;
 
 namespace DormFlow.Application.Common.Abstractions;
 
-/// <summary>ออก Access Token แบบ JWT ให้ผู้ใช้</summary>
+/// <summary>ອອກ Access Token ຕົວແບບ JWT ກັບຜູ້ໃຊ້</summary>
 public interface IAccessTokenGenerator
 {
-    /// <summary>สร้าง Access Token จากข้อมูลผู้ใช้</summary>
-    /// <param name="profile">ข้อมูลผู้ใช้ที่จะใส่ลงใน Claim</param>
+    /// <summary>ສ້າງ Access Token ຈາກຂໍ້ມູນຜູ້ໃຊ້</summary>
+    /// <param name="profile">ຂໍ້ມູນຜູ້ໃຊ້ທີ່ຈະຖືກປ້ອນເຂົ້າ Claim</param>
     AccessToken Generate(UserSecurityProfile profile);
 }

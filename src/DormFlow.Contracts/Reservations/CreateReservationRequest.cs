@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Reservations;
 
-/// <summary>คำขอจองห้องพัก</summary>
+/// <summary>ຄຳຮ້ອງຂໍຈອງ</summary>
 public class CreateReservationRequest
 {
-    /// <summary>ห้องที่ต้องการจอง ต้องอยู่ในสถานะว่างเท่านั้น</summary>
+    /// <summary>ຫ້ອງທີ່ເຈົ້າຕ້ອງການຈອງຕ້ອງຢູ່ໃນສະຖານະບໍ່ເຮັດວຽກເທົ່ານັ້ນ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่จอง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ຈອງແລ້ວ</summary>
     public Guid TenantId { get; set; }
 
-    /// <summary>วันที่คาดว่าจะเข้าพัก</summary>
+    /// <summary>ວັນທີທີ່ຄາດວ່າຈະຢູ່</summary>
     public DateOnly MoveInDate { get; set; }
 
-    /// <summary>จำนวนวันที่กันห้องไว้ก่อนหมดอายุ นับจากเวลาที่จอง</summary>
+    /// <summary>ຈຳນວນມື້ທີ່ຫ້ອງຖືກຈອງໄວ້ກ່ອນທີ່ມັນຈະໝົດອາຍຸ. ຈາກເວລາຂອງການຈອງ</summary>
     public int HoldDays { get; set; } = 3;
 
-    /// <summary>ค่าจองห้อง</summary>
+    /// <summary>ຄ່າຈອງຫ້ອງ</summary>
     public decimal ReservationFee { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

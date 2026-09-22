@@ -1,35 +1,35 @@
 namespace DormFlow.Contracts.Floors;
 
-/// <summary>ข้อมูลชั้นหนึ่งของอาคาร</summary>
+/// <summary>ຂໍ້ມູນຊັ້ນທໍາອິດຂອງອາຄານ</summary>
 public class FloorResponse
 {
-    /// <summary>รหัสอ้างอิงของชั้น</summary>
+    /// <summary>ລະຫັດອ້າງອີງຊັ້ນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรเจ้าของชั้นนี้</summary>
+    /// <summary>ອົງກອນທີ່ເປັນເຈົ້າຂອງຫ້ອງຮຽນນີ້</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่ชั้นนี้สังกัด</summary>
+    /// <summary>ຫໍພັກຊັ້ນນີ້ຂຶ້ນກັບ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>อาคารที่ชั้นนี้สังกัด</summary>
+    /// <summary>ອາຄານທີ່ຊັ້ນນີ້ຂຶ້ນກັບ</summary>
     public Guid BuildingId { get; init; }
 
-    /// <summary>ลำดับชั้น</summary>
+    /// <summary>ລຳດັບ</summary>
     public int FloorNumber { get; init; }
 
-    /// <summary>ชื่อชั้น สำหรับแสดงผล</summary>
+    /// <summary>ຊື່ຫ້ອງຮຽນສໍາລັບການສະແດງ</summary>
     public string? Name { get; init; }
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; init; }
 
-    /// <summary>สถานะของชั้น</summary>
+    /// <summary>ສະຖານະຊັ້ນ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

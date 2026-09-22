@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการใบแจ้งหนี้</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງໃບແຈ້ງຜີ້</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/invoices")]
@@ -17,7 +17,7 @@ public sealed class InvoicesController(IInvoiceService invoiceService) : Control
 {
     private readonly IInvoiceService _invoiceService = invoiceService;
 
-    /// <summary>ดึงรายการใบแจ้งหนี้แบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ໄດ້ວາງໄວ້ແລ້ວ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Invoices.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<InvoiceResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class InvoicesController(IInvoiceService invoiceService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลใบแจ้งหนี้หนึ่งฉบับ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນໃບແຈ້ງຜີ້</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Invoices.View)]
     [ProducesResponseType(typeof(ApiResponse<InvoiceResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class InvoicesController(IInvoiceService invoiceService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างใบแจ้งหนี้ใหม่ในสถานะร่าง</summary>
+    /// <summary>ສ້າງໃບແຈ້ງໜີ້ໃໝ່ໃນສະຖານະສະບັບຮ່າງ</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Invoices.Create)]
     [ProducesResponseType(typeof(ApiResponse<InvoiceResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class InvoicesController(IInvoiceService invoiceService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>ออกใบแจ้งหนี้ให้ผู้เช่า</summary>
+    /// <summary>ອອກໃບແຈ້ງໜີ້ໃຫ້ຜູ້ເຊົ່າ</summary>
     [HttpPost("{id:guid}/issue")]
     [RequirePermission(PermissionCodes.Invoices.Issue)]
     [ProducesResponseType(typeof(ApiResponse<InvoiceResponse>), StatusCodes.Status200OK)]
@@ -71,7 +71,7 @@ public sealed class InvoicesController(IInvoiceService invoiceService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ยกเลิกใบแจ้งหนี้</summary>
+    /// <summary>ຍົກເລີກໃບແຈ້ງໜີ້</summary>
     [HttpPost("{id:guid}/cancel")]
     [RequirePermission(PermissionCodes.Invoices.Cancel)]
     [ProducesResponseType(typeof(ApiResponse<InvoiceResponse>), StatusCodes.Status200OK)]

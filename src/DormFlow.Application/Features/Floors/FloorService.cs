@@ -11,7 +11,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Floors;
 
-/// <summary>Use Case ทั้งหมดของโมดูลชั้นอาคาร</summary>
+/// <summary>Use Case ໂມດູນຊັ້ນກໍ່ສ້າງທັງໝົດ</summary>
 public sealed class FloorService(
     IFloorRepository repository,
     IBuildingRepository buildingRepository,
@@ -70,17 +70,17 @@ public sealed class FloorService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Building building = await _buildingRepository.GetByIdAsync(request.BuildingId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบอาคารที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບອາຄານທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             building.OrganizationId,
             building.DormitoryId.GetValueOrDefault(),
-            "ไม่พบอาคารที่ระบุ");
+            "ບໍ່ພົບອາຄານທີ່ລະບຸ");
 
         if (await _repository.ExistsByFloorNumberAsync(building.Id, request.FloorNumber, null, cancellationToken))
         {
-            throw new ConflictException($"ชั้นที่ {request.FloorNumber} มีอยู่แล้วในอาคารนี้");
+            throw new ConflictException($"ຊັ້ນທີ {request.FloorNumber} ມີຢູ່ແລ້ວໃນອາຄານນີ້");
         }
 
         Floor floor = new()
@@ -119,7 +119,7 @@ public sealed class FloorService(
 
         if (await _repository.ExistsByFloorNumberAsync(floor.BuildingId, request.FloorNumber, floor.Id, cancellationToken))
         {
-            throw new ConflictException($"ชั้นที่ {request.FloorNumber} มีอยู่แล้วในอาคารนี้");
+            throw new ConflictException($"ຊັ້ນທີ {request.FloorNumber} ມີຢູ່ແລ້ວໃນອາຄານນີ້");
         }
 
         floor.FloorNumber = request.FloorNumber;
@@ -146,7 +146,7 @@ public sealed class FloorService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out FloorStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Floor floor = await FindAccessibleAsync(id, cancellationToken);
@@ -184,13 +184,13 @@ public sealed class FloorService(
     private async Task<Floor> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Floor floor = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลชั้นที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຊັ້ນທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             floor.OrganizationId,
             floor.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลชั้นที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຊັ້ນທີ່ຕ້ອງການ");
 
         return floor;
     }

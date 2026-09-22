@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 namespace DormFlow.Infrastructure.Identity;
 
 /// <summary>
-/// การดำเนินการกับบัญชีผู้ใช้ที่ทำงานบน ASP.NET Core Identity
+/// ການປະຕິບັດກ່ຽວກັບບັນຊີຜູ້ໃຊ້ທີ່ເຮັດວຽກຢູ່ ASP.NET Core Identity
 /// </summary>
 /// <remarks>
-/// คลาสนี้เป็นจุดเดียวในระบบที่แตะ <see cref="UserManager{TUser}"/> โดยตรง
-/// ทำให้ชั้น Application ไม่มีทางเข้าถึงแฮชรหัสผ่านหรือเขียนตรรกะการตรวจรหัสผ่านเอง
+/// ຫ້ອງຮຽນນີ້ແມ່ນຈຸດດຽວໃນລະບົບທີ່ຖືກສໍາຜັດ <see cref="UserManager{TUser}"/> ໂດຍກົງ
+/// ເຮັດໃຫ້ພື້ນເຮືອນ Application ບໍ່ມີວິທີທີ່ຈະເຂົ້າເຖິງ hash ລະຫັດຜ່ານຫຼືຂຽນ logic ການກວດສອບລະຫັດຜ່ານຕົວມັນເອງ
 /// </remarks>
 public sealed class UserAccountService(
     UserManager<ApplicationUser> userManager,
@@ -46,7 +46,7 @@ public sealed class UserAccountService(
 
         if (!await _userManager.CheckPasswordAsync(user, password))
         {
-            // นับความพยายามที่ผิดพลาดเพื่อให้กลไกล็อกบัญชีของ Identity ทำงาน
+            // ນັບຄວາມພະຍາຍາມທີ່ບໍ່ຖືກຕ້ອງເພື່ອເປີດໃຊ້ກົນໄກການລັອກບັນຊີ Identity ເຮັດວຽກ
             await _userManager.AccessFailedAsync(user);
 
             return await _userManager.IsLockedOutAsync(user)
@@ -54,8 +54,8 @@ public sealed class UserAccountService(
                 : UserAuthenticationResult.Failed(UserAuthenticationStatus.InvalidCredentials);
         }
 
-        // ตรวจสถานะของบัญชีและองค์กรหลังจากรหัสผ่านถูกต้องแล้วเท่านั้น
-        // เพื่อไม่ให้ผู้ที่ไม่ทราบรหัสผ่านใช้ข้อความตอบกลับแยกแยะว่าอีเมลนี้มีอยู่จริง
+        // ກວດເບິ່ງສະຖານະຂອງບັນຊີ ແລະອົງກອນຂອງເຈົ້າຫຼັງຈາກລະຫັດຜ່ານຖືກຕ້ອງເທົ່ານັ້ນ
+        // ນີ້ແມ່ນເພື່ອປ້ອງກັນບໍ່ໃຫ້ຄົນທີ່ບໍ່ຮູ້ລະຫັດຜ່ານຈາກການໃຊ້ຂໍ້ຄວາມຕອບກັບຈາກການຈໍາແນກວ່າອີເມວນີ້ມີຢູ່
         if (user.Status != UserStatus.Active)
         {
             return UserAuthenticationResult.Failed(UserAuthenticationStatus.AccountDisabled);
@@ -120,7 +120,7 @@ public sealed class UserAccountService(
         DateTimeOffset loggedInAt,
         CancellationToken cancellationToken = default)
     {
-        // อัปเดตเฉพาะคอลัมน์เดียวโดยไม่ต้องโหลด entity ทั้งตัวเข้ามาก่อน
+        // ອັບເດດພຽງແຕ່ຜຶ່ງຖັນໂດຍບໍ່ມີການໂຫຼດ entity ຮ່າງກາຍທັງຝົດເຂົ້າມາໃນຄັ້ງທໍາອິດ
         await _dbContext.Users
             .Where(user => user.Id == userId)
             .ExecuteUpdateAsync(
@@ -137,7 +137,7 @@ public sealed class UserAccountService(
 
         ApplicationUser? user = await _userManager.FindByEmailAsync(email);
 
-        // ไม่สร้างโทเคนให้บัญชีที่ถูกปิดใช้งาน แต่ผู้เรียกจะได้รับข้อความเดียวกันเสมอ
+        // ຢ່າສ້າງ tokens ສໍາລັບບັນຊີທີ່ພິການ. ແຕ່ຜູ້ໂທໄດ້ຮັບຂໍ້ຄວາມດຽວກັນສະເໝີ
         if (user is null || !user.CanSignIn)
         {
             return null;
@@ -159,18 +159,18 @@ public sealed class UserAccountService(
 
         if (user is null || !user.CanSignIn)
         {
-            // ตอบข้อความกลาง ๆ เพื่อไม่ให้แยกแยะได้ว่าอีเมลนี้มีบัญชีอยู่หรือไม่
-            return PasswordOperationResult.Failed("ตั้งรหัสผ่านใหม่ไม่สำเร็จ โทเคนอาจหมดอายุหรือถูกใช้ไปแล้ว");
+            // ຕອບຂໍ້ຄວາມທີ່ເປັນກາງເພື່ອບໍ່ໃຫ້ຈໍາແນກວ່າທີ່ຢູ່ອີເມວນີ້ມີບັນຊີຫຼືບໍ່
+            return PasswordOperationResult.Failed("ຕັ້ງລະຫັດຜ່ານໃໝ່ບໍ່ສຳເລັດ ໂທເຄນອາດໝົດອາຍຸ ຫຼື ຖືກໃຊ້ໄປແລ້ວ");
         }
 
         IdentityResult result = await _userManager.ResetPasswordAsync(user, token, newPassword);
 
         if (!result.Succeeded)
         {
-            return PasswordOperationResult.Failed([.. result.Errors.Select(TranslateIdentityError)]);
+            return PasswordOperationResult.Failed([.. result.Errors.Select(IdentityErrorTranslator.Translate)]);
         }
 
-        // ปลดล็อกบัญชีที่ถูกล็อกจากการกรอกรหัสผ่านผิด เพราะเจ้าของยืนยันตัวตนผ่านอีเมลแล้ว
+        // ປົດລັອກບັນຊີທີ່ຖືກລັອກຈາກການໃສ່ລະຫັດຜ່ານຜິດ. ເນື່ອງຈາກວ່າເຈົ້າຂອງໄດ້ຢືນຢັນຕົວຕົນຂອງລາວຜ່ານອີເມວ
         await _userManager.ResetAccessFailedCountAsync(user);
         await _userManager.SetLockoutEndDateAsync(user, null);
 
@@ -188,21 +188,21 @@ public sealed class UserAccountService(
 
         if (user is null || !user.CanSignIn)
         {
-            return PasswordOperationResult.Failed("ไม่พบบัญชีผู้ใช้ หรือบัญชีถูกปิดใช้งาน");
+            return PasswordOperationResult.Failed("ບໍ່ພົບບັນຊີຜູ້ໃຊ້ ຫຼື ບັນຊີຖືກປິດການໃຊ້ງານ");
         }
 
         IdentityResult result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
         return result.Succeeded
             ? PasswordOperationResult.Success
-            : PasswordOperationResult.Failed([.. result.Errors.Select(TranslateIdentityError)]);
+            : PasswordOperationResult.Failed([.. result.Errors.Select(IdentityErrorTranslator.Translate)]);
     }
 
     private async Task<bool> IsOrganizationActiveAsync(
         Guid? organizationId,
         CancellationToken cancellationToken)
     {
-        // ผู้ดูแลระบบที่ไม่ผูกกับองค์กรใดไม่ต้องผ่านการตรวจนี้
+        // ຜູ້ບໍລິຫານທີ່ບໍ່ໄດ້ຂຶ້ນກັບອົງກອນໃດຜຶ່ງບໍ່ຈໍາເປັນຕ້ອງຜ່ານການສອບເສັງນີ້
         if (organizationId is null)
         {
             return true;
@@ -258,7 +258,7 @@ public sealed class UserAccountService(
             return [];
         }
 
-        // รวมสิทธิ์จากทุกบทบาทของผู้ใช้ในคำสั่งเดียว แล้วตัดค่าซ้ำที่ฝั่งฐานข้อมูล
+        // ສົມທົບການອະນຸຍາດຈາກທຸກບົດບາດຂອງຜູ້ໃຊ້ໃນຄໍາສັ່ງດຽວ. ຫຼັງຈາກນັ້ນ, ຕັດຄ່າທີ່ຊ້ໍາກັນຢູ່ດ້ານຖານຂໍ້ມູນ
         return await _dbContext.RolePermissions
             .Where(rolePermission => _dbContext.Roles
                 .Where(role => role.Name != null && roleNames.Contains(role.Name))
@@ -270,23 +270,4 @@ public sealed class UserAccountService(
             .ToArrayAsync(cancellationToken);
     }
 
-    /// <summary>
-    /// แปลงรหัสข้อผิดพลาดของ Identity เป็นข้อความภาษาไทย
-    /// </summary>
-    /// <remarks>
-    /// ข้อความเริ่มต้นของ Identity เป็นภาษาอังกฤษทั้งหมด
-    /// แปลเฉพาะกรณีที่ผู้ใช้พบบ่อย ส่วนที่เหลือคืนข้อความเดิมเพื่อไม่ให้ข้อมูลหาย
-    /// </remarks>
-    private static string TranslateIdentityError(IdentityError error) => error.Code switch
-    {
-        "PasswordMismatch" => "รหัสผ่านปัจจุบันไม่ถูกต้อง",
-        "InvalidToken" => "โทเคนไม่ถูกต้องหรือหมดอายุแล้ว กรุณาขอลิงก์ตั้งรหัสผ่านใหม่อีกครั้ง",
-        "PasswordTooShort" => "รหัสผ่านสั้นเกินไป",
-        "PasswordRequiresDigit" => "รหัสผ่านต้องมีตัวเลขอย่างน้อยหนึ่งตัว",
-        "PasswordRequiresLower" => "รหัสผ่านต้องมีตัวอักษรพิมพ์เล็กอย่างน้อยหนึ่งตัว",
-        "PasswordRequiresUpper" => "รหัสผ่านต้องมีตัวอักษรพิมพ์ใหญ่อย่างน้อยหนึ่งตัว",
-        "PasswordRequiresUniqueChars" => "รหัสผ่านต้องมีอักขระที่ไม่ซ้ำกันมากกว่านี้",
-        "UserLockedOut" => "บัญชีนี้ถูกล็อกชั่วคราว กรุณาลองใหม่ภายหลัง",
-        _ => error.Description,
-    };
 }

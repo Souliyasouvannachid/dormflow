@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลค่าใช้จ่ายบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຄ່າໃຊ້ຈ່າຍໃນ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ExpenseRepository(DormFlowDbContext dbContext) : IExpenseRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

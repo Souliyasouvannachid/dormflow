@@ -3,24 +3,24 @@ using DormFlow.Contracts.Leases;
 
 namespace DormFlow.Application.Features.Contracts;
 
-/// <summary>Use Case ทั้งหมดของโมดูลสัญญาเช่า</summary>
+/// <summary>Use Case ໂມດູນການເຊົ່າທັງໝົດ</summary>
 public interface IContractService
 {
-    /// <summary>ดึงรายการสัญญาเช่าแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງສັນຍາເຊົ່າ</summary>
     Task<PagedResult<ContractResponse>> GetPagedAsync(
         ContractListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลสัญญาเช่าจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນການເຊົ່າຈາກລະຫັດອ້າງອີງ</summary>
     Task<ContractResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างสัญญาเช่าใหม่ในสถานะร่าง</summary>
+    /// <summary>ສ້າງສັນຍາເຊົ່າໃໝ່ຢູ່ໃນລັດສະບັບຮ່າງ</summary>
     Task<ContractResponse> CreateAsync(CreateContractRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>เปิดใช้งานสัญญาเช่า (เช็คอิน) ห้องจะถูกเปลี่ยนสถานะเป็นมีผู้เช่าอยู่</summary>
+    /// <summary>ເປີດໃຊ້ຂໍ້ຕົກລົງການເຊົ່າ (ເຊັກອິນ) ສະຖານະຫ້ອງຈະຖືກປ່ຽນເປັນ occupied</summary>
     Task<ContractResponse> ActivateAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สิ้นสุดสัญญาเช่า (เช็คเอาท์) ห้องจะถูกเปลี่ยนสถานะเป็นรอทำความสะอาด</summary>
+    /// <summary>ສິ້ນສຸດສັນຍາເຊົ່າ (ກວດເບິ່ງ) ຫ້ອງຈະຖືກປ່ຽນເປັນສະຖານະການອະນາໄມທີ່ລໍຖ້າຢູ່</summary>
     Task<ContractResponse> TerminateAsync(
         Guid id,
         TerminateContractRequest request,

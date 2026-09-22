@@ -6,18 +6,18 @@ using System.Text.Unicode;
 namespace DormFlow.Contracts.Common;
 
 /// <summary>
-/// ค่าตั้งการแปลง JSON ที่ใช้ร่วมกันทุกจุดที่ระบบเขียน Response
+/// ການຕັ້ງຄ່າການແປງ JSON ແບ່ງປັນໃນທຸກຈຸດທີ່ລະບົບຂຽນ Response
 /// </summary>
 /// <remarks>
-/// รวมไว้ที่เดียวเพื่อให้ Response จาก Controller, Middleware, Health Check และ Rate Limiter
-/// มีรูปแบบเดียวกันทั้งหมด
+/// ຮວບຮວມຢູ່ໃນສະຖານທີ່ຜຶ່ງດັ່ງນັ້ນ Response ຈາກ Controller, Middleware, Health Check ແລະ Rate Limiter
+/// ພວກເຂົາທັງຝົດມີຮູບແບບດຽວກັນ
 /// </remarks>
 public static class DormFlowJsonSerializerOptions
 {
-    /// <summary>ค่าตั้งมาตรฐานที่พร้อมใช้งาน</summary>
+    /// <summary>ມີການຕັ້ງຄ່າມາດຕະຖານ</summary>
     public static JsonSerializerOptions Default { get; } = CreateDefault();
 
-    /// <summary>สร้างค่าตั้งมาตรฐานชุดใหม่ที่ยังแก้ไขเพิ่มได้</summary>
+    /// <summary>ສ້າງຊຸດການຕັ້ງຄ່າມາດຕະຖານໃຝ່ທີ່ຍັງສາມາດແກ້ໄຂໄດ້</summary>
     public static JsonSerializerOptions CreateDefault()
     {
         JsonSerializerOptions options = new(JsonSerializerDefaults.Web);
@@ -26,8 +26,8 @@ public static class DormFlowJsonSerializerOptions
         return options;
     }
 
-    /// <summary>ใส่ค่าตั้งมาตรฐานของ DormFlow ลงในอ็อบเจกต์ที่มีอยู่แล้ว</summary>
-    /// <param name="options">ค่าตั้งที่ต้องการปรับ เช่นของ ASP.NET Core MVC</param>
+    /// <summary>ກະລຸນາໃສ່ການຕັ້ງຄ່າເລີ່ມຕົ້ນສໍາລັບ DormFlow ເຂົ້າໄປໃນວັດຖຸທີ່ມີຢູ່ແລ້ວ</summary>
+    /// <param name="options">ການຕັ້ງຄ່າທີ່ທ່ານຕ້ອງການທີ່ຈະປັບ, ເຊັ່ນ: ASP.NET Core MVC</param>
     public static void Configure(JsonSerializerOptions options)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -35,9 +35,9 @@ public static class DormFlowJsonSerializerOptions
         options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 
-        // ปล่อยให้อักษรไทยออกไปเป็นตัวอักษรจริงแทน ก ทำให้ Response อ่านง่ายและขนาดเล็กลง
-        // ใช้ได้อย่างปลอดภัยเพราะ API ตอบเป็น application/json เสมอ ไม่เคยฝังผลลัพธ์ลงใน HTML
-        options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Thai);
+        // ປ່ອຍຕົວໜັງສືລາວອອກເປັນຕົວໜັງສືແທ້ແທນ ກ ເຮັດ Response ອ່ານງ່າຍ ແລະຂະໜາດນ້ອຍກວ່າ
+        // ມັນປອດໄພທີ່ຈະໃຊ້ເພາະວ່າ API ຄໍາຕອບແມ່ນ application/json ສະເຝີ, ບໍ່ເຄີຍຝັງຜົນໄດ້ຮັບເຂົ້າໄປໃນ HTML
+        options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Lao);
 
         if (!options.Converters.Any(converter => converter is JsonStringEnumConverter))
         {

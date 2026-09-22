@@ -10,7 +10,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Dormitories;
 
-/// <summary>Use Case ทั้งหมดของโมดูลหอพัก</summary>
+/// <summary>Use Case ໂມດູນຫໍພັກທັງໝົດ</summary>
 public sealed class DormitoryService(
     IDormitoryRepository repository,
     ICurrentUser currentUser,
@@ -18,7 +18,7 @@ public sealed class DormitoryService(
     IValidator<CreateDormitoryRequest> createValidator,
     IValidator<UpdateDormitoryRequest> updateValidator) : IDormitoryService
 {
-    /// <summary>ชื่อ Entity ที่ใช้กำกับเหตุการณ์ใน Audit Log</summary>
+    /// <summary>ຊື່ Entity ໃຊ້ເພື່ອຊີ້ບອກເຫດການໃນ Audit Log</summary>
     private const string AuditEntityName = "Dormitory";
 
     private static readonly string[] AllowedSortFields = ["code", "name", "status", "createdAt"];
@@ -75,7 +75,7 @@ public sealed class DormitoryService(
 
         if (await _repository.ExistsByCodeAsync(organizationId, code, null, cancellationToken))
         {
-            throw new ConflictException($"รหัสหอพัก '{code}' ถูกใช้ในองค์กรนี้แล้ว");
+            throw new ConflictException($"ລະຫັດຫໍພັກ '{code}' ຖືກໃຊ້ໃນອົງກອນນີ້ແລ້ວ");
         }
 
         Dormitory dormitory = new()
@@ -128,7 +128,7 @@ public sealed class DormitoryService(
 
         if (await _repository.ExistsByCodeAsync(dormitory.OrganizationId, code, dormitory.Id, cancellationToken))
         {
-            throw new ConflictException($"รหัสหอพัก '{code}' ถูกใช้ในองค์กรนี้แล้ว");
+            throw new ConflictException($"ລະຫັດຫໍພັກ '{code}' ຖືກໃຊ້ໃນອົງກອນນີ້ແລ້ວ");
         }
 
         dormitory.Code = code;
@@ -170,7 +170,7 @@ public sealed class DormitoryService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out DormitoryStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Dormitory dormitory = await FindAccessibleAsync(id, cancellationToken);
@@ -208,13 +208,13 @@ public sealed class DormitoryService(
     private async Task<Dormitory> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Dormitory dormitory = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลหอพักที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຫໍພັກທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             dormitory.OrganizationId,
             dormitory.Id,
-            "ไม่พบข้อมูลหอพักที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຫໍພັກທີ່ຕ້ອງການ");
 
         return dormitory;
     }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางการแจ้งเตือน</summary>
+/// <summary>ຕັ້ງຄ່າກຳນົດເວລາການແຈ້ງເຕືອນ</summary>
 public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
     /// <inheritdoc />

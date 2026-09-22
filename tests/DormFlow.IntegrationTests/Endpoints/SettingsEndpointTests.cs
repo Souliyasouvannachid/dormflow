@@ -10,20 +10,20 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการจัดการค่าตั้งขององค์กรผ่าน HTTP จริง</summary>
+/// <summary>ການທົດສອບການຄຸ້ມຄອງການຕັ້ງຄ່າອົງກອນໂດຍຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class SettingsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task สร้างค่าตั้งใหม่ด้วยคีย์ที่ยังไม่มี_ต้องสำเร็จ()
+    public async Task ສ້າງການຕັ້ງຄ່າໃໝ່ດ້ວຍກະແຈທີ່ຍັງບໍ່ທັນມີຢູ່_ຕ້ອງປະສົບຜົນສໍາເລັດ()
     {
         using HttpClient client = await CreateOwnerClientAsync();
 
         using HttpResponseMessage response = await client.PutAsJsonAsync(
             new Uri("/api/v1/settings/invoice.footer-text", UriKind.Relative),
-            new UpsertSettingRequest { Value = "ขอบคุณที่ใช้บริการ" },
+            new UpsertSettingRequest { Value = "ຂອບໃຈທີ່ໃຊ້ບໍລິການ" },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -31,11 +31,11 @@ public class SettingsEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<SettingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         setting.Key.Should().Be("invoice.footer-text");
-        setting.Value.Should().Be("ขอบคุณที่ใช้บริการ");
+        setting.Value.Should().Be("ຂອບໃຈທີ່ໃຊ້ບໍລິການ");
     }
 
     [Fact]
-    public async Task แก้ไขค่าตั้งที่มีอยู่แล้ว_ต้องได้ค่าใหม่_ไม่สร้างรายการซ้ำ()
+    public async Task ແກ້ໄຂການຕັ້ງຄ່າທີ່ມີຢູ່_ຕ້ອງໄດ້ຮັບມູນຄ່າໃຝ່_ຢ່າສ້າງລາຍການຊໍ້າກັນ()
     {
         using HttpClient client = await CreateOwnerClientAsync();
 
@@ -61,7 +61,7 @@ public class SettingsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ลบค่าตั้ง_แล้วอ่านต่อ_ต้องได้_404()
+    public async Task ລຶບການຕັ້ງຄ່າ_ແລ້ວອ່ານຕໍ່_ຕ້ອງໄດ້ຮັບ_404()
     {
         using HttpClient client = await CreateOwnerClientAsync();
 
@@ -79,7 +79,7 @@ public class SettingsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task สร้างค่าตั้งซ้ำคีย์เดิมได้หลังจากลบไปแล้ว()
+    public async Task ທ່ານສາມາດສ້າງການຕັ້ງຄ່າຊ້ໍາກັນສໍາລັບລະຫັດດຽວກັນຫຼັງຈາກລຶບມັນ()
     {
         using HttpClient client = await CreateOwnerClientAsync();
 
@@ -102,7 +102,7 @@ public class SettingsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ผู้ใช้ขององค์กรหนึ่งเห็นค่าตั้งขององค์กรตนเองเท่านั้น()
+    public async Task ຜູ້ໃຊ້ຂອງອົງກອນພຽງແຕ່ເບິ່ງການຕັ້ງຄ່າຂອງອົງກອນຂອງຕົນເອງ()
     {
         using HttpClient ownerAClient = await CreateOwnerClientAsync();
         using HttpClient ownerBClient = await CreateOwnerClientAsync();
@@ -135,7 +135,7 @@ public class SettingsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await superAdminClient.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;

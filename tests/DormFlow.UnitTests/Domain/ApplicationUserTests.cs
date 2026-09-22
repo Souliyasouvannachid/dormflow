@@ -5,20 +5,20 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Domain;
 
-/// <summary>ตรวจตรรกะของบัญชีผู้ใช้ที่ต่อยอดจาก ASP.NET Core Identity</summary>
+/// <summary>ກວດເບິ່ງເຫດຜົນຂອງບັນຊີຜູ້ໃຊ້ທີ່ທ່ານສ້າງຂຶ້ນ ASP.NET Core Identity</summary>
 public class ApplicationUserTests
 {
     private static ApplicationUser CreateUser(UserStatus status, bool isDeleted = false)
         => new()
         {
-            FirstName = "ทดสอบ",
-            LastName = "ระบบ",
+            FirstName = "ການທົດສອບ",
+            LastName = "ລະບົບ",
             Status = status,
             IsDeleted = isDeleted,
         };
 
     [Fact]
-    public void CanSignIn_เมื่อสถานะ_Active_และไม่ถูกลบ_ต้องเป็นจริง()
+    public void CanSignIn_ໃນເວລາທີ່ສະຖານະ_Active_ແລະບໍ່ໄດ້ລຶບ_ຕ້ອງເປັນຄວາມຈິງ()
     {
         ApplicationUser user = CreateUser(UserStatus.Active);
 
@@ -28,7 +28,7 @@ public class ApplicationUserTests
     [Theory]
     [InlineData(UserStatus.Inactive)]
     [InlineData(UserStatus.Suspended)]
-    public void CanSignIn_เมื่อสถานะไม่ใช่_Active_ต้องเป็นเท็จ(UserStatus status)
+    public void CanSignIn_ໃນເວລາທີ່ສະຖານະບໍ່ແມ່ນ_Active_ຈະຕ້ອງບໍ່ຖືກຕ້ອງ(UserStatus status)
     {
         ApplicationUser user = CreateUser(status);
 
@@ -36,7 +36,7 @@ public class ApplicationUserTests
     }
 
     [Fact]
-    public void CanSignIn_เมื่อถูก_Soft_Delete_ต้องเป็นเท็จแม้สถานะเป็น_Active()
+    public void CanSignIn_ເມື່ອມັນຖືກຕ້ອງ_Soft_Delete_ຈະຕ້ອງບໍ່ຖືກຕ້ອງເຖິງແມ່ນວ່າສະຖານະແມ່ນ_Active()
     {
         ApplicationUser user = CreateUser(UserStatus.Active, isDeleted: true);
 
@@ -44,10 +44,10 @@ public class ApplicationUserTests
     }
 
     [Fact]
-    public void FullName_ต้องรวมชื่อและนามสกุลโดยตัดช่องว่างส่วนเกิน()
+    public void FullName_ນາມສະກຸນແລະນາມສະກຸນຈະຕ້ອງຖືກລວມເຂົ້າກໍາຈັດຊ່ອງຫວ່າງເພີ່ມເຕີມ()
     {
         ApplicationUser user = CreateUser(UserStatus.Active);
 
-        user.FullName.Should().Be("ทดสอบ ระบบ");
+        user.FullName.Should().Be($"{user.FirstName} {user.LastName}");
     }
 }

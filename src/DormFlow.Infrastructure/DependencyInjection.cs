@@ -46,26 +46,26 @@ using Microsoft.Extensions.Hosting;
 namespace DormFlow.Infrastructure;
 
 /// <summary>
-/// จุดลงทะเบียน Dependency Injection ของชั้น Infrastructure
+/// ຈຸດລົງທະບຽນ Dependency Injection ຂອງຊັ້ນ Infrastructure
 /// </summary>
 public static class DependencyInjection
 {
-    /// <summary>ชื่อ Connection String หลักของระบบ</summary>
+    /// <summary>ຊື່ Connection String ຫຼັກຂອງລະບົບ</summary>
     public const string DefaultConnectionName = "DefaultConnection";
 
-    /// <summary>Assembly ของชั้น Infrastructure ใช้ใน Architecture Test</summary>
+    /// <summary>Assembly ຂອງຊັ້ນ Infrastructure ໃຊ້ໃນ Architecture Test</summary>
     public static Assembly InfrastructureAssembly => typeof(DependencyInjection).Assembly;
 
     /// <summary>
-    /// ลงทะเบียนบริการทั้งหมดของชั้น Infrastructure
+    /// ລົງທະບຽນບໍລິການຊັ້ນທັງຝົດ Infrastructure
     /// </summary>
-    /// <param name="services">Service collection ของแอปพลิเคชัน</param>
-    /// <param name="configuration">Configuration ของแอปพลิเคชัน</param>
+    /// <param name="services">Service collection ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="configuration">Configuration ຂອງຄໍາຮ້ອງສະຝັກ</param>
     /// <exception cref="InvalidOperationException">
-    /// เมื่อไม่พบ Connection String ชื่อ DefaultConnection
-    /// ระบบเลือกที่จะหยุดทำงานทันทีแทนที่จะไปพังตอนมีคำขอเข้ามาแล้ว
+    /// ເມື່ອບໍ່ພົບ Connection String ຊື່ DefaultConnection
+    /// ລະບົບເລືອກທີ່ຈະຢຸດການເຮັດວຽກທັນທີແທນທີ່ຈະ crashing ເມື່ອໄດ້ຮັບການຮ້ອງຂໍ
     /// </exception>
-    /// <param name="environment">สภาพแวดล้อมโฮสต์ของแอปพลิเคชัน ใช้เพื่อข้าม Background Job ในสภาพแวดล้อม Testing</param>
+    /// <param name="environment">ສະພາບແວດລ້ອມໂຮດແອັບພລິເຄຊັນຖືກໃຊ້ເພື່ອຂ້າມຜ່ານ Background Job ໃນສະພາບແວດລ້ອມ Testing</param>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -78,7 +78,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
         services.AddDormFlowIdentity();
         services.AddTokenServices(configuration);
-        services.AddSupportingServices(configuration);
+        services.AddSupportingServices(configuration, environment);
         services.AddBackgroundJobStorage(configuration, environment);
 
         return services;
@@ -117,7 +117,7 @@ public static class DependencyInjection
                 .UseSnakeCaseNamingConvention()
                 .AddInterceptors(serviceProvider.GetRequiredService<AuditableEntitySaveChangesInterceptor>());
 
-            // ทั้งสองค่านี้เปิดได้เฉพาะตอนพัฒนา เพราะทำให้ค่าพารามิเตอร์จริงปรากฏใน Log
+            // ທັງສອງການຕັ້ງຄ່າເຫຼົ່ານີ້ສາມາດເປີດໄດ້ພຽງແຕ່ໃນລະຫວ່າງການພັດທະນາ. ເນື່ອງຈາກວ່າຄ່າພາລາມິເຕີທີ່ແທ້ຈິງປາກົດຢູ່ໃນ Log
             optionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging);
             optionsBuilder.EnableDetailedErrors(databaseOptions.EnableDetailedErrors);
         });
@@ -155,17 +155,17 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// ลงทะเบียน ASP.NET Core Identity
+    /// ລົງທະບຽນ ASP.NET Core Identity
     /// </summary>
     /// <remarks>
-    /// ใช้ AddIdentityCore แทน AddIdentity เพราะระบบยืนยันตัวตนด้วย JWT ไม่ใช้ cookie
-    /// AddIdentity จะลงทะเบียน authentication scheme แบบ cookie มาให้ด้วยซึ่งไม่จำเป็นและทำให้สับสน
+    /// ໃຊ້ AddIdentityCore ແທນ AddIdentity ເນື່ອງຈາກວ່າລະບົບການຢັ້ງຢືນຕົວຕົນເຊັ່ນດຽວກັນ JWT ຢ່າໃຊ້ cookie
+    /// AddIdentity ຈະລົງທະບຽນ authentication scheme ຕົວແບບ cookie ສະຜອງໃຫ້, ທີ່ບໍ່ຈໍາເປັນແລະສັບສົນ
     /// </remarks>
     private static IServiceCollection AddDormFlowIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<ApplicationUser>(options =>
             {
-                // ข้อกำหนดรหัสผ่านต้องตรงกับ PasswordRules ในชั้น Application
+                // ຄວາມຕ້ອງການລະຫັດຜ່ານຕ້ອງກົງກັນ PasswordRules ໃນຫ້ອງຮຽນ Application
                 options.Password.RequiredLength = PasswordRules.MinimumLength;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
@@ -173,7 +173,7 @@ public static class DependencyInjection
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredUniqueChars = 4;
 
-                // ล็อกบัญชี 15 นาทีเมื่อกรอกรหัสผ่านผิดครบ 5 ครั้ง
+                // ບັນຊີຖືກລັອກ 15 ນາທີຫຼັງຈາກໃສ່ລະຫັດຜ່ານຜິດ 5 ເທື່ອ
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
@@ -209,14 +209,19 @@ public static class DependencyInjection
 
     private static IServiceCollection AddSupportingServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
             .ValidateDataAnnotations()
+            .Validate(
+                options => !string.Equals(options.Provider, "Smtp", StringComparison.OrdinalIgnoreCase)
+                    || !string.IsNullOrWhiteSpace(options.SmtpHost),
+                "ຕ້ອງກຳນົດ Email:SmtpHost ເມື່ອ Email:Provider ເປັນ Smtp.")
             .ValidateOnStart();
 
-        // ข้อมูลผู้ดูแลระบบเริ่มต้นอ่านจาก environment variable ตรง ๆ ตามชื่อที่กำหนดไว้ในเอกสารระบบ
+        // ຂໍ້ມູນເລີ່ມຕົ້ນຂອງຜູ້ເບິ່ງແຍງລະບົບອ່ານຈາກ environment variable ກົງກັບຊື່ທີ່ລະບຸໄວ້ໃນເອກະສານລະບົບ
         services.Configure<SeedOptions>(options =>
         {
             options.AdminEmail = configuration[SeedOptions.AdminEmailVariable];
@@ -225,22 +230,42 @@ public static class DependencyInjection
             options.AdminLastName = configuration[SeedOptions.AdminLastNameVariable];
         });
 
-        services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>();
+        string emailProvider = configuration["Email:Provider"] ?? "PickupDirectory";
+        if (environment.IsProduction()
+            && string.Equals(emailProvider, "PickupDirectory", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                "Email:Provider ບໍ່ສາມາດເປັນ PickupDirectory ໃນ Production ໄດ້. ກະລຸນາຕັ້ງຄ່າ SMTP ແທນ.");
+        }
+
+        if (string.Equals(emailProvider, "Smtp", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        }
+        else if (string.Equals(emailProvider, "PickupDirectory", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>();
+        }
+        else
+        {
+            throw new InvalidOperationException(
+                $"ບໍ່ຮອງຮັບ Email:Provider '{emailProvider}'. ກະລຸນາໃຊ້ 'Smtp' ຫຼື 'PickupDirectory'.");
+        }
 
         return services;
     }
 
     /// <summary>
-    /// ลงทะเบียนที่เก็บข้อมูลของ Background Job (Hangfire) บน PostgreSQL ตัวเดียวกับฐานข้อมูลหลัก
+    /// ລົງທະບຽນບ່ອນເກັບຂໍ້ມູນຂອງທ່ານ Background Job (Hangfire) ສຸດ PostgreSQL ຄືກັນກັບຖານຂໍ້ມູນຫຼັກ
     /// </summary>
     /// <remarks>
-    /// ลงทะเบียนเฉพาะ Storage เท่านั้น ไม่รวม Server/Dashboard/การตั้งเวลา Recurring Job
-    /// ซึ่งเป็นเรื่องของ Runtime/Hosting และอยู่ที่ชั้น Api แทน (ดู BackgroundJobConfiguration)
-    /// เพื่อให้แยกส่วน "ลงทะเบียนบริการ" กับ "สั่งให้ทำงานจริง" ออกจากกันชัดเจน เหมือนกับ AddPersistence/DatabaseInitializer
-    /// ข้ามการลงทะเบียนทั้งหมดในสภาพแวดล้อม Testing หรือเมื่อปิดผ่านค่าตั้ง BackgroundJobs:Enabled เพราะ
-    /// Hangfire.PostgreSql ติดตั้ง Schema ของตัวเองทันทีตอนเรียก UsePostgreSqlStorage (ไม่ใช่ตอนเริ่ม Server)
-    /// ถ้าปล่อยให้ทำงานคู่ขนานกับ dbContext.Database.EnsureCreatedAsync() ของ Integration Test
-    /// EF Core จะเข้าใจผิดว่าฐานข้อมูลมีตารางอยู่แล้วและข้ามการสร้างตารางของแอปพลิเคชันทั้งหมด (พบเป็นบั๊กจริงระหว่างพัฒนา)
+    /// ລົງທະບຽນເທົ່ານັ້ນ Storage ເທົ່ານັ້ນ, ບໍ່ລວມ Server/Dashboard/ກໍານົດເວລາ Recurring Job
+    /// ຊຶ່ງເປັນເລື່ອງຂອງ Runtime/Hosting ແລະຢູ່ເທິງພື້ນ Api ແທນ (ສັງເກດເບິ່ງ BackgroundJobConfiguration)
+    /// ແຍກ "ລົງທະບຽນສໍາລັບການບໍລິການ" ກັບ "ຄໍາສັ່ງທີ່ຈະເຮັດວຽກຕົວຈິງ" ແຍກອອກຈາກກັນຢ່າງຈະແຈ້ງ, ເປັນ AddPersistence/DatabaseInitializer
+    /// ຂ້າມການລົງທະບຽນທັງໝົດໃນສະພາບແວດລ້ອມ Testing ຫຼືເມື່ອປິດຜ່ານການຕັ້ງຄ່າ BackgroundJobs:Enabled ເນື່ອງຈາກວ່າ
+    /// Hangfire.PostgreSql ຕິດຕັ້ງ Schema ເປັນເຈົ້າຂອງທັນທີເມື່ອໂທຫາ UsePostgreSqlStorage (ບໍ່ແມ່ນໃນຕອນເລີ່ມຕົ້ນ Server)
+    /// ຖ້າອະນຸຍາດໃຫ້ເຮັດວຽກຂະຜານກັບ dbContext.Database.EnsureCreatedAsync() ຂອງ Integration Test
+    /// EF Core ມັນເຮັດໃຫ້ຄວາມຜິດພາດຂອງການສົມມຸດວ່າຖານຂໍ້ມູນມີຕາຕະລາງແລ້ວແລະຂ້າມການສ້າງຕາຕະລາງຂອງແອັບພລິເຄຊັນທັງຝົດ (ພົບແມງໄມ້ທີ່ແທ້ຈິງໃນລະຫວ່າງການພັດທະນາ)
     /// </remarks>
     private static IServiceCollection AddBackgroundJobStorage(
         this IServiceCollection services,
@@ -275,9 +300,9 @@ public static class DependencyInjection
         if (string.IsNullOrWhiteSpace(connectionString))
         {
             throw new InvalidOperationException(
-                $"ไม่พบ Connection String ชื่อ '{DefaultConnectionName}' " +
-                "กำหนดค่าผ่าน environment variable ชื่อ ConnectionStrings__DefaultConnection " +
-                "หรือใน appsettings.Development.json สำหรับการพัฒนาบนเครื่อง");
+                $"ບໍ່ພົບ Connection String ຊື່ '{DefaultConnectionName}' " +
+                "ກຳນົດຄ່າຜ່ານ environment variable ຊື່ ConnectionStrings__DefaultConnection " +
+                "ຫຼືໃນ appsettings.Development.json ສຳລັບການພັດທະນາເທິງເຄື່ອງ");
         }
 
         return connectionString;

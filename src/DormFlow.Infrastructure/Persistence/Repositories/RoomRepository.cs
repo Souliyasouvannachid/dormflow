@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลห้องพักบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຫ້ອງຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class RoomRepository(DormFlowDbContext dbContext) : IRoomRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -16,6 +16,22 @@ public sealed class RoomRepository(DormFlowDbContext dbContext) : IRoomRepositor
     /// <inheritdoc />
     public Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => _dbContext.Rooms.FirstOrDefaultAsync(room => room.Id == id, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyDictionary<Guid, Room>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(ids);
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, Room>();
+        }
+
+        return await _dbContext.Rooms
+            .Where(room => ids.Contains(room.Id))
+            .ToDictionaryAsync(room => room.Id, cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task<bool> ExistsByRoomNumberAsync(

@@ -11,14 +11,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการบริหารจัดการบัญชีผู้ใช้งานผ่าน HTTP จริง</summary>
+/// <summary>ທົດສອບການຄຸ້ມຄອງບັນຊີຜູ້ໃຊ້ຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class UsersEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task SuperAdmin_ต้องสร้างผู้ใช้_กำหนดบทบาท_และมอบหมายหอพักได้()
+    public async Task SuperAdmin_ຜູ້ໃຊ້ຕ້ອງຖືກສ້າງຂື້ນ_ກໍານົດບົດບາດ_ແລະສາມາດມອບຝາຍຫໍພັກ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -36,8 +36,8 @@ public class UsersEndpointTests(DormFlowApiFactory factory)
                 OrganizationId = organization.Id,
                 Email = email,
                 Password = "Test-Passw0rd1",
-                FirstName = "สมชาย",
-                LastName = "ทดสอบ",
+                FirstName = "ສົມໃຈ",
+                LastName = "ການທົດສອບ",
             },
             TestContext.Current.CancellationToken);
 
@@ -57,8 +57,8 @@ public class UsersEndpointTests(DormFlowApiFactory factory)
                 OrganizationId = organization.Id,
                 Email = email,
                 Password = "Test-Passw0rd1",
-                FirstName = "สมหญิง",
-                LastName = "ทดสอบ",
+                FirstName = "ຜູ້ຍິງ",
+                LastName = "ການທົດສອບ",
             },
             TestContext.Current.CancellationToken);
         duplicateResponse.StatusCode.Should().Be(HttpStatusCode.Conflict);
@@ -98,7 +98,7 @@ public class UsersEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ผู้ใช้ที่ไม่มีสิทธิ์_users_manage_ต้องได้_403()
+    public async Task ຜູ້ໃຊ້ທີ່ບໍ່ມີສິດພິເສດ_users_manage_ຕ້ອງໄດ້ຮັບ_403()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -117,7 +117,7 @@ public class UsersEndpointTests(DormFlowApiFactory factory)
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = code, Name = $"องค์กรทดสอบ {code}" },
+            new CreateOrganizationRequest { Code = code, Name = $"ອົງກອນການທົດສອບ {code}" },
             TestContext.Current.CancellationToken);
 
         response.EnsureSuccessStatusCode();
@@ -138,7 +138,7 @@ public class UsersEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organizationId,
                 Code = code,
-                Name = $"หอพักทดสอบ {code}",
+                Name = $"ຫໍພັກການທົດສອບ {code}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",

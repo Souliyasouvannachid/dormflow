@@ -1,8 +1,8 @@
 namespace DormFlow.Contracts.Payments;
 
-/// <summary>คำขอคืนเงิน</summary>
+/// <summary>ການຮ້ອງຂໍຄືນເງິນ</summary>
 public class RefundPaymentRequest
 {
-    /// <summary>สาเหตุการคืนเงิน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບການຄືນເງິນ</summary>
     public string? Reason { get; set; }
 }

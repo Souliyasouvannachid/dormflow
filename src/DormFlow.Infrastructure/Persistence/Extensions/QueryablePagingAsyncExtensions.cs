@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 namespace DormFlow.Infrastructure.Persistence.Extensions;
 
 /// <summary>
-/// ส่วนขยายที่แปลง <see cref="IQueryable{T}"/> ของ EF Core ให้เป็นผลลัพธ์แบบแบ่งหน้า
+/// ສ່ວນຂະຫຍາຍທີ່ແປງແລ້ວ <see cref="IQueryable{T}"/> ຂອງ EF Core ເຂົ້າໄປໃນຜົນໄດ້ຮັບ paginated
 /// </summary>
 /// <remarks>
-/// อยู่ในชั้น Infrastructure เพราะต้องพึ่ง EF Core ในการสั่ง query แบบ asynchronous
-/// ส่วนตรรกะการคำนวณหน้าอยู่ในชั้น Application ที่ทดสอบได้โดยไม่ต้องมีฐานข้อมูล
+/// ໃນຫ້ອງຮຽນ Infrastructure ເນື່ອງຈາກວ່າຂ້າພະເຈົ້າຕ້ອງຂຶ້ນກັບ EF Core ເພື່ອສັ່ງ query ຕົວແບບ asynchronous
+/// ເຫດຜົນການຄິດໄລ່ຜ້າແມ່ນຢູ່ໃນຊັ້ນ Application ທີ່ສາມາດທົດສອບໄດ້ໂດຍບໍ່ມີຖານຂໍ້ມູນ
 /// </remarks>
 public static class QueryablePagingAsyncExtensions
 {
     /// <summary>
-    /// นับจำนวนรายการทั้งหมดแล้วดึงเฉพาะหน้าที่ต้องการ
+    /// ນັບຈໍານວນລາຍການທັງຝົດແລະສະກັດພຽງແຕ່ຜ້າທີ່ຕ້ອງການ
     /// </summary>
-    /// <typeparam name="TSource">ชนิดของข้อมูลใน Query</typeparam>
-    /// <param name="source">Query ที่ใส่เงื่อนไขกรองและเรียงลำดับเรียบร้อยแล้ว</param>
-    /// <param name="query">พารามิเตอร์การแบ่งหน้าที่ปรับค่าแล้ว</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <typeparam name="TSource">ປະເພດຂອງຂໍ້ມູນໃນ Query</typeparam>
+    /// <param name="source">Query ບ່ອນທີ່ເງື່ອນໄຂໄດ້ຖືກກັ່ນຕອງແລະຈັດຮຽງຢ່າງສໍາເລັດຜົນ</param>
+    /// <param name="query">ປັບຕົວກໍານົດການ pagination</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     public static async Task<PagedResult<TSource>> ToPagedResultAsync<TSource>(
         this IQueryable<TSource> source,
         PagedQuery query,
@@ -42,14 +42,14 @@ public static class QueryablePagingAsyncExtensions
     }
 
     /// <summary>
-    /// แปลงผลลัพธ์เป็นรูปแบบแบ่งหน้าพร้อมแม็ปเป็น DTO ในคำสั่งเดียว
+    /// ປ່ຽນຜົນໄດ້ຮັບເປັນຮູບແບບ pagination ດ້ວຍການສ້າງແຜນທີ່ເປັນ DTO ໃນຄໍາສັ່ງຜຶ່ງ
     /// </summary>
-    /// <typeparam name="TSource">ชนิดของข้อมูลใน Query</typeparam>
-    /// <typeparam name="TResult">ชนิดของ DTO ที่ต้องการ</typeparam>
-    /// <param name="source">Query ที่ใส่เงื่อนไขกรองและเรียงลำดับเรียบร้อยแล้ว</param>
-    /// <param name="selector">นิพจน์แม็ปข้อมูลเป็น DTO ทำงานที่ฝั่งฐานข้อมูล</param>
-    /// <param name="query">พารามิเตอร์การแบ่งหน้าที่ปรับค่าแล้ว</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <typeparam name="TSource">ປະເພດຂອງຂໍ້ມູນໃນ Query</typeparam>
+    /// <typeparam name="TResult">ປະເພດຂອງ DTO ຕ້ອງການ</typeparam>
+    /// <param name="source">Query ບ່ອນທີ່ເງື່ອນໄຂໄດ້ຖືກກັ່ນຕອງແລະຈັດຮຽງຢ່າງສໍາເລັດຜົນ</param>
+    /// <param name="selector">ການສະແດງອອກແຜນທີ່ຂໍ້ມູນແມ່ນ DTO ເຮັດວຽກຢູ່ໃນດ້ານຖານຂໍ້ມູນ</param>
+    /// <param name="query">ປັບຕົວກໍານົດການ pagination</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     public static Task<PagedResult<TResult>> ToPagedResultAsync<TSource, TResult>(
         this IQueryable<TSource> source,
         System.Linq.Expressions.Expression<Func<TSource, TResult>> selector,

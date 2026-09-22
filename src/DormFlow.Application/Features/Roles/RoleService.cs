@@ -9,7 +9,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Roles;
 
-/// <summary>Use Case ทั้งหมดของโมดูลบทบาท</summary>
+/// <summary>Use Case ໂມດູນບົດບາດທັງໝົດ</summary>
 public sealed class RoleService(
     IRoleRepository repository,
     ICurrentUser currentUser,
@@ -63,7 +63,7 @@ public sealed class RoleService(
 
         if (await _repository.ExistsByNameAsync(name, null, cancellationToken))
         {
-            throw new ConflictException($"ชื่อบทบาท '{name}' ถูกใช้ในระบบแล้ว");
+            throw new ConflictException($"ຊື່ບົດບາດ '{name}' ຖືກໃຊ້ໃນລະບົບແລ້ວ");
         }
 
         RoleOperationResult result = await _repository.CreateAsync(name, request.Description, cancellationToken);
@@ -71,7 +71,7 @@ public sealed class RoleService(
         if (!result.Succeeded || result.RoleId is null)
         {
             throw new ValidationFailedException(
-                result.Errors.Count > 0 ? string.Join(" ", result.Errors) : "สร้างบทบาทไม่สำเร็จ");
+                result.Errors.Count > 0 ? string.Join(" ", result.Errors) : "ສ້າງບົດບາດບໍ່ສຳເລັດ");
         }
 
         await _auditLogWriter.WriteAsync(
@@ -97,13 +97,13 @@ public sealed class RoleService(
 
         if (role.IsSystemRole && !string.Equals(role.Name, name, StringComparison.Ordinal))
         {
-            throw new ConflictException("ไม่สามารถเปลี่ยนชื่อบทบาทมาตรฐานของระบบได้");
+            throw new ConflictException("ບໍ່ສາມາດປ່ຽນຊື່ບົດບາດມາດຕະຖານຂອງລະບົບໄດ້");
         }
 
         if (!string.Equals(role.Name, name, StringComparison.Ordinal)
             && await _repository.ExistsByNameAsync(name, role.Id, cancellationToken))
         {
-            throw new ConflictException($"ชื่อบทบาท '{name}' ถูกใช้ในระบบแล้ว");
+            throw new ConflictException($"ຊື່ບົດບາດ '{name}' ຖືກໃຊ້ໃນລະບົບແລ້ວ");
         }
 
         await _repository.UpdateAsync(role.Id, name, request.Description, cancellationToken);
@@ -124,7 +124,7 @@ public sealed class RoleService(
 
         if (role.IsSystemRole)
         {
-            throw new ConflictException("ไม่สามารถลบบทบาทมาตรฐานของระบบได้");
+            throw new ConflictException("ບໍ່ສາມາດລຶບບົດບາດມາດຕະຖານຂອງລະບົບໄດ້");
         }
 
         await _repository.DeleteAsync(role.Id, cancellationToken);
@@ -156,7 +156,7 @@ public sealed class RoleService(
 
         if (!succeeded)
         {
-            throw new ValidationFailedException("กำหนดสิทธิ์ไม่สำเร็จ กรุณาตรวจสอบรหัสสิทธิ์ที่ระบุ");
+            throw new ValidationFailedException("ກຳນົດສິດບໍ່ສຳເລັດ ກະລຸນາກວດສອບລະຫັດສິດທີ່ລະບຸ");
         }
 
         await _auditLogWriter.WriteAsync(
@@ -171,7 +171,7 @@ public sealed class RoleService(
 
     private async Task<RoleInfo> RequireByIdAsync(Guid id, CancellationToken cancellationToken)
         => await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลบทบาทที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນບົດບາດທີ່ຕ້ອງການ");
 
     private static RoleResponse ToResponse(RoleInfo role) => new()
     {

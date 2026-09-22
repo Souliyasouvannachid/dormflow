@@ -1,11 +1,11 @@
 namespace DormFlow.Contracts.Settings;
 
-/// <summary>คำขอสร้างหรือแก้ไขค่าตั้งหนึ่งรายการ (Key มาจาก Route)</summary>
+/// <summary>ຮ້ອງຂໍໃຫ້ສ້າງ ຫຼືແກ້ໄຂການຕັ້ງຄ່າໃດໜຶ່ງ (Key ມາຈາກ Route)</summary>
 public class UpsertSettingRequest
 {
-    /// <summary>องค์กรเป้าหมาย จำเป็นเฉพาะเมื่อผู้เรียกเป็น SuperAdmin ผู้ใช้อื่นถูกบังคับใช้องค์กรของตนเสมอ</summary>
+    /// <summary>ອົງກອນເປົ້າຝາຍຕ້ອງການພຽງແຕ່ຖ້າຜູ້ໂທແມ່ນ SuperAdmin ຜູ້ໃຊ້ອື່ນໆຖືກບັງຄັບໃຫ້ບັງຄັບໃຫ້ອົງກອນຂອງພວກເຂົາສະເຝີ</summary>
     public Guid? OrganizationId { get; set; }
 
-    /// <summary>ค่าของค่าตั้ง</summary>
+    /// <summary>ການຕັ້ງຄ່າ</summary>
     public string Value { get; set; } = string.Empty;
 }

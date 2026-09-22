@@ -7,8 +7,8 @@ using Xunit;
 namespace DormFlow.UnitTests.Application.Dormitories;
 
 /// <summary>
-/// ตรวจกฎการตรวจสอบข้อมูลหอพัก โดยเฉพาะขอบเขตวันที่ออกใบแจ้งหนี้และวันครบกำหนดชำระ
-/// ซึ่งเป็นค่าที่ระบบใบแจ้งหนี้ในเฟสถัดไปจะพึ่งพาโดยตรง
+/// ກວດສອບກົດລະບຽບການກວດສອບຂໍ້ມູນຫໍພັກ. ໂດຍສະເພາະແມ່ນຂອບເຂດຂອງວັນທີໃບເກັບເງິນແລະວັນທີການຊໍາລະຊໍາລະ
+/// ນີ້ແມ່ນມູນຄ່າທີ່ໄລຍະຕໍ່ໄປຂອງລະບົບໃບເກັບເງິນຈະອີງໃສ່ໂດຍກົງ
 /// </summary>
 public class DormitoryValidatorsTests
 {
@@ -18,7 +18,7 @@ public class DormitoryValidatorsTests
     [InlineData(1)]
     [InlineData(28)]
     [InlineData(15)]
-    public void BillingDay_ในช่วงที่ยอมรับ_ต้องผ่าน(int billingDay)
+    public void BillingDay_ໃນລະຫວ່າງການຍອມຮັບ_ຕ້ອງຜ່ານ(int billingDay)
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.BillingDay = billingDay;
@@ -32,7 +32,7 @@ public class DormitoryValidatorsTests
     [InlineData(0)]
     [InlineData(29)]
     [InlineData(-1)]
-    public void BillingDay_นอกช่วงที่ยอมรับ_ต้องไม่ผ่าน(int billingDay)
+    public void BillingDay_ຢູ່ນອກຂອບເຂດທີ່ຍອມຮັບ_ບໍ່ຕ້ອງຜ່ານ(int billingDay)
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.BillingDay = billingDay;
@@ -45,7 +45,7 @@ public class DormitoryValidatorsTests
     [Theory]
     [InlineData(1)]
     [InlineData(31)]
-    public void PaymentDueDay_ในช่วงที่ยอมรับ_ต้องผ่าน(int paymentDueDay)
+    public void PaymentDueDay_ໃນລະຫວ່າງການຍອມຮັບ_ຕ້ອງຜ່ານ(int paymentDueDay)
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.PaymentDueDay = paymentDueDay;
@@ -56,7 +56,7 @@ public class DormitoryValidatorsTests
     }
 
     [Fact]
-    public void PaymentDueDay_เกิน31_ต้องไม่ผ่าน()
+    public void PaymentDueDay_ເກີນ31_ບໍ່ຕ້ອງຜ່ານ()
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.PaymentDueDay = 32;
@@ -70,7 +70,7 @@ public class DormitoryValidatorsTests
     [InlineData("Fixed")]
     [InlineData("Percentage")]
     [InlineData("fixed")]
-    public void LateFeeType_ค่าที่ถูกต้อง_ต้องผ่าน(string lateFeeType)
+    public void LateFeeType_ຄ່າທີ່ຖືກຕ້ອງ_ຕ້ອງຜ່ານ(string lateFeeType)
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.LateFeeType = lateFeeType;
@@ -81,7 +81,7 @@ public class DormitoryValidatorsTests
     }
 
     [Fact]
-    public void LateFeeType_ค่าที่ไม่มีอยู่จริง_ต้องไม่ผ่าน()
+    public void LateFeeType_ຄ່າທີ່ບໍ່ມີຕົວຈິງແລ້ວ_ບໍ່ຕ້ອງຜ່ານ()
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.LateFeeType = "Compound";
@@ -92,7 +92,7 @@ public class DormitoryValidatorsTests
     }
 
     [Fact]
-    public void Code_ว่างเปล่า_ต้องไม่ผ่าน()
+    public void Code_ຫວ່າງເປົ່າ_ບໍ່ຕ້ອງຜ່ານ()
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.Code = string.Empty;
@@ -103,7 +103,7 @@ public class DormitoryValidatorsTests
     }
 
     [Fact]
-    public void Email_รูปแบบไม่ถูกต้อง_ต้องไม่ผ่าน()
+    public void Email_ຮູບແບບບໍ່ຖືກຕ້ອງ_ບໍ່ຕ້ອງຜ່ານ()
     {
         CreateDormitoryRequest request = CreateValidRequest();
         request.Email = "not-an-email";
@@ -114,7 +114,7 @@ public class DormitoryValidatorsTests
     }
 
     [Fact]
-    public void ข้อมูลครบถ้วนถูกต้อง_ต้องผ่านทั้งหมด()
+    public void ຂໍ້ມູນຄົບຖ້ວນແລະຖືກຕ້ອງ_ຕ້ອງຜ່ານທັງຝົດ()
     {
         ValidationResult result = _validator.Validate(CreateValidRequest());
 
@@ -124,7 +124,7 @@ public class DormitoryValidatorsTests
     private static CreateDormitoryRequest CreateValidRequest() => new()
     {
         Code = "D01",
-        Name = "หอพักทดสอบ",
+        Name = "ຫໍພັກການທົດສອບ",
         BillingDay = 1,
         PaymentDueDay = 5,
         LateFeeType = "Fixed",

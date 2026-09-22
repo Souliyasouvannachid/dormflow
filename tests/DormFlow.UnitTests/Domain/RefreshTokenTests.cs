@@ -6,7 +6,7 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Domain;
 
-/// <summary>ตรวจตรรกะวงจรชีวิตของ Refresh Token</summary>
+/// <summary>ກວດເບິ່ງເຫດຜົນຂອງວົງຈອນຊີວິດຂອງ Refresh Token</summary>
 public class RefreshTokenTests
 {
     private static RefreshToken CreateToken(DateTimeOffset expiresAt)
@@ -19,7 +19,7 @@ public class RefreshTokenTests
         };
 
     [Fact]
-    public void IsExpired_เมื่อยังไม่ถึงเวลาหมดอายุ_ต้องเป็นเท็จ()
+    public void IsExpired_ເມື່ອເວລາຍັງບໍ່ໝົດ_ຈະຕ້ອງບໍ່ຖືກຕ້ອງ()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));
@@ -28,7 +28,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void IsExpired_เมื่อถึงเวลาหมดอายุพอดี_ต้องเป็นจริง()
+    public void IsExpired_ເມື່ອເຖິງເວລາໝົດອາຍຸ_ຕ້ອງເປັນຄວາມຈິງ()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now);
@@ -37,7 +37,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void IsActive_เมื่อยังไม่หมดอายุและไม่ถูกเพิกถอน_ต้องเป็นจริง()
+    public void IsActive_ໃນເວລາທີ່ມັນຍັງບໍ່ທັນຝົດອາຍຸແລະບໍ່ໄດ້ຮັບການຖອນຄືນ_ຕ້ອງເປັນຄວາມຈິງ()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));
@@ -46,7 +46,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void IsActive_หลังถูกเพิกถอนแล้ว_ต้องเป็นเท็จ()
+    public void IsActive_ຫຼັງຈາກໄດ້ຖືກຍົກເລີກ_ຈະຕ້ອງບໍ່ຖືກຕ້ອງ()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));
@@ -58,7 +58,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void Revoke_ต้องบันทึกสาเหตุและเวลาที่เพิกถอน()
+    public void Revoke_ເຫດຜົນແລະເວລາຂອງການຖອນຕ້ອງຖືກບັນທຶກ()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));
@@ -71,7 +71,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void Revoke_เมื่อระบุโทเคนที่มาแทน_ต้องบันทึก_ReplacedByTokenId()
+    public void Revoke_ເມື່ອກໍານົດtokenທົດແທນ_ຕ້ອງປະຫຍັດ_ReplacedByTokenId()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));
@@ -83,7 +83,7 @@ public class RefreshTokenTests
     }
 
     [Fact]
-    public void Revoke_เมื่อถูกเพิกถอนไปแล้ว_ต้องโยน_DomainException()
+    public void Revoke_ເມື່ອໄດ້ຖືກຖອນຄືນແລ້ວ_ຕ້ອງຖິ້ມ_DomainException()
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         RefreshToken token = CreateToken(now.AddDays(1));

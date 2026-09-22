@@ -7,7 +7,7 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ตรวจว่าเส้นทาง Health Check ทำงานครบตามที่ orchestrator และ docker compose ต้องใช้
+/// ກວດເບິ່ງວ່າເສັ້ນທາງນັ້ນ Health Check ສໍາເລັດວຽກງານຕາມທີ່ໄດ້ກໍານົດໄວ້ orchestrator ແລະ docker compose ຕ້ອງໃຊ້
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class HealthCheckEndpointTests(DormFlowApiFactory factory)
@@ -15,7 +15,7 @@ public class HealthCheckEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task Health_live_ต้องตอบว่าระบบยังทำงานอยู่()
+    public async Task Health_live_ຕ້ອງຕອບວ່າລະບົບຍັງເຮັດວຽກຢູ່()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -28,7 +28,7 @@ public class HealthCheckEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Health_live_ต้องไม่ตรวจฐานข้อมูล()
+    public async Task Health_live_ເຈົ້າບໍ່ຄວນກວດເບິ່ງຖານຂໍ້ມູນ()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -41,7 +41,7 @@ public class HealthCheckEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Health_ready_ต้องตรวจการเชื่อมต่อ_PostgreSQL()
+    public async Task Health_ready_ຕ້ອງກວດສອບການເຊື່ອມຕໍ່_PostgreSQL()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -57,7 +57,7 @@ public class HealthCheckEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Health_ต้องรวมผลการตรวจทุกรายการ()
+    public async Task Health_ຜົນການທົດສອບທັງໝົດຕ້ອງຖືກລວມເຂົ້າ()
     {
         using HttpClient client = _factory.CreateClient();
 

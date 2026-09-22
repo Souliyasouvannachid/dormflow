@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางหอพัก</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງຫໍພັກ</summary>
 public sealed class DormitoryConfiguration : IEntityTypeConfiguration<Dormitory>
 {
     /// <inheritdoc />
@@ -30,7 +30,7 @@ public sealed class DormitoryConfiguration : IEntityTypeConfiguration<Dormitory>
         builder.Property(dormitory => dormitory.LateFeeType).HasConversion<string>().HasMaxLength(20).IsRequired();
         builder.Property(dormitory => dormitory.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // รหัสหอพักต้องไม่ซ้ำกันภายในองค์กรเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ລະຫັດຫໍພັກຕ້ອງເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(dormitory => new { dormitory.OrganizationId, dormitory.Code })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -42,7 +42,7 @@ public sealed class DormitoryConfiguration : IEntityTypeConfiguration<Dormitory>
     }
 }
 
-/// <summary>ตั้งค่าตารางอาคาร</summary>
+/// <summary>ຕັ້ງຄ່າຕາຂ່າຍໄຟຟ້າ</summary>
 public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
 {
     /// <inheritdoc />
@@ -58,7 +58,7 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
         builder.Property(building => building.Description).HasMaxLength(1000);
         builder.Property(building => building.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // รหัสอาคารต้องไม่ซ้ำกันภายในหอพักเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ລະຫັດອາຄານຕ້ອງເປັນເອກະລັກພາຍໃນຫໍພັກດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(building => new { building.DormitoryId, building.Code })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -70,7 +70,7 @@ public sealed class BuildingConfiguration : IEntityTypeConfiguration<Building>
     }
 }
 
-/// <summary>ตั้งค่าตารางชั้นของอาคาร</summary>
+/// <summary>ຕັ້ງຄ່າຕາຂ່າຍໄຟຟ້າຊັ້ນອາຄານ</summary>
 public sealed class FloorConfiguration : IEntityTypeConfiguration<Floor>
 {
     /// <inheritdoc />
@@ -85,7 +85,7 @@ public sealed class FloorConfiguration : IEntityTypeConfiguration<Floor>
         builder.Property(floor => floor.Description).HasMaxLength(1000);
         builder.Property(floor => floor.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // เลขชั้นต้องไม่ซ้ำกันภายในอาคารเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ຕົວເລກຊັ້ນຕ້ອງເປັນເອກະລັກພາຍໃນອາຄານດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(floor => new { floor.BuildingId, floor.FloorNumber })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -97,7 +97,7 @@ public sealed class FloorConfiguration : IEntityTypeConfiguration<Floor>
     }
 }
 
-/// <summary>ตั้งค่าตารางประเภทห้อง</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງປະເພດຫ້ອງ</summary>
 public sealed class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
 {
     /// <inheritdoc />
@@ -113,7 +113,7 @@ public sealed class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
         builder.Property(roomType => roomType.Description).HasMaxLength(1000);
         builder.Property(roomType => roomType.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // รหัสประเภทห้องต้องไม่ซ้ำกันภายในหอพักเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ລະຫັດປະເພດຫ້ອງຈະຕ້ອງບໍ່ຊໍ້າກັນພາຍໃນຫໍພັກດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(roomType => new { roomType.DormitoryId, roomType.Code })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -125,7 +125,7 @@ public sealed class RoomTypeConfiguration : IEntityTypeConfiguration<RoomType>
     }
 }
 
-/// <summary>ตั้งค่าตารางห้องพัก</summary>
+/// <summary>ຕັ້ງຄ່າຕາຕະລາງຫ້ອງ</summary>
 public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
 {
     /// <inheritdoc />
@@ -140,7 +140,13 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(room => room.Description).HasMaxLength(1000);
         builder.Property(room => room.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-        // เลขห้องต้องไม่ซ้ำกันภายในอาคารเดียวกัน เฉพาะแถวที่ยังไม่ถูกลบ
+        // ໃນອັດຕາສ່ວນ (0-100) ສະນັ້ນຕັ້ງຄວາມລະອຽດດ້ວຍຕົນເອງ, ຢ່າໃຊ້ມັນ numeric(18,2) ປະຕິບັດຕາມ convention ທົ່ວໄປ
+        builder.Property(room => room.FloorPlanX).HasPrecision(5, 2);
+        builder.Property(room => room.FloorPlanY).HasPrecision(5, 2);
+        builder.Property(room => room.FloorPlanWidth).HasPrecision(5, 2);
+        builder.Property(room => room.FloorPlanHeight).HasPrecision(5, 2);
+
+        // ຕົວເລກຫ້ອງຈະຕ້ອງບໍ່ຊໍ້າກັນພາຍໃນອາຄານດຽວກັນ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(room => new { room.BuildingId, room.RoomNumber })
             .IsUnique()
             .HasFilter("is_deleted = false");
@@ -166,7 +172,7 @@ public sealed class RoomConfiguration : IEntityTypeConfiguration<Room>
     }
 }
 
-/// <summary>ตั้งค่าตารางการมอบหมายผู้ใช้ให้ดูแลหอพัก</summary>
+/// <summary>ຕັ້ງຄ່າກຳນົດເວລາການມອບໝາຍຜູ້ໃຊ້ຫໍພັກ</summary>
 public sealed class UserDormitoryConfiguration : IEntityTypeConfiguration<UserDormitory>
 {
     /// <inheritdoc />
@@ -180,8 +186,13 @@ public sealed class UserDormitoryConfiguration : IEntityTypeConfiguration<UserDo
 
         builder.Property(assignment => assignment.AssignedAt).IsRequired();
 
-        // ผู้ใช้หนึ่งคนถูกมอบหมายให้ดูแลหอพักเดียวกันซ้ำไม่ได้
+        // ຜູ້ໃຊ້ໜຶ່ງຄົນບໍ່ສາມາດຖືກມອບໝາຍໃຫ້ຢູ່ໃນຫໍພັກດຽວກັນໄດ້
         builder.HasIndex(assignment => new { assignment.UserId, assignment.DormitoryId }).IsUnique();
+        // ໃຫ້ມີຫໍພັກຫຼັກໄດ້ພຽງແຫ່ງດຽວຕໍ່ຜູ້ໃຊ້ ແມ້ຈະມີການມອບໝາຍພ້ອມກັນ.
+        builder.HasIndex(assignment => assignment.UserId)
+            .IsUnique()
+            .HasDatabaseName("ix_user_dormitories_one_primary_per_user")
+            .HasFilter("is_primary = true");
         builder.HasIndex(assignment => assignment.DormitoryId);
 
         builder.HasOne<ApplicationUser>()

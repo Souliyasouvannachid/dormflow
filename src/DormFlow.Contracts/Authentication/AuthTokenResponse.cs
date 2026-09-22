@@ -1,29 +1,29 @@
 namespace DormFlow.Contracts.Authentication;
 
-/// <summary>ผลลัพธ์ของการเข้าสู่ระบบหรือการต่ออายุโทเคน</summary>
+/// <summary>ຜົນໄດ້ຮັບຂອງການເຂົ້າສູ່ລະບົບຫຼືການຕໍ່ອາຍຸ tokens</summary>
 public class AuthTokenResponse
 {
-    /// <summary>Access Token แบบ JWT ใช้แนบใน Authorization header</summary>
+    /// <summary>Access Token ຕົວແບບ JWT ໃຊ້ຕິດຢູ່ໃນ Authorization header</summary>
     public string AccessToken { get; init; } = string.Empty;
 
-    /// <summary>ชนิดของโทเคน ใช้ค่า Bearer เสมอ</summary>
+    /// <summary>ປະເພດຂອງ token, ການນໍາໃຊ້ມູນຄ່າ Bearer ສະເໝີ</summary>
     public string TokenType { get; init; } = "Bearer";
 
-    /// <summary>อายุที่เหลือของ Access Token หน่วยเป็นวินาที</summary>
+    /// <summary>ຊີວິດທີ່ຍັງເຫຼືອຂອງ Access Token ຜ່ວຍບໍລິການແມ່ນວິນາທີ</summary>
     public int ExpiresIn { get; init; }
 
-    /// <summary>เวลาหมดอายุของ Access Token</summary>
+    /// <summary>ເວລາຝົດອາຍຸຂອງ Access Token</summary>
     public DateTimeOffset ExpiresAt { get; init; }
 
     /// <summary>
-    /// Refresh Token ใช้ขอ Access Token ใบใหม่
-    /// ทุกครั้งที่ใช้ ระบบจะออกใบใหม่ให้และเพิกถอนใบเดิมทันที
+    /// Refresh Token ເຄີຍຖາມ Access Token ໃບໃໝ່
+    /// ທຸກໆຄັ້ງທີ່ໃຊ້ລະບົບຈະອອກອັນໃໝ່ ແລະ ຖອນອັນເກົ່າທັນທີ
     /// </summary>
     public string RefreshToken { get; init; } = string.Empty;
 
-    /// <summary>เวลาหมดอายุของ Refresh Token</summary>
+    /// <summary>ເວລາຝົດອາຍຸຂອງ Refresh Token</summary>
     public DateTimeOffset RefreshTokenExpiresAt { get; init; }
 
-    /// <summary>ข้อมูลของผู้ใช้ที่เข้าสู่ระบบ</summary>
+    /// <summary>ເຂົ້າສູ່ລະບົບຂໍ້ມູນຜູ້ໃຊ້</summary>
     public CurrentUserResponse User { get; init; } = new();
 }

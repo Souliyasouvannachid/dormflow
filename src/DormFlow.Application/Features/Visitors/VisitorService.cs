@@ -12,7 +12,7 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Visitors;
 
-/// <summary>Use Case ทั้งหมดของโมดูลผู้มาเยือน</summary>
+/// <summary>Use Case ໂມດູນແຂກທັງໝົດ</summary>
 public sealed class VisitorService(
     IVisitorRepository repository,
     IRoomRepository roomRepository,
@@ -59,6 +59,19 @@ public sealed class VisitorService(
     }
 
     /// <inheritdoc />
+    public Task<int> GetCountAsync(VisitorStatus status, CancellationToken cancellationToken = default)
+    {
+        VisitorListFilter filter = new(
+            TenantScope.GetOrganizationRestrictionForListing(_currentUser),
+            DormitoryId: null,
+            RoomId: null,
+            status,
+            TenantScope.GetDormitoryRestrictionForListing(_currentUser));
+
+        return _repository.CountAsync(filter, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<VisitorResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => ToResponse(await FindAccessibleAsync(id, cancellationToken));
 
@@ -71,22 +84,22 @@ public sealed class VisitorService(
         await _checkInValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         if (request.TenantId.HasValue)
         {
             Tenant tenant = await _tenantRepository.GetByIdAsync(request.TenantId.Value, cancellationToken)
-                ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+                ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
 
             if (tenant.OrganizationId != room.OrganizationId)
             {
-                throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+                throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
             }
         }
 
@@ -124,7 +137,7 @@ public sealed class VisitorService(
 
         if (visitor.Status != VisitorStatus.CheckedIn)
         {
-            throw new ConflictException("ผู้มาเยือนรายนี้ออกจากหอพักไปแล้ว");
+            throw new ConflictException("ຜູ້ມາຢ້ຽມຢາມລາຍນີ້ອອກຈາກຫໍພັກໄປແລ້ວ");
         }
 
         visitor.Status = VisitorStatus.CheckedOut;
@@ -146,13 +159,13 @@ public sealed class VisitorService(
     private async Task<Visitor> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Visitor visitor = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้มาเยือนที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ມາຢ້ຽມຢາມທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             visitor.OrganizationId,
             visitor.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลผู้มาเยือนที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນຜູ້ມາຢ້ຽມຢາມທີ່ຕ້ອງການ");
 
         return visitor;
     }

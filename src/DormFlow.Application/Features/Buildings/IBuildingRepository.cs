@@ -5,42 +5,46 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Buildings;
 
-/// <summary>ตัวกรองสำหรับดึงรายการอาคารแบบแบ่งหน้า</summary>
-/// <param name="OrganizationId">จำกัดผลลัพธ์ให้เห็นเฉพาะอาคารขององค์กรนี้ เป็น null เฉพาะ SuperAdmin เท่านั้น</param>
-/// <param name="DormitoryId">กรองเฉพาะอาคารของหอพักที่ระบุ เป็น null เมื่อไม่จำกัด</param>
-/// <param name="Status">กรองเฉพาะอาคารที่มีสถานะตรงกัน เป็น null เมื่อไม่จำกัด</param>
-/// <param name="RestrictToDormitoryIds">จำกัดผลลัพธ์ให้เห็นเฉพาะอาคารของหอพักในรายการนี้ เป็น null เมื่อไม่จำกัด</param>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງອາຄານ</summary>
+/// <param name="OrganizationId">ຈໍາກັດຜົນໄດ້ຮັບພຽງແຕ່ອາຄານຂອງອົງກອນນີ້ null ເທົ່ານັ້ນ SuperAdmin ເທົ່ານັ້ນ</param>
+/// <param name="DormitoryId">ກັ່ນຕອງສະເພາະອາຄານຫໍພັກທີ່ລະບຸເປັນ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
+/// <param name="Status">ກັ່ນຕອງສະເພາະອາຄານທີ່ມີສະຖານະທີ່ກົງກັນ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
+/// <param name="RestrictToDormitoryIds">ຈໍາກັດຜົນໄດ້ຮັບພຽງແຕ່ອາຄານຫໍພັກໃນບັນຊີລາຍຊື່ນີ້ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
 public sealed record BuildingListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
     BuildingStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลอาคารในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການກໍ່ສ້າງໃນຖານຂໍ້ມູນ</summary>
 public interface IBuildingRepository
 {
-    /// <summary>อ่านอาคารจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານການສ້າງຈາກລະຫັດອ້າງອີງ</summary>
     Task<Building?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีอาคารที่ใช้รหัสนี้อยู่แล้วในหอพักเดียวกันหรือไม่</summary>
+    /// <summary>ດຶງຊື່ອາຄານເປັນຄູ່ (ລະຫັດ, ຊື່) ອີງ ຕາມ ບັນ ຊີ ລາຍ ຊື່ ລະ ຫັດ ສໍາ ລັບ ການ ສະ ແດງ ໂດຍ ບໍ່ ມີ ການ join</summary>
+    Task<IReadOnlyDictionary<Guid, string>> GetNamesByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
+
+    /// <summary>ກວດເບິ່ງວ່າມີອາຄານທີ່ມີລະຫັດນີ້ຢູ່ໃນຫໍພັກດຽວກັນ</summary>
     Task<bool> ExistsByCodeAsync(
         Guid dormitoryId,
         string code,
         Guid? excludeBuildingId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการอาคารแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງອາຄານ paginated ໂດຍອີງໃສ່ການກັ່ນຕອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Building>> GetPagedAsync(
         BuildingListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มอาคารใหม่</summary>
+    /// <summary>ເພີ່ມອາຄານໃໝ່</summary>
     Task AddAsync(Building building, CancellationToken cancellationToken = default);
 
-    /// <summary>ทำเครื่องหมายลบอาคาร ระบบจะแปลงเป็น Soft Delete ให้อัตโนมัติตอนบันทึก</summary>
+    /// <summary>Mark ລຶບອາຄານ ລະບົບຈະປ່ຽນເປັນ Soft Delete ອັດຕະໂນມັດເມື່ອບັນທຶກ</summary>
     void Remove(Building building);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

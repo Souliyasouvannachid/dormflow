@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Authorization;
 namespace DormFlow.Api.Authorization;
 
 /// <summary>
-/// ประดับ Endpoint ที่ต้องการสิทธิ์เฉพาะ
+/// ຕົກແຕ່ງ Endpoint ທີ່ຮຽກຮ້ອງໃຫ້ມີສິດສະເພາະ
 /// </summary>
 /// <remarks>
-/// ใช้แทน [Authorize(Policy = "...")] ตรง ๆ เพื่อให้อ่านโค้ดของ Controller เข้าใจง่ายกว่า
-/// และเพื่อให้ชื่อ Policy ที่แท้จริงถูกสร้างจากรหัสสิทธิ์แบบอัตโนมัติในจุดเดียว
+/// ໃຊ້ແທນ [Authorize(Policy = "...")] ໂດຍກົງເພື່ອອ່ານລະຫັດ Controller ເຂົ້າໃຈງ່າຍກວ່າ
+/// ແລະໃຫ້ຊື່ Policy ແທ້ຈິງແມ່ນຜະລິດຈາກລະຫັດການອະນຸຍາດອັດຕະໂນມັດຢູ່ໃນສະຖານທີ່ດຽວ
 /// </remarks>
 public sealed class RequirePermissionAttribute : AuthorizeAttribute
 {
-    /// <summary>คำนำหน้าของทุก Policy ที่สร้างจากสิทธิ์ ใช้แยกจาก Policy ประเภทอื่น</summary>
+    /// <summary>ຄໍານໍາຜ້າຂອງທຸກໆ Policy ສ້າງຈາກການອະນຸຍາດ, ໃຊ້ແຍກຕ່າງຫາກຈາກ Policy ປະເພດອື່ນໆ</summary>
     public const string PolicyPrefix = "Permission:";
 
-    /// <summary>สร้าง Attribute จากรหัสสิทธิ์ที่ต้องการ</summary>
-    /// <param name="permissionCode">รหัสสิทธิ์ เช่น rooms.create</param>
+    /// <summary>ສ້າງ Attribute ຈາກລະຫັດການອະນຸຍາດທີ່ຕ້ອງການ</summary>
+    /// <param name="permissionCode">ລະຫັດການອະນຸຍາດເຊັ່ນ rooms.create</param>
     public RequirePermissionAttribute(string permissionCode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(permissionCode);

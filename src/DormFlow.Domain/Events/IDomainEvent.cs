@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Events;
 
 /// <summary>
-/// เหตุการณ์เชิงธุรกิจที่เกิดขึ้นภายใน Domain
-/// จะถูกเผยแพร่หลังจากบันทึกฐานข้อมูลสำเร็จเท่านั้น
+/// ເຫດການທາງທຸລະກິດທີ່ເກີດຂຶ້ນພາຍໃນ Domain
+/// ມັນຈະຖືກເຜີຍແຜ່ພຽງແຕ່ຫຼັງຈາກຖານຂໍ້ມູນໄດ້ຖືກບັນທຶກໄວ້ສົບຜົນສໍາເລັດ
 /// </summary>
 public interface IDomainEvent
 {
-    /// <summary>รหัสอ้างอิงของเหตุการณ์ ใช้สำหรับ Idempotency ของผู้รับปลายทาง</summary>
+    /// <summary>ລະຫັດອ້າງອີງເຫດການແມ່ນໃຊ້ສໍາລັບ Idempotency ຂອງຜູ້ຮັບປາຍທາງ</summary>
     Guid EventId { get; }
 
-    /// <summary>เวลาที่เหตุการณ์เกิดขึ้น</summary>
+    /// <summary>ເວລາທີ່ເຫດການເກີດຂຶ້ນ</summary>
     DateTimeOffset OccurredAt { get; }
 }

@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 namespace DormFlow.Infrastructure.Persistence;
 
 /// <summary>
-/// บันทึกเหตุการณ์ลงตาราง audit_logs
+/// ບັນທຶກເຫດການໃນຕາຕະລາງ audit_logs
 /// </summary>
 /// <remarks>
-/// เติมข้อมูลบริบทของคำขอให้อัตโนมัติ ผู้เรียกจึงระบุแค่ว่าเกิดอะไรขึ้นกับอะไร
-/// การบันทึกใช้ ExecuteUpdate ไม่ได้เพราะเป็นการเพิ่มแถวใหม่
-/// แต่ใช้ DbContext ตัวเดียวกับ Use Case จึงอยู่ในธุรกรรมเดียวกันเมื่อผู้เรียกครอบธุรกรรมไว้
+/// ຕື່ມຂໍ້ມູນໃສ່ອັດຕະໂນມັດ context ຜູ້ໂທຫຼັງຈາກນັ້ນກໍານົດພຽງແຕ່ສິ່ງທີ່ເກີດຂຶ້ນແລະສິ່ງທີ່
+/// ການບັນທຶກການນໍາໃຊ້ ExecuteUpdate ມັນເປັນໄປບໍ່ໄດ້ເພາະມັນເພີ່ມແຖວໃໝ່
+/// ແຕ່ໃຊ້ DbContext ອັນດຽວກັນກັບ Use Case ດັ່ງນັ້ນ, ມັນຢູ່ໃນການເຮັດທຸລະກໍາດຽວກັນເມື່ອຜູ້ໂທກວມເອົາການເຮັດທຸລະກໍາ
 /// </remarks>
 public sealed class AuditLogWriter(
     DormFlowDbContext dbContext,
     ICurrentUser currentUser,
     IDateTimeProvider dateTimeProvider) : IAuditLogWriter
 {
-    /// <summary>ความยาวสูงสุดของ User Agent ที่เก็บได้</summary>
+    /// <summary>ຄວາມຍາວສູງສຸດຂອງ User Agent ທີ່ສາມາດເກັບຮັກສາໄດ້</summary>
     private const int MaxUserAgentLength = 512;
 
-    /// <summary>ความยาวสูงสุดของเส้นทางคำขอที่เก็บได้</summary>
+    /// <summary>ຄວາມຍາວສູງສຸດຂອງເສັ້ນທາງການຮ້ອງຂໍທີ່ສາມາດເກັບຮັກສາໄດ້</summary>
     private const int MaxRequestPathLength = 512;
 
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -56,7 +56,7 @@ public sealed class AuditLogWriter(
             EntityName = entityName,
             EntityId = entityId,
 
-            // ตอนเข้าสู่ระบบยังไม่มี Claim ผู้เรียกจึงส่งรหัสผู้ใช้เข้ามาเอง
+            // ໃນເວລາທີ່ເຂົ້າສູ່ລະບົບບໍ່ມີ Claim ຜູ້ໂທຫຼັງຈາກນັ້ນສົ່ງລະຫັດຜູ້ໃຊ້ດ້ວຍຕົນເອງ
             UserId = userId ?? _currentUser.UserId,
             OrganizationId = organizationId ?? _currentUser.OrganizationId,
             OldValues = oldValues,

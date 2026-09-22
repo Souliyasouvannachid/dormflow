@@ -3,22 +3,22 @@ using DormFlow.Contracts.Parking;
 
 namespace DormFlow.Application.Features.Parking;
 
-/// <summary>Use Case ทั้งหมดของโมดูลจดทะเบียนที่จอดรถ</summary>
+/// <summary>Use Case ທັງຝົດຂອງໂມດູນການລົງທະບຽນບ່ອນຈອດລົດ</summary>
 public interface IParkingRegistrationService
 {
-    /// <summary>ดึงรายการจดทะเบียนที่จอดรถแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງລາຍຊື່ບ່ອນຈອດລົດທີ່ລົງທະບຽນ</summary>
     Task<PagedResult<ParkingRegistrationResponse>> GetPagedAsync(
         ParkingRegistrationListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลการจดทะเบียนที่จอดรถจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນການລົງທະບຽນບ່ອນຈອດລົດຈາກລະຫັດອ້າງອີງ</summary>
     Task<ParkingRegistrationResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>จดทะเบียนที่จอดรถใหม่ ทะเบียนรถเดียวกันมีการจดทะเบียนที่ยังไม่สิ้นสุดซ้อนกันไม่ได้</summary>
+    /// <summary>ລົງທະບຽນບ່ອນຈອດລົດໃໝ່ ທະບຽນລົດດຽວກັນບໍ່ສາມາດທັບຊ້ອນກັນໄດ້ກັບທະບຽນລົດທີ່ຍັງບໍ່ທັນສຳເລັດ</summary>
     Task<ParkingRegistrationResponse> RegisterAsync(
         RegisterParkingRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>สิ้นสุดการจดทะเบียนที่จอดรถ ทำได้เฉพาะรายการที่ยังจดทะเบียนอยู่เท่านั้น</summary>
+    /// <summary>ການສິ້ນສຸດການລົງທະບຽນບ່ອນຈອດລົດສາມາດເຮັດໄດ້ພຽງແຕ່ສໍາລັບລາຍການທີ່ຍັງລົງທະບຽນ</summary>
     Task<ParkingRegistrationResponse> ReleaseAsync(Guid id, CancellationToken cancellationToken = default);
 }

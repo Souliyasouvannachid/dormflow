@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับการแจ้งเตือน</summary>
+/// <summary>Endpoint ສໍາລັບການແຈ້ງການ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/notifications")]
@@ -18,7 +18,7 @@ public sealed class NotificationsController(INotificationService notificationSer
 {
     private readonly INotificationService _notificationService = notificationService;
 
-    /// <summary>ดึงรายการแจ้งเตือนของตนเองแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງລາຍຊື່ການແຈ້ງເຕືອນແບບ paginated ຂອງທ່ານເອງ</summary>
     [HttpGet]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<NotificationResponse>>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class NotificationsController(INotificationService notificationSer
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>ทำเครื่องหมายว่าอ่านการแจ้งเตือนของตนเองแล้ว</summary>
+    /// <summary>ໝາຍການແຈ້ງເຕືອນຂອງທ່ານວ່າອ່ານແລ້ວ</summary>
     [HttpPost("{id:guid}/read")]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<NotificationResponse>), StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class NotificationsController(INotificationService notificationSer
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>ส่งการแจ้งเตือนถึงผู้ใช้หนึ่งคน</summary>
+    /// <summary>ສົ່ງການແຈ້ງເຕືອນໃຫ້ຜູ້ໃຊ້ຄົນດຽວ</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Notifications.Send)]
     [ProducesResponseType(typeof(ApiResponse<NotificationResponse>), StatusCodes.Status200OK)]

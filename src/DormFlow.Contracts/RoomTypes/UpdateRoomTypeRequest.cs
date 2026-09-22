@@ -1,26 +1,26 @@
 namespace DormFlow.Contracts.RoomTypes;
 
-/// <summary>คำขอแก้ไขข้อมูลประเภทห้อง</summary>
+/// <summary>ຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນປະເພດຫ້ອງ</summary>
 public class UpdateRoomTypeRequest
 {
-    /// <summary>รหัสประเภทห้อง ไม่ซ้ำกันภายในหอพักเดียวกัน</summary>
+    /// <summary>ລະຫັດປະເພດຫ້ອງບໍ່ຊໍ້າກັນພາຍໃນຫໍພັກດຽວກັນ</summary>
     public string Code { get; set; } = string.Empty;
 
-    /// <summary>ชื่อประเภทห้อง</summary>
+    /// <summary>ຊື່ປະເພດຫ້ອງ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>ค่าเช่ารายเดือน</summary>
+    /// <summary>ຄ່າເຊົ່າລາຍເດືອນ</summary>
     public decimal MonthlyRent { get; set; }
 
-    /// <summary>ค่าเช่ารายวัน เว้นว่างเมื่อไม่รองรับการเช่ารายวัน</summary>
+    /// <summary>ເຊົ່າລາຍວັນ ປ່ອຍຫວ່າງໄວ້ເມື່ອບໍ່ຮອງຮັບການເຊົ່າລາຍວັນ</summary>
     public decimal? DailyRent { get; set; }
 
-    /// <summary>ค่ามัดจำ</summary>
+    /// <summary>ຝາກ</summary>
     public decimal DepositAmount { get; set; }
 
-    /// <summary>จำนวนผู้เข้าพักสูงสุด</summary>
+    /// <summary>ຈຳນວນແຂກສູງສຸດ</summary>
     public int MaximumOccupants { get; set; } = 1;
 }

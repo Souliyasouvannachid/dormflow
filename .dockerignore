@@ -1,4 +1,4 @@
-# โฟลเดอร์ผลลัพธ์การ build
+# ໂຟນເດີຜົນໄດ້ຮັບ build
 **/bin/
 **/obj/
 **/out/
@@ -6,7 +6,7 @@
 **/TestResults/
 **/logs/
 
-# ไฟล์ของ IDE
+# ໄຟລ໌ຂອງ IDE
 .vs/
 .vscode/
 .idea/
@@ -18,7 +18,7 @@
 .gitignore
 .gitattributes
 
-# ไฟล์ลับและค่าตั้งเฉพาะเครื่อง
+# ໄຟລ໌ລັບ ແລະການຕັ້ງຄ່າເຄື່ອງ
 .env
 .env.*
 !.env.example
@@ -26,7 +26,7 @@
 **/*.pfx
 **/*.key
 
-# เอกสารและไฟล์ที่ไม่จำเป็นต่อการ build
+# ເອກະສານແລະໄຟລ໌ທີ່ບໍ່ຈໍາເປັນ build
 *.md
 !README.md
 docker-compose*.yml

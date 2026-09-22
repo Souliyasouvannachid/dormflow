@@ -9,12 +9,12 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Infrastructure;
 
 /// <summary>
-/// สร้าง Test Host ของ DormFlow API พร้อม PostgreSQL จริงที่รันในคอนเทนเนอร์
+/// ສ້າງ Test Host ຂອງ DormFlow API ພ້ອມ PostgreSQL ຕົວຈິງແລ້ວແລ່ນຢູ່ໃນຖັງ
 /// </summary>
 /// <remarks>
-/// ใช้ PostgreSQL จริงผ่าน Testcontainers แทน InMemory Database
-/// เพราะพฤติกรรมสำคัญหลายอย่างของระบบ เช่น Global Query Filter, timestamptz,
-/// jsonb และ Optimistic Concurrency ด้วยคอลัมน์ xmin ไม่มีอยู่ใน InMemory Provider
+/// ໃຊ້ PostgreSQL ຜ່ານຄວາມຈິງ Testcontainers ແທນ InMemory Database
+/// ເນື່ອງຈາກວ່າພຶດຕິກໍາທີ່ສໍາຄັນຈໍານວນຫຼາຍຂອງລະບົບເຊັ່ນ: Global Query Filter, timestamptz,
+/// jsonb ແລະ Optimistic Concurrency ກັບຖັນ xmin ບໍ່ມີຢູ່ໃນ InMemory Provider
 /// </remarks>
 public sealed class DormFlowApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -25,7 +25,7 @@ public sealed class DormFlowApiFactory : WebApplicationFactory<Program>, IAsyncL
         .WithCleanUp(true)
         .Build();
 
-    /// <summary>Connection String ของฐานข้อมูลที่ใช้ในเทสต์</summary>
+    /// <summary>Connection String ຂອງຖານຂໍ້ມູນທີ່ໃຊ້ໃນການທົດສອບ</summary>
     public string ConnectionString => _postgres.GetConnectionString();
 
     /// <inheritdoc />
@@ -33,14 +33,14 @@ public sealed class DormFlowApiFactory : WebApplicationFactory<Program>, IAsyncL
     {
         await _postgres.StartAsync();
 
-        // การเข้าถึง Services เป็นจุดที่ Test Host ถูกสร้างขึ้นจริง
-        // จึงต้องสตาร์ตคอนเทนเนอร์ให้เสร็จก่อนบรรทัดนี้เสมอ
+        // ການເຂົ້າເຖິງ Services ແມ່ນຈຸດ Test Host ຕົວຈິງແລ້ວໄດ້ຖືກສ້າງຂຶ້ນ
+        // ເພາະສະນັ້ນ, ຕູ້ຄອນເທນເນີຕ້ອງຖືກເລີ່ມຕົ້ນກ່ອນເສັ້ນນີ້
         using IServiceScope scope = Services.CreateScope();
         DormFlowDbContext dbContext = scope.ServiceProvider.GetRequiredService<DormFlowDbContext>();
         await dbContext.Database.EnsureCreatedAsync();
 
-        // Program.cs ข้ามการ Seed อัตโนมัติในสภาพแวดล้อม Testing
-        // จึงต้อง Seed สิทธิ์และบทบาทที่นี่เพื่อให้เทสต์การเข้าสู่ระบบมีข้อมูลให้ทดสอบ
+        // Program.cs ຂ້າມ Seed ອັດຕະໂນມັດໃນສະພາບແວດລ້ອມ Testing
+        // ສະນັ້ນຕ້ອງ Seed ການອະນຸຍາດ ແລະບົດບາດຢູ່ທີ່ນີ້ເພື່ອໃຫ້ຂໍ້ມູນການເຂົ້າສູ່ລະບົບທົດສອບ
         DatabaseSeeder seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
         await seeder.SeedAsync();
     }
@@ -60,20 +60,20 @@ public sealed class DormFlowApiFactory : WebApplicationFactory<Program>, IAsyncL
 
         builder.UseEnvironment("Testing");
 
-        // ต้องใช้ UseSetting ไม่ใช่ ConfigureAppConfiguration
-        // เพราะ Program.cs อ่านค่า configuration ตั้งแต่ตอนลงทะเบียนบริการ
-        // ซึ่งเกิดก่อนที่ callback ของ ConfigureAppConfiguration จะถูกเรียก
+        // ຕ້ອງໃຊ້ UseSetting ບໍ່ ConfigureAppConfiguration
+        // ເນື່ອງຈາກວ່າ Program.cs ອ່ານຄ່າ configuration ຈາກປັດຈຸບັນຂອງການລົງທະບຽນການບໍລິການ
+        // ທີ່ເກີດຂຶ້ນກ່ອນ callback ຂອງ ConfigureAppConfiguration ຈະຖືກເອີ້ນ
         builder.UseSetting("ConnectionStrings:DefaultConnection", _postgres.GetConnectionString());
 
-        // TestServer ไม่มีพอร์ต HTTPS จริง จึงต้องปิดการ redirect ไม่งั้นทุกคำขอจะได้ 307
+        // TestServer ບໍ່ມີພອດ HTTPS ແທ້ຈິງແລ້ວ, ສະນັ້ນຕ້ອງປິດ redirect ຖ້າບໍ່ດັ່ງນັ້ນ, ທຸກໆຄໍາຮ້ອງຂໍຈະຖືກອະນຸຍາດ 307
         builder.UseSetting("Https:EnableRedirection", "false");
 
-        // ปิด Rate Limiting เพื่อไม่ให้เทสต์ที่ยิงหลายคำขอชนโควตาแล้วล้มแบบสุ่ม
+        // ປິດ Rate Limiting ນີ້ແມ່ນເພື່ອປ້ອງກັນການທົດສອບທີ່ເຮັດໃຫ້ເກີດການຮ້ອງຂໍຫຼາຍຈາກການກົດດັນໂຄຕ້າຂອງພວກເຂົາແລະລົ້ມເຫຼວແບບສຸ່ມ
         builder.UseSetting("RateLimiting:Enabled", "false");
 
         builder.UseSetting("Cors:AllowedOrigins:0", "http://localhost");
 
-        // กุญแจสำหรับเทสต์เท่านั้น ไม่ใช่ความลับจริง ต้องยาวอย่างน้อย 32 ตัวอักษรตาม JwtOptions
+        // ລະຫັດສໍາລັບການທົດສອບເທົ່ານັ້ນ ມັນບໍ່ແມ່ນຄວາມລັບແທ້ໆ. ຢ່າງໜ້ອຍຕ້ອງມີຄວາມຍາວ 32 ຕົວອັກສອນຕາມ JwtOptions
         builder.UseSetting("Jwt:SigningKey", "dormflow-integration-test-signing-key-not-a-real-secret");
     }
 }

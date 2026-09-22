@@ -6,15 +6,15 @@ using Xunit;
 namespace DormFlow.UnitTests.Contracts;
 
 /// <summary>
-/// ตรวจว่ารูปแบบ JSON ของ API Response ตรงตามสัญญาที่ประกาศไว้กับฝั่ง Client
-/// เพราะการเปลี่ยนชื่อฟิลด์หรือลำดับฟิลด์คือ breaking change
+/// ກວດເບິ່ງວ່າຮູບແບບ JSON ຂອງ API Response ຕາມສັນຍາທີ່ໄດ້ປະກາດກັບຝັ່ງ Client
+/// ເນື່ອງຈາກວ່າການປ່ຽນຊື່ພາກສະຜາມຫຼືຄໍາສັ່ງພາກສະຜາມແມ່ນ breaking change
 /// </summary>
 public class ApiResponseTests
 {
     private static readonly JsonSerializerOptions SerializerOptions = DormFlowJsonSerializerOptions.Default;
 
     [Fact]
-    public void Ok_ควรตั้งค่า_Success_เป็นจริงและไม่มีข้อมูลข้อผิดพลาด()
+    public void Ok_ຄວນຈະຖືກກໍານົດ_Success_ຄວາມຈິງແລະບໍ່ມີຂໍ້ມູນຂໍ້ຜິດພາດ()
     {
         ApiResponse response = ApiResponse.Ok();
 
@@ -25,19 +25,19 @@ public class ApiResponseTests
     }
 
     [Fact]
-    public void Ok_พร้อมข้อมูล_ควรคืนข้อมูลเดิมกลับมา()
+    public void Ok_ກັບຂໍ້ມູນ_ຂໍ້ມູນຕົ້ນສະບັບຄວນຈະຖືກສົ່ງຄືນ()
     {
         var payload = new { Id = 7 };
 
-        ApiResponse<object> response = ApiResponse.Ok<object>(payload, "ดึงข้อมูลสำเร็จ");
+        ApiResponse<object> response = ApiResponse.Ok<object>(payload, "ດຶງຂໍ້ມູນສຳເລັດ");
 
         response.Success.Should().BeTrue();
-        response.Message.Should().Be("ดึงข้อมูลสำเร็จ");
+        response.Message.Should().Be("ດຶງຂໍ້ມູນສຳເລັດ");
         response.Data.Should().BeSameAs(payload);
     }
 
     [Fact]
-    public void Fail_ควรตั้งค่า_Success_เป็นเท็จและเก็บ_TraceId()
+    public void Fail_ຄວນຈະຖືກກໍານົດ_Success_ບໍ່ຖືກຕ້ອງແລະຮັກສາ_TraceId()
     {
         ApiResponse response = ApiResponse.Fail(ApiMessages.NotFound, "trace-001");
 
@@ -47,22 +47,22 @@ public class ApiResponseTests
     }
 
     [Fact]
-    public void ValidationFailed_ควรเก็บรายละเอียดรายฟิลด์ไว้ครบ()
+    public void ValidationFailed_ລາຍລະອຽດຄົບຖ້ວນສົມບູນຂອງແຕ່ລະພາກສະຜາມຄວນໄດ້ຮັບການເກັບຮັກສາໄວ້()
     {
         Dictionary<string, string[]> errors = new(StringComparer.Ordinal)
         {
-            ["name"] = ["กรุณาระบุชื่อ"],
+            ["name"] = ["ກະລຸນາລະບຸຊື່"],
         };
 
         ApiResponse response = ApiResponse.ValidationFailed(ApiMessages.ValidationFailed, errors, "trace-002");
 
         response.Success.Should().BeFalse();
         response.Errors.Should().ContainKey("name");
-        response.Errors!["name"].Should().ContainSingle().Which.Should().Be("กรุณาระบุชื่อ");
+        response.Errors!["name"].Should().ContainSingle().Which.Should().Be("ກະລຸນາລະບຸຊື່");
     }
 
     [Fact]
-    public void Serialize_กรณีสำเร็จ_ต้องไม่มีฟิลด์_errors_และ_traceId()
+    public void Serialize_ກໍລະນີທີ່ປະສົບຜົນສໍາເລັດ_ຈະຕ້ອງບໍ່ມີພາກສະຜາມ_errors_ແລະ_traceId()
     {
         string json = JsonSerializer.Serialize(ApiResponse.Ok(), SerializerOptions);
 
@@ -73,7 +73,7 @@ public class ApiResponseTests
     }
 
     [Fact]
-    public void Serialize_กรณีมีข้อมูล_ต้องเรียงฟิลด์เป็น_success_message_data()
+    public void Serialize_ໃນກໍລະນີທີ່ມີຂໍ້ມູນ_ຊ່ອງຂໍ້ມູນຕ້ອງຖືກຈັດຮຽງເປັນ_success_message_data()
     {
         ApiResponse<int> response = ApiResponse.Ok(42);
 
@@ -83,11 +83,11 @@ public class ApiResponseTests
     }
 
     [Fact]
-    public void Serialize_กรณี_Validation_ไม่ผ่าน_ต้องมี_errors_และ_traceId()
+    public void Serialize_ກໍລະນີ_Validation_ບໍ່ຜ່ານ_ຕ້ອງມີ_errors_ແລະ_traceId()
     {
         Dictionary<string, string[]> errors = new(StringComparer.Ordinal)
         {
-            ["name"] = ["กรุณาระบุชื่อ"],
+            ["name"] = ["ກະລຸນາລະບຸຊື່"],
         };
 
         string json = JsonSerializer.Serialize(
@@ -95,7 +95,7 @@ public class ApiResponseTests
             SerializerOptions);
 
         json.Should().Contain("\"success\":false");
-        json.Should().Contain("\"errors\":{\"name\":[\"กรุณาระบุชื่อ\"]}");
+        json.Should().Contain("\"errors\":{\"name\":[\"ກະລຸນາລະບຸຊື່\"]}");
         json.Should().Contain("\"traceId\":\"trace-003\"");
     }
 }

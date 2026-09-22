@@ -18,15 +18,15 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบว่าผู้ใช้บทบาท Owner ที่เรียก List Endpoint โดยไม่ระบุตัวกรองหอพัก ต้องเห็นเฉพาะข้อมูล
-/// ขององค์กรตนเองเท่านั้น ไม่เห็นข้อมูลข้ามองค์กร
+/// ທົດສອບບົດບາດຂອງຜູ້ໃຊ້ນັ້ນ Owner ເອີ້ນວ່າ List Endpoint ໂດຍບໍ່ໄດ້ລະບຸຕົວກອງຫໍພັກ ຕ້ອງເບິ່ງຂໍ້ມູນເທົ່ານັ້ນ
+/// ຂອງອົງກອນຂອງທ່ານເອງເທົ່ານັ້ນບໍ່ສາມາດເຫັນຂໍ້ມູນຂ້າມອົງກອນ
 /// </summary>
 /// <remarks>
-/// เป็น Regression Test ของช่องโหว่ที่พบระหว่างพัฒนา: <see cref="TenantScope.GetDormitoryRestrictionForListing"/>
-/// คืนค่า null ให้ Owner (หมายถึง "เห็นได้ทุกหอพักในองค์กรของตน") แต่ก่อนแก้ไข Repository ของโมดูลที่แยกตามหอพัก
+/// ແມ່ນ Regression Test ຂອງຈຸດອ່ອນທີ່ພົບເຫັນໃນລະຫວ່າງການພັດທະນາ: <see cref="TenantScope.GetDormitoryRestrictionForListing"/>
+/// ຟື້ນຟູ null ໃຫ້ Owner (ຝາຍຄວາມວ່າ "ທ່ານສາມາດເບິ່ງມັນຢູ່ໃນທຸກໆຫໍພັກໃນອົງກອນຂອງເຈົ້າ") ແຕ່ກ່ອນທີ່ຈະດັດແກ້ Repository ຂອງໂມດູນທີ່ແຍກອອກໂດຍຫໍພັກ
 /// (Buildings, Floors, RoomTypes, Rooms, Reservations, Contracts, MeterReadings, Invoices, Payments,
-/// MaintenanceRequests) ไม่มีการกรองด้วย OrganizationId เพิ่มเติมเลย ทำให้ Owner เห็นข้อมูลของทุกองค์กรในระบบ
-/// แก้ไขด้วย <see cref="TenantScope.GetOrganizationRestrictionForListing"/> ที่ต้องเรียกคู่กันเสมอ
+/// MaintenanceRequests) ບໍ່ມີການກັ່ນຕອງຄືກັນ OrganizationId ເຮັດໃຫ້ມັນຫຼາຍ Owner ເບິ່ງຂໍ້ມູນຂອງທຸກອົງກອນໃນລະບົບ
+/// ກະລຸນາແກ້ໄຂ <see cref="TenantScope.GetOrganizationRestrictionForListing"/> ນັ້ນຕ້ອງຖືກເອີ້ນຢູ່ຮ່ວມກັນສະເໝີ
 /// </remarks>
 [Collection(ApiTestFixtures.Name)]
 public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
@@ -34,7 +34,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task Owner_เรียกรายการห้องพักโดยไม่ระบุตัวกรอง_ต้องไม่เห็นห้องขององค์กรอื่น()
+    public async Task Owner_ເອົາບັນຊີລາຍຊື່ຂອງຫ້ອງໂດຍບໍ່ມີການກໍານົດການກັ່ນຕອງ_ຕ້ອງບໍ່ສາມາດເຫັນຫ້ອງຂອງອົງກອນອື່ນໄດ້()
     {
         using HttpClient adminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -62,7 +62,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Owner_เรียกรายการงานแจ้งซ่อมโดยไม่ระบุตัวกรอง_ต้องไม่เห็นงานขององค์กรอื่น()
+    public async Task Owner_ດຶງລາຍຊື່ຂອງວຽກສ້ອມແປງໂດຍບໍ່ລະບຸຕົວກອງ_ຕ້ອງບໍ່ເຄີຍເຫັນການເຮັດວຽກຂອງອົງກອນອື່ນໆ()
     {
         using HttpClient adminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -93,7 +93,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Owner_เรียกรายการใบแจ้งหนี้โดยไม่ระบุตัวกรอง_ต้องไม่เห็นใบแจ้งหนี้ขององค์กรอื่น()
+    public async Task Owner_ດຶງເອົາບັນຊີລາຍຊື່ຂອງໃບເກັບເງິນໂດຍບໍ່ລະບຸຕົວກອງ_ຕ້ອງບໍ່ສາມາດເຫັນໃບແຈ້ງໜີ້ຈາກອົງກອນອື່ນໄດ້()
     {
         using HttpClient adminClient = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -124,7 +124,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
     {
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/maintenance-requests", UriKind.Relative),
-            new CreateMaintenanceRequestRequest { RoomId = roomId, Title = "ทดสอบ", Priority = "Low" },
+            new CreateMaintenanceRequestRequest { RoomId = roomId, Title = "ການທົດສອບ", Priority = "Low" },
             TestContext.Current.CancellationToken);
         response.EnsureSuccessStatusCode();
 
@@ -141,8 +141,8 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);
@@ -186,7 +186,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -198,7 +198,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -210,14 +210,14 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -229,7 +229,7 @@ public class CrossOrganizationIsolationEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,

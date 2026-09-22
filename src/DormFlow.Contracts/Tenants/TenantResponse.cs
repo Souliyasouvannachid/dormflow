@@ -1,47 +1,47 @@
 namespace DormFlow.Contracts.Tenants;
 
-/// <summary>ข้อมูลผู้เช่าหนึ่งคน</summary>
+/// <summary>ຂໍ້ມູນຜູ້ເຊົ່າຜຶ່ງ</summary>
 public class TenantResponse
 {
-    /// <summary>รหัสอ้างอิงของผู้เช่า</summary>
+    /// <summary>ລະຫັດອ້າງອີງຜູ້ເຊົ່າ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่ผู้เช่ารายนี้สังกัด</summary>
+    /// <summary>ອົງກອນທີ່ຜູ້ເຊົ່ານີ້ຂຶ້ນກັບ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public string FirstName { get; init; } = string.Empty;
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public string LastName { get; init; } = string.Empty;
 
-    /// <summary>อีเมล</summary>
+    /// <summary>ອີເມວ</summary>
     public string? Email { get; init; }
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; init; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทาง</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນ</summary>
     public string? NationalId { get; init; }
 
-    /// <summary>วันเดือนปีเกิด</summary>
+    /// <summary>ວັນເດືອນປີເກີດ</summary>
     public DateOnly? DateOfBirth { get; init; }
 
-    /// <summary>ที่อยู่ตามทะเบียนบ้าน</summary>
+    /// <summary>ທີ່ຢູ່ ຕາມທະບຽນເຮືອນ</summary>
     public string? Address { get; init; }
 
-    /// <summary>ชื่อผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ຊື່ຂອງຜູ້ຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactName { get; init; }
 
-    /// <summary>เบอร์โทรศัพท์ผู้ติดต่อฉุกเฉิน</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່ສຸກເສີນ</summary>
     public string? EmergencyContactPhone { get; init; }
 
-    /// <summary>สถานะของผู้เช่า</summary>
+    /// <summary>ສະຖານະຜູ້ເຊົ່າ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

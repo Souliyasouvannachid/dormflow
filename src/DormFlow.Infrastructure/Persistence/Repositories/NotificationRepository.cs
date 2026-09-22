@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลการแจ้งเตือนบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການແຈ້ງເຕືອນເປີດ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class NotificationRepository(DormFlowDbContext dbContext) : INotificationRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

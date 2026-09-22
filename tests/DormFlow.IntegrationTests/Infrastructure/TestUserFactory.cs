@@ -10,17 +10,17 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Infrastructure;
 
-/// <summary>สร้างผู้ใช้ทดสอบผ่าน UserManager โดยตรง แทนการพึ่งบัญชีผู้ดูแลระบบที่ Seed จาก environment variable</summary>
+/// <summary>ສ້າງຜູ້ໃຊ້ທົດສອບຜ່ານ UserManager ໂດຍກົງແທນທີ່ຈະອີງໃສ່ບັນຊີຜູ້ເບິ່ງແຍງລະບົບນັ້ນ Seed ຈາກ environment variable</summary>
 public static class TestUserFactory
 {
-    /// <summary>รหัสผ่านมาตรฐานที่ใช้กับผู้ใช้ทดสอบทุกคนที่สร้างจากคลาสนี้</summary>
+    /// <summary>ລະຫັດຜ່ານມາດຕະຖານທີ່ໃຊ້ສໍາລັບຜູ້ໃຊ້ການທົດສອບທັງຝົດທີ່ສ້າງຂຶ້ນຈາກຫ້ອງຮຽນນີ້</summary>
     public const string DefaultPassword = "Test-Passw0rd1";
 
-    /// <summary>สร้างผู้ใช้ทดสอบพร้อมบทบาทที่ระบุ แล้วคืนอีเมลที่ใช้เข้าสู่ระบบ</summary>
-    /// <param name="factory">Test Host ที่ใช้สร้าง Service Scope</param>
-    /// <param name="roleName">บทบาทที่ต้องการมอบให้ผู้ใช้ เป็น null เมื่อไม่ต้องการบทบาทใด</param>
-    /// <param name="organizationId">องค์กรที่ผู้ใช้จะสังกัด เป็น null สำหรับผู้ใช้ที่ไม่ผูกกับองค์กรใด เช่น SuperAdmin</param>
-    /// <param name="status">สถานะของบัญชี</param>
+    /// <summary>ສ້າງຜູ້ໃຊ້ທົດສອບທີ່ມີບົດບາດທີ່ກໍານົດໄວ້. ຈາກນັ້ນສົ່ງຄືນອີເມວທີ່ໃຊ້ເພື່ອເຂົ້າສູ່ລະບົບ</summary>
+    /// <param name="factory">Test Host ໃຊ້ເພື່ອສ້າງ Service Scope</param>
+    /// <param name="roleName">ບົດບາດທີ່ທ່ານຕ້ອງການທີ່ຈະມອບຝາຍໃຫ້ຜູ້ໃຊ້ແມ່ນ null ເມື່ອເຈົ້າບໍ່ຕ້ອງການບົດບາດໃດໆ</param>
+    /// <param name="organizationId">ອົງກອນທີ່ຜູ້ໃຊ້ຈະຂຶ້ນກັບແມ່ນ null ສໍາລັບຜູ້ໃຊ້ທີ່ບໍ່ໄດ້ເຊື່ອມຕໍ່ກັບອົງກອນໃດຜຶ່ງ, ເຊັ່ນ: SuperAdmin</param>
+    /// <param name="status">ສະຖານະບັນຊີ</param>
     public static async Task<string> CreateAsync(
         DormFlowApiFactory factory,
         string? roleName = null,
@@ -40,8 +40,8 @@ public static class TestUserFactory
             UserName = email,
             Email = email,
             EmailConfirmed = true,
-            FirstName = "ผู้ใช้",
-            LastName = "ทดสอบ",
+            FirstName = "ຜູ້ໃຊ້",
+            LastName = "ການທົດສອບ",
             OrganizationId = organizationId,
             Status = status,
         };
@@ -50,7 +50,7 @@ public static class TestUserFactory
         if (!createResult.Succeeded)
         {
             throw new InvalidOperationException(
-                $"สร้างผู้ใช้ทดสอบไม่สำเร็จ: {string.Join(", ", createResult.Errors.Select(error => error.Description))}");
+                $"ລົ້ມເຫຼວໃນການສ້າງຜູ້ໃຊ້ທົດສອບ: {string.Join(", ", createResult.Errors.Select(error => error.Description))}");
         }
 
         if (roleName is not null)
@@ -59,16 +59,16 @@ public static class TestUserFactory
             if (!roleResult.Succeeded)
             {
                 throw new InvalidOperationException(
-                    $"เพิ่มบทบาทให้ผู้ใช้ทดสอบไม่สำเร็จ: {string.Join(", ", roleResult.Errors.Select(error => error.Description))}");
+                    $"ເພີ່ມບົດບາດໃຫ້ກັບຜູ້ໃຊ້ທີ່ບໍ່ສາມາດທົດສອບໄດ້: {string.Join(", ", roleResult.Errors.Select(error => error.Description))}");
             }
         }
 
         return email;
     }
 
-    /// <summary>เข้าสู่ระบบด้วยอีเมลที่ระบุ คืนโทเคนทั้งชุดที่ได้รับ</summary>
-    /// <param name="client">HttpClient ของ Test Host</param>
-    /// <param name="email">อีเมลที่ใช้เข้าสู่ระบบ ต้องสร้างไว้ล่วงหน้าด้วย <see cref="CreateAsync"/></param>
+    /// <summary>ເຂົ້າສູ່ລະບົບດ້ວຍອີເມວທີ່ລະບຸ. ສົ່ງຄືນຊຸດໂທເຄັນທັງໝົດທີ່ໄດ້ຮັບ</summary>
+    /// <param name="client">HttpClient ຂອງ Test Host</param>
+    /// <param name="email">ອີເມວທີ່ໃຊ້ເພື່ອເຂົ້າສູ່ລະບົບຈະຕ້ອງສ້າງລ່ວງຜ້າ <see cref="CreateAsync"/></param>
     public static async Task<AuthTokenResponse> LoginAsync(HttpClient client, string email)
     {
         ArgumentNullException.ThrowIfNull(client);
@@ -85,11 +85,11 @@ public static class TestUserFactory
     }
 
     /// <summary>
-    /// สร้างผู้ใช้ทดสอบ เข้าสู่ระบบ แล้วคืน HttpClient ที่แนบ Access Token ไว้ให้พร้อมใช้งาน
+    /// ສ້າງຜູ້ໃຊ້ທົດສອບ, ເຂົ້າສູ່ລະບົບ, ແລະກັບຄືນ HttpClient ຕິດ Access Token ສາມາດໃຊ້ໄດ້
     /// </summary>
-    /// <param name="factory">Test Host ที่ใช้สร้าง Service Scope และ HttpClient</param>
-    /// <param name="roleName">บทบาทที่ต้องการมอบให้ผู้ใช้ เป็น null เมื่อไม่ต้องการบทบาทใด</param>
-    /// <param name="organizationId">องค์กรที่ผู้ใช้จะสังกัด เป็น null สำหรับผู้ใช้ที่ไม่ผูกกับองค์กรใด เช่น SuperAdmin</param>
+    /// <param name="factory">Test Host ໃຊ້ເພື່ອສ້າງ Service Scope ແລະ HttpClient</param>
+    /// <param name="roleName">ບົດບາດທີ່ທ່ານຕ້ອງການທີ່ຈະມອບຝາຍໃຫ້ຜູ້ໃຊ້ແມ່ນ null ເມື່ອເຈົ້າບໍ່ຕ້ອງການບົດບາດໃດໆ</param>
+    /// <param name="organizationId">ອົງກອນທີ່ຜູ້ໃຊ້ຈະຂຶ້ນກັບແມ່ນ null ສໍາລັບຜູ້ໃຊ້ທີ່ບໍ່ໄດ້ເຊື່ອມຕໍ່ກັບອົງກອນໃດຜຶ່ງ, ເຊັ່ນ: SuperAdmin</param>
     public static async Task<HttpClient> CreateAuthenticatedClientAsync(
         DormFlowApiFactory factory,
         string? roleName = null,

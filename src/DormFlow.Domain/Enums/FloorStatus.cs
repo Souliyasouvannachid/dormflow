@@ -1,11 +1,11 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของชั้นในอาคาร</summary>
+/// <summary>ສະຖານະຂອງຊັ້ນໃນອາຄານ</summary>
 public enum FloorStatus
 {
-    /// <summary>เปิดใช้งานตามปกติ</summary>
+    /// <summary>ເປີດໃຊ້ປົກກະຕິ</summary>
     Active = 1,
 
-    /// <summary>ปิดใช้งานชั่วคราว</summary>
+    /// <summary>ປິດການໃຊ້ງານຊົ່ວຄາວ</summary>
     Inactive = 2,
 }

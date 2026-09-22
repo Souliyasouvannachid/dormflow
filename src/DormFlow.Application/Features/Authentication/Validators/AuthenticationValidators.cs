@@ -3,132 +3,132 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Authentication.Validators;
 
-/// <summary>ข้อกำหนดของรหัสผ่านที่ใช้ร่วมกันทุกจุดที่ผู้ใช้ตั้งรหัสผ่าน</summary>
+/// <summary>ຄວາມຕ້ອງການລະຫັດຜ່ານທີ່ແບ່ງປັນທົ່ວທຸກຈຸດລະຫັດຜ່ານຂອງຜູ້ໃຊ້</summary>
 public static class PasswordRules
 {
-    /// <summary>ความยาวขั้นต่ำของรหัสผ่าน</summary>
+    /// <summary>ຄວາມຍາວລະຫັດຜ່ານຕໍາ່ສຸດ</summary>
     public const int MinimumLength = 8;
 
-    /// <summary>ความยาวสูงสุดของรหัสผ่าน</summary>
+    /// <summary>ຄວາມຍາວລະຫັດຜ່ານສູງສຸດ</summary>
     public const int MaximumLength = 128;
 
     /// <summary>
-    /// ใส่กฎของรหัสผ่านให้กับฟิลด์ที่ระบุ
+    /// ໃສ່ກົດລະບຽບລະຫັດຜ່ານສໍາລັບຊ່ອງຂໍ້ມູນທີ່ກໍານົດໄວ້
     /// </summary>
-    /// <typeparam name="T">ชนิดของ request ที่กำลังตรวจสอบ</typeparam>
-    /// <param name="rule">กฎของฟิลด์รหัสผ่าน</param>
+    /// <typeparam name="T">ປະເພດຂອງ request ທີ່ກໍາລັງຖືກກວດສອບ</typeparam>
+    /// <param name="rule">ກົດລະບຽບຊ່ອງໃສ່ລະຫັດຜ່ານ</param>
     /// <remarks>
-    /// กฎชุดนี้ต้องสอดคล้องกับค่าที่ตั้งไว้ใน ASP.NET Core Identity
-    /// มีไว้เพื่อให้ผู้ใช้ได้รับข้อความภาษาไทยที่ชัดเจนก่อนที่คำขอจะไปถึงชั้น Identity
+    /// ຊຸດຂອງກົດລະບຽບນີ້ຕ້ອງສອດຄ່ອງກັບຄ່າທີ່ກໍານົດໄວ້ໃນ ASP.NET Core Identity
+    /// ມັນມີຈຸດປະສົງເພື່ອໃຫ້ຜູ້ໃຊ້ມີຂໍ້ຄວາມພາສາລາວທີ່ຊັດເຈນກ່ອນທີ່ຄໍາຮ້ອງຂໍຈະມາຮອດຊັ້ນ Identity
     /// </remarks>
     public static IRuleBuilderOptions<T, string> ApplyPasswordPolicy<T>(this IRuleBuilder<T, string> rule)
     {
         ArgumentNullException.ThrowIfNull(rule);
 
         return rule
-            .NotEmpty().WithMessage("กรุณาระบุรหัสผ่าน")
-            .MinimumLength(MinimumLength).WithMessage($"รหัสผ่านต้องยาวอย่างน้อย {MinimumLength} ตัวอักษร")
-            .MaximumLength(MaximumLength).WithMessage($"รหัสผ่านต้องยาวไม่เกิน {MaximumLength} ตัวอักษร")
-            .Matches("[A-Z]").WithMessage("รหัสผ่านต้องมีตัวอักษรพิมพ์ใหญ่อย่างน้อยหนึ่งตัว")
-            .Matches("[a-z]").WithMessage("รหัสผ่านต้องมีตัวอักษรพิมพ์เล็กอย่างน้อยหนึ่งตัว")
-            .Matches("[0-9]").WithMessage("รหัสผ่านต้องมีตัวเลขอย่างน้อยหนึ่งตัว");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດຜ່ານ")
+            .MinimumLength(MinimumLength).WithMessage($"ລະຫັດຜ່ານຕ້ອງມີຄວາມຍາວຢ່າງໜ້ອຍ {MinimumLength} ໂຕອັກສອນ")
+            .MaximumLength(MaximumLength).WithMessage($"ລະຫັດຜ່ານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ {MaximumLength} ໂຕອັກສອນ")
+            .Matches("[A-Z]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕອັກສອນພິມໃຫຍ່ຢ່າງໜ້ອຍໜຶ່ງໂຕ")
+            .Matches("[a-z]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕອັກສອນພິມນ້ອຍຢ່າງໜ້ອຍໜຶ່ງໂຕ")
+            .Matches("[0-9]").WithMessage("ລະຫັດຜ່ານຕ້ອງມີໂຕເລກຢ່າງໜ້ອຍໜຶ່ງໂຕ");
     }
 }
 
-/// <summary>ตรวจสอบข้อมูลการเข้าสู่ระบบ</summary>
+/// <summary>ຢືນຢັນຂໍ້ມູນການເຂົ້າສູ່ລະບົບ</summary>
 public sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public LoginRequestValidator()
     {
         RuleFor(request => request.Email)
-            .NotEmpty().WithMessage("กรุณาระบุอีเมล")
-            .MaximumLength(256).WithMessage("อีเมลต้องยาวไม่เกิน 256 ตัวอักษร")
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸອີເມວ")
+            .MaximumLength(256).WithMessage("ອີເມວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 256 ໂຕອັກສອນ")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ");
 
-        // ตอนเข้าสู่ระบบไม่บังคับความซับซ้อนของรหัสผ่าน
-        // เพราะบัญชีเก่าอาจตั้งรหัสไว้ก่อนที่นโยบายปัจจุบันจะมีผล
+        // ຄວາມຊັບຊ້ອນຂອງລະຫັດຜ່ານແມ່ນບໍ່ຈໍາເປັນໃນເວລາທີ່ເຂົ້າສູ່ລະບົບ
+        // ນີ້ແມ່ນຍ້ອນວ່າບັນຊີເກົ່າອາດຈະໄດ້ຕັ້ງລະຫັດຜ່ານກ່ອນທີ່ນະໂຍບາຍປະຈຸບັນຈະມີຜົນ
         RuleFor(request => request.Password)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสผ่าน")
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດຜ່ານ")
             .MaximumLength(PasswordRules.MaximumLength)
-            .WithMessage($"รหัสผ่านต้องยาวไม่เกิน {PasswordRules.MaximumLength} ตัวอักษร");
+            .WithMessage($"ລະຫັດຜ່ານຕ້ອງມີຄວາມຍາວບໍ່ເກີນ {PasswordRules.MaximumLength} ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอต่ออายุโทเคน</summary>
+/// <summary>ກວດເບິ່ງຄຳຮ້ອງຂໍການຕໍ່ອາຍຸໂທເຄັນຂອງທ່ານ</summary>
 public sealed class RefreshTokenRequestValidator : AbstractValidator<RefreshTokenRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public RefreshTokenRequestValidator()
     {
         RuleFor(request => request.RefreshToken)
-            .NotEmpty().WithMessage("กรุณาระบุ Refresh Token")
-            .MaximumLength(512).WithMessage("Refresh Token ไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸ Refresh Token")
+            .MaximumLength(512).WithMessage("Refresh Token ບໍ່ຖືກຕ້ອງ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอออกจากระบบ</summary>
+/// <summary>ກວດເບິ່ງການຮ້ອງຂໍອອກຈາກລະບົບ</summary>
 public sealed class LogoutRequestValidator : AbstractValidator<LogoutRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public LogoutRequestValidator()
     {
         RuleFor(request => request.RefreshToken)
-            .NotEmpty().WithMessage("กรุณาระบุ Refresh Token")
-            .MaximumLength(512).WithMessage("Refresh Token ไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸ Refresh Token")
+            .MaximumLength(512).WithMessage("Refresh Token ບໍ່ຖືກຕ້ອງ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอลิงก์ตั้งรหัสผ่านใหม่</summary>
+/// <summary>ກວດເບິ່ງຄໍາຮ້ອງຂໍການເຊື່ອມຕໍ່ຄືນລະຫັດຜ່ານ</summary>
 public sealed class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public ForgotPasswordRequestValidator()
     {
         RuleFor(request => request.Email)
-            .NotEmpty().WithMessage("กรุณาระบุอีเมล")
-            .MaximumLength(256).WithMessage("อีเมลต้องยาวไม่เกิน 256 ตัวอักษร")
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸອີເມວ")
+            .MaximumLength(256).WithMessage("ອີເມວຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 256 ໂຕອັກສອນ")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอตั้งรหัสผ่านใหม่</summary>
+/// <summary>ຢືນຢັນການຮ້ອງຂໍການຕັ້ງລະຫັດຜ່ານໃຝ່</summary>
 public sealed class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public ResetPasswordRequestValidator()
     {
         RuleFor(request => request.Email)
-            .NotEmpty().WithMessage("กรุณาระบุอีเมล")
-            .EmailAddress().WithMessage("รูปแบบอีเมลไม่ถูกต้อง");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸອີເມວ")
+            .EmailAddress().WithMessage("ຮູບແບບອີເມວບໍ່ຖືກຕ້ອງ");
 
         RuleFor(request => request.Token)
-            .NotEmpty().WithMessage("กรุณาระบุโทเคนสำหรับตั้งรหัสผ่านใหม่");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸໂທເຄນສຳລັບຕັ້ງລະຫັດຜ່ານໃໝ່");
 
         RuleFor(request => request.NewPassword).ApplyPasswordPolicy();
 
         RuleFor(request => request.ConfirmPassword)
             .Equal(request => request.NewPassword)
-            .WithMessage("รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน");
+            .WithMessage("ລະຫັດຜ່ານໃໝ່ແລະການຢືນຢັນລະຫັດຜ່ານບໍ່ຕົງກັນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอเปลี่ยนรหัสผ่าน</summary>
+/// <summary>ກວດເບິ່ງການຮ້ອງຂໍການປ່ຽນແປງລະຫັດຜ່ານ</summary>
 public sealed class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public ChangePasswordRequestValidator()
     {
         RuleFor(request => request.CurrentPassword)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสผ่านปัจจุบัน");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດຜ່ານປັດຈຸບັນ");
 
         RuleFor(request => request.NewPassword)
             .ApplyPasswordPolicy()
             .NotEqual(request => request.CurrentPassword)
-            .WithMessage("รหัสผ่านใหม่ต้องไม่ซ้ำกับรหัสผ่านปัจจุบัน");
+            .WithMessage("ລະຫັດຜ່ານໃໝ່ຕ້ອງບໍ່ຊ້ຳກັບລະຫັດຜ່ານປັດຈຸບັນ");
 
         RuleFor(request => request.ConfirmPassword)
             .Equal(request => request.NewPassword)
-            .WithMessage("รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน");
+            .WithMessage("ລະຫັດຜ່ານໃໝ່ແລະການຢືນຢັນລະຫັດຜ່ານບໍ່ຕົງກັນ");
     }
 }

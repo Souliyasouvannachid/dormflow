@@ -3,26 +3,26 @@ using DormFlow.Contracts.Tenants;
 
 namespace DormFlow.Application.Features.Tenants;
 
-/// <summary>Use Case ทั้งหมดของโมดูลผู้เช่า</summary>
+/// <summary>Use Case ໂມດູນຜູ້ເຊົ່າທັງໝົດ</summary>
 public interface ITenantService
 {
-    /// <summary>ดึงรายการผู้เช่าแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ເຊົ່າທີ່ຕັ້ງໄວ້ແລ້ວ</summary>
     Task<PagedResult<TenantResponse>> GetPagedAsync(
         TenantListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลผู้เช่าจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຜູ້ເຊົ່າຈາກລະຫັດອ້າງອີງ</summary>
     Task<TenantResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างข้อมูลผู้เช่าใหม่</summary>
+    /// <summary>ສ້າງຂໍ້ມູນຜູ້ເຊົ່າໃຝ່</summary>
     Task<TenantResponse> CreateAsync(CreateTenantRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>แก้ไขข้อมูลผู้เช่า</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນຜູ້ເຊົ່າ</summary>
     Task<TenantResponse> UpdateAsync(
         Guid id,
         UpdateTenantRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนสถานะผู้เช่า</summary>
+    /// <summary>ປ່ຽນສະຖານະຜູ້ເຊົ່າ</summary>
     Task<TenantResponse> ChangeStatusAsync(Guid id, string status, CancellationToken cancellationToken = default);
 }

@@ -1,13 +1,13 @@
 namespace DormFlow.Application.Common.Models;
 
 /// <summary>
-/// ข้อมูลบทบาทหนึ่งบทบาท ใช้แทน Entity ของ ASP.NET Core Identity ในชั้น Application
+/// ຂໍ້ມູນຜຶ່ງບົດບາດແມ່ນໃຊ້ແທນ Entity ຂອງ ASP.NET Core Identity ໃນຫ້ອງຮຽນ Application
 /// </summary>
-/// <param name="Id">รหัสอ้างอิงของบทบาท</param>
-/// <param name="Name">ชื่อบทบาท</param>
-/// <param name="Description">คำอธิบายบทบาท</param>
-/// <param name="IsSystemRole">เป็นบทบาทมาตรฐานของระบบหรือไม่</param>
-/// <param name="Permissions">รหัสสิทธิ์ทั้งหมดที่บทบาทนี้มี</param>
+/// <param name="Id">ລະຫັດການສົ່ງຕໍ່ບົດບາດ</param>
+/// <param name="Name">ຊື່ບົດບາດ</param>
+/// <param name="Description">ລາຍລະອຽດບົດບາດ</param>
+/// <param name="IsSystemRole">ນີ້ແມ່ນບົດບາດມາດຕະຖານສໍາລັບລະບົບບໍ?</param>
+/// <param name="Permissions">ລະຫັດການອະນຸຍາດທັງໝົດທີ່ບົດບາດນີ້ມີ</param>
 public sealed record RoleInfo(
     Guid Id,
     string Name,

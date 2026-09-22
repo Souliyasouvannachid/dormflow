@@ -2,21 +2,21 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Contracts.Rooms;
 
-/// <summary>พารามิเตอร์การค้นหารายการห้องพัก</summary>
+/// <summary>ຕົວກໍານົດການຊອກຫາລາຍການຫ້ອງ</summary>
 public class RoomListRequest : PagedQueryRequest
 {
-    /// <summary>กรองเฉพาะห้องของหอพักที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫ້ອງຂອງຫໍພັກທີ່ກຳນົດໄວ້</summary>
     public Guid? DormitoryId { get; set; }
 
-    /// <summary>กรองเฉพาะห้องของอาคารที่ระบุ</summary>
+    /// <summary>ການກັ່ນຕອງພຽງແຕ່ຫ້ອງຂອງອາຄານທີ່ລະບຸໄວ້</summary>
     public Guid? BuildingId { get; set; }
 
-    /// <summary>กรองเฉพาะห้องของชั้นที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫ້ອງຂອງຊັ້ນທີ່ລະບຸ</summary>
     public Guid? FloorId { get; set; }
 
-    /// <summary>กรองเฉพาะห้องของประเภทห้องที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫ້ອງຂອງປະເພດຫ້ອງທີ່ລະບຸ</summary>
     public Guid? RoomTypeId { get; set; }
 
-    /// <summary>กรองเฉพาะห้องที่มีสถานะตรงกับที่ระบุ</summary>
+    /// <summary>ກັ່ນຕອງສະເພາະຫ້ອງທີ່ມີສະຖານະດຽວກັນຕາມທີ່ລະບຸໄວ້</summary>
     public string? Status { get; set; }
 }

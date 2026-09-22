@@ -4,37 +4,37 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Payments;
 
-/// <summary>ตรวจสอบคำขอบันทึกรายการชำระเงิน</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍການບັນທຶກການຈ່າຍເງິນ</summary>
 public sealed class CreatePaymentRequestValidator : AbstractValidator<CreatePaymentRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreatePaymentRequestValidator()
     {
         RuleFor(request => request.InvoiceId)
-            .NotEmpty().WithMessage("กรุณาระบุใบแจ้งหนี้ที่ชำระ");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸໃບແຈ້ງໜີ້ທີ່ຊຳລະ");
 
         RuleFor(request => request.Amount)
-            .GreaterThan(0).WithMessage("จำนวนเงินที่ชำระต้องมากกว่าศูนย์");
+            .GreaterThan(0).WithMessage("ຈຳນວນເງິນທີ່ຊຳລະຕ້ອງຫຼາຍກວ່າສູນ");
 
         RuleFor(request => request.Method)
             .Must(value => Enum.TryParse<PaymentMethod>(value, ignoreCase: true, out _))
-            .WithMessage("ช่องทางการชำระเงินไม่ถูกต้อง ต้องเป็น Cash, BankTransfer, QrCode หรือ Other");
+            .WithMessage("ຊ່ອງທາງການຊຳລະເງິນບໍ່ຖືກຕ້ອງ ຕ້ອງເປັນ Cash, BankTransfer, QrCode ຫຼື Other");
 
         RuleFor(request => request.ReferenceNumber)
-            .MaximumLength(100).WithMessage("เลขอ้างอิงต้องยาวไม่เกิน 100 ตัวอักษร");
+            .MaximumLength(100).WithMessage("ເລກອ້າງອີງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
 
         RuleFor(request => request.Notes)
-            .MaximumLength(1000).WithMessage("หมายเหตุต้องยาวไม่เกิน 1000 ตัวอักษร");
+            .MaximumLength(1000).WithMessage("ໝາຍເຫດຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 1000 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอคืนเงิน</summary>
+/// <summary>ທົບທວນຄືນຄໍາຮ້ອງຂໍການຄືນເງິນຂອງທ່ານ</summary>
 public sealed class RefundPaymentRequestValidator : AbstractValidator<RefundPaymentRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public RefundPaymentRequestValidator()
     {
         RuleFor(request => request.Reason)
-            .MaximumLength(500).WithMessage("สาเหตุการคืนเงินต้องยาวไม่เกิน 500 ตัวอักษร");
+            .MaximumLength(500).WithMessage("ສາເຫດການຄືນເງິນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 500 ໂຕອັກສອນ");
     }
 }

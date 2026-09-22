@@ -1,7 +1,7 @@
 namespace DormFlow.Application.Common.Models;
 
-/// <summary>ข้อความอีเมลหนึ่งฉบับ</summary>
-/// <param name="To">อีเมลผู้รับ</param>
-/// <param name="Subject">หัวข้อ</param>
-/// <param name="Body">เนื้อหาแบบข้อความธรรมดา</param>
+/// <summary>ຜຶ່ງໃນອີເມວ</summary>
+/// <param name="To">ອີເມວຜູ້ຮັບ</param>
+/// <param name="Subject">ຫົວຂໍ້</param>
+/// <param name="Body">ເນື້ອໃນຂໍ້ຄວາມທຳມະດາ</param>
 public sealed record EmailMessage(string To, string Subject, string Body);

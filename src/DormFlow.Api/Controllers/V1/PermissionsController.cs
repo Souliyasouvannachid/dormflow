@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับดูรายการสิทธิ์ทั้งหมดของระบบ</summary>
+/// <summary>Endpoint ເພື່ອເບິ່ງລາຍຊື່ການອະນຸຍາດລະບົບທັງໝົດ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/permissions")]
@@ -18,7 +18,7 @@ public sealed class PermissionsController(IPermissionService permissionService) 
 {
     private readonly IPermissionService _permissionService = permissionService;
 
-    /// <summary>ดึงรายการสิทธิ์ทั้งหมดของระบบ ใช้ประกอบหน้าจอกำหนดสิทธิ์ให้บทบาท</summary>
+    /// <summary>ດຶງລາຍຊື່ການອະນຸຍາດລະບົບທັງໝົດ. ໃຊ້ເພື່ອປະກອບຜ້າຈໍເພື່ອກໍານົດການອະນຸຍາດສໍາລັບບົດບາດ</summary>
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PermissionResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<PermissionResponse>>>> GetAll(

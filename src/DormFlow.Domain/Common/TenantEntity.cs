@@ -1,8 +1,8 @@
 namespace DormFlow.Domain.Common;
 
 /// <summary>
-/// คลาสฐานของ Entity ฝั่งธุรกิจทั้งหมดที่ต้องแยกข้อมูลตามองค์กรและหอพัก
-/// ทุก Query ที่อ่าน Entity ชนิดนี้ต้องกรองด้วย OrganizationId เสมอ
+/// ຊັ້ນພື້ນຖານຂອງ Entity ທຸກໆດ້ານທຸລະກິດທີ່ຕ້ອງການແຍກຂໍ້ມູນໂດຍອົງກອນແລະຫໍພັກ
+/// ທຸກໆ Query ທີ່ອ່ານ Entity ປະເພດນີ້ຍັງຕ້ອງໄດ້ຮັບການກັ່ນຕອງ OrganizationId ສະເໝີ
 /// </summary>
 public abstract class TenantEntity : BaseEntity, ITenantScoped
 {

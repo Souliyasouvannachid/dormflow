@@ -5,35 +5,35 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Organizations;
 
-/// <summary>ตัวกรองสำหรับดึงรายการองค์กรแบบแบ่งหน้า</summary>
-/// <param name="OrganizationId">จำกัดผลลัพธ์ให้เห็นเฉพาะองค์กรนี้แห่งเดียว เป็น null เมื่อ SuperAdmin เห็นได้ทุกองค์กร</param>
-/// <param name="Status">กรองเฉพาะองค์กรที่มีสถานะตรงกัน เป็น null เมื่อไม่จำกัด</param>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງອົງກອນ</summary>
+/// <param name="OrganizationId">ຈໍາກັດຜົນໄດ້ຮັບພຽງແຕ່ອົງກອນນີ້ null ເມື່ອໃດ SuperAdmin ສາມາດເຫັນໄດ້ໃນທຸກອົງກອນ</param>
+/// <param name="Status">ການກັ່ນຕອງພຽງແຕ່ສໍາລັບອົງກອນທີ່ມີສະຖານະທີ່ກົງກັນຂອງ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
 public sealed record OrganizationListFilter(Guid? OrganizationId, OrganizationStatus? Status);
 
-/// <summary>เข้าถึงข้อมูลองค์กรในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຂອງບໍລິສັດໃນຖານຂໍ້ມູນ</summary>
 public interface IOrganizationRepository
 {
-    /// <summary>อ่านองค์กรจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານອົງກອນຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Organization?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีองค์กรที่ใช้รหัสนี้อยู่แล้วหรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າອົງກອນໃດນຶ່ງໃຊ້ລະຫັດນີ້ແລ້ວ</summary>
     Task<bool> ExistsByCodeAsync(
         string code,
         Guid? excludeOrganizationId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการองค์กรแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງອົງກອນ paginated ໂດຍອີງໃສ່ການກັ່ນຕອງທີ່ລະບຸໄວ້</summary>
     Task<PagedResult<Organization>> GetPagedAsync(
         OrganizationListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มองค์กรใหม่</summary>
+    /// <summary>ເພີ່ມອົງກອນໃໝ່</summary>
     Task AddAsync(Organization organization, CancellationToken cancellationToken = default);
 
-    /// <summary>ทำเครื่องหมายลบองค์กร ระบบจะแปลงเป็น Soft Delete ให้อัตโนมัติตอนบันทึก</summary>
+    /// <summary>Mark ລຶບອົງກອນ ລະບົບຈະປ່ຽນເປັນ Soft Delete ອັດຕະໂນມັດເມື່ອບັນທຶກ</summary>
     void Remove(Organization organization);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

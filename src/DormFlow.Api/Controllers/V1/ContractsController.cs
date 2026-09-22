@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace DormFlow.Api.Controllers.V1;
 
 /// <summary>
-/// Endpoint สำหรับจัดการสัญญาเช่า
+/// Endpoint ສໍາລັບການຄຸ້ມຄອງສັນຍາເຊົ່າ
 /// </summary>
 /// <remarks>
-/// เช็คอินและเช็คเอาท์คือการเรียก <c>activate</c> และ <c>terminate</c> บนสัญญานี้
-/// ไม่มี Endpoint แยกต่างหาก ดูเหตุผลเพิ่มเติมที่ <see cref="Domain.Entities.Contract"/>
+/// Check-in ແລະ check-out ແມ່ນເອີ້ນວ່າ <c>activate</c> ແລະ <c>terminate</c> ກ່ຽວກັບສັນຍາສະບັບນີ້
+/// ບໍ່ມີ Endpoint ແຍກຕ່າງຫາກ, ເບິ່ງເຫດຜົນເພີ່ມເຕີມຢູ່ <see cref="Domain.Entities.Contract"/>
 /// </remarks>
 [ApiController]
 [ApiVersion("1.0")]
@@ -23,7 +23,7 @@ public sealed class ContractsController(IContractService contractService) : Cont
 {
     private readonly IContractService _contractService = contractService;
 
-    /// <summary>ดึงรายการสัญญาเช่าแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ paginated ຂອງສັນຍາເຊົ່າ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Contracts.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ContractResponse>>), StatusCodes.Status200OK)]
@@ -35,7 +35,7 @@ public sealed class ContractsController(IContractService contractService) : Cont
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลสัญญาเช่าหนึ่งฉบับ</summary>
+    /// <summary>ອ່ານສັນຍາເຊົ່າຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Contracts.View)]
     [ProducesResponseType(typeof(ApiResponse<ContractResponse>), StatusCodes.Status200OK)]
@@ -48,7 +48,7 @@ public sealed class ContractsController(IContractService contractService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>สร้างสัญญาเช่าใหม่ในสถานะร่าง</summary>
+    /// <summary>ສ້າງສັນຍາເຊົ່າໃໝ່ຢູ່ໃນລັດສະບັບຮ່າງ</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Contracts.Create)]
     [ProducesResponseType(typeof(ApiResponse<ContractResponse>), StatusCodes.Status200OK)]
@@ -63,7 +63,7 @@ public sealed class ContractsController(IContractService contractService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>เปิดใช้งานสัญญาเช่า (เช็คอิน)</summary>
+    /// <summary>ເປີດໃຊ້ຂໍ້ຕົກລົງການເຊົ່າ (ເຊັກອິນ)</summary>
     [HttpPost("{id:guid}/activate")]
     [RequirePermission(PermissionCodes.Contracts.Activate)]
     [ProducesResponseType(typeof(ApiResponse<ContractResponse>), StatusCodes.Status200OK)]
@@ -77,7 +77,7 @@ public sealed class ContractsController(IContractService contractService) : Cont
         return Ok(ApiResponse.Ok(result, ApiMessages.Success));
     }
 
-    /// <summary>สิ้นสุดสัญญาเช่า (เช็คเอาท์)</summary>
+    /// <summary>ສິ້ນສຸດສັນຍາເຊົ່າ (ກວດເບິ່ງ)</summary>
     [HttpPost("{id:guid}/terminate")]
     [RequirePermission(PermissionCodes.Contracts.Terminate)]
     [ProducesResponseType(typeof(ApiResponse<ContractResponse>), StatusCodes.Status200OK)]

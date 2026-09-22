@@ -1,11 +1,11 @@
 namespace DormFlow.Contracts.Deposits;
 
-/// <summary>คำขอคืนเงินมัดจำ</summary>
+/// <summary>ການຮ້ອງຂໍເງິນຄືນເງິນຝາກ</summary>
 public class RefundDepositRequest
 {
-    /// <summary>จำนวนเงินที่ต้องการคืน ต้องอยู่ระหว่าง 0 ถึงจำนวนเงินมัดจำที่รับไว้ (0 หมายถึงริบทั้งหมด)</summary>
+    /// <summary>ຈຳນວນເງິນທີ່ຈະຄືນຕ້ອງຢູ່ລະຫວ່າງ 0 ກັບຈໍານວນເງິນຝາກທີ່ໄດ້ຮັບ (0 ໝາຍເຖິງການຍຶດທັງໝົດ)</summary>
     public decimal RefundAmount { get; set; }
 
-    /// <summary>เหตุผลของส่วนที่หักไว้ไม่คืน จำเป็นเมื่อคืนไม่เต็มจำนวน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບສ່ວນທີ່ຖືກຫັກບໍ່ຖືກສົ່ງຄືນ ຕ້ອງການເວລາກາງຄືນບໍ່ເຕັມທີ່</summary>
     public string? DeductionReason { get; set; }
 }

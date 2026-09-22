@@ -2,27 +2,27 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DormFlow.Infrastructure.Identity;
 
-/// <summary>บทบาทผู้ใช้งาน ต่อยอดจาก <see cref="IdentityRole{TKey}"/></summary>
+/// <summary>ບົດບາດຂອງຜູ້ໃຊ້ສືບຕໍ່ຈາກ <see cref="IdentityRole{TKey}"/></summary>
 public class ApplicationRole : IdentityRole<Guid>
 {
-    /// <summary>สร้างบทบาทเปล่า ใช้โดย EF Core ตอนสร้างอ็อบเจกต์จากฐานข้อมูล</summary>
+    /// <summary>ສ້າງບົດບາດຫວ່າງເປົ່າ. ໃຊ້ໂດຍ EF Core ເມື່ອສ້າງວັດຖຸຈາກຖານຂໍ້ມູນ</summary>
     public ApplicationRole()
     {
     }
 
-    /// <summary>สร้างบทบาทจากชื่อ</summary>
-    /// <param name="roleName">ชื่อบทบาท</param>
+    /// <summary>ສ້າງບົດບາດຈາກຊື່</summary>
+    /// <param name="roleName">ຊື່ບົດບາດ</param>
     public ApplicationRole(string roleName)
         : base(roleName)
     {
     }
 
-    /// <summary>คำอธิบายบทบาท</summary>
+    /// <summary>ລາຍລະອຽດບົດບາດ</summary>
     public string? Description { get; set; }
 
     /// <summary>
-    /// เป็นบทบาทมาตรฐานของระบบหรือไม่
-    /// บทบาทที่เป็นของระบบจะลบไม่ได้ เพราะมีการอ้างถึงในโค้ดและในข้อมูลเริ่มต้น
+    /// ນີ້ແມ່ນບົດບາດມາດຕະຖານສໍາລັບລະບົບບໍ?
+    /// ບໍ່ສາມາດລຶບບົດບາດທີ່ເປັນຂອງລະບົບໄດ້. ເນື່ອງຈາກວ່າມັນຖືກອ້າງອີງໃນລະຫັດແລະຂໍ້ມູນເບື້ອງຕົ້ນ
     /// </summary>
     public bool IsSystemRole { get; set; }
 }

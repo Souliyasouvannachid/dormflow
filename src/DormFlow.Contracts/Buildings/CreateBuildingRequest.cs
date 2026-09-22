@@ -1,20 +1,20 @@
 namespace DormFlow.Contracts.Buildings;
 
-/// <summary>คำขอสร้างอาคารใหม่</summary>
+/// <summary>ການຮ້ອງຂໍການກໍ່ສ້າງອາຄານໃຝ່</summary>
 public class CreateBuildingRequest
 {
-    /// <summary>หอพักที่อาคารนี้จะสังกัด</summary>
+    /// <summary>ຫໍພັກທີ່ອາຄານນີ້ຈະຂຶ້ນກັບ</summary>
     public Guid DormitoryId { get; set; }
 
-    /// <summary>รหัสอาคาร ไม่ซ้ำกันภายในหอพักเดียวกัน</summary>
+    /// <summary>ລະຫັດອາຄານແມ່ນເປັນເອກະລັກພາຍໃນຫໍພັກດຽວກັນ</summary>
     public string Code { get; set; } = string.Empty;
 
-    /// <summary>ชื่ออาคาร</summary>
+    /// <summary>ຊື່ອາຄານ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>จำนวนชั้นทั้งหมดของอาคาร</summary>
+    /// <summary>ຈໍານວນຊັ້ນທັງຝົດຂອງອາຄານ</summary>
     public int TotalFloors { get; set; } = 1;
 }

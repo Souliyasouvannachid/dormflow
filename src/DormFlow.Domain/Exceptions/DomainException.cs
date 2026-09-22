@@ -1,27 +1,27 @@
 namespace DormFlow.Domain.Exceptions;
 
 /// <summary>
-/// ข้อผิดพลาดที่เกิดจากกฎทางธุรกิจใน Domain
-/// ชั้น API จะแปลง Exception ตระกูลนี้เป็น HTTP 409 Conflict
+/// ຄວາມຜິດພາດທີ່ເກີດຈາກກົດລະບຽບທຸລະກິດໃນ Domain
+/// ຊັ້ນ API ຈະປ່ຽນ Exception ຄອບຄົວນີ້ແມ່ນ HTTP 409 Conflict
 /// </summary>
 public class DomainException : Exception
 {
-    /// <summary>สร้าง Exception พร้อมข้อความเริ่มต้น</summary>
+    /// <summary>ສ້າງ Exception ດ້ວຍຂໍ້ຄວາມເບື້ອງຕົ້ນ</summary>
     public DomainException()
-        : base("เกิดข้อผิดพลาดจากกฎทางธุรกิจ")
+        : base("ເກີດຂໍ້ຜິດພາດຈາກກົດລະບຽບທຸລະກິດ")
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความที่กำหนดเอง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມທີ່ກໍາຜົດເອງ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
     public DomainException(string message)
         : base(message)
     {
     }
 
-    /// <summary>สร้าง Exception พร้อมข้อความและ Exception ต้นทาง</summary>
-    /// <param name="message">ข้อความอธิบายสาเหตุ</param>
-    /// <param name="innerException">Exception ต้นทาง</param>
+    /// <summary>ສ້າງ Exception ກັບຂໍ້ຄວາມແລະ Exception ຕົ້ນກໍາເນີດ</summary>
+    /// <param name="message">ຂໍ້ຄວາມອະທິບາຍສາເຫດ</param>
+    /// <param name="innerException">Exception ຕົ້ນກໍາເນີດ</param>
     public DomainException(string message, Exception innerException)
         : base(message, innerException)
     {

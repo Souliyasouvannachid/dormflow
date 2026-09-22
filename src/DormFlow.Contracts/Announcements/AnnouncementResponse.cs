@@ -1,35 +1,35 @@
 namespace DormFlow.Contracts.Announcements;
 
-/// <summary>ข้อมูลประกาศหนึ่งฉบับ</summary>
+/// <summary>ຂໍ້ມູນປະກາດຜຶ່ງ</summary>
 public class AnnouncementResponse
 {
-    /// <summary>รหัสอ้างอิงของประกาศ</summary>
+    /// <summary>ລະຫັດອ້າງອິງປະກາດ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>องค์กรที่เกี่ยวข้อง</summary>
+    /// <summary>ອົງກອນທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid OrganizationId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>หัวข้อประกาศ</summary>
+    /// <summary>ຫົວຂໍ້ປະກາດ</summary>
     public string Title { get; init; } = string.Empty;
 
-    /// <summary>เนื้อหาประกาศ</summary>
+    /// <summary>ເນື້ອໃນປະກາດ</summary>
     public string Content { get; init; } = string.Empty;
 
-    /// <summary>สถานะของประกาศ</summary>
+    /// <summary>ສະຖານະປະກາດ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่เผยแพร่</summary>
+    /// <summary>ເວລາເຜີຍແຜ່</summary>
     public DateTimeOffset? PublishedAt { get; init; }
 
-    /// <summary>เวลาที่ประกาศหมดอายุ</summary>
+    /// <summary>ປະກາດເວລາໝົດອາຍຸ</summary>
     public DateTimeOffset? ExpiresAt { get; init; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; init; }
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 }

@@ -15,11 +15,11 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Contracts;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลสัญญาเช่า
+/// Use Case ໂມດູນການເຊົ່າທັງໝົດ
 /// </summary>
 /// <remarks>
-/// เช็คอินและเช็คเอาท์ถูกรวมไว้เป็นการกระทำบนสัญญา (<see cref="ActivateAsync"/> และ <see cref="TerminateAsync"/>)
-/// แทนการแยกเป็นโมดูลของตัวเอง ดูเหตุผลเพิ่มเติมที่ <see cref="Domain.Entities.Contract"/>
+/// ການເຊັກອິນແລະເຊັກເອົາແມ່ນລວມເຂົ້າໃນການດໍາເນີນການໃນສັນຍາ (<see cref="ActivateAsync"/> ແລະ <see cref="TerminateAsync"/>)
+/// ແທນທີ່ຈະແຍກມັນເຂົ້າໄປໃນໂມດູນຂອງຕົນເອງ ເບິ່ງເຫດຜົນເພີ່ມເຕີມຢູ່ທີ່ <see cref="Domain.Entities.Contract"/>
 /// </remarks>
 public sealed class ContractService(
     IContractRepository repository,
@@ -34,7 +34,7 @@ public sealed class ContractService(
 {
     private const string AuditEntityName = "Contract";
 
-    /// <summary>จำนวนครั้งสูงสุดที่ลองสุ่มเลขที่สัญญาใหม่เมื่อชนกับที่มีอยู่แล้ว</summary>
+    /// <summary>ຈຳນວນຄັ້ງສູງສຸດເພື່ອທົດລອງໃຊ້ໝາຍເລກສັນຍາແບບສຸ່ມໃໝ່ເມື່ອຂັດກັບອັນທີ່ມີຢູ່ແລ້ວ</summary>
     private const int MaxContractNumberAttempts = 5;
 
     private static readonly string[] AllowedSortFields = ["contractNumber", "startDate", "endDate", "status", "createdAt"];
@@ -88,40 +88,40 @@ public sealed class ContractService(
         await _createValidator.ValidateAndThrowAsync(request, cancellationToken);
 
         Room room = await _roomRepository.GetByIdAsync(request.RoomId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบห้องที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             room.OrganizationId,
             room.DormitoryId.GetValueOrDefault(),
-            "ไม่พบห้องที่ระบุ");
+            "ບໍ່ພົບຫ້ອງທີ່ລະບຸ");
 
         Tenant tenant = await _tenantRepository.GetByIdAsync(request.TenantId, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
 
         if (tenant.OrganizationId != room.OrganizationId)
         {
-            throw new NotFoundException("ไม่พบข้อมูลผู้เช่าที่ระบุ");
+            throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນຜູ້ເຊົ່າທີ່ລະບຸ");
         }
 
         if (tenant.Status == TenantStatus.Blacklisted)
         {
-            throw new ConflictException("ผู้เช่ารายนี้ถูกขึ้นบัญชีดำ ไม่สามารถทำสัญญาเช่าได้");
+            throw new ConflictException("ຜູ້ເຊົ່າລາຍນີ້ຖືກຂຶ້ນບັນຊີດຳ ບໍ່ສາມາດເຮັດສັນຍາເຊົ່າໄດ້");
         }
 
         if (await _repository.HasOpenContractAsync(room.Id, cancellationToken))
         {
-            throw new ConflictException("ห้องนี้มีสัญญาเช่าที่ยังไม่สิ้นสุดอยู่แล้ว");
+            throw new ConflictException("ຫ້ອງນີ້ມີສັນຍາເຊົ່າທີ່ຍັງບໍ່ສິ້ນສຸດຢູ່ແລ້ວ");
         }
 
         Reservation? reservation = await ResolveReservationAsync(request, room, tenant, cancellationToken);
 
         if (reservation is null)
         {
-            // ทำสัญญาโดยไม่ผ่านการจองล่วงหน้า ห้องต้องว่างอยู่จริงเท่านั้น
+            // ເຮັດສັນຍາໂດຍບໍ່ມີການຈອງລ່ວງຜ້າ. ຕົວຈິງແລ້ວຫ້ອງຈະຕ້ອງຫວ່າງເປົ່າ
             if (room.Status != RoomStatus.Available)
             {
-                throw new ConflictException("ห้องนี้ไม่ว่าง ไม่สามารถทำสัญญาได้");
+                throw new ConflictException("ຫ້ອງນີ້ບໍ່ວ່າງ ບໍ່ສາມາດເຮັດສັນຍາໄດ້");
             }
 
             room.Status = RoomStatus.Reserved;
@@ -146,7 +146,7 @@ public sealed class ContractService(
 
         await _repository.AddAsync(contract, cancellationToken);
 
-        // เรียกครั้งเดียวเพื่อบันทึกสัญญาใหม่พร้อมกับการเปลี่ยนแปลงของห้องและการจอง (ถ้ามี) ในธุรกรรมเดียวกัน
+        // ໂທຫາຄັ້ງດຽວເພື່ອບັນທຶກສັນຍາໃຝ່ພ້ອມກັບການປ່ຽນແປງຫ້ອງແລະການຈອງ (ຖ້າມີ) ໃນທຸລະກໍາດຽວກັນ
         await _repository.SaveChangesAsync(cancellationToken);
 
         await _auditLogWriter.WriteAsync(
@@ -166,7 +166,7 @@ public sealed class ContractService(
 
         if (contract.Status != ContractStatus.Draft)
         {
-            throw new ConflictException("เปิดใช้งานได้เฉพาะสัญญาที่ยังเป็นร่างเท่านั้น");
+            throw new ConflictException("ເປີດໃຊ້ງານໄດ້ສະເພາະສັນຍາທີ່ຍັງເປັນຮ່າງເທົ່ານັ້ນ");
         }
 
         Room? room = await _roomRepository.GetByIdAsync(contract.RoomId, cancellationToken);
@@ -205,13 +205,13 @@ public sealed class ContractService(
 
         if (contract.Status != ContractStatus.Active)
         {
-            throw new ConflictException("สิ้นสุดได้เฉพาะสัญญาที่เปิดใช้งานอยู่เท่านั้น");
+            throw new ConflictException("ສິ້ນສຸດໄດ້ສະເພາະສັນຍາທີ່ເປີດໃຊ້ງານຢູ່ເທົ່ານັ້ນ");
         }
 
         Room? room = await _roomRepository.GetByIdAsync(contract.RoomId, cancellationToken);
         if (room is not null)
         {
-            // ห้องเข้าสู่สถานะรอทำความสะอาดก่อน แล้วเจ้าหน้าที่ค่อยเปลี่ยนเป็นว่างเองผ่าน Endpoint ของห้อง
+            // ຫ້ອງເຂົ້າໄປໃນສະຖານະລໍຖ້າການເຮັດຄວາມສະອາດກ່ອນ. ຈາກນັ້ນເຈົ້າໜ້າທີ່ກໍຄ່ອຍໆປ່ຽນໃຫ້ເປັນອິດສະລະດ້ວຍຕົນເອງ Endpoint ຂອງຫ້ອງ
             room.Status = RoomStatus.Cleaning;
         }
 
@@ -245,16 +245,16 @@ public sealed class ContractService(
         }
 
         Reservation reservation = await _reservationRepository.GetByIdAsync(request.ReservationId.Value, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบการจองที่ระบุ");
+            ?? throw new NotFoundException("ບໍ່ພົບການຈອງທີ່ລະບຸ");
 
         if (reservation.RoomId != room.Id || reservation.TenantId != tenant.Id)
         {
-            throw new ValidationFailedException("การจองที่ระบุไม่ตรงกับห้องหรือผู้เช่าที่เลือก");
+            throw new ValidationFailedException("ການຈອງທີ່ລະບຸບໍ່ກົງກັບຫ້ອງຫຼືຜູ້ເຊົ່າທີ່ເລືອກ");
         }
 
         if (reservation.Status != ReservationStatus.Pending)
         {
-            throw new ConflictException("การจองนี้ถูกใช้ทำสัญญาไปแล้วหรือถูกยกเลิกไปแล้ว");
+            throw new ConflictException("ການຈອງນີ້ຖືກໃຊ້ເຮັດສັນຍາໄປແລ້ວ ຫຼືຖືກຍົກເລີກໄປແລ້ວ");
         }
 
         reservation.Status = ReservationStatus.ConvertedToContract;
@@ -276,19 +276,19 @@ public sealed class ContractService(
             }
         }
 
-        throw new InvalidOperationException("ไม่สามารถสุ่มเลขที่สัญญาที่ไม่ซ้ำกันได้ กรุณาลองใหม่อีกครั้ง");
+        throw new InvalidOperationException("ບໍ່ສາມາດສຸ່ມເລກທີ່ສັນຍາທີ່ບໍ່ຊ້ຳກັນໄດ້ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ");
     }
 
     private async Task<Contract> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Contract contract = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลสัญญาเช่าที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນສັນຍາເຊົ່າທີ່ຕ້ອງການ");
 
         TenantScope.EnsureDormitoryAccess(
             _currentUser,
             contract.OrganizationId,
             contract.DormitoryId.GetValueOrDefault(),
-            "ไม่พบข้อมูลสัญญาเช่าที่ต้องการ");
+            "ບໍ່ພົບຂໍ້ມູນສັນຍາເຊົ່າທີ່ຕ້ອງການ");
 
         return contract;
     }

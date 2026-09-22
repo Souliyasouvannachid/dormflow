@@ -10,11 +10,11 @@ using FluentValidation;
 namespace DormFlow.Application.Features.Organizations;
 
 /// <summary>
-/// Use Case ทั้งหมดของโมดูลองค์กร
+/// Use Case ທັງຝົດຂອງໂມດູນອົງກອນ
 /// </summary>
 /// <remarks>
-/// สร้างและลบองค์กรทำได้เฉพาะ SuperAdmin เท่านั้น (บังคับด้วยสิทธิ์ที่ระดับ Controller)
-/// ส่วนการดูและแก้ไขข้อมูล Owner ทำได้เฉพาะองค์กรของตนเอง
+/// ທ່ານພຽງແຕ່ສາມາດສ້າງແລະລຶບອົງກອນ SuperAdmin ເທົ່ານັ້ນ (ບັງຄັບດ້ວຍການອະນຸຍາດໃນລະດັບ Controller)
+/// ພາກສ່ວນເບິ່ງ ແລະແກ້ໄຂຂໍ້ມູນ Owner ສາມາດເຮັດໄດ້ໂດຍອົງກອນຂອງທ່ານເອງ
 /// </remarks>
 public sealed class OrganizationService(
     IOrganizationRepository repository,
@@ -70,7 +70,7 @@ public sealed class OrganizationService(
 
         if (await _repository.ExistsByCodeAsync(code, null, cancellationToken))
         {
-            throw new ConflictException($"รหัสองค์กร '{code}' ถูกใช้ในระบบแล้ว");
+            throw new ConflictException($"ລະຫັດອົງກອນ '{code}' ຖືກໃຊ້ໃນລະບົບແລ້ວ");
         }
 
         Organization organization = new()
@@ -110,7 +110,7 @@ public sealed class OrganizationService(
 
         if (await _repository.ExistsByCodeAsync(code, organization.Id, cancellationToken))
         {
-            throw new ConflictException($"รหัสองค์กร '{code}' ถูกใช้ในระบบแล้ว");
+            throw new ConflictException($"ລະຫັດອົງກອນ '{code}' ຖືກໃຊ້ໃນລະບົບແລ້ວ");
         }
 
         organization.Code = code;
@@ -140,7 +140,7 @@ public sealed class OrganizationService(
     {
         if (!Enum.TryParse(status, ignoreCase: true, out OrganizationStatus newStatus))
         {
-            throw new ValidationFailedException($"สถานะ '{status}' ไม่ถูกต้อง");
+            throw new ValidationFailedException($"ສະຖານະ '{status}' ບໍ່ຖືກຕ້ອງ");
         }
 
         Organization organization = await FindAccessibleAsync(id, cancellationToken);
@@ -178,11 +178,11 @@ public sealed class OrganizationService(
     private async Task<Organization> FindAccessibleAsync(Guid id, CancellationToken cancellationToken)
     {
         Organization organization = await _repository.GetByIdAsync(id, cancellationToken)
-            ?? throw new NotFoundException("ไม่พบข้อมูลองค์กรที่ต้องการ");
+            ?? throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນອົງກອນທີ່ຕ້ອງການ");
 
         if (!_currentUser.IsSuperAdmin && _currentUser.OrganizationId != organization.Id)
         {
-            throw new NotFoundException("ไม่พบข้อมูลองค์กรที่ต้องการ");
+            throw new NotFoundException("ບໍ່ພົບຂໍ້ມູນອົງກອນທີ່ຕ້ອງການ");
         }
 
         return organization;

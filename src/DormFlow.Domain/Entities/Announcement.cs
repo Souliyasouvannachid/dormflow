@@ -4,29 +4,29 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// ประกาศของหอพักหนึ่งฉบับ
+/// ປະກາດຫໍພັກໜຶ່ງ
 /// </summary>
 /// <remarks>
-/// ผูกกับหอพักเดียวเสมอ (DormitoryId บังคับ) ไม่รองรับประกาศระดับองค์กรที่แสดงพร้อมกันทุกหอพัก
-/// เพราะสเปกไม่ได้ระบุรายละเอียดของโมดูลนี้ไว้เลย
+/// ຜູກມັດຢູ່ຫໍພັກໜຶ່ງສະເໝີ (DormitoryId ບັງຄັບ) ບໍ່ຮອງຮັບການປະກາດຂອງບໍລິສັດທີ່ສະແດງໃນເວລາດຽວກັນຢູ່ໃນຫໍພັກທັງໝົດ
+/// ເພາະສະເປັກບໍ່ໄດ້ລະບຸລາຍລະອຽດຂອງໂມດູນນີ້ເລີຍ
 /// </remarks>
 public class Announcement : TenantEntity
 {
-    /// <summary>หัวข้อประกาศ</summary>
+    /// <summary>ຫົວຂໍ້ປະກາດ</summary>
     public required string Title { get; set; }
 
-    /// <summary>เนื้อหาประกาศ</summary>
+    /// <summary>ເນື້ອໃນປະກາດ</summary>
     public required string Content { get; set; }
 
-    /// <summary>สถานะของประกาศ</summary>
+    /// <summary>ສະຖານະປະກາດ</summary>
     public AnnouncementStatus Status { get; set; } = AnnouncementStatus.Draft;
 
-    /// <summary>เวลาที่เผยแพร่ เป็น null เมื่อยังไม่เผยแพร่</summary>
+    /// <summary>ເວລາເຜີຍແຜ່ແມ່ນ null ໃນເວລາທີ່ບໍ່ທັນໄດ້ຈັດພີມມາ</summary>
     public DateTimeOffset? PublishedAt { get; set; }
 
-    /// <summary>เวลาที่ประกาศหมดอายุ เป็น null เมื่อไม่กำหนด</summary>
+    /// <summary>ເວລາໝົດອາຍຸປະກາດແມ່ນ null ເມື່ອບໍ່ໄດ້ລະບຸ</summary>
     public DateTimeOffset? ExpiresAt { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

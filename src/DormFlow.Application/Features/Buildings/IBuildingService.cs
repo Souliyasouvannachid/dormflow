@@ -3,32 +3,32 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Application.Features.Buildings;
 
-/// <summary>Use Case ทั้งหมดของโมดูลอาคาร</summary>
+/// <summary>Use Case ໂມດູນການກໍ່ສ້າງທັງຝົດ</summary>
 public interface IBuildingService
 {
-    /// <summary>ดึงรายการอาคารแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງຂໍ້ມູນລາຍຊື່ຕຶກອາຄານ</summary>
     Task<PagedResult<BuildingResponse>> GetPagedAsync(
         BuildingListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลอาคารจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນການກໍ່ສ້າງຈາກລະຫັດອ້າງອີງ</summary>
     Task<BuildingResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างอาคารใหม่</summary>
+    /// <summary>ສ້າງອາຄານໃຝ່</summary>
     Task<BuildingResponse> CreateAsync(CreateBuildingRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>แก้ไขข้อมูลอาคาร</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນອາຄານ</summary>
     Task<BuildingResponse> UpdateAsync(
         Guid id,
         UpdateBuildingRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนสถานะอาคาร</summary>
+    /// <summary>ປ່ຽນສະຖານະການກໍ່ສ້າງ</summary>
     Task<BuildingResponse> ChangeStatusAsync(
         Guid id,
         string status,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ลบอาคาร</summary>
+    /// <summary>ລຶບອາຄານ</summary>
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

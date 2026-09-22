@@ -3,39 +3,39 @@ using DormFlow.Contracts.Rooms;
 
 namespace DormFlow.Application.Features.Rooms;
 
-/// <summary>Use Case ทั้งหมดของโมดูลห้องพัก</summary>
+/// <summary>Use Case ໂມດູນຫ້ອງທັງໝົດ</summary>
 public interface IRoomService
 {
-    /// <summary>ดึงรายการห้องพักแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງລາຍຊື່ຫ້ອງທີ່ມີ paginated</summary>
     Task<PagedResult<RoomResponse>> GetPagedAsync(
         RoomListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการห้องว่างที่พร้อมให้เช่าแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍການແບ່ງໜ້າຂອງຫ້ອງທີ່ມີໃຫ້ເຊົ່າ</summary>
     Task<PagedResult<RoomResponse>> GetAvailableAsync(
         RoomListRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>สรุปจำนวนห้องแยกตามสถานะ</summary>
+    /// <summary>ສະຫຼຸບຂອງຈໍານວນຫ້ອງທີ່ແຍກຕາມສະຖານະ</summary>
     Task<RoomSummaryResponse> GetSummaryAsync(
         RoomSummaryRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลห้องพักจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຫ້ອງຈາກລະຫັດອ້າງອີງ</summary>
     Task<RoomResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างห้องพักใหม่</summary>
+    /// <summary>ສ້າງຫ້ອງໃຝ່</summary>
     Task<RoomResponse> CreateAsync(CreateRoomRequest request, CancellationToken cancellationToken = default);
 
-    /// <summary>แก้ไขข้อมูลห้องพัก</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນຫ້ອງ</summary>
     Task<RoomResponse> UpdateAsync(
         Guid id,
         UpdateRoomRequest request,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนสถานะห้องพัก</summary>
+    /// <summary>ປ່ຽນສະຖານະຫ້ອງ</summary>
     Task<RoomResponse> ChangeStatusAsync(Guid id, string status, CancellationToken cancellationToken = default);
 
-    /// <summary>ลบห้องพัก</summary>
+    /// <summary>ລຶບຫ້ອງ</summary>
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

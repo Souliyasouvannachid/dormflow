@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลการจดทะเบียนที่จอดรถบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການລົງທະບຽນບ່ອນຈອດລົດໃນ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ParkingRegistrationRepository(DormFlowDbContext dbContext) : IParkingRegistrationRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

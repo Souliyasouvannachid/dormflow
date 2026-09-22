@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace DormFlow.Infrastructure.Persistence;
 
 /// <summary>
-/// ตัวสร้าง DbContext สำหรับเครื่องมือ dotnet ef ตอน design time
+/// ຜູ້ກໍ່ສ້າງ DbContext ສໍາລັບເຄື່ອງມື dotnet ef ຕອນ design time
 /// </summary>
 /// <remarks>
-/// ใช้เฉพาะตอนสร้างและรัน Migration เท่านั้น ไม่ถูกเรียกตอนแอปทำงานจริง
-/// อ่าน Connection String จาก environment variable เพื่อไม่ต้องผูกกับไฟล์ appsettings ของโปรเจกต์ API
+/// ໃຊ້ພຽງແຕ່ໃນເວລາທີ່ການກໍ່ສ້າງແລະແລ່ນ Migration ພຽງແຕ່, ມັນບໍ່ໄດ້ຖືກເອີ້ນວ່າໃນເວລາທີ່ app ກໍາລັງເຮັດວຽກຕົວຈິງ
+/// ອ່ານ Connection String ຈາກ environment variable ເພື່ອບໍ່ຈໍາເປັນຕ້ອງຜູກມັດກັບໄຟລ໌ appsettings ຂອງໂຄງການ API
 /// </remarks>
 public sealed class DormFlowDbContextFactory : IDesignTimeDbContextFactory<DormFlowDbContext>
 {
-    /// <summary>ชื่อ environment variable ที่ใช้กำหนด Connection String ตอน design time</summary>
+    /// <summary>ຊື່ environment variable ໃຊ້ເພື່ອກໍານົດ Connection String ຕອນ design time</summary>
     public const string ConnectionStringVariable = "ConnectionStrings__DefaultConnection";
 
-    /// <summary>Connection String สำรองที่ชี้ไปยัง PostgreSQL ของ docker compose บนเครื่องนักพัฒนา</summary>
+    /// <summary>Connection String ສະຫຼັບຊີ້ໄປ PostgreSQL ຂອງ docker compose ໃນເຄື່ອງພັດທະນາ</summary>
     private const string LocalDevelopmentConnectionString =
         "Host=localhost;Port=5432;Database=dormflow;Username=dormflow;Password=dormflow;Include Error Detail=true";
 
@@ -34,7 +34,7 @@ public sealed class DormFlowDbContextFactory : IDesignTimeDbContextFactory<DormF
             {
                 npgsql.MigrationsAssembly(DormFlowDbContext.InfrastructureAssembly.FullName);
 
-                // ต้องตรงกับชื่อตารางที่ DependencyInjection.AddPersistence ใช้ตอนแอปทำงานจริงเสมอ
+                // ຕ້ອງກົງກັບຊື່ຕາຕະລາງ DependencyInjection.AddPersistence ໃຊ້ມັນສະເໝີເມື່ອແອັບກຳລັງເຮັດວຽກຢູ່
                 npgsql.MigrationsHistoryTable(DormFlowDbContext.MigrationsHistoryTableName);
             })
             .UseSnakeCaseNamingConvention()

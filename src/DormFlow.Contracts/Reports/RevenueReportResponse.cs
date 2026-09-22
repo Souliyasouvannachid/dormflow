@@ -1,32 +1,32 @@
 namespace DormFlow.Contracts.Reports;
 
-/// <summary>ผลสรุปรายได้ในช่วงเวลาที่ระบุ</summary>
+/// <summary>ສະຫຼຸບລາຍຮັບສໍາລັບໄລຍະເວລາທີ່ກໍານົດໄວ້</summary>
 public class RevenueReportResponse
 {
-    /// <summary>เดือนเริ่มต้นของช่วงที่สรุป</summary>
+    /// <summary>ເດືອນເລີ່ມຕົ້ນຂອງໄລຍະເວລາສະຫຼຸບ</summary>
     public DateOnly PeriodFrom { get; init; }
 
-    /// <summary>เดือนสิ้นสุดของช่วงที่สรุป</summary>
+    /// <summary>ເດືອນສິ້ນສຸດຂອງໄລຍະເວລາສະຫຼຸບ</summary>
     public DateOnly PeriodTo { get; init; }
 
-    /// <summary>จำนวนใบแจ้งหนี้ทั้งหมดในช่วง (ไม่นับที่ถูกยกเลิก)</summary>
+    /// <summary>ຈຳນວນໃບແຈ້ງໜີ້ທັງໝົດໃນຮອບເວລາ (ຍົກເລີກບໍ່ໄດ້ນັບ)</summary>
     public int InvoiceCount { get; init; }
 
-    /// <summary>จำนวนใบแจ้งหนี้ที่ชำระครบแล้ว</summary>
+    /// <summary>ຈໍານວນໃບເກັບເງິນທີ່ຈ່າຍເຕັມ</summary>
     public int PaidInvoiceCount { get; init; }
 
     /// <summary>
-    /// จำนวนใบแจ้งหนี้ที่เกินกำหนดชำระ ณ เวลาที่ขอรายงาน (คำนวณสด จากวันครบกำหนดเทียบกับวันนี้
-    /// เพราะระบบยังไม่มี Background Job ที่ตั้งสถานะ Overdue ให้อัตโนมัติ)
+    /// ຈຳນວນໃບເກັບເງິນທີ່ໝົດກຳນົດໃນເວລາລາຍງານຖືກຮ້ອງຂໍ (ການຄິດໄລ່ສົດຈາກວັນທີຄົບກຳນົດທຽບກັບມື້ນີ້
+    /// ເນື່ອງຈາກວ່າລະບົບຍັງບໍ່ທັນມີ Background Job ສະຖານທີ່ສະຖານະ Overdue ອັດຕະໂນມັດ)
     /// </summary>
     public int OverdueInvoiceCount { get; init; }
 
-    /// <summary>ยอดที่ออกใบแจ้งหนี้รวมทั้งหมดในช่วง</summary>
+    /// <summary>ຈຳນວນໃບແຈ້ງໜີ້ທັງໝົດໃນຮອບເວລາ</summary>
     public decimal TotalInvoiced { get; init; }
 
-    /// <summary>ยอดที่เก็บเงินได้จริงรวมทั้งหมดในช่วง</summary>
+    /// <summary>ຈໍານວນທັງຝົດຕົວຈິງເກັບກໍາໃນລະຫວ່າງ</summary>
     public decimal TotalCollected { get; init; }
 
-    /// <summary>ยอดค้างชำระรวม (TotalInvoiced - TotalCollected)</summary>
+    /// <summary>ຍອດຄົງຄ້າງທັງໝົດ (TotalInvoiced - TotalCollected)</summary>
     public decimal TotalOutstanding { get; init; }
 }

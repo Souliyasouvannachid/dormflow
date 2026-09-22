@@ -3,33 +3,33 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.Floors;
 
-/// <summary>ตรวจสอบคำขอสร้างชั้นใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງຊັ້ນໃຝ່</summary>
 public sealed class CreateFloorRequestValidator : AbstractValidator<CreateFloorRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateFloorRequestValidator()
     {
         RuleFor(request => request.BuildingId)
-            .NotEmpty().WithMessage("กรุณาระบุอาคารที่ชั้นนี้สังกัด");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸອາຄານທີ່ຊັ້ນນີ້ສັງກັດ");
 
         RuleFor(request => request.FloorNumber)
-            .InclusiveBetween(-5, 200).WithMessage("ลำดับชั้นไม่ถูกต้อง");
+            .InclusiveBetween(-5, 200).WithMessage("ລຳດັບຊັ້ນບໍ່ຖືກຕ້ອງ");
 
         RuleFor(request => request.Name)
-            .MaximumLength(100).WithMessage("ชื่อชั้นต้องยาวไม่เกิน 100 ตัวอักษร");
+            .MaximumLength(100).WithMessage("ຊື່ຊັ້ນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลชั้น</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍການແກ້ໄຂຂໍ້ມູນຊັ້ນ</summary>
 public sealed class UpdateFloorRequestValidator : AbstractValidator<UpdateFloorRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpdateFloorRequestValidator()
     {
         RuleFor(request => request.FloorNumber)
-            .InclusiveBetween(-5, 200).WithMessage("ลำดับชั้นไม่ถูกต้อง");
+            .InclusiveBetween(-5, 200).WithMessage("ລຳດັບຊັ້ນບໍ່ຖືກຕ້ອງ");
 
         RuleFor(request => request.Name)
-            .MaximumLength(100).WithMessage("ชื่อชั้นต้องยาวไม่เกิน 100 ตัวอักษร");
+            .MaximumLength(100).WithMessage("ຊື່ຊັ້ນຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 100 ໂຕອັກສອນ");
     }
 }

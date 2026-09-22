@@ -1,60 +1,60 @@
 namespace DormFlow.Contracts.Dormitories;
 
-/// <summary>คำขอแก้ไขข้อมูลหอพัก</summary>
-/// <remarks>ไม่มีฟิลด์ OrganizationId เพราะการย้ายหอพักข้ามองค์กรไม่ใช่การแก้ไขข้อมูลปกติ</remarks>
+/// <summary>ຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນຫໍພັກ</summary>
+/// <remarks>ບໍ່ມີພາກສະຜາມ OrganizationId ເນື່ອງຈາກວ່າການຍ້າຍຫໍພັກໃນທົ່ວອົງກອນບໍ່ແມ່ນການປ່ຽນແປງຂໍ້ມູນປົກກະຕິ</remarks>
 public class UpdateDormitoryRequest
 {
-    /// <summary>รหัสหอพัก ไม่ซ้ำกันภายในองค์กรเดียวกัน</summary>
+    /// <summary>ລະຫັດຫໍພັກແມ່ນເປັນເອກະລັກພາຍໃນອົງກອນດຽວກັນ</summary>
     public string Code { get; set; } = string.Empty;
 
-    /// <summary>ชื่อหอพัก</summary>
+    /// <summary>ຊື່ຫໍພັກ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>คำอธิบายเพิ่มเติม</summary>
+    /// <summary>ຄໍາອະທິບາຍເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ติดต่อ</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່</summary>
     public string? Phone { get; set; }
 
-    /// <summary>อีเมลติดต่อ</summary>
+    /// <summary>ອີເມວຕິດຕໍ່</summary>
     public string? Email { get; set; }
 
-    /// <summary>ที่อยู่</summary>
+    /// <summary>ທີ່ຢູ່</summary>
     public string? Address { get; set; }
 
-    /// <summary>จังหวัด</summary>
+    /// <summary>ແຂວງ</summary>
     public string? Province { get; set; }
 
-    /// <summary>อำเภอ/เขต</summary>
+    /// <summary>ເມືອງ/ພື້ນທີ່</summary>
     public string? District { get; set; }
 
-    /// <summary>ตำบล/แขวง</summary>
+    /// <summary>ເມືອງ/ເມືອງ</summary>
     public string? Subdistrict { get; set; }
 
-    /// <summary>รหัสไปรษณีย์</summary>
+    /// <summary>ລະຫັດໄປສະນີ</summary>
     public string? PostalCode { get; set; }
 
-    /// <summary>ละติจูด</summary>
+    /// <summary>ເສັ້ນຂະໜານ</summary>
     public decimal? Latitude { get; set; }
 
-    /// <summary>ลองจิจูด</summary>
+    /// <summary>ເສັ້ນແວງ</summary>
     public decimal? Longitude { get; set; }
 
-    /// <summary>วันที่ในแต่ละเดือนที่ออกใบแจ้งหนี้ (1-28)</summary>
+    /// <summary>ວັນທີໃນແຕ່ລະເດືອນໃບແຈ້ງໜີ້ຖືກອອກ (1-28)</summary>
     public int BillingDay { get; set; } = 1;
 
-    /// <summary>วันที่ครบกำหนดชำระในแต่ละเดือน (1-31)</summary>
+    /// <summary>ວັນທີການຊໍາລະເງິນໃນແຕ່ລະເດືອນ (1-31)</summary>
     public int PaymentDueDay { get; set; } = 5;
 
-    /// <summary>รูปแบบการคิดค่าปรับชำระล่าช้า</summary>
+    /// <summary>ຮູບແບບການຄິດໄລ່ຄ່າທຳນຽມການຈ່າຍເງິນຊ້າ</summary>
     public string LateFeeType { get; set; } = "Fixed";
 
-    /// <summary>จำนวนค่าปรับชำระล่าช้า</summary>
+    /// <summary>ຈໍານວນການລົງໂທດການຈ່າຍເງິນຊ້າ</summary>
     public decimal LateFeeAmount { get; set; }
 
-    /// <summary>อัตราค่าน้ำต่อหน่วย ใช้คำนวณค่าน้ำในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    /// <summary>ອັດຕາຄ່ານ້ຳຕໍ່ຫົວໜ່ວຍ ໃຊ້ເພື່ອຄິດໄລ່ຄ່ານ້ຳໃນໃບແຈ້ງໜີ້ຈາກຄ່າແມັດ</summary>
     public decimal WaterRatePerUnit { get; set; }
 
-    /// <summary>อัตราค่าไฟต่อหน่วย ใช้คำนวณค่าไฟในใบแจ้งหนี้จากค่ามิเตอร์</summary>
+    /// <summary>ອັດຕາຄ່າໄຟຟ້າຕໍ່ຫົວໜ່ວຍໃຊ້ເພື່ອຄິດໄລ່ຄ່າໄຟຟ້າໃນໃບແຈ້ງໜີ້ຈາກຄ່າແມັດ</summary>
     public decimal ElectricityRatePerUnit { get; set; }
 }

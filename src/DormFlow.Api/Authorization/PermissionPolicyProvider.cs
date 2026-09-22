@@ -5,18 +5,18 @@ using Microsoft.Extensions.Options;
 namespace DormFlow.Api.Authorization;
 
 /// <summary>
-/// สร้าง Authorization Policy ให้กับรหัสสิทธิ์แบบอัตโนมัติ
+/// ສ້າງ Authorization Policy ກັບລະຫັດການອະນຸຍາດອັດຕະໂນມັດ
 /// </summary>
 /// <remarks>
-/// ทำให้ไม่ต้องลงทะเบียน Policy ล่วงหน้าทีละสิทธิ์ในโปรแกรมเริ่มต้น
-/// เมื่อเพิ่มสิทธิ์ใหม่ใน PermissionCodes ก็ใช้ [RequirePermission("...")] ได้ทันที
+/// ເຮັດໃຫ້ມັນບໍ່ຈໍາເປັນຕ້ອງລົງທະບຽນ Policy ລ່ວງໜ້າການອະນຸຍາດຄັ້ງດຽວໃນໂປຣແກຣມເລີ່ມຕົ້ນ
+/// ເມື່ອເພີ່ມການອະນຸຍາດໃຝ່ໃນ PermissionCodes ຂ້ອຍໃຊ້ມັນ [RequirePermission("...")] ທັນທີ
 /// </remarks>
 public sealed class PermissionPolicyProvider : IAuthorizationPolicyProvider
 {
     private readonly DefaultAuthorizationPolicyProvider _fallbackProvider;
 
-    /// <summary>สร้าง Provider</summary>
-    /// <param name="options">ค่าตั้งของ Authorization</param>
+    /// <summary>ສ້າງ Provider</summary>
+    /// <param name="options">ການຕັ້ງຄ່າ Authorization</param>
     public PermissionPolicyProvider(IOptions<AuthorizationOptions> options)
     {
         _fallbackProvider = new DefaultAuthorizationPolicyProvider(options);

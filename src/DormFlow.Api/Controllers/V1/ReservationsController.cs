@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการการจองห้องพัก</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງການຈອງຫ້ອງ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/reservations")]
@@ -17,7 +17,7 @@ public sealed class ReservationsController(IReservationService reservationServic
 {
     private readonly IReservationService _reservationService = reservationService;
 
-    /// <summary>ดึงรายการจองแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ການຈອງແບບ paginated</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Reservations.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ReservationResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class ReservationsController(IReservationService reservationServic
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลการจองหนึ่งรายการ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນການຈອງຜຶ່ງ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Reservations.View)]
     [ProducesResponseType(typeof(ApiResponse<ReservationResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class ReservationsController(IReservationService reservationServic
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>จองห้องพัก</summary>
+    /// <summary>ຈອງຫ້ອງ</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Reservations.Create)]
     [ProducesResponseType(typeof(ApiResponse<ReservationResponse>), StatusCodes.Status200OK)]
@@ -57,7 +57,7 @@ public sealed class ReservationsController(IReservationService reservationServic
         return Ok(ApiResponse.Ok(result, ApiMessages.Created));
     }
 
-    /// <summary>ยกเลิกการจอง</summary>
+    /// <summary>ຍົກເລີກການຈອງ</summary>
     [HttpPost("{id:guid}/cancel")]
     [RequirePermission(PermissionCodes.Reservations.Cancel)]
     [ProducesResponseType(typeof(ApiResponse<ReservationResponse>), StatusCodes.Status200OK)]

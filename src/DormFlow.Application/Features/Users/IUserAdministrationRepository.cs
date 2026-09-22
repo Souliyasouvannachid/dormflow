@@ -5,13 +5,13 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Users;
 
-/// <summary>ตัวกรองสำหรับดึงรายการผู้ใช้แบบแบ่งหน้า</summary>
-/// <param name="OrganizationId">กรองเฉพาะผู้ใช้ขององค์กรที่ระบุ เป็น null เมื่อไม่จำกัด</param>
-/// <param name="DormitoryId">กรองเฉพาะผู้ใช้ที่ได้รับมอบหมายให้ดูแลหอพักที่ระบุ เป็น null เมื่อไม่จำกัด</param>
-/// <param name="Status">กรองเฉพาะผู้ใช้ที่มีสถานะตรงกัน เป็น null เมื่อไม่จำกัด</param>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຜູ້ໃຊ້</summary>
+/// <param name="OrganizationId">ການກັ່ນຕອງພຽງແຕ່ຜູ້ໃຊ້ຂອງອົງກອນທີ່ລະບຸໄວ້ເປັນ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
+/// <param name="DormitoryId">ການກັ່ນຕອງພຽງແຕ່ຜູ້ໃຊ້ມອບຝາຍໃຫ້ຫໍພັກທີ່ລະບຸໄວ້ເປັນ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
+/// <param name="Status">ກັ່ນຕອງສະເພາະຜູ້ໃຊ້ທີ່ສະຖານະກົງກັບ null ໃນເວລາທີ່ບໍ່ຈໍາກັດ</param>
 /// <param name="RestrictToDormitoryIds">
-/// จำกัดผลลัพธ์ให้เห็นเฉพาะผู้ใช้ที่ได้รับมอบหมายให้ดูแลหอพักในรายการนี้อย่างน้อยหนึ่งแห่ง
-/// เป็น null เมื่อผู้เรียกเห็นได้ทุกผู้ใช้ในองค์กรของตน (SuperAdmin และ Owner)
+/// ຈໍາກັດຜົນໄດ້ຮັບກັບຜູ້ໃຊ້ທີ່ຖືກມອບຝາຍໃຫ້ຢ່າງຜ້ອຍຜຶ່ງຫໍພັກໃນບັນຊີລາຍຊື່ນີ້
+/// ແມ່ນ null ເມື່ອຜູ້ໂທສາມາດເຫັນໄດ້ໂດຍຜູ້ໃຊ້ທຸກຄົນໃນອົງກອນຂອງພວກເຂົາ (SuperAdmin ແລະ Owner)
 /// </param>
 public sealed record UserListFilter(
     Guid? OrganizationId,
@@ -19,42 +19,42 @@ public sealed record UserListFilter(
     UserStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>ผลลัพธ์ของการสร้างบัญชีผู้ใช้ใหม่</summary>
-/// <param name="Succeeded">สำเร็จหรือไม่</param>
-/// <param name="UserId">รหัสผู้ใช้ที่สร้างสำเร็จ มีค่าเฉพาะเมื่อสำเร็จ</param>
-/// <param name="Errors">ข้อความอธิบายสาเหตุที่ไม่สำเร็จ</param>
+/// <summary>ຜົນໄດ້ຮັບຂອງການສ້າງບັນຊີຜູ້ໃຊ້ໃຝ່</summary>
+/// <param name="Succeeded">ປະສົບຜົນສໍາເລັດຫຼືບໍ່?</param>
+/// <param name="UserId">ສ້າງ ID ຜູ້ໃຊ້ສົບຜົນສໍາເລັດມັນມີມູນຄ່າພຽງແຕ່ໃນເວລາທີ່ສໍາເລັດ</param>
+/// <param name="Errors">ຂໍ້ຄວາມອະທິບາຍເຫດຜົນສໍາລັບຄວາມລົ້ມເຫຼວ</param>
 public sealed record UserCreationResult(bool Succeeded, Guid? UserId, IReadOnlyList<string> Errors)
 {
-    /// <summary>สร้างผลลัพธ์ที่สำเร็จ</summary>
+    /// <summary>ສ້າງຜົນສໍາເລັດ</summary>
     public static UserCreationResult Success(Guid userId) => new(true, userId, []);
 
-    /// <summary>สร้างผลลัพธ์ที่ไม่สำเร็จ</summary>
+    /// <summary>ຜະລິດຜົນໄດ້ຮັບທີ່ບໍ່ສໍາເລັດ</summary>
     public static UserCreationResult Failed(params string[] errors) => new(false, null, errors);
 }
 
 /// <summary>
-/// เข้าถึงและจัดการบัญชีผู้ใช้ในฐานข้อมูล สำหรับหน้าจอดูแลผู้ใช้งานของผู้ดูแลระบบ
+/// ເຂົ້າເຖິງ ແລະຈັດການບັນຊີຜູ້ໃຊ້ໃນຖານຂໍ້ມູນ. ສໍາລັບຜ້າຈໍການດູແລຜູ້ໃຊ້ຂອງຜູ້ບໍລິຫານ
 /// </summary>
 /// <remarks>
-/// แยกจาก <see cref="Common.Abstractions.IUserAccountService"/> เพราะเป็นคนละความรับผิดชอบ
-/// ตัวนั้นดูแลเรื่องยืนยันตัวตนและรหัสผ่านของผู้ใช้เจ้าของบัญชีเอง
-/// ส่วนตัวนี้ดูแลเรื่องการบริหารจัดการบัญชีผู้ใช้อื่นโดยผู้ดูแลระบบ
+/// ແຍກອອກຈາກ <see cref="Common.Abstractions.IUserAccountService"/> ເນື່ອງຈາກວ່າມັນເປັນຄວາມຮັບຜິດຊອບຂອງແຕ່ລະຄົນ
+/// ບຸກຄົນນັ້ນເບິ່ງແຍງການກວດສອບຕົວຕົນແລະລະຫັດຜ່ານຂອງຜູ້ໃຊ້ບັນຊີ
+/// ພາກນີ້ເບິ່ງແຍງການຈັດການບັນຊີຜູ້ໃຊ້ອື່ນໂດຍຜູ້ເບິ່ງແຍງລະບົບ
 /// </remarks>
 public interface IUserAdministrationRepository
 {
-    /// <summary>ตรวจว่ามีบัญชีที่ใช้อีเมลนี้อยู่แล้วหรือไม่</summary>
+    /// <summary>ກວດເບິ່ງວ່າມີບັນຊີທີ່ມີທີ່ຢູ່ອີເມວນີ້ຢູ່ກ່ອນແລ້ວ</summary>
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
 
-    /// <summary>อ่านข้อมูลผู้ใช้จากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຜູ້ໃຊ້ຈາກລະຫັດອ້າງອີງ</summary>
     Task<UserSecurityProfile?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการผู้ใช้แบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ຜູ້ໃຊ້ທີ່ມີ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<UserSecurityProfile>> GetPagedAsync(
         UserListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>สร้างบัญชีผู้ใช้ใหม่</summary>
+    /// <summary>ສ້າງບັນຊີໃຝ່</summary>
     Task<UserCreationResult> CreateAsync(
         Guid? organizationId,
         string email,
@@ -64,7 +64,7 @@ public interface IUserAdministrationRepository
         string? phone,
         CancellationToken cancellationToken = default);
 
-    /// <summary>แก้ไขข้อมูลโปรไฟล์ของผู้ใช้ คืนค่า false เมื่อไม่พบผู้ใช้</summary>
+    /// <summary>ແກ້ໄຂຂໍ້ມູນໂປຣໄຟລ໌ຜູ້ໃຊ້ Restore false ເມື່ອຜູ້ໃຊ້ບໍ່ພົບ</summary>
     Task<bool> UpdateProfileAsync(
         Guid userId,
         string firstName,
@@ -73,15 +73,15 @@ public interface IUserAdministrationRepository
         string? profileImage,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เปลี่ยนสถานะบัญชีผู้ใช้ คืนค่า false เมื่อไม่พบผู้ใช้</summary>
+    /// <summary>ປ່ຽນສະຖານະບັນຊີຜູ້ໃຊ້ຄືນ false ເມື່ອຜູ້ໃຊ້ບໍ່ພົບ</summary>
     Task<bool> ChangeStatusAsync(
         Guid userId,
         UserStatus status,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// กำหนดบทบาทให้ผู้ใช้ แทนที่บทบาทเดิมทั้งหมดด้วยรายการที่ระบุ
-    /// คืนค่า false เมื่อไม่พบผู้ใช้ หรือพบชื่อบทบาทที่ไม่มีอยู่จริงในระบบ
+    /// ມອບໝາຍໜ້າທີ່ໃຫ້ຜູ້ໃຊ້ແທນໜ້າທີ່ເດີມທັງໝົດດ້ວຍໜ້າທີ່ທີ່ລະບຸໄວ້
+    /// ຟື້ນຟູ false ເມື່ອຜູ້ໃຊ້ບໍ່ພົບ ຫຼືພົບຊື່ບົດບາດທີ່ບໍ່ມີຢູ່ໃນລະບົບ
     /// </summary>
     Task<bool> SetRolesAsync(
         Guid userId,
@@ -89,8 +89,8 @@ public interface IUserAdministrationRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// มอบหมายให้ผู้ใช้ดูแลหอพักหนึ่งแห่ง คืนค่า false เมื่อไม่พบผู้ใช้หรือไม่พบหอพัก
-    /// เมื่อตั้งเป็นหอพักหลัก หอพักหลักเดิมของผู้ใช้รายนี้ (ถ้ามี) จะถูกยกเลิกสถานะหอพักหลักให้อัตโนมัติ
+    /// ມອບໃຫ້ຜູ້ໃຊ້ຢູ່ໃນຫໍພັກຜຶ່ງ. ຟື້ນຟູ false ເມື່ອຜູ້ໃຊ້ບໍ່ພົບຫຼືຫໍພັກບໍ່ພົບ
+    /// ໃນເວລາທີ່ມັນໄດ້ຮັບການສ້າງຕັ້ງເປັນຫໍພັກຕົ້ນຕໍຂອງຜູ້ໃຊ້ນີ້ຫໍພັກຕົ້ນສະບັບ (ຖ້າມີ) ສະຖານະຫໍພັກຫຼັກຈະຖືກຍົກເລີກໂດຍອັດຕະໂນມັດ
     /// </summary>
     Task<bool> AssignDormitoryAsync(
         Guid userId,
@@ -100,15 +100,15 @@ public interface IUserAdministrationRepository
         DateTimeOffset assignedAt,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ถอนการมอบหมายหอพักออกจากผู้ใช้ คืนค่า false เมื่อไม่พบการมอบหมายนั้น</summary>
+    /// <summary>ເອົາການມອບຝາຍຫໍພັກອອກຈາກຜູ້ໃຊ້ Restore false ເມື່ອການມອບໝາຍນັ້ນບໍ່ພົບ</summary>
     Task<bool> RemoveDormitoryAsync(
         Guid userId,
         Guid dormitoryId,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ตรวจว่าผู้ใช้ที่ระบุสังกัดองค์กรนี้ มีบทบาทที่กำหนด และได้รับมอบหมายให้ดูแลหอพักที่ระบุหรือไม่
-    /// ใช้ตรวจสอบก่อนมอบหมายงาน เช่น การมอบหมายช่างซ่อมบำรุงให้ดูแลงานซ่อมในหอพักหนึ่ง ๆ
+    /// ກວດສອບວ່າຜູ້ໃຊ້ທີ່ລະບຸນັ້ນເປັນຂອງອົງກອນນີ້. ມີບົດບາດທີ່ກໍານົດໄວ້ແລະໄດ້ຮັບການມອບຝາຍໃຫ້ເບິ່ງແຍງຫໍພັກທີ່ກໍານົດໄວ້ຫຼືບໍ່
+    /// ໃຊ້ໃນການກວດສອບກ່ອນການມອບໝາຍວຽກເຊັ່ນ: ມອບໝາຍໃຫ້ຊ່າງສ້ອມແປງເພື່ອເບິ່ງແຍງວຽກງານສ້ອມແປງໃນຫໍພັກໂດຍສະເພາະ
     /// </summary>
     Task<bool> HasRoleForDormitoryAsync(
         Guid userId,

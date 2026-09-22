@@ -1,17 +1,17 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของเงินมัดจำ</summary>
+/// <summary>ສະຖານະຂອງເງິນຝາກ</summary>
 public enum DepositStatus
 {
-    /// <summary>รับเงินมัดจำไว้แล้ว ยังไม่มีการคืน</summary>
+    /// <summary>ເງິນຝາກທີ່ໄດ້ຮັບຍັງບໍ່ມີການຄືນເງິນ</summary>
     Held = 1,
 
-    /// <summary>คืนเงินมัดจำบางส่วนแล้ว</summary>
+    /// <summary>ບາງສ່ວນຂອງເງິນຝາກໄດ້ຖືກສົ່ງຄືນ</summary>
     PartiallyRefunded = 2,
 
-    /// <summary>คืนเงินมัดจำครบแล้ว</summary>
+    /// <summary>ເງິນຝາກໄດ້ຖືກສົ່ງຄືນຢ່າງເຕັມສ່ວນ</summary>
     Refunded = 3,
 
-    /// <summary>ริบเงินมัดจำทั้งหมด ไม่มีการคืน</summary>
+    /// <summary>ເງິນຝາກທັງໝົດຖືກສູນເສຍ, ບໍ່ມີການຄືນເງິນ</summary>
     Forfeited = 4,
 }

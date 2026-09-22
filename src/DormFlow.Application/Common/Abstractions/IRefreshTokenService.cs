@@ -4,16 +4,16 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Application.Common.Abstractions;
 
 /// <summary>
-/// จัดการวงจรชีวิตของ Refresh Token ทั้งการออก การตรวจสอบ การหมุน และการเพิกถอน
+/// ການຄຸ້ມຄອງວົງຈອນຊີວິດຂອງ Refresh Token ລວມທັງການອອກ, ກວດກາ, ໝູນວຽນ ແລະ ຖອນຄືນ
 /// </summary>
 public interface IRefreshTokenService
 {
-    /// <summary>ออก Refresh Token ใบใหม่ให้ผู้ใช้</summary>
-    /// <param name="userId">เจ้าของโทเคน</param>
-    /// <param name="jwtId">ค่า jti ของ Access Token ที่ออกคู่กัน</param>
-    /// <param name="ipAddress">หมายเลข IP ต้นทาง</param>
-    /// <param name="userAgent">User Agent ของคำขอ</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ອອກ Refresh Token ໃບຮັບຮອງໃໝ່ສຳລັບຜູ້ໃຊ້</summary>
+    /// <param name="userId">ເຈົ້າຂອງໂທເຄັນ</param>
+    /// <param name="jwtId">ມູນຄ່າ jti ຂອງ Access Token ທີ່ອອກມາຮ່ວມກັນ</param>
+    /// <param name="ipAddress">ເລກ IP ຕົ້ນກໍາເນີດ</param>
+    /// <param name="userAgent">User Agent ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<IssuedRefreshToken> IssueAsync(
         Guid userId,
         string jwtId,
@@ -22,27 +22,27 @@ public interface IRefreshTokenService
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ตรวจสอบว่าโทเคนที่ผู้เรียกส่งมายังใช้ต่ออายุได้หรือไม่
+    /// ກວດເບິ່ງວ່າໂທເຄັນທີ່ສົ່ງໂດຍຜູ້ໂທສາມາດຖືກນໍາໃຊ້ສໍາລັບການຕໍ່ອາຍຸ
     /// </summary>
     /// <remarks>
-    /// เมื่อพบว่าโทเคนถูกหมุนไปแล้วแต่ถูกนำกลับมาใช้ซ้ำ
-    /// เมธอดนี้จะเพิกถอนโทเคนที่ยังใช้งานได้ทั้งหมดของผู้ใช้รายนั้นทันทีก่อนคืนผลลัพธ์
-    /// เพราะแปลว่าโทเคนหลุดไปอยู่ในมือผู้อื่นแล้ว
+    /// ເມື່ອມັນໄດ້ຖືກຄົ້ນພົບວ່າ tokens ໄດ້ຖືກ spun ແລ້ວແຕ່ໄດ້ຖືກນໍາມາໃຊ້ຄືນ
+    /// ວິທີການນີ້ທັນທີຖອນ tokens ທີ່ໃຊ້ວຽກທັງຝົດສໍາລັບຜູ້ໃຊ້ນັ້ນກ່ອນທີ່ຈະກັບຄືນຜົນໄດ້ຮັບ
+    /// ເນື່ອງຈາກວ່າມັນຝາຍຄວາມວ່າ token ໄດ້ຕົກຢູ່ໃນມືຂອງຄົນອື່ນ
     /// </remarks>
-    /// <param name="rawToken">ค่าโทเคนที่ผู้เรียกส่งมา</param>
-    /// <param name="ipAddress">หมายเลข IP ต้นทาง</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <param name="rawToken">ມູນຄ່າໂທເຄັນທີ່ສົ່ງໂດຍຜູ້ໂທ</param>
+    /// <param name="ipAddress">ເລກ IP ຕົ້ນກໍາເນີດ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<RefreshTokenValidationResult> ValidateAsync(
         string rawToken,
         string? ipAddress,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิกถอนโทเคนใบเดิมแล้วออกใบใหม่แทนในธุรกรรมเดียวกัน</summary>
-    /// <param name="currentTokenId">รหัสของโทเคนใบเดิม</param>
-    /// <param name="jwtId">ค่า jti ของ Access Token ใบใหม่</param>
-    /// <param name="ipAddress">หมายเลข IP ต้นทาง</param>
-    /// <param name="userAgent">User Agent ของคำขอ</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ຖອດຖອນໂທເຄັນເກົ່າ ແລະອອກອັນໃໝ່ໃນທຸລະກຳດຽວກັນ</summary>
+    /// <param name="currentTokenId">ລະຫັດຂອງ token ຕົ້ນສະບັບ</param>
+    /// <param name="jwtId">ມູນຄ່າ jti ຂອງ Access Token ໃບໃໝ່</param>
+    /// <param name="ipAddress">ເລກ IP ຕົ້ນກໍາເນີດ</param>
+    /// <param name="userAgent">User Agent ຂອງຄໍາຮ້ອງສະຝັກ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<IssuedRefreshToken> RotateAsync(
         Guid currentTokenId,
         string jwtId,
@@ -50,24 +50,24 @@ public interface IRefreshTokenService
         string? userAgent,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิกถอนโทเคนหนึ่งใบ</summary>
-    /// <param name="rawToken">ค่าโทเคนที่ต้องการเพิกถอน</param>
-    /// <param name="reason">สาเหตุที่เพิกถอน</param>
-    /// <param name="ipAddress">หมายเลข IP ต้นทาง</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
-    /// <returns>true เมื่อพบและเพิกถอนสำเร็จ</returns>
+    /// <summary>ຍົກເລີກໜຶ່ງໂທເຄັນ</summary>
+    /// <param name="rawToken">ຄ່າຂອງໂທເຄັນທີ່ຈະຖືກຖອນຄືນ</param>
+    /// <param name="reason">ເຫດຜົນສໍາລັບການຖອນ</param>
+    /// <param name="ipAddress">ເລກ IP ຕົ້ນກໍາເນີດ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
+    /// <returns>true ເມື່ອພົບເຫັນແລະໄດ້ຍົກເລີກສໍາເລັດ</returns>
     Task<bool> RevokeAsync(
         string rawToken,
         RefreshTokenRevocationReason reason,
         string? ipAddress,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิกถอนโทเคนที่ยังใช้งานได้ทั้งหมดของผู้ใช้</summary>
-    /// <param name="userId">เจ้าของโทเคน</param>
-    /// <param name="reason">สาเหตุที่เพิกถอน</param>
-    /// <param name="ipAddress">หมายเลข IP ต้นทาง</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
-    /// <returns>จำนวนโทเคนที่ถูกเพิกถอน</returns>
+    /// <summary>ຖອນ tokens ຜູ້ໃຊ້ທີ່ໃຊ້ວຽກທັງຝົດ</summary>
+    /// <param name="userId">ເຈົ້າຂອງໂທເຄັນ</param>
+    /// <param name="reason">ເຫດຜົນສໍາລັບການຖອນ</param>
+    /// <param name="ipAddress">ເລກ IP ຕົ້ນກໍາເນີດ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
+    /// <returns>ຈຳນວນໂທເຄັນຖືກຖອນຄືນ</returns>
     Task<int> RevokeAllForUserAsync(
         Guid userId,
         RefreshTokenRevocationReason reason,

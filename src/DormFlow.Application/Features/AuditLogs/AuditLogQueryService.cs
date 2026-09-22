@@ -8,7 +8,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.AuditLogs;
 
-/// <summary>Use Case ทั้งหมดของโมดูล Audit Log</summary>
+/// <summary>Use Case ໂມດູນທັງໝົດ Audit Log</summary>
 public sealed class AuditLogQueryService(
     IAuditLogRepository repository,
     ICurrentUser currentUser) : IAuditLogQueryService
@@ -27,7 +27,7 @@ public sealed class AuditLogQueryService(
 
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "createdAt");
 
-        // เหตุการณ์ล่าสุดควรอยู่บนสุดเสมอเมื่อผู้เรียกไม่ได้ระบุการเรียงลำดับมาเอง
+        // ເຫດການຫຼ້າສຸດຄວນຈະຢູ່ເທິງສຸດສະເໝີ ເມື່ອຜູ້ໂທບໍ່ໄດ້ລະບຸການຈັດຮຽງ
         if (string.IsNullOrWhiteSpace(request.SortBy))
         {
             query = query with { SortDirection = SortDirection.Desc };

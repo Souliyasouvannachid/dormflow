@@ -1,32 +1,32 @@
 namespace DormFlow.Contracts.Reports;
 
-/// <summary>ใบแจ้งหนี้ค้างชำระหนึ่งฉบับ</summary>
+/// <summary>ໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງອັນໜຶ່ງ</summary>
 public class OutstandingInvoiceItemResponse
 {
-    /// <summary>รหัสอ้างอิงของใบแจ้งหนี้</summary>
+    /// <summary>ລະຫັດອ້າງອີງໃບເກັບເງິນ</summary>
     public Guid InvoiceId { get; init; }
 
-    /// <summary>เลขที่ใบแจ้งหนี้</summary>
+    /// <summary>ໝາຍເລກໃບເກັບເງິນ</summary>
     public string InvoiceNumber { get; init; } = string.Empty;
 
-    /// <summary>สัญญาเช่าที่เกี่ยวข้อง</summary>
+    /// <summary>ສັນຍາເຊົ່າທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid ContractId { get; init; }
 
-    /// <summary>หอพักที่เกี่ยวข้อง</summary>
+    /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; init; }
 
-    /// <summary>วันที่ครบกำหนดชำระ</summary>
+    /// <summary>ວັນທີການຊໍາລະເງິນ</summary>
     public DateOnly DueDate { get; init; }
 
-    /// <summary>ยอดรวมทั้งบิล</summary>
+    /// <summary>ລວມທັງໃບບິນຄ່າ</summary>
     public decimal TotalAmount { get; init; }
 
-    /// <summary>ยอดที่ชำระแล้ว</summary>
+    /// <summary>ຈ່າຍທັງໝົດ</summary>
     public decimal PaidAmount { get; init; }
 
-    /// <summary>ยอดคงเหลือที่ยังต้องชำระ</summary>
+    /// <summary>ຍອດຄົງເຫຼືອທີ່ຕ້ອງຈ່າຍ</summary>
     public decimal RemainingBalance { get; init; }
 
-    /// <summary>จำนวนวันที่เกินกำหนดชำระแล้ว เป็น 0 เมื่อยังไม่ถึงกำหนด</summary>
+    /// <summary>ຈໍານວນມື້ທີ່ຜ່ານໄປສໍາລັບການຈ່າຍເງິນແມ່ນ 0 ໃນເວລາທີ່ມັນບໍ່ທັນກໍານົດ</summary>
     public int DaysOverdue { get; init; }
 }

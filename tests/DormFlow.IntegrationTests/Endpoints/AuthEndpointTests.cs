@@ -11,7 +11,7 @@ using Xunit;
 namespace DormFlow.IntegrationTests.Endpoints;
 
 /// <summary>
-/// ทดสอบเส้นทางการยืนยันตัวตนทั้งหมดผ่าน HTTP จริงบน PostgreSQL ใน Testcontainers
+/// ທົດສອບເສັ້ນທາງການຮັບຮອງທັງໝົດຜ່ານ HTTP ແທ້ຈິງແລ້ວ PostgreSQL ໃນ Testcontainers
 /// </summary>
 [Collection(ApiTestFixtures.Name)]
 public class AuthEndpointTests(DormFlowApiFactory factory)
@@ -19,7 +19,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task Login_ด้วยข้อมูลที่ถูกต้อง_ต้องได้รับ_Token_และข้อมูลผู้ใช้()
+    public async Task Login_ດ້ວຍຂໍ້ມູນທີ່ຖືກຕ້ອງ_ຕ້ອງໄດ້ຮັບ_Token_ແລະຂໍ້ມູນຜູ້ໃຊ້()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory, DormFlowRoles.Staff);
@@ -43,7 +43,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Login_ด้วยรหัสผ่านผิด_ต้องได้_401()
+    public async Task Login_ດ້ວຍລະຫັດຜ່ານຜິດ_ຕ້ອງໄດ້ຮັບ_401()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
@@ -57,7 +57,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Login_ด้วยอีเมลที่ไม่มีอยู่จริง_ต้องได้_401_ข้อความเดียวกับรหัสผ่านผิด()
+    public async Task Login_ດ້ວຍທີ່ຢູ່ອີເມວທີ່ບໍ່ມີຢູ່_ຕ້ອງໄດ້ຮັບ_401_ຂໍ້ຄວາມດຽວກັນກັບລະຫັດຜ່ານຜິດ()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -69,11 +69,11 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
         ApiResponse? body = await response.Content.ReadFromJsonAsync<ApiResponse>(TestContext.Current.CancellationToken);
-        body!.Message.Should().Be("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        body!.Message.Should().Be("ອີເມວຫຼືລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ");
     }
 
     [Fact]
-    public async Task Login_ข้อมูลไม่ผ่าน_Validation_ต้องได้_400()
+    public async Task Login_ຂໍ້ມູນບໍ່ໄດ້ຜ່ານ_Validation_ຕ້ອງໄດ້ຮັບ_400()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -86,7 +86,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Me_เมื่อไม่ได้แนบ_Token_ต้องได้_401()
+    public async Task Me_ເມື່ອບໍ່ຕິດ_Token_ຕ້ອງໄດ້ຮັບ_401()
     {
         using HttpClient client = _factory.CreateClient();
 
@@ -98,7 +98,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Me_เมื่อแนบ_Token_ที่ถูกต้อง_ต้องได้ข้อมูลผู้ใช้ปัจจุบัน()
+    public async Task Me_ເມື່ອຕິດ_Token_ຖືກຕ້ອງ_ຕ້ອງໄດ້ຮັບຂໍ້ມູນຜູ້ໃຊ້ປະຈຸບັນ()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
@@ -119,7 +119,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task RefreshToken_ด้วยโทเคนที่ถูกต้อง_ต้องได้รับชุดโทเคนใหม่()
+    public async Task RefreshToken_ກັບtokenທີ່ຖືກຕ້ອງ_ທ່ານຕ້ອງໄດ້ຮັບຊຸດໂທເຄັນໃໝ່()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
@@ -140,13 +140,13 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task RefreshToken_ใบเดิมหลังถูกหมุนไปแล้ว_ต้องใช้ซ้ำไม่ได้()
+    public async Task RefreshToken_ບັດຕົ້ນສະບັບໄດ້ຖືກຝຸນແລ້ວ_ຕ້ອງບໍ່ໄດ້ນໍາໃຊ້ຄືນ()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
         AuthTokenResponse original = await LoginAsync(client, email);
 
-        // หมุนโทเคนหนึ่งครั้งเพื่อให้ใบเดิมกลายเป็นใบที่ถูกเพิกถอนแล้ว
+        // ໝຸນໂທເຄັນຄັ້ງດຽວເພື່ອໃຫ້ເຄື່ອງເດີມຖືກຖອນຄືນ
         await client.PostAsJsonAsync(
             new Uri("/api/v1/auth/refresh-token", UriKind.Relative),
             new RefreshTokenRequest { RefreshToken = original.RefreshToken },
@@ -161,7 +161,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task Logout_ต้องเพิกถอนโทเคนจนใช้ต่ออายุไม่ได้อีก()
+    public async Task Logout_tokenຕ້ອງໄດ້ຮັບການຖອນຄືນຈົນກ່ວາມັນບໍ່ສາມາດຖືກນໍາໃຊ້ສໍາລັບການຕໍ່ອາຍຸໄດ້()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
@@ -185,7 +185,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ChangePassword_สำเร็จแล้ว_Refresh_Token_เดิมต้องใช้ไม่ได้อีกต่อไป()
+    public async Task ChangePassword_ມັນຈົບແລ້ວ_Refresh_Token_ອະດີດບໍ່ສາມາດໃຊ້ໄດ້ອີກຕໍ່ໄປ()
     {
         using HttpClient client = _factory.CreateClient();
         string email = await TestUserFactory.CreateAsync(_factory);
@@ -214,7 +214,7 @@ public class AuthEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task ForgotPassword_สำหรับอีเมลที่ไม่มีอยู่จริง_ต้องตอบสำเร็จเสมอ()
+    public async Task ForgotPassword_ສໍາລັບທີ່ຢູ່ອີເມວທີ່ບໍ່ມີຢູ່_ຕ້ອງຕອບຢ່າງສຳເລັດຜົນສະເໝີ()
     {
         using HttpClient client = _factory.CreateClient();
 

@@ -3,63 +3,63 @@ using FluentValidation;
 
 namespace DormFlow.Application.Features.RoomTypes;
 
-/// <summary>ตรวจสอบคำขอสร้างประเภทห้องใหม่</summary>
+/// <summary>ທົບທວນຄືນການຮ້ອງຂໍເພື່ອສ້າງປະເພດຫ້ອງໃຝ່</summary>
 public sealed class CreateRoomTypeRequestValidator : AbstractValidator<CreateRoomTypeRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public CreateRoomTypeRequestValidator()
     {
         RuleFor(request => request.DormitoryId)
-            .NotEmpty().WithMessage("กรุณาระบุหอพักที่ประเภทห้องนี้สังกัด");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຫໍພັກທີ່ປະເພດຫ້ອງນີ້ສັງກັດ");
 
         RuleFor(request => request.Code)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสประเภทห้อง")
-            .MaximumLength(50).WithMessage("รหัสประเภทห้องต้องยาวไม่เกิน 50 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດປະເພດຫ້ອງ")
+            .MaximumLength(50).WithMessage("ລະຫັດປະເພດຫ້ອງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อประเภทห้อง")
-            .MaximumLength(200).WithMessage("ชื่อประเภทห้องต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ປະເພດຫ້ອງ")
+            .MaximumLength(200).WithMessage("ຊື່ປະເພດຫ້ອງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.MonthlyRent)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าเช่ารายเดือนต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າເຊົ່າລາຍເດືອນຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.DailyRent)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าเช่ารายวันต้องไม่ติดลบ")
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າເຊົ່າລາຍວັນຕ້ອງບໍ່ຕິດລົບ")
             .When(request => request.DailyRent.HasValue);
 
         RuleFor(request => request.DepositAmount)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่ามัดจำต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າມັດຈຳຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.MaximumOccupants)
-            .GreaterThan(0).WithMessage("จำนวนผู้เข้าพักสูงสุดต้องมากกว่า 0");
+            .GreaterThan(0).WithMessage("ຈຳນວນຜູ້ເຂົ້າພັກສູງສຸດຕ້ອງຫຼາຍກວ່າ 0");
     }
 }
 
-/// <summary>ตรวจสอบคำขอแก้ไขข้อมูลประเภทห้อง</summary>
+/// <summary>ກວດເບິ່ງຄຳຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນປະເພດຫ້ອງ</summary>
 public sealed class UpdateRoomTypeRequestValidator : AbstractValidator<UpdateRoomTypeRequest>
 {
-    /// <summary>สร้างตัวตรวจสอบ</summary>
+    /// <summary>ສ້າງຕົວກວດສອບ</summary>
     public UpdateRoomTypeRequestValidator()
     {
         RuleFor(request => request.Code)
-            .NotEmpty().WithMessage("กรุณาระบุรหัสประเภทห้อง")
-            .MaximumLength(50).WithMessage("รหัสประเภทห้องต้องยาวไม่เกิน 50 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸລະຫັດປະເພດຫ້ອງ")
+            .MaximumLength(50).WithMessage("ລະຫັດປະເພດຫ້ອງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 50 ໂຕອັກສອນ");
 
         RuleFor(request => request.Name)
-            .NotEmpty().WithMessage("กรุณาระบุชื่อประเภทห้อง")
-            .MaximumLength(200).WithMessage("ชื่อประเภทห้องต้องยาวไม่เกิน 200 ตัวอักษร");
+            .NotEmpty().WithMessage("ກະລຸນາລະບຸຊື່ປະເພດຫ້ອງ")
+            .MaximumLength(200).WithMessage("ຊື່ປະເພດຫ້ອງຕ້ອງມີຄວາມຍາວບໍ່ເກີນ 200 ໂຕອັກສອນ");
 
         RuleFor(request => request.MonthlyRent)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าเช่ารายเดือนต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າເຊົ່າລາຍເດືອນຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.DailyRent)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่าเช่ารายวันต้องไม่ติดลบ")
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າເຊົ່າລາຍວັນຕ້ອງບໍ່ຕິດລົບ")
             .When(request => request.DailyRent.HasValue);
 
         RuleFor(request => request.DepositAmount)
-            .GreaterThanOrEqualTo(0).WithMessage("ค่ามัดจำต้องไม่ติดลบ");
+            .GreaterThanOrEqualTo(0).WithMessage("ຄ່າມັດຈຳຕ້ອງບໍ່ຕິດລົບ");
 
         RuleFor(request => request.MaximumOccupants)
-            .GreaterThan(0).WithMessage("จำนวนผู้เข้าพักสูงสุดต้องมากกว่า 0");
+            .GreaterThan(0).WithMessage("ຈຳນວນຜູ້ເຂົ້າພັກສູງສຸດຕ້ອງຫຼາຍກວ່າ 0");
     }
 }

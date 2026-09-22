@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางผู้มาเยือน</summary>
+/// <summary>ຕັ້ງໂຕະແຂກ</summary>
 public sealed class VisitorConfiguration : IEntityTypeConfiguration<Visitor>
 {
     /// <inheritdoc />

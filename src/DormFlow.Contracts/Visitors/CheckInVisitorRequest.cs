@@ -1,26 +1,26 @@
 namespace DormFlow.Contracts.Visitors;
 
-/// <summary>คำขอบันทึกการเข้าของผู้มาเยือน</summary>
+/// <summary>ຄຳຮ້ອງຂໍບັນທຶກຜູ້ເຂົ້າຊົມ</summary>
 public class CheckInVisitorRequest
 {
-    /// <summary>ห้องที่ผู้มาเยือนมาเยี่ยม</summary>
+    /// <summary>ຫ້ອງທີ່ນັກທ່ອງທ່ຽວມາຢ້ຽມຢາມ</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่ผู้มาเยือนมาเยี่ยม เป็น null เมื่อไม่ระบุ</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ເຂົ້າມາຢ້ຽມຢາມແມ່ນ null ເມື່ອບໍ່ໄດ້ລະບຸ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>ชื่อผู้มาเยือน</summary>
+    /// <summary>ຊື່ນັກທ່ອງທ່ຽວ</summary>
     public string VisitorName { get; set; } = string.Empty;
 
-    /// <summary>เบอร์โทรศัพท์ผู้มาเยือน</summary>
+    /// <summary>ເບີໂທລະສັບຂອງຜູ້ເຂົ້າຊົມ</summary>
     public string? VisitorPhone { get; set; }
 
-    /// <summary>เลขบัตรประจำตัวประชาชนหรือหนังสือเดินทางของผู้มาเยือน</summary>
+    /// <summary>ບັດປະຈຳຕົວ ຫຼືໝາຍເລກໜັງສືຜ່ານແດນຂອງຜູ້ເຂົ້າຊົມ</summary>
     public string? IdNumber { get; set; }
 
-    /// <summary>วัตถุประสงค์การมาเยือน</summary>
+    /// <summary>ຈຸດປະສົງຂອງການຢ້ຽມຢາມ</summary>
     public string? Purpose { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

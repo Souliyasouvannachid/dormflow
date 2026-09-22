@@ -1,23 +1,23 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของใบแจ้งหนี้</summary>
+/// <summary>ສະຖານະໃບແຈ້ງໜີ້</summary>
 public enum InvoiceStatus
 {
-    /// <summary>ร่าง ยังไม่ออกให้ผู้เช่า แก้ไข/ยกเลิกได้อิสระ</summary>
+    /// <summary>ຮ່າງດັ່ງກ່າວຍັງບໍ່ທັນໄດ້ອອກໃຫ້ຜູ້ເຊົ່າ. ແກ້ໄຂ/ຍົກເລີກໄດ້ຢ່າງເສລີ</summary>
     Draft = 1,
 
-    /// <summary>ออกให้ผู้เช่าแล้ว รอชำระ</summary>
+    /// <summary>ອອກໃຫ້ຜູ້ເຊົ່າ, ລໍຖ້າການຈ່າຍເງິນ</summary>
     Issued = 2,
 
-    /// <summary>ชำระแล้วบางส่วน</summary>
+    /// <summary>ຈ່າຍເປັນບາງສ່ວນ</summary>
     PartiallyPaid = 3,
 
-    /// <summary>ชำระครบแล้ว</summary>
+    /// <summary>ຈ່າຍເຕັມ</summary>
     Paid = 4,
 
-    /// <summary>เกินกำหนดชำระ</summary>
+    /// <summary>ເກີນກຳນົດ</summary>
     Overdue = 5,
 
-    /// <summary>ยกเลิก</summary>
+    /// <summary>ຍົກເລີກ</summary>
     Cancelled = 6,
 }

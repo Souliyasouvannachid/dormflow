@@ -1,30 +1,30 @@
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// การมอบหมายผู้ใช้ให้ดูแลหอพักหนึ่งแห่ง
+/// ການມອບຝາຍໃຫ້ຜູ້ໃຊ້ຈັດການຜຶ່ງຫໍພັກ
 /// </summary>
 /// <remarks>
-/// ผู้ใช้หนึ่งคนดูแลได้หลายหอพัก และหอพักหนึ่งแห่งมีผู้ดูแลได้หลายคน
-/// ใช้ Id ของตัวเองแทน Composite Key เพื่อให้มีคอลัมน์ assigned_at และ assigned_by ต่อการมอบหมายแต่ละครั้งได้ชัดเจน
-/// ไม่ใช้ Soft Delete เพราะการถอนสิทธิ์ดูแลหอพักควรลบแถวออกจริง
+/// ຜູ້ໃຊ້ຄົນດຽວສາມາດເບິ່ງແຍງຫໍພັກຫຼາຍບ່ອນ. ແລະຜຶ່ງຫໍພັກສາມາດມີຜູ້ບໍລິຫານຈໍານວນຫຼາຍ
+/// ໃຊ້ Id ເປັນຂອງຕົນເອງແທນ Composite Key ມີຖັນ assigned_at ແລະ assigned_by ແຕ່ລະວຽກທີ່ຈະແຈ້ງ
+/// ຢ່າໃຊ້ Soft Delete ເນື່ອງຈາກວ່າການຖອນສິດໃນການດູແລຂອງຫໍພັກໃນຕົວຈິງແລ້ວຄວນຈະລົບແຖວ
 /// </remarks>
 public class UserDormitory
 {
-    /// <summary>รหัสอ้างอิงของการมอบหมาย</summary>
+    /// <summary>ລະຫັດອ້າງອີງການມອບໝາຍ</summary>
     public Guid Id { get; init; } = Guid.CreateVersion7();
 
-    /// <summary>ผู้ใช้ที่ได้รับมอบหมาย</summary>
+    /// <summary>ຜູ້ໃຊ້ທີ່ຖືກມອບຝາຍ</summary>
     public Guid UserId { get; set; }
 
-    /// <summary>หอพักที่ได้รับมอบหมาย</summary>
+    /// <summary>ຫໍພັກທີ່ຖືກມອບໝາຍ</summary>
     public Guid DormitoryId { get; set; }
 
-    /// <summary>เป็นหอพักหลักของผู้ใช้รายนี้หรือไม่</summary>
+    /// <summary>ນີ້ແມ່ນຫໍພັກຫຼັກຂອງຜູ້ໃຊ້ບໍ?</summary>
     public bool IsPrimary { get; set; }
 
-    /// <summary>เวลาที่มอบหมาย</summary>
+    /// <summary>ເວລາມອບໝາຍ</summary>
     public DateTimeOffset AssignedAt { get; set; }
 
-    /// <summary>ผู้มอบหมาย</summary>
+    /// <summary>ຜູ້ມອບໝາຍ</summary>
     public Guid? AssignedBy { get; set; }
 }

@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.AuditLogs;
 
-/// <summary>ตัวกรองสำหรับดึงรายการ Audit Log แบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງລາຍການ Audit Log ປະເພດການແບ່ງໜ້າ</summary>
 public sealed record AuditLogListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -16,10 +16,10 @@ public sealed record AuditLogListFilter(
     DateTimeOffset? To,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูล Audit Log ในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນ Audit Log ໃນຖານຂໍ້ມູນ</summary>
 public interface IAuditLogRepository
 {
-    /// <summary>ดึงรายการ Audit Log แบบแบ่งหน้าตามตัวกรองที่ระบุ เรียงจากเหตุการณ์ล่าสุดไปเก่าสุด</summary>
+    /// <summary>ດຶງເອົາລາຍການ Audit Log Pagination ອີງຕາມຕົວກອງທີ່ລະບຸ ຄັດຈາກເຫດການຫຼ້າສຸດໄປຫາເຫດການເກົ່າແກ່ທີ່ສຸດ</summary>
     Task<PagedResult<AuditLog>> GetPagedAsync(
         AuditLogListFilter filter,
         PagedQuery query,

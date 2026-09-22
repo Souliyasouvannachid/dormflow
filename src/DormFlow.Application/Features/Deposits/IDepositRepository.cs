@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Deposits;
 
-/// <summary>ตัวกรองสำหรับดึงรายการเงินมัดจำแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີເງິນຝາກ paginated</summary>
 public sealed record DepositListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -13,24 +13,24 @@ public sealed record DepositListFilter(
     DepositStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลเงินมัดจำในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນເງິນຝາກໃນຖານຂໍ້ມູນ</summary>
 public interface IDepositRepository
 {
-    /// <summary>อ่านเงินมัดจำจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານເງິນຝາກຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Deposit?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่าสัญญาเช่านี้มีการรับเงินมัดจำไว้แล้วหรือยัง</summary>
+    /// <summary>ກວດເບິ່ງວ່າຂໍ້ຕົກລົງການເຊົ່ານີ້ໄດ້ຮັບເງິນຝາກຫຼືບໍ່</summary>
     Task<bool> ExistsByContractIdAsync(Guid contractId, CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการเงินมัดจำแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີເງິນຝາກທີ່ມີ paginated ໂດຍອີງໃສ່ຕົວກອງທີ່ກໍານົດໄວ້</summary>
     Task<PagedResult<Deposit>> GetPagedAsync(
         DepositListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มเงินมัดจำใหม่</summary>
+    /// <summary>ເພີ່ມເງິນຝາກໃໝ່</summary>
     Task AddAsync(Deposit deposit, CancellationToken cancellationToken = default);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

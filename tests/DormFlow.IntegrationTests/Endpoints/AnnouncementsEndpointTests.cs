@@ -11,14 +11,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบวงจรชีวิตของประกาศผ่าน HTTP จริง</summary>
+/// <summary>ທົດສອບວົງຈອນຊີວິດຂອງການປະກາດຜ່ານ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task สร้างประกาศใหม่_ต้องได้สถานะ_Draft()
+    public async Task ສ້າງການປະກາດໃຝ່_ຕ້ອງໄດ້ຮັບການສະຖານະ_Draft()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -31,8 +31,8 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
             new CreateAnnouncementRequest
             {
                 DormitoryId = dormitory.Id,
-                Title = "ปิดปรับปรุงลิฟต์",
-                Content = "ลิฟต์อาคาร A จะปิดปรับปรุงวันที่ 1-3 กันยายนนี้",
+                Title = "ປິດສໍາລັບການບໍາລຸງຮັກສາລິຟ",
+                Content = "ຟ ໃນ ການ ກໍ່ ສ້າງ A ຈະຖືກປິດສໍາລັບການບໍາລຸງຮັກສາ 1-3 ເດືອນກັນຍານີ້",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -45,14 +45,14 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เผยแพร่ประกาศที่เป็นร่าง_ต้องได้สถานะ_Published()
+    public async Task ເຜີຍແຜ່ຮ່າງປະກາດ_ຕ້ອງໄດ້ຮັບການສະຖານະ_Published()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         DormitoryResponse dormitory = await CreateDormitoryAsync(client);
-        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ประกาศทดสอบ 1");
+        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ປະກາດການທົດສອບ 1");
 
         using HttpResponseMessage response = await client.PostAsync(
             new Uri($"/api/v1/announcements/{draft.Id}/publish", UriKind.Relative),
@@ -68,14 +68,14 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เผยแพร่ประกาศที่เผยแพร่ไปแล้วซ้ำ_ต้องได้_409()
+    public async Task ເຜີຍແຜ່ການປະກາດທີ່ໄດ້ເຜີຍແຜ່ແລ້ວຄືນໃໝ່_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         DormitoryResponse dormitory = await CreateDormitoryAsync(client);
-        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ประกาศทดสอบ 2");
+        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ປະກາດການທົດສອບ 2");
 
         await client.PostAsync(
             new Uri($"/api/v1/announcements/{draft.Id}/publish", UriKind.Relative),
@@ -91,14 +91,14 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เก็บประกาศที่เผยแพร่แล้วเข้าคลัง_ต้องได้สถานะ_Archived()
+    public async Task ເກັບຮັກສາປະກາດທີ່ເຜີຍແຜ່ຢູ່ໃນບ່ອນເກັບມ້ຽນ_ຕ້ອງໄດ້ຮັບການສະຖານະ_Archived()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         DormitoryResponse dormitory = await CreateDormitoryAsync(client);
-        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ประกาศทดสอบ 3");
+        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ປະກາດການທົດສອບ 3");
 
         await client.PostAsync(
             new Uri($"/api/v1/announcements/{draft.Id}/publish", UriKind.Relative),
@@ -118,14 +118,14 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task เก็บประกาศที่ยังเป็นร่างเข้าคลัง_ต้องได้_409()
+    public async Task ຮັກສາການປະກາດທີ່ຍັງຮ່າງຢູ່ໃນບ່ອນເກັບມ້ຽນ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         DormitoryResponse dormitory = await CreateDormitoryAsync(client);
-        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ประกาศทดสอบ 4");
+        AnnouncementResponse draft = await CreateAnnouncementAsync(client, dormitory.Id, "ປະກາດການທົດສອບ 4");
 
         using HttpResponseMessage response = await client.PostAsync(
             new Uri($"/api/v1/announcements/{draft.Id}/archive", UriKind.Relative),
@@ -144,7 +144,7 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitoryId,
                 Title = title,
-                Content = $"เนื้อหาของ {title}",
+                Content = $"ເນື້ອໃນຂອງ {title}",
             },
             TestContext.Current.CancellationToken);
 
@@ -159,7 +159,7 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -171,7 +171,7 @@ public class AnnouncementsEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",

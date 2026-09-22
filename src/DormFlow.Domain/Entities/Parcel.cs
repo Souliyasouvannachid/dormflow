@@ -4,41 +4,41 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// พัสดุ/ไปรษณีย์หนึ่งชิ้นที่มาถึงหอพักสำหรับผู้เช่า
+/// ພັດສະດຸ/ຈົດໝາຍສະບັບໜຶ່ງທີ່ມາຮອດຫໍພັກສຳລັບຜູ້ເຊົ່າ
 /// </summary>
 /// <remarks>
-/// ผูกกับห้องเสมอ (เพื่อขอบเขตองค์กร/หอพักและเพื่อให้เจ้าหน้าที่รู้ว่าต้องแจ้งห้องไหน)
-/// ส่วนผู้เช่าเป็นทางเลือก เพราะบางครั้งเจ้าหน้าที่บันทึกพัสดุที่มาถึงก่อนยืนยันได้ว่าเป็นของใครในห้อง
+/// ສະເຝີ tied ກັບຫ້ອງ (ສໍາລັບຂອບເຂດການຈັດຕັ້ງ/ຫໍພັກ ແລະ ເພື່ອໃຫ້ພະນັກງານຮູ້ວ່າຫ້ອງໃດໃຫ້ແຈ້ງ)
+/// ສໍາລັບຜູ້ເຊົ່າ, ມັນເປັນທາງເລືອກ. ເພາະວ່າບາງຄັ້ງພະນັກງານບັນທຶກຊຸດທີ່ມາຮອດກ່ອນເພື່ອຢືນຢັນວ່າໃຜຢູ່ໃນຫ້ອງ
 /// </remarks>
 public class Parcel : TenantEntity
 {
-    /// <summary>ห้องที่พัสดุนี้ส่งถึง</summary>
+    /// <summary>ຫ້ອງຊຸດນີ້ແມ່ນສົ່ງໃຫ້</summary>
     public Guid RoomId { get; set; }
 
-    /// <summary>ผู้เช่าที่พัสดุนี้ส่งถึง เป็น null เมื่อยังไม่ยืนยันว่าเป็นของใครในห้อง</summary>
+    /// <summary>ຜູ້ເຊົ່າທີ່ parcel ນີ້ຖືກຈັດສົ່ງແມ່ນ null ໃນເວລາທີ່ຍັງບໍ່ໄດ້ຮັບການຢືນຢັນວ່າໃຜເປັນຂອງຫ້ອງການ</summary>
     public Guid? TenantId { get; set; }
 
-    /// <summary>บริษัทขนส่ง</summary>
+    /// <summary>ບໍລິສັດຂົນສົ່ງ</summary>
     public string? CourierName { get; set; }
 
-    /// <summary>เลขพัสดุ</summary>
+    /// <summary>ໝາຍເລກເຄື່ອງໝາຍ</summary>
     public string? TrackingNumber { get; set; }
 
-    /// <summary>คำอธิบายพัสดุเพิ่มเติม</summary>
+    /// <summary>ລາຍລະອຽດການພັດທະນາເພີ່ມເຕີມ</summary>
     public string? Description { get; set; }
 
-    /// <summary>เวลาที่รับพัสดุไว้ที่หอพัก</summary>
+    /// <summary>ເວລາໄປຮັບເຄື່ອງຢູ່ຫໍພັກ</summary>
     public DateTimeOffset ReceivedAt { get; set; }
 
-    /// <summary>สถานะของพัสดุ</summary>
+    /// <summary>ສະຖານະການຫຸ້ມຫໍ່</summary>
     public ParcelStatus Status { get; set; } = ParcelStatus.Received;
 
-    /// <summary>เวลาที่ผู้เช่ามารับพัสดุ เป็น null เมื่อยังไม่มารับ</summary>
+    /// <summary>ເວລາຜູ້ເຊົ່າມາຮັບຂອງແມ່ນ null ເມື່ອເຈົ້າຍັງບໍ່ໄດ້ມາຮັບມັນເທື່ອ</summary>
     public DateTimeOffset? PickedUpAt { get; set; }
 
-    /// <summary>ชื่อผู้มารับพัสดุจริง (อาจไม่ใช่ผู้เช่าโดยตรง เช่น เพื่อนร่วมห้อง)</summary>
+    /// <summary>ຊື່ແທ້ຂອງຜູ້ທີ່ໄດ້ຮັບຊຸດ (ພວກເຂົາອາດຈະບໍ່ເປັນຜູ້ເຊົ່າໂດຍກົງ, ເຊັ່ນວ່າເພື່ອນຮ່ວມຫ້ອງ)</summary>
     public string? PickedUpByName { get; set; }
 
-    /// <summary>หมายเหตุเพิ่มเติม</summary>
+    /// <summary>ບັນທຶກເພີ່ມເຕີມ</summary>
     public string? Notes { get; set; }
 }

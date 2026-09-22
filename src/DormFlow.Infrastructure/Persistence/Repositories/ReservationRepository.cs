@@ -1,3 +1,4 @@
+using DormFlow.Application.Common.Exceptions;
 using DormFlow.Application.Common.Pagination;
 using DormFlow.Application.Features.Reservations;
 using DormFlow.Contracts.Common;
@@ -5,10 +6,11 @@ using DormFlow.Domain.Entities;
 using DormFlow.Domain.Enums;
 using DormFlow.Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลการจองบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຈອງຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class ReservationRepository(DormFlowDbContext dbContext) : IReservationRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -72,10 +74,49 @@ public sealed class ReservationRepository(DormFlowDbContext dbContext) : IReserv
     /// <inheritdoc />
     public async Task<IReadOnlyList<Reservation>> GetExpiredPendingAsync(
         DateTimeOffset asOf,
+        int batchSize,
         CancellationToken cancellationToken = default)
-        => await _dbContext.Reservations
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(batchSize);
+
+        return await _dbContext.Reservations
             .Where(reservation => reservation.Status == ReservationStatus.Pending && reservation.ExpiresAt <= asOf)
+            .OrderBy(reservation => reservation.ExpiresAt)
+            .Take(batchSize)
             .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<int> GetPendingExpiringCountAsync(
+        ReservationListFilter filter,
+        DateTimeOffset expiresBeforeOrAt,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        IQueryable<Reservation> reservations = _dbContext.Reservations
+            .AsNoTracking()
+            .Where(reservation => reservation.Status == ReservationStatus.Pending
+                && reservation.ExpiresAt <= expiresBeforeOrAt);
+
+        if (filter.OrganizationId.HasValue)
+        {
+            reservations = reservations.Where(reservation => reservation.OrganizationId == filter.OrganizationId.Value);
+        }
+
+        if (filter.DormitoryId.HasValue)
+        {
+            reservations = reservations.Where(reservation => reservation.DormitoryId == filter.DormitoryId.Value);
+        }
+
+        if (filter.RestrictToDormitoryIds is not null)
+        {
+            reservations = reservations.Where(reservation =>
+                reservation.DormitoryId != null && filter.RestrictToDormitoryIds.Contains(reservation.DormitoryId.Value));
+        }
+
+        return reservations.CountAsync(cancellationToken);
+    }
 
     /// <inheritdoc />
     public Task AddAsync(Reservation reservation, CancellationToken cancellationToken = default)
@@ -88,7 +129,21 @@ public sealed class ReservationRepository(DormFlowDbContext dbContext) : IReserv
 
     /// <inheritdoc />
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        => await _dbContext.SaveChangesAsync(cancellationToken);
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException exception)
+            when (exception.InnerException is PostgresException postgresException
+                && postgresException.SqlState == PostgresErrorCodes.UniqueViolation
+                && postgresException.ConstraintName == "ix_reservations_one_pending_per_room")
+        {
+            throw new ConflictException(
+                "ຫ້ອງນີ້ມີການຈອງຄ້າງຢູ່ແລ້ວ ບໍ່ສາມາດຈອງຊ້ຳໄດ້",
+                exception);
+        }
+    }
 
     private static IQueryable<Reservation> ApplySort(IQueryable<Reservation> reservations, PagedQuery query)
         => query.SortBy?.ToLowerInvariant() switch

@@ -1,23 +1,23 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>หมวดหมู่ของค่าใช้จ่ายในการดำเนินงาน</summary>
+/// <summary>ປະເພດຂອງຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ</summary>
 public enum ExpenseCategory
 {
-    /// <summary>ค่าน้ำ ค่าไฟ ค่าสาธารณูปโภคส่วนกลาง</summary>
+    /// <summary>ໃບບິນຄ່ານ້ຳ, ຄ່າໄຟຟ້າ, ໃບເກັບເງິນຄ່າສາທາລະນູປະໂພກ</summary>
     Utilities = 1,
 
-    /// <summary>ค่าซ่อมบำรุงและวัสดุอุปกรณ์</summary>
+    /// <summary>ຄ່າໃຊ້ຈ່າຍໃນການບໍາລຸງຮັກສາແລະອຸປະກອນ</summary>
     Maintenance = 2,
 
-    /// <summary>เงินเดือนและค่าตอบแทนพนักงาน</summary>
+    /// <summary>ເງິນເດືອນ ແລະ ຄ່າຊົດເຊີຍພະນັກງານ</summary>
     Salaries = 3,
 
-    /// <summary>วัสดุสิ้นเปลืองและของใช้สำนักงาน</summary>
+    /// <summary>ເຄື່ອງໃຊ້ຫ້ອງການ ແລະເຄື່ອງໃຊ້</summary>
     Supplies = 4,
 
-    /// <summary>ค่าการตลาดและโฆษณา</summary>
+    /// <summary>ຄ່າໃຊ້ຈ່າຍໃນການຕະຫຼາດແລະການໂຄສະນາ</summary>
     Marketing = 5,
 
-    /// <summary>อื่น ๆ</summary>
+    /// <summary>ອື່ນໆ</summary>
     Other = 6,
 }

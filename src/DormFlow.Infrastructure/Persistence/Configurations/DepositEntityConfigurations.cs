@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DormFlow.Infrastructure.Persistence.Configurations;
 
-/// <summary>ตั้งค่าตารางเงินมัดจำ</summary>
+/// <summary>ກໍານົດຕາຕະລາງເງິນຝາກ</summary>
 public sealed class DepositConfiguration : IEntityTypeConfiguration<Deposit>
 {
     /// <inheritdoc />
@@ -20,7 +20,7 @@ public sealed class DepositConfiguration : IEntityTypeConfiguration<Deposit>
         builder.Property(deposit => deposit.DeductionReason).HasMaxLength(500);
         builder.Property(deposit => deposit.Notes).HasMaxLength(1000);
 
-        // สัญญาเช่าหนึ่งฉบับรับเงินมัดจำได้เพียงรายการเดียว เฉพาะแถวที่ยังไม่ถูกลบ
+        // ສັນຍາເຊົ່າຜຶ່ງຍອມຮັບພຽງແຕ່ຜຶ່ງເງິນຝາກ. ມີແຕ່ແຖວທີ່ຍັງບໍ່ໄດ້ລຶບ
         builder.HasIndex(deposit => deposit.ContractId)
             .IsUnique()
             .HasFilter("is_deleted = false");

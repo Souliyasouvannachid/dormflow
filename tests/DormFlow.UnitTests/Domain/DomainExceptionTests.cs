@@ -4,31 +4,31 @@ using Xunit;
 
 namespace DormFlow.UnitTests.Domain;
 
-/// <summary>ตรวจว่าข้อผิดพลาดเชิงธุรกิจพกข้อความและรหัสกฎไปด้วยเสมอ</summary>
+/// <summary>ໃຫ້ແນ່ໃຈວ່າຄວາມຜິດພາດທາງທຸລະກິດມີຂໍ້ຄວາມແລະກົດລະບຽບ ID ສະເຝີ</summary>
 public class DomainExceptionTests
 {
     [Fact]
-    public void BusinessRuleViolationException_ต้องเก็บรหัสกฎที่ระบุ()
+    public void BusinessRuleViolationException_ຕ້ອງເກັບຮັກສາIDກົດລະບຽບທີ່ລະບຸໄວ້()
     {
         BusinessRuleViolationException exception = new(
             "rooms.duplicate_room_number",
-            "เลขห้องนี้ถูกใช้ในอาคารเดียวกันแล้ว");
+            "ໝາຍເລກຫ້ອງນີ້ແມ່ນໃຊ້ໃນອາຄານດຽວກັນແລ້ວ");
 
         exception.RuleCode.Should().Be("rooms.duplicate_room_number");
-        exception.Message.Should().Be("เลขห้องนี้ถูกใช้ในอาคารเดียวกันแล้ว");
+        exception.Message.Should().Be("ໝາຍເລກຫ້ອງນີ້ແມ່ນໃຊ້ໃນອາຄານດຽວກັນແລ້ວ");
         exception.Should().BeAssignableTo<DomainException>();
     }
 
     [Fact]
-    public void BusinessRuleViolationException_ต้องไม่รับรหัสกฎที่ว่าง()
+    public void BusinessRuleViolationException_IDກົດລະບຽບຫວ່າງເປົ່າຕ້ອງບໍ່ໄດ້ຮັບການຍອມຮັບ()
     {
-        Action act = () => _ = new BusinessRuleViolationException("   ", "ข้อความ");
+        Action act = () => _ = new BusinessRuleViolationException("   ", "ຂໍ້ຄວາມ");
 
         act.Should().Throw<ArgumentException>();
     }
 
     [Fact]
-    public void DomainException_ที่ไม่ระบุข้อความ_ต้องมีข้อความเริ่มต้น()
+    public void DomainException_ເຊິ່ງບໍ່ໄດ້ລະບຸຂໍ້ຄວາມ_ຕ້ອງມີຂໍ້ຄວາມເບື້ອງຕົ້ນ()
     {
         DomainException exception = new();
 

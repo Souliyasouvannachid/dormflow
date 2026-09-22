@@ -3,7 +3,7 @@ using DormFlow.Contracts.Common;
 
 namespace DormFlow.Application.Features.Reports;
 
-/// <summary>ตัวกรองของรายงานสรุปรายได้</summary>
+/// <summary>ການກັ່ນຕອງບົດລາຍງານສະຫຼຸບລາຍຮັບ</summary>
 public sealed record RevenueReportFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -11,7 +11,7 @@ public sealed record RevenueReportFilter(
     DateOnly PeriodTo,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>ผลสรุปดิบของรายงานรายได้ ก่อนแปลงเป็น Response</summary>
+/// <summary>ສະຫຼຸບຫຍໍ້ຂອງບົດລາຍງານລາຍໄດ້ກ່ອນທີ່ຈະປ່ຽນເປັນ Response</summary>
 public sealed record RevenueSummary(
     int InvoiceCount,
     int PaidInvoiceCount,
@@ -19,13 +19,16 @@ public sealed record RevenueSummary(
     decimal TotalInvoiced,
     decimal TotalCollected);
 
-/// <summary>ตัวกรองของรายงานใบแจ้งหนี้ค้างชำระ</summary>
+/// <summary>ຍອດເກັບໄດ້ລວມຕາມເດືອນ</summary>
+public sealed record RevenueTrendSummary(DateOnly PeriodMonth, decimal TotalCollected);
+
+/// <summary>ການກັ່ນຕອງລາຍງານໃບແຈ້ງໜີ້ທີ່ບໍ່ໄດ້ຈ່າຍ</summary>
 public sealed record OutstandingInvoicesFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>ข้อมูลดิบหนึ่งแถวของรายงานใบแจ้งหนี้ค้างชำระ ก่อนคำนวณยอดคงเหลือ/จำนวนวันเกินกำหนด</summary>
+/// <summary>ແຖວໜຶ່ງຂອງຂໍ້ມູນດິບຂອງລາຍງານໃບແຈ້ງໜີ້ທີ່ບໍ່ໄດ້ຮັບຄ່າຈ້າງ. ກ່ອນທີ່ຈະຄິດໄລ່ຍອດເງິນ/ຈຳນວນມື້ທີ່ເກີນກຳນົດ</summary>
 public sealed record OutstandingInvoiceRow(
     Guid InvoiceId,
     string InvoiceNumber,
@@ -35,27 +38,32 @@ public sealed record OutstandingInvoiceRow(
     decimal TotalAmount,
     decimal PaidAmount);
 
-/// <summary>เข้าถึงข้อมูลสำหรับสร้างรายงาน โดยรวมข้อมูลจากหลาย Entity</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນເພື່ອສ້າງບົດລາຍງານໂດຍການລວມຂໍ້ມູນຈາກຫຼາຍໆຄົນ Entity</summary>
 public interface IReportRepository
 {
-    /// <summary>สรุปยอดรายได้ตามตัวกรองที่ระบุ</summary>
-    /// <param name="filter">ตัวกรอง</param>
-    /// <param name="asOfDate">วันที่ใช้อ้างอิงคำนวณจำนวนใบแจ้งหนี้ที่เกินกำหนดชำระ</param>
-    /// <param name="cancellationToken">โทเคนสำหรับยกเลิกคำสั่ง</param>
+    /// <summary>ສະຫຼຸບລາຍຮັບຕາມຕົວກອງທີ່ກໍານົດໄວ້</summary>
+    /// <param name="filter">ການກັ່ນຕອງ</param>
+    /// <param name="asOfDate">ວັນທີອ້າງອີງແມ່ນໃຊ້ເພື່ອຄິດໄລ່ຈຳນວນໃບເກັບເງິນທີ່ໝົດກຳນົດ</param>
+    /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>
     Task<RevenueSummary> GetRevenueSummaryAsync(
         RevenueReportFilter filter,
         DateOnly asOfDate,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการใบแจ้งหนี้ค้างชำระแบบแบ่งหน้า เรียงตามวันครบกำหนดชำระ (ใกล้ครบกำหนดที่สุดก่อน)</summary>
+    /// <summary>ດຶງຍອດເກັບໄດ້ລວມຫຼາຍເດືອນດ້ວຍ query ດຽວ</summary>
+    Task<IReadOnlyList<RevenueTrendSummary>> GetRevenueTrendAsync(
+        RevenueReportFilter filter,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ຄ້າງໄວ້. ຈັດຮຽງຕາມວັນທີຄົບກຳນົດການຈ່າຍເງິນ (ໃກ້ທີ່ສຸດກັບວັນທີຄົບກຳນົດກ່ອນ)</summary>
     Task<PagedResult<OutstandingInvoiceRow>> GetOutstandingInvoicesAsync(
         OutstandingInvoicesFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// ดึงรายการใบแจ้งหนี้ค้างชำระทั้งหมดตามตัวกรอง ไม่แบ่งหน้า ใช้สำหรับส่งออกไฟล์
-    /// จำกัดจำนวนแถวสูงสุดไว้ในระดับ Infrastructure เพื่อป้องกันการดึงข้อมูลจำนวนมากเกินไปในคำขอเดียว
+    /// ດຶງເອົາບັນຊີລາຍຊື່ຂອງໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຄາທັງໝົດໂດຍອີງໃສ່ຕົວກອງ, ບໍ່ໄດ້ໃສ່ໜ້າ, ໃຊ້ສຳລັບການສົ່ງອອກໄຟລ໌
+    /// ຈຳກັດຈຳນວນແຖວສູງສຸດເປັນລະດັບໜຶ່ງ Infrastructure ນີ້ປ້ອງກັນການດຶງຂໍ້ມູນຫຼາຍເກີນໄປໃນຄໍາຮ້ອງຂໍດຽວ
     /// </summary>
     Task<IReadOnlyList<OutstandingInvoiceRow>> GetOutstandingInvoicesForExportAsync(
         OutstandingInvoicesFilter filter,

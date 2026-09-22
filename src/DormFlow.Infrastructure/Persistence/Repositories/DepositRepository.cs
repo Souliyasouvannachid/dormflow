@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลเงินมัดจำบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນເງິນຝາກຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class DepositRepository(DormFlowDbContext dbContext) : IDepositRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลผู้มาเยือนบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຜູ້ເຂົ້າຊົມຢູ່ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class VisitorRepository(DormFlowDbContext dbContext) : IVisitorRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;
@@ -60,6 +60,42 @@ public sealed class VisitorRepository(DormFlowDbContext dbContext) : IVisitorRep
         visitors = ApplySort(visitors, query);
 
         return visitors.ToPagedResultAsync(query, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<int> CountAsync(VisitorListFilter filter, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        IQueryable<Visitor> visitors = _dbContext.Visitors.AsNoTracking();
+
+        if (filter.OrganizationId.HasValue)
+        {
+            visitors = visitors.Where(visitor => visitor.OrganizationId == filter.OrganizationId.Value);
+        }
+
+        if (filter.DormitoryId.HasValue)
+        {
+            visitors = visitors.Where(visitor => visitor.DormitoryId == filter.DormitoryId.Value);
+        }
+
+        if (filter.RoomId.HasValue)
+        {
+            visitors = visitors.Where(visitor => visitor.RoomId == filter.RoomId.Value);
+        }
+
+        if (filter.Status.HasValue)
+        {
+            visitors = visitors.Where(visitor => visitor.Status == filter.Status.Value);
+        }
+
+        if (filter.RestrictToDormitoryIds is not null)
+        {
+            visitors = visitors.Where(visitor =>
+                visitor.DormitoryId != null && filter.RestrictToDormitoryIds.Contains(visitor.DormitoryId.Value));
+        }
+
+        return visitors.CountAsync(cancellationToken);
     }
 
     /// <inheritdoc />

@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>สถานะของบัญชีผู้ใช้</summary>
+/// <summary>ສະຖານະບັນຊີຜູ້ໃຊ້</summary>
 public enum UserStatus
 {
-    /// <summary>ใช้งานได้ตามปกติ</summary>
+    /// <summary>ສາມາດໃຊ້ໄດ້ຕາມປົກກະຕິ</summary>
     Active = 1,
 
-    /// <summary>ปิดใช้งาน เข้าสู่ระบบไม่ได้</summary>
+    /// <summary>ຄົນພິການ. ບໍ່ສາມາດເຂົ້າສູ່ລະບົບໄດ້</summary>
     Inactive = 2,
 
-    /// <summary>ถูกระงับ เข้าสู่ระบบไม่ได้จนกว่าผู้ดูแลจะปลดระงับ</summary>
+    /// <summary>ໂຈະ. ບໍ່ສາມາດເຂົ້າສູ່ລະບົບໄດ້ຈົນກ່ວາຜູ້ເບິ່ງແຍງລະບົບຈະເອົາການລະງັບອອກ</summary>
     Suspended = 3,
 }

@@ -3,7 +3,7 @@ using DormFlow.Domain.Entities;
 
 namespace DormFlow.Application.Features.Permissions;
 
-/// <summary>Use Case ทั้งหมดของโมดูลสิทธิ์การใช้งาน</summary>
+/// <summary>Use Case ໃບອະນຸຍາດໂມດູນທັງໝົດ</summary>
 public sealed class PermissionService(IPermissionRepository repository) : IPermissionService
 {
     private readonly IPermissionRepository _repository = repository;

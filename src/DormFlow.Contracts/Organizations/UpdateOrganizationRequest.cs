@@ -1,23 +1,23 @@
 namespace DormFlow.Contracts.Organizations;
 
-/// <summary>คำขอแก้ไขข้อมูลองค์กร</summary>
+/// <summary>ຮ້ອງຂໍການແກ້ໄຂຂໍ້ມູນອົງກອນ</summary>
 public class UpdateOrganizationRequest
 {
-    /// <summary>รหัสองค์กร ไม่ซ้ำกันทั้งระบบ</summary>
+    /// <summary>ລະຫັດອົງກອນແມ່ນເປັນເອກະລັກໃນທົ່ວລະບົບ</summary>
     public string Code { get; set; } = string.Empty;
 
-    /// <summary>ชื่อองค์กร</summary>
+    /// <summary>ຊື່ອົງກອນ</summary>
     public string Name { get; set; } = string.Empty;
 
-    /// <summary>เลขประจำตัวผู้เสียภาษี</summary>
+    /// <summary>ໝາຍເລກປະຈຳຕົວຜູ້ເສຍພາສີ</summary>
     public string? TaxId { get; set; }
 
-    /// <summary>เบอร์โทรศัพท์ติดต่อ</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່</summary>
     public string? Phone { get; set; }
 
-    /// <summary>อีเมลติดต่อ</summary>
+    /// <summary>ອີເມວຕິດຕໍ່</summary>
     public string? Email { get; set; }
 
-    /// <summary>ที่อยู่</summary>
+    /// <summary>ທີ່ຢູ່</summary>
     public string? Address { get; set; }
 }

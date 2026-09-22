@@ -1,35 +1,35 @@
 namespace DormFlow.Contracts.Organizations;
 
-/// <summary>ข้อมูลองค์กรหนึ่งแห่ง</summary>
+/// <summary>ຂໍ້ມູນຂອງອົງກອນຜຶ່ງ</summary>
 public class OrganizationResponse
 {
-    /// <summary>รหัสอ้างอิงขององค์กร</summary>
+    /// <summary>ລະຫັດອ້າງອີງອົງກອນ</summary>
     public Guid Id { get; init; }
 
-    /// <summary>รหัสองค์กร</summary>
+    /// <summary>ລະຫັດອົງກອນ</summary>
     public string Code { get; init; } = string.Empty;
 
-    /// <summary>ชื่อองค์กร</summary>
+    /// <summary>ຊື່ອົງກອນ</summary>
     public string Name { get; init; } = string.Empty;
 
-    /// <summary>เลขประจำตัวผู้เสียภาษี</summary>
+    /// <summary>ໝາຍເລກປະຈຳຕົວຜູ້ເສຍພາສີ</summary>
     public string? TaxId { get; init; }
 
-    /// <summary>เบอร์โทรศัพท์ติดต่อ</summary>
+    /// <summary>ເບີໂທລະສັບຕິດຕໍ່</summary>
     public string? Phone { get; init; }
 
-    /// <summary>อีเมลติดต่อ</summary>
+    /// <summary>ອີເມວຕິດຕໍ່</summary>
     public string? Email { get; init; }
 
-    /// <summary>ที่อยู่</summary>
+    /// <summary>ທີ່ຢູ່</summary>
     public string? Address { get; init; }
 
-    /// <summary>สถานะขององค์กร</summary>
+    /// <summary>ສະຖານະອົງກອນ</summary>
     public string Status { get; init; } = string.Empty;
 
-    /// <summary>เวลาที่สร้างข้อมูล</summary>
+    /// <summary>ເວລາສ້າງຂໍ້ມູນ</summary>
     public DateTimeOffset CreatedAt { get; init; }
 
-    /// <summary>เวลาที่แก้ไขข้อมูลล่าสุด</summary>
+    /// <summary>ເວລາຂອງການດັດແກ້ຫຼ້າສຸດ</summary>
     public DateTimeOffset? UpdatedAt { get; init; }
 }

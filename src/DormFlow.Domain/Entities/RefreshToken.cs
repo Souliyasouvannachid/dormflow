@@ -5,61 +5,61 @@ using DormFlow.Domain.Exceptions;
 namespace DormFlow.Domain.Entities;
 
 /// <summary>
-/// Refresh Token หนึ่งใบ เก็บเฉพาะค่าแฮชของโทเคน ไม่เก็บค่าจริง
+/// Refresh Token ປີ້ໜຶ່ງເກັບພຽງແຕ່ຄ່າ hash ຂອງໂທເຄັນ. ບໍ່ເກັບມູນຄ່າຕົວຈິງ
 /// </summary>
 /// <remarks>
-/// ถ้าฐานข้อมูลรั่ว ผู้ที่ได้ข้อมูลไปจะนำค่าแฮชไปขอ Access Token ต่อไม่ได้
-/// เพราะระบบตรวจโดยแฮชค่าที่ผู้เรียกส่งมาแล้วเทียบ ไม่ได้เทียบค่าที่เก็บไว้โดยตรง
+/// ຖ້າຖານຂໍ້ມູນຖືກຮົ່ວ, ຜູ້ທີ່ໄດ້ຮັບຂໍ້ມູນຈະຮ້ອງຂໍໃຫ້ມີຄ່າ hash Access Token ບໍ່ສາມາດສືບຕໍ່ໄດ້
+/// ເນື່ອງຈາກວ່າລະບົບກວດສອບໂດຍການ hashing ຄ່າທີ່ສົ່ງໂດຍຜູ້ໂທແລະປຽບທຽບໃຫ້ເຂົາເຈົ້າ. ມູນຄ່າທີ່ເກັບໄວ້ບໍ່ໄດ້ປຽບທຽບໂດຍກົງ
 /// </remarks>
 public class RefreshToken : BaseEntity
 {
-    /// <summary>ผู้ใช้ที่เป็นเจ้าของโทเคน</summary>
+    /// <summary>ຜູ້ໃຊ້ທີ່ເປັນເຈົ້າຂອງ token</summary>
     public Guid UserId { get; set; }
 
-    /// <summary>ค่าแฮชของโทเคน</summary>
+    /// <summary>ຄ່າໂທເຄັນ hash</summary>
     public required string TokenHash { get; set; }
 
-    /// <summary>รหัสอ้างอิงของ Access Token ที่ออกคู่กัน ใช้ตรวจสอบย้อนหลัง</summary>
+    /// <summary>ລະຫັດອ້າງອີງຂອງ Access Token ອອກມາຮ່ວມກັນ, ນໍາໃຊ້ສໍາລັບການກວດສອບຄືນຫຼັງ</summary>
     public required string JwtId { get; set; }
 
-    /// <summary>เวลาหมดอายุ</summary>
+    /// <summary>ເວລາໝົດອາຍຸ</summary>
     public DateTimeOffset ExpiresAt { get; set; }
 
-    /// <summary>หมายเลข IP ที่ขอโทเคนนี้</summary>
+    /// <summary>ເລກ IP ຜູ້ທີ່ຮ້ອງຂໍ token ນີ້</summary>
     public string? CreatedByIp { get; set; }
 
-    /// <summary>User Agent ที่ขอโทเคนนี้</summary>
+    /// <summary>User Agent ຜູ້ທີ່ຮ້ອງຂໍ token ນີ້</summary>
     public string? UserAgent { get; set; }
 
-    /// <summary>เวลาที่ถูกเพิกถอน</summary>
+    /// <summary>ຖອນເວລາ</summary>
     public DateTimeOffset? RevokedAt { get; set; }
 
-    /// <summary>หมายเลข IP ที่สั่งเพิกถอน</summary>
+    /// <summary>ເລກ IP ສັ່ງໃຫ້ຍົກເລີກ</summary>
     public string? RevokedByIp { get; set; }
 
-    /// <summary>โทเคนใบใหม่ที่มาแทนใบนี้ตามกลไก Token Rotation</summary>
+    /// <summary>ໂທເຄັນໃໝ່ທີ່ປ່ຽນແທນອັນນີ້ດ້ວຍກົນຈັກ Token Rotation</summary>
     public Guid? ReplacedByTokenId { get; set; }
 
-    /// <summary>สาเหตุที่ถูกเพิกถอน</summary>
+    /// <summary>ເຫດຜົນສໍາລັບການຖອນ</summary>
     public RefreshTokenRevocationReason? ReasonRevoked { get; set; }
 
-    /// <summary>ถูกเพิกถอนไปแล้วหรือยัง</summary>
+    /// <summary>ມັນໄດ້ຖືກຖອນຄືນແລ້ວບໍ?</summary>
     public bool IsRevoked => RevokedAt.HasValue;
 
-    /// <summary>ตรวจว่าโทเคนหมดอายุแล้วหรือยัง</summary>
-    /// <param name="now">เวลาปัจจุบัน</param>
+    /// <summary>ກວດເບິ່ງວ່າໂທເຄັນໝົດອາຍຸຫຼືບໍ່</summary>
+    /// <param name="now">ເວລາປະຈຸບັນ</param>
     public bool IsExpired(DateTimeOffset now) => now >= ExpiresAt;
 
-    /// <summary>ตรวจว่าโทเคนยังใช้ต่ออายุได้อยู่หรือไม่</summary>
-    /// <param name="now">เวลาปัจจุบัน</param>
+    /// <summary>ກວດເບິ່ງວ່າ token ແມ່ນຍັງໃຊ້ໄດ້ສໍາລັບການຕໍ່ອາຍຸ</summary>
+    /// <param name="now">ເວລາປະຈຸບັນ</param>
     public bool IsActive(DateTimeOffset now) => !IsRevoked && !IsExpired(now);
 
-    /// <summary>เพิกถอนโทเคนใบนี้</summary>
-    /// <param name="now">เวลาที่เพิกถอน</param>
-    /// <param name="reason">สาเหตุที่เพิกถอน</param>
-    /// <param name="revokedByIp">หมายเลข IP ที่สั่งเพิกถอน</param>
-    /// <param name="replacedByTokenId">โทเคนใบใหม่ที่มาแทน กรณีเพิกถอนเพราะหมุนโทเคน</param>
-    /// <exception cref="DomainException">เมื่อโทเคนถูกเพิกถอนไปแล้ว</exception>
+    /// <summary>ຖອນໂທເຄັນນີ້</summary>
+    /// <param name="now">ເວລາຖອນ</param>
+    /// <param name="reason">ເຫດຜົນສໍາລັບການຖອນ</param>
+    /// <param name="revokedByIp">ເລກ IP ສັ່ງໃຫ້ຍົກເລີກ</param>
+    /// <param name="replacedByTokenId">ໂທເຄັນໃໝ່ທີ່ປ່ຽນແທນ ໃນກໍລະນີຂອງການຖອດຖອນເນື່ອງຈາກການໝຸນໂທເຄັນ</param>
+    /// <exception cref="DomainException">ເມື່ອ token ໄດ້ຖືກຖອນຄືນ</exception>
     public void Revoke(
         DateTimeOffset now,
         RefreshTokenRevocationReason reason,
@@ -68,7 +68,7 @@ public class RefreshToken : BaseEntity
     {
         if (IsRevoked)
         {
-            throw new DomainException("Refresh Token ใบนี้ถูกเพิกถอนไปแล้ว");
+            throw new DomainException("Refresh Token ໃບນີ້ຖືກເພີກຖອນໄປແລ້ວ");
         }
 
         RevokedAt = now;

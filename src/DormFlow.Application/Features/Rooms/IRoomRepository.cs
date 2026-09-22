@@ -5,7 +5,7 @@ using DormFlow.Domain.Enums;
 
 namespace DormFlow.Application.Features.Rooms;
 
-/// <summary>ตัวกรองสำหรับดึงรายการห้องพักแบบแบ่งหน้า</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຫ້ອງ</summary>
 public sealed record RoomListFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
@@ -15,43 +15,47 @@ public sealed record RoomListFilter(
     RoomStatus? Status,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>ตัวกรองสำหรับสรุปจำนวนห้องแยกตามสถานะ</summary>
+/// <summary>ການກັ່ນຕອງສໍາລັບການສະຫຼຸບຈໍານວນຂອງຫ້ອງໂດຍສະຖານະ</summary>
 public sealed record RoomSummaryFilter(
     Guid? OrganizationId,
     Guid? DormitoryId,
     Guid? BuildingId,
     IReadOnlyCollection<Guid>? RestrictToDormitoryIds);
 
-/// <summary>เข้าถึงข้อมูลห้องพักในฐานข้อมูล</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນຫ້ອງໃນຖານຂໍ້ມູນ</summary>
 public interface IRoomRepository
 {
-    /// <summary>อ่านห้องพักจากรหัสอ้างอิง</summary>
+    /// <summary>ອ່ານຫ້ອງຈາກລະຫັດການສົ່ງຕໍ່</summary>
     Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    /// <summary>ตรวจว่ามีห้องที่ใช้เลขนี้อยู่แล้วในอาคารเดียวกันหรือไม่</summary>
+    /// <summary>ອ່ານຫ້ອງຫຼາຍຫ້ອງໃນ query ດຽວ ສຳລັບ background job</summary>
+    Task<IReadOnlyDictionary<Guid, Room>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
+
+    /// <summary>ກວດເບິ່ງວ່າມີຫ້ອງທີ່ມີຕົວເລກນີ້ຢູ່ໃນອາຄານດຽວກັນ</summary>
     Task<bool> ExistsByRoomNumberAsync(
         Guid buildingId,
         string roomNumber,
         Guid? excludeRoomId,
         CancellationToken cancellationToken = default);
 
-    /// <summary>ดึงรายการห้องพักแบบแบ่งหน้าตามตัวกรองที่ระบุ</summary>
+    /// <summary>ດຶງເອົາບັນຊີລາຍຊື່ຂອງຫ້ອງ paginated ໂດຍອີງຕາມຕົວກອງທີ່ລະບຸ</summary>
     Task<PagedResult<Room>> GetPagedAsync(
         RoomListFilter filter,
         PagedQuery query,
         CancellationToken cancellationToken = default);
 
-    /// <summary>นับจำนวนห้องแยกตามสถานะตามตัวกรองที่ระบุ</summary>
+    /// <summary>ນັບຫ້ອງຕາມສະຖານະໂດຍອີງໃສ່ຕົວກອງທີ່ລະບຸ</summary>
     Task<IReadOnlyDictionary<RoomStatus, int>> GetStatusCountsAsync(
         RoomSummaryFilter filter,
         CancellationToken cancellationToken = default);
 
-    /// <summary>เพิ่มห้องพักใหม่</summary>
+    /// <summary>ເພີ່ມຫ້ອງໃຝ່</summary>
     Task AddAsync(Room room, CancellationToken cancellationToken = default);
 
-    /// <summary>ทำเครื่องหมายลบห้องพัก ระบบจะแปลงเป็น Soft Delete ให้อัตโนมัติตอนบันทึก</summary>
+    /// <summary>ຝາຍລຶບຫ້ອງ ລະບົບຈະປ່ຽນເປັນ Soft Delete ອັດຕະໂນມັດເມື່ອບັນທຶກ</summary>
     void Remove(Room room);
 
-    /// <summary>บันทึกการเปลี่ยนแปลงทั้งหมดลงฐานข้อมูล</summary>
+    /// <summary>ບັນທຶກການປ່ຽນແປງທັງໝົດໃສ່ຖານຂໍ້ມູນ</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

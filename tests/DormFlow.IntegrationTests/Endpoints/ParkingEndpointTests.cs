@@ -16,14 +16,14 @@ using Xunit;
 
 namespace DormFlow.IntegrationTests.Endpoints;
 
-/// <summary>ทดสอบการจดทะเบียนและสิ้นสุดที่จอดรถผ่าน HTTP จริง</summary>
+/// <summary>ຜ່ານການທົດສອບການລົງທະບຽນແລະບ່ອນຈອດລົດສຸດທ້າຍ HTTP ຄວາມຈິງ</summary>
 [Collection(ApiTestFixtures.Name)]
 public class ParkingEndpointTests(DormFlowApiFactory factory)
 {
     private readonly DormFlowApiFactory _factory = factory;
 
     [Fact]
-    public async Task จดทะเบียนที่จอดรถใหม่_ต้องได้สถานะ_Active()
+    public async Task ລົງທະບຽນບ່ອນຈອດລົດໃຝ່_ຕ້ອງໄດ້ຮັບການສະຖານະ_Active()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
@@ -37,10 +37,10 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             {
                 RoomId = room.Id,
                 TenantId = tenant.Id,
-                LicensePlate = "กข-1234",
+                LicensePlate = "ຄ-1234",
                 VehicleType = "Car",
                 Brand = "Toyota",
-                Color = "ขาว",
+                Color = "ສີຂາວ",
             },
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -49,18 +49,18 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             .ReadFromJsonAsync<ApiResponse<ParkingRegistrationResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         registration.Status.Should().Be("Active");
-        registration.LicensePlate.Should().Be("กข-1234");
+        registration.LicensePlate.Should().Be("ຄ-1234");
     }
 
     [Fact]
-    public async Task สิ้นสุดการจดทะเบียนที่จอดรถ_ต้องได้สถานะ_Ended()
+    public async Task ສິ້ນສຸດການລົງທະບຽນບ່ອນຈອດລົດ_ຕ້ອງໄດ້ຮັບການສະຖານະ_Ended()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         (RoomResponse room, TenantResponse tenant) = await CreateRoomWithTenantAsync(client);
-        ParkingRegistrationResponse registration = await RegisterParkingAsync(client, room.Id, tenant.Id, "กข-5678");
+        ParkingRegistrationResponse registration = await RegisterParkingAsync(client, room.Id, tenant.Id, "ຄ-5678");
 
         using HttpResponseMessage response = await client.PostAsync(
             new Uri($"/api/v1/parking/{registration.Id}/release", UriKind.Relative),
@@ -76,14 +76,14 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task จดทะเบียนทะเบียนรถที่มีการจดทะเบียนยังไม่สิ้นสุดอยู่แล้วซ้ำ_ต้องได้_409()
+    public async Task ລົງທະບຽນຄືນລົດທີ່ທະບຽນຍັງບໍ່ທັນໝົດອາຍຸ_ຕ້ອງໄດ້ຮັບ_409()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         (RoomResponse room, TenantResponse tenant) = await CreateRoomWithTenantAsync(client);
-        await RegisterParkingAsync(client, room.Id, tenant.Id, "กข-9999");
+        await RegisterParkingAsync(client, room.Id, tenant.Id, "ຄ-9999");
 
         using HttpResponseMessage response = await client.PostAsJsonAsync(
             new Uri("/api/v1/parking", UriKind.Relative),
@@ -91,7 +91,7 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             {
                 RoomId = room.Id,
                 TenantId = tenant.Id,
-                LicensePlate = "กข-9999",
+                LicensePlate = "ຄ-9999",
                 VehicleType = "Motorcycle",
             },
             TestContext.Current.CancellationToken);
@@ -100,14 +100,14 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
     }
 
     [Fact]
-    public async Task จดทะเบียนทะเบียนรถซ้ำได้หลังจากรายการเดิมสิ้นสุดแล้ว_ต้องสำเร็จ()
+    public async Task ທ່ານສາມາດລົງທະບຽນທະບຽນຍານພາຫະນະຂອງທ່ານຄືນໃຝ່ໄດ້ຫຼັງຈາກການລົງທະບຽນຕົ້ນສະບັບສິ້ນສຸດລົງ_ຕ້ອງປະສົບຜົນສໍາເລັດ()
     {
         using HttpClient client = await TestUserFactory.CreateAuthenticatedClientAsync(
             _factory,
             DormFlowRoles.SuperAdmin);
 
         (RoomResponse room, TenantResponse tenant) = await CreateRoomWithTenantAsync(client);
-        ParkingRegistrationResponse first = await RegisterParkingAsync(client, room.Id, tenant.Id, "กข-1111");
+        ParkingRegistrationResponse first = await RegisterParkingAsync(client, room.Id, tenant.Id, "ຄ-1111");
 
         await client.PostAsync(
             new Uri($"/api/v1/parking/{first.Id}/release", UriKind.Relative),
@@ -120,7 +120,7 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             {
                 RoomId = room.Id,
                 TenantId = tenant.Id,
-                LicensePlate = "กข-1111",
+                LicensePlate = "ຄ-1111",
                 VehicleType = "Car",
             },
             TestContext.Current.CancellationToken);
@@ -153,7 +153,7 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
         string orgCode = $"ORG{Guid.NewGuid():N}";
         using HttpResponseMessage orgResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/organizations", UriKind.Relative),
-            new CreateOrganizationRequest { Code = orgCode, Name = $"องค์กรทดสอบ {orgCode}" },
+            new CreateOrganizationRequest { Code = orgCode, Name = $"ອົງກອນການທົດສອບ {orgCode}" },
             TestContext.Current.CancellationToken);
         OrganizationResponse organization = (await orgResponse.Content
             .ReadFromJsonAsync<ApiResponse<OrganizationResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -165,7 +165,7 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             {
                 OrganizationId = organization.Id,
                 Code = dormCode,
-                Name = $"หอพักทดสอบ {dormCode}",
+                Name = $"ຫໍພັກການທົດສອບ {dormCode}",
                 BillingDay = 1,
                 PaymentDueDay = 5,
                 LateFeeType = "Fixed",
@@ -177,14 +177,14 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
         string buildingCode = $"B{Guid.NewGuid():N}";
         using HttpResponseMessage buildingResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/buildings", UriKind.Relative),
-            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"อาคาร {buildingCode}", TotalFloors = 3 },
+            new CreateBuildingRequest { DormitoryId = dormitory.Id, Code = buildingCode, Name = $"ອາຄານ {buildingCode}", TotalFloors = 3 },
             TestContext.Current.CancellationToken);
         BuildingResponse building = (await buildingResponse.Content
             .ReadFromJsonAsync<ApiResponse<BuildingResponse>>(TestContext.Current.CancellationToken))!.Data!;
 
         using HttpResponseMessage floorResponse = await client.PostAsJsonAsync(
             new Uri("/api/v1/floors", UriKind.Relative),
-            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ชั้น 1" },
+            new CreateFloorRequest { BuildingId = building.Id, FloorNumber = 1, Name = "ຊັ້ນ 1" },
             TestContext.Current.CancellationToken);
         FloorResponse floor = (await floorResponse.Content
             .ReadFromJsonAsync<ApiResponse<FloorResponse>>(TestContext.Current.CancellationToken))!.Data!;
@@ -196,7 +196,7 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             {
                 DormitoryId = dormitory.Id,
                 Code = roomTypeCode,
-                Name = $"ประเภทห้อง {roomTypeCode}",
+                Name = $"ປະເພດຫ້ອງ {roomTypeCode}",
                 MonthlyRent = 3500,
                 DepositAmount = 3500,
                 MaximumOccupants = 2,
@@ -226,8 +226,8 @@ public class ParkingEndpointTests(DormFlowApiFactory factory)
             new CreateTenantRequest
             {
                 OrganizationId = organization.Id,
-                FirstName = "สมชาย",
-                LastName = $"ทดสอบ-{Guid.NewGuid():N}",
+                FirstName = "ສົມໃຈ",
+                LastName = $"ການທົດສອບ-{Guid.NewGuid():N}",
                 Phone = "0800000000",
             },
             TestContext.Current.CancellationToken);

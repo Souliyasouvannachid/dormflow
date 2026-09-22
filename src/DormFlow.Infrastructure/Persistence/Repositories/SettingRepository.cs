@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DormFlow.Infrastructure.Persistence.Repositories;
 
-/// <summary>เข้าถึงข้อมูลค่าตั้งบน PostgreSQL ผ่าน EF Core</summary>
+/// <summary>ເຂົ້າເຖິງຂໍ້ມູນການຕັ້ງຄ່າ PostgreSQL ຜ່ານ EF Core</summary>
 public sealed class SettingRepository(DormFlowDbContext dbContext) : ISettingRepository
 {
     private readonly DormFlowDbContext _dbContext = dbContext;

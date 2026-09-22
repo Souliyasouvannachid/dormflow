@@ -6,12 +6,12 @@ using Microsoft.OpenApi;
 namespace DormFlow.Api.OpenApi;
 
 /// <summary>
-/// กำหนดชื่อระบบ คำอธิบาย และผู้ติดต่อของเอกสาร OpenAPI จากค่าใน configuration
+/// ກໍານົດຊື່ລະບົບຂອງເອກະສານ, ຄໍາອະທິບາຍ, ແລະການຕິດຕໍ່ OpenAPI ຈາກມູນຄ່າໃນ configuration
 /// </summary>
 /// <remarks>
-/// ต้องลงทะเบียนผ่าน AddApiVersioning().AddOpenApi(...) เท่านั้น
-/// เพราะ transformer ของ Asp.Versioning เขียนทับ Info.Title ด้วยชื่อ assembly
-/// การลงทะเบียนที่จุดนั้นทำให้ transformer ตัวนี้ทำงานทีหลังและได้ค่าตามที่ตั้งไว้จริง
+/// ຕ້ອງລົງທະບຽນຜ່ານ AddApiVersioning().AddOpenApi(...) ເທົ່ານັ້ນ
+/// ເນື່ອງຈາກວ່າ transformer ຂອງ Asp.Versioning ຂຽນທັບ Info.Title ໂດຍຊື່ assembly
+/// ການລົງທະບຽນຢູ່ໃນຈຸດນັ້ນເຮັດໃຫ້ transformer ອັນນີ້ເຮັດວຽກຕໍ່ມາແລະຕົວຈິງແລ້ວໄດ້ຮັບຄ່າທີ່ກໍານົດໄວ້
 /// </remarks>
 public sealed class ApiDocumentInfoTransformer(IOptions<ApiOptions> apiOptions) : IOpenApiDocumentTransformer
 {

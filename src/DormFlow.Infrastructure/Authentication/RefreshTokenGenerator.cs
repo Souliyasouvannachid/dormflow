@@ -3,25 +3,25 @@ using System.Security.Cryptography;
 namespace DormFlow.Infrastructure.Authentication;
 
 /// <summary>
-/// สร้างและแฮชค่าของ Refresh Token
+/// ສ້າງແລະ hash ມູນຄ່າຂອງ Refresh Token
 /// </summary>
 /// <remarks>
-/// ค่าจริงของโทเคนถูกส่งให้ผู้เรียกเพียงครั้งเดียว ฐานข้อมูลเก็บเฉพาะค่าแฮช
-/// การตรวจสอบทำโดยแฮชค่าที่ผู้เรียกส่งมาแล้วค้นหาด้วยค่าแฮชนั้น
-/// ถ้าฐานข้อมูลรั่ว ผู้ที่ได้ข้อมูลไปจะนำค่าแฮชไปแลก Access Token ต่อไม่ได้
+/// ມູນຄ່າຕົວຈິງຂອງ token ຖືກສົ່ງໄປຫາຜູ້ໂທຄັ້ງດຽວເທົ່ານັ້ນ. ຖານຂໍ້ມູນເກັບຮັກສາພຽງແຕ່ຄ່າ hash
+/// ການກວດສອບແມ່ນເຮັດໄດ້ໂດຍການ hashing ຄ່າທີ່ສົ່ງໂດຍຜູ້ໂທແລະຊອກຫາຄ່າ hash ນັ້ນ
+/// ຖ້າຖານຂໍ້ມູນຖືກຮົ່ວ, ຜູ້ທີ່ໄດ້ຮັບຂໍ້ມູນຈະແລກປ່ຽນມູນຄ່າ hash Access Token ບໍ່ສາມາດສືບຕໍ່ໄດ້
 /// </remarks>
 public static class RefreshTokenGenerator
 {
-    /// <summary>จำนวนไบต์สุ่มที่ใช้สร้างโทเคนหนึ่งใบ</summary>
+    /// <summary>ຈຳນວນ bytes ແບບສຸ່ມທີ່ໃຊ້ເພື່ອສ້າງ token</summary>
     private const int TokenByteLength = 64;
 
-    /// <summary>สร้างค่าโทเคนใหม่แบบสุ่มด้วยตัวสร้างเลขสุ่มเชิงเข้ารหัส</summary>
+    /// <summary>ສ້າງຄ່າ token ໃໝ່ແບບສຸ່ມດ້ວຍເຄື່ອງສ້າງຕົວເລກແບບສຸ່ມ cryptographic</summary>
     public static string CreateToken()
         => Base64UrlEncode(RandomNumberGenerator.GetBytes(TokenByteLength));
 
-    /// <summary>คำนวณค่าแฮชของโทเคนในรูปแบบเลขฐานสิบหกตัวพิมพ์เล็ก</summary>
-    /// <param name="token">ค่าโทเคนจริง</param>
-    /// <exception cref="ArgumentException">เมื่อค่าโทเคนว่าง</exception>
+    /// <summary>ຄິດໄລ່ຄ່າ hash ຂອງ token ໃນຮູບແບບເລກຖານສິບຫົກຕົວນ້ອຍ</summary>
+    /// <param name="token">ຄ່າ token ທີ່ແທ້ຈິງ</param>
+    /// <exception cref="ArgumentException">ເມື່ອຄ່າ token ຫວ່າງເປົ່າ</exception>
     public static string ComputeHash(string token)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(token);
@@ -31,8 +31,8 @@ public static class RefreshTokenGenerator
     }
 
     /// <summary>
-    /// เข้ารหัสไบต์เป็นข้อความที่ใช้ได้ทั้งใน URL และใน JSON
-    /// ตัดอักขระที่ต้องหลบหลีกใน URL ออกทั้งหมด
+    /// ການເຂົ້າລະຫັດ byte-to-text ສາມາດນຳໃຊ້ໄດ້ທັງໃນ URL ແລະໃນ JSON
+    /// ຕັດຕົວອັກສອນທີ່ຕ້ອງໄດ້ຮັບການ maneuvered ໃນ URL ທັງໝົດ
     /// </summary>
     private static string Base64UrlEncode(byte[] bytes)
         => Convert.ToBase64String(bytes)

@@ -1,12 +1,12 @@
 namespace DormFlow.Contracts.Common;
 
 /// <summary>
-/// คำขอเปลี่ยนสถานะ ใช้ร่วมกันกับทุก Entity ที่มีคำสั่ง PATCH .../status
+/// ການຮ້ອງຂໍການປ່ຽນແປງສະຖານະການນໍາໃຊ້ຮ່ວມກັບທັງຝົດ Entity ກັບຄໍາສັ່ງ PATCH .../status
 /// </summary>
-/// <typeparam name="TStatus">ชนิดของ Enum สถานะของ Entity นั้น</typeparam>
+/// <typeparam name="TStatus">ປະເພດຂອງ Enum ສະຖານະຂອງ Entity ນັ້ນ</typeparam>
 public class ChangeStatusRequest<TStatus>
     where TStatus : struct, Enum
 {
-    /// <summary>สถานะใหม่ที่ต้องการตั้ง</summary>
+    /// <summary>ສະຖານະໃໝ່ທີ່ທ່ານຕ້ອງການຕັ້ງ</summary>
     public TStatus Status { get; set; }
 }

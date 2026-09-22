@@ -1,48 +1,48 @@
 namespace DormFlow.Contracts.Common;
 
 /// <summary>
-/// ผลลัพธ์แบบแบ่งหน้าที่ใช้กับทุก List Endpoint
+/// ຜົນໄດ້ຮັບໃນຜ້ານໍາໃຊ້ກັບທັງຝົດ List Endpoint
 /// </summary>
-/// <typeparam name="TItem">ชนิดของรายการในหน้า</typeparam>
+/// <typeparam name="TItem">ປະເພດຂອງລາຍການໃນຜ້າ</typeparam>
 public class PagedResult<TItem>
 {
-    /// <summary>รายการข้อมูลของหน้าปัจจุบัน</summary>
+    /// <summary>ບັນຊີລາຍຊື່ຂອງຂໍ້ມູນສໍາລັບຜ້າປະຈຸບັນ</summary>
     public IReadOnlyList<TItem> Items { get; init; } = [];
 
-    /// <summary>หมายเลขหน้าปัจจุบัน เริ่มที่ 1</summary>
+    /// <summary>ໝາຍເລກໜ້າປັດຈຸບັນເລີ່ມຕົ້ນທີ່ 1</summary>
     public int Page { get; init; } = PaginationDefaults.FirstPage;
 
-    /// <summary>จำนวนรายการต่อหน้า</summary>
+    /// <summary>ຈໍານວນລາຍການຕໍ່ຜ້າ</summary>
     public int PageSize { get; init; } = PaginationDefaults.DefaultPageSize;
 
-    /// <summary>จำนวนรายการทั้งหมดที่ตรงเงื่อนไข (ก่อนแบ่งหน้า)</summary>
+    /// <summary>ຈໍານວນລາຍການທັງໝົດທີ່ກົງກັບເງື່ອນໄຂ (ກ່ອນທີ່ຈະແຕກຜ້າ)</summary>
     public long TotalItems { get; init; }
 
-    /// <summary>จำนวนหน้าทั้งหมด</summary>
+    /// <summary>ຈຳນວນໜ້າທັງໝົດ</summary>
     public int TotalPages => PageSize <= 0 ? 0 : (int)Math.Ceiling(TotalItems / (double)PageSize);
 
-    /// <summary>มีหน้าก่อนหน้าหรือไม่</summary>
+    /// <summary>ມີໜ້າກ່ອນໜ້ານີ້ບໍ?</summary>
     public bool HasPreviousPage => Page > PaginationDefaults.FirstPage;
 
-    /// <summary>มีหน้าถัดไปหรือไม่</summary>
+    /// <summary>ມີໜ້າຕໍ່ໄປບໍ?</summary>
     public bool HasNextPage => Page < TotalPages;
 }
 
 /// <summary>
-/// ตัวช่วยสร้าง <see cref="PagedResult{TItem}"/>
+/// ຕົວຊ່ວຍສ້າງ <see cref="PagedResult{TItem}"/>
 /// </summary>
 /// <remarks>
-/// แยกเป็นคลาสไม่มี generic เพื่อให้เรียกใช้ได้โดยไม่ต้องระบุชนิดซ้ำ
-/// และเพื่อไม่ให้มี static member อยู่บน generic type
+/// ບໍ່ມີການແບ່ງອອກເປັນຫ້ອງຮຽນ generic ເພື່ອໃຫ້ສາມາດດໍາເນີນການໄດ້ໂດຍບໍ່ຕ້ອງລະບຸປະເພດອີກເທື່ອຜຶ່ງ
+/// ແລະໃນຄໍາສັ່ງທີ່ຈະບໍ່ມີ static member ແມ່ນຢູ່ generic type
 /// </remarks>
 public static class PagedResult
 {
-    /// <summary>สร้างผลลัพธ์แบบแบ่งหน้า</summary>
-    /// <typeparam name="TItem">ชนิดของรายการในหน้า</typeparam>
-    /// <param name="items">รายการข้อมูลของหน้าปัจจุบัน</param>
-    /// <param name="page">หมายเลขหน้าปัจจุบัน</param>
-    /// <param name="pageSize">จำนวนรายการต่อหน้า</param>
-    /// <param name="totalItems">จำนวนรายการทั้งหมดที่ตรงเงื่อนไข</param>
+    /// <summary>ສ້າງຜົນໄດ້ຮັບ paginated</summary>
+    /// <typeparam name="TItem">ປະເພດຂອງລາຍການໃນຜ້າ</typeparam>
+    /// <param name="items">ບັນຊີລາຍຊື່ຂອງຂໍ້ມູນສໍາລັບຜ້າປະຈຸບັນ</param>
+    /// <param name="page">ໝາຍເລກໜ້າປັດຈຸບັນ</param>
+    /// <param name="pageSize">ຈໍານວນລາຍການຕໍ່ຜ້າ</param>
+    /// <param name="totalItems">ຈໍານວນລາຍການທັງໝົດທີ່ກົງກັບເງື່ອນໄຂ</param>
     public static PagedResult<TItem> Create<TItem>(
         IReadOnlyList<TItem> items,
         int page,
@@ -60,10 +60,10 @@ public static class PagedResult
         };
     }
 
-    /// <summary>สร้างผลลัพธ์แบบแบ่งหน้าที่ไม่มีข้อมูล</summary>
-    /// <typeparam name="TItem">ชนิดของรายการในหน้า</typeparam>
-    /// <param name="page">หมายเลขหน้าปัจจุบัน</param>
-    /// <param name="pageSize">จำนวนรายการต่อหน้า</param>
+    /// <summary>ສ້າງຜົນໄດ້ຮັບແບບ paginated ໂດຍບໍ່ມີຂໍ້ມູນ</summary>
+    /// <typeparam name="TItem">ປະເພດຂອງລາຍການໃນຜ້າ</typeparam>
+    /// <param name="page">ໝາຍເລກໜ້າປັດຈຸບັນ</param>
+    /// <param name="pageSize">ຈໍານວນລາຍການຕໍ່ຜ້າ</param>
     public static PagedResult<TItem> Empty<TItem>(
         int page = PaginationDefaults.FirstPage,
         int pageSize = PaginationDefaults.DefaultPageSize)

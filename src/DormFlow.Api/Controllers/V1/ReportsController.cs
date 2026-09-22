@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับรายงาน</summary>
+/// <summary>Endpoint ສໍາລັບການລາຍງານ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/reports")]
@@ -17,7 +17,7 @@ public sealed class ReportsController(IReportService reportService) : Controller
 {
     private readonly IReportService _reportService = reportService;
 
-    /// <summary>สรุปยอดรายได้ในช่วงเวลาที่ระบุ</summary>
+    /// <summary>ສະຫຼຸບລາຍຮັບສໍາລັບໄລຍະເວລາທີ່ກໍານົດໄວ້</summary>
     [HttpGet("revenue")]
     [RequirePermission(PermissionCodes.Reports.View)]
     [ProducesResponseType(typeof(ApiResponse<RevenueReportResponse>), StatusCodes.Status200OK)]
@@ -30,7 +30,7 @@ public sealed class ReportsController(IReportService reportService) : Controller
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>ส่งออกรายงานสรุปรายได้เป็นไฟล์ CSV</summary>
+    /// <summary>ສົ່ງອອກບົດລາຍງານສະຫຼຸບລາຍຮັບເພື່ອຍື່ນ CSV</summary>
     [HttpGet("revenue/export")]
     [RequirePermission(PermissionCodes.Reports.Export)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -43,7 +43,7 @@ public sealed class ReportsController(IReportService reportService) : Controller
         return File(csv, "text/csv", "revenue-report.csv");
     }
 
-    /// <summary>ดึงรายการใบแจ้งหนี้ค้างชำระแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບແຈ້ງໜີ້ທີ່ຄ້າງໄວ້</summary>
     [HttpGet("outstanding-invoices")]
     [RequirePermission(PermissionCodes.Reports.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<OutstandingInvoiceItemResponse>>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ public sealed class ReportsController(IReportService reportService) : Controller
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>ส่งออกรายงานใบแจ้งหนี้ค้างชำระเป็นไฟล์ CSV</summary>
+    /// <summary>ສົ່ງອອກບົດລາຍງານໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຄາເປັນໄຟລ໌ CSV</summary>
     [HttpGet("outstanding-invoices/export")]
     [RequirePermission(PermissionCodes.Reports.Export)]
     [ProducesResponseType(StatusCodes.Status200OK)]

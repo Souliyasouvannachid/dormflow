@@ -1,17 +1,17 @@
 namespace DormFlow.Contracts.Users;
 
-/// <summary>คำขอแก้ไขข้อมูลโปรไฟล์ของผู้ใช้</summary>
+/// <summary>ຮ້ອງຂໍແກ້ໄຂຂໍ້ມູນໂປຣໄຟລ໌ຜູ້ໃຊ້</summary>
 public class UpdateUserRequest
 {
-    /// <summary>ชื่อ</summary>
+    /// <summary>ຊື່</summary>
     public string FirstName { get; set; } = string.Empty;
 
-    /// <summary>นามสกุล</summary>
+    /// <summary>ນາມສະກຸນ</summary>
     public string LastName { get; set; } = string.Empty;
 
-    /// <summary>เบอร์โทรศัพท์</summary>
+    /// <summary>ເບີໂທລະສັບ</summary>
     public string? Phone { get; set; }
 
-    /// <summary>ที่อยู่ของรูปโปรไฟล์</summary>
+    /// <summary>ທີ່ຢູ່ຮູບໂປຣໄຟລ໌</summary>
     public string? ProfileImage { get; set; }
 }

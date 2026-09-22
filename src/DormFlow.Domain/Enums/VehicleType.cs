@@ -1,14 +1,14 @@
 namespace DormFlow.Domain.Enums;
 
-/// <summary>ประเภทของยานพาหนะ</summary>
+/// <summary>ປະເພດຍານພາຫະນະ</summary>
 public enum VehicleType
 {
-    /// <summary>รถยนต์</summary>
+    /// <summary>ລົດ</summary>
     Car = 1,
 
-    /// <summary>รถจักรยานยนต์</summary>
+    /// <summary>ລົດຈັກ</summary>
     Motorcycle = 2,
 
-    /// <summary>อื่น ๆ</summary>
+    /// <summary>ອື່ນໆ</summary>
     Other = 3,
 }

@@ -10,12 +10,12 @@ using Microsoft.Extensions.Options;
 namespace DormFlow.Infrastructure.Authentication;
 
 /// <summary>
-/// จัดการวงจรชีวิตของ Refresh Token บน PostgreSQL
+/// ການຄຸ້ມຄອງວົງຈອນຊີວິດຂອງ Refresh Token ສຸດ PostgreSQL
 /// </summary>
 /// <remarks>
-/// ใช้กลไก Token Rotation ทุกครั้งที่ต่ออายุ โทเคนใบเดิมถูกเพิกถอนและออกใบใหม่แทน
-/// ถ้ามีการนำใบที่ถูกหมุนไปแล้วกลับมาใช้ซ้ำ แปลว่าโทเคนหลุดไปอยู่ในมือผู้อื่น
-/// ระบบจะเพิกถอนโทเคนที่ยังใช้งานได้ทั้งหมดของผู้ใช้รายนั้นทันที
+/// ກົນໄກການນໍາໃຊ້ Token Rotation ທຸກໆຄັ້ງທີ່ທ່ານຕໍ່ອາຍຸ ໂຕເຄັນຕົ້ນສະບັບໄດ້ຖືກຖອນຄືນ ແລະມີການອອກອັນໃໝ່ແທນ
+/// ຖ້າໃບທີ່ຖືກຝຸນແລ້ວຖືກນໍາມາໃຊ້ໃຝ່, ນີ້ຝາຍຄວາມວ່າ tokens ໄດ້ຕົກຢູ່ໃນມືທີ່ບໍ່ຖືກຕ້ອງ
+/// tokens ທີ່ເຮັດວຽກທັງຝົດສໍາລັບຜູ້ໃຊ້ນັ້ນຈະຖືກຖອນຄືນທັນທີ
 /// </remarks>
 public sealed class RefreshTokenService(
     DormFlowDbContext dbContext,
@@ -69,7 +69,7 @@ public sealed class RefreshTokenService(
 
         if (token.IsRevoked)
         {
-            // ถูกเพิกถอนเพราะหมุนโทเคนไปแล้ว แต่ยังมีคนถือใบเก่ามาใช้ แปลว่าโทเคนรั่ว
+            // ມັນໄດ້ຖືກຖອນຄືນເພາະວ່າໂທເຄັນໄດ້ຖືກຝຸນໄປກ່ອນແລ້ວ. ແຕ່ຍັງມີຄົນທີ່ໃຊ້ເຄື່ອງເກົ່າ. ມັນຝາຍຄວາມວ່າ token ຖືກຮົ່ວ
             if (token.ReasonRevoked == RefreshTokenRevocationReason.ReplacedByNewToken)
             {
                 await RevokeAllForUserAsync(
@@ -106,7 +106,7 @@ public sealed class RefreshTokenService(
 
         RefreshToken current = await _dbContext.RefreshTokens
                 .FirstOrDefaultAsync(token => token.Id == currentTokenId, cancellationToken)
-            ?? throw new InvalidOperationException($"ไม่พบ Refresh Token รหัส {currentTokenId} ที่ต้องการหมุน");
+            ?? throw new InvalidOperationException($"ບໍ່ພົບ Refresh Token ລະຫັດ {currentTokenId} ທີ່ຕ້ອງການໝູນ");
 
         (RefreshToken replacement, string rawToken) = CreateToken(
             current.UserId,
@@ -122,8 +122,8 @@ public sealed class RefreshTokenService(
 
         _dbContext.RefreshTokens.Add(replacement);
 
-        // การเพิกถอนใบเดิมกับการออกใบใหม่ต้องสำเร็จหรือล้มเหลวไปด้วยกัน
-        // SaveChangesAsync ครั้งเดียวครอบทั้งสองอย่างไว้ในธุรกรรมเดียวอยู่แล้ว
+        // ການຖອນໃບຢັ້ງຢືນເກົ່າແລະການອອກໃບຢັ້ງຢືນໃໝ່ຕ້ອງສຳເລັດຫຼືບໍ່ພ້ອມກັນ
+        // SaveChangesAsync ການໃຊ້ເວລາຜຶ່ງແລ້ວກວມເອົາທັງສອງໃນຜຶ່ງທຸລະກໍາ
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new IssuedRefreshToken(rawToken, replacement.Id, replacement.ExpiresAt);

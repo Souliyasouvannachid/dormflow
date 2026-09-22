@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormFlow.Api.Controllers.V1;
 
-/// <summary>Endpoint สำหรับจัดการใบเสร็จรับเงิน</summary>
+/// <summary>Endpoint ສໍາລັບການຄຸ້ມຄອງໃບຮັບເງິນ</summary>
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/receipts")]
@@ -17,7 +17,7 @@ public sealed class ReceiptsController(IReceiptService receiptService) : Control
 {
     private readonly IReceiptService _receiptService = receiptService;
 
-    /// <summary>ดึงรายการใบเสร็จรับเงินแบบแบ่งหน้า</summary>
+    /// <summary>ດຶງເອົາລາຍຊື່ໃບຮັບເງິນທີ່ໄດ້ວາງໄວ້ແລ້ວ</summary>
     [HttpGet]
     [RequirePermission(PermissionCodes.Receipts.View)]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ReceiptResponse>>), StatusCodes.Status200OK)]
@@ -29,7 +29,7 @@ public sealed class ReceiptsController(IReceiptService receiptService) : Control
         return Ok(ApiResponse.Paged(result));
     }
 
-    /// <summary>อ่านข้อมูลใบเสร็จรับเงินหนึ่งฉบับ</summary>
+    /// <summary>ອ່ານຂໍ້ມູນຂອງຜຶ່ງໃບຮັບ</summary>
     [HttpGet("{id:guid}")]
     [RequirePermission(PermissionCodes.Receipts.View)]
     [ProducesResponseType(typeof(ApiResponse<ReceiptResponse>), StatusCodes.Status200OK)]
@@ -42,7 +42,7 @@ public sealed class ReceiptsController(IReceiptService receiptService) : Control
         return Ok(ApiResponse.Ok(result, ApiMessages.Retrieved));
     }
 
-    /// <summary>ออกใบเสร็จรับเงินใหม่</summary>
+    /// <summary>ອອກໃບຮັບເງິນໃໝ່</summary>
     [HttpPost]
     [RequirePermission(PermissionCodes.Receipts.Issue)]
     [ProducesResponseType(typeof(ApiResponse<ReceiptResponse>), StatusCodes.Status200OK)]
