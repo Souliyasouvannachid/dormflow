@@ -42,3 +42,6 @@ appsettings.*.Local.json
 *.p12
 *.key
 secrets.json
+
+## Local deployment backups (may include credentials and database contents)
+.deployment-backups/

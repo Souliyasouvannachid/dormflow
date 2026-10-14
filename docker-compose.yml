@@ -11,8 +11,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?ຕ້ອງໄດ້ຮັບການກໍານົດ POSTGRES_PASSWORD ໃນໄຟລ໌ .env}
       # ເລັ່ງການຈັບຄູ່ຂໍ້ຄວາມ ແລະຕັ້ງທ້ອງຖິ່ນທີ່ສອດຄ່ອງກັນໃນທຸກອຸປະກອນ
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+    # The database stays private on the Compose network. The API reaches it at
+    # dormflow-postgres:5432; friends should use the API, never PostgreSQL.
     volumes:
       - dormflow-postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -43,6 +43,7 @@ services:
       ForwardedHeaders__KnownProxies__0: ${ForwardedHeaders__KnownProxies__0:-}
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?ຕ້ອງໄດ້ຮັບການກໍານົດ Connection String ໃນໄຟລ໌ .env}
       Cors__AllowedOrigins__0: ${Cors__AllowedOrigins__0:-http://localhost:3000}
+      Cors__AllowedOrigins__1: ${Cors__AllowedOrigins__1:-}
       RateLimiting__Enabled: ${RateLimiting__Enabled:-true}
       RateLimiting__PermitLimit: ${RateLimiting__PermitLimit:-100}
       RateLimiting__WindowSeconds: ${RateLimiting__WindowSeconds:-60}
@@ -63,13 +64,14 @@ services:
       # ປັບລະບົບຖານຂໍ້ມູນໂດຍອັດຕະໂນມັດໃນເວລາເລີ່ມຕົ້ນ. ປະໄວ້ເພື່ອຄວາມສະດວກໃນເວລາແລ່ນຄັ້ງທໍາອິດ
       # ປິດຄ່ານີ້ (false) ແລ້ວແລ່ນ dotnet ef database update ແຍກກ່ອນ deploy ເມື່ອແລ່ນຫຼາຍຕົວຢ່າງພ້ອມໆກັນ
       Database__AutoMigrate: ${Database__AutoMigrate:-false}
+      Database__EnableSensitiveDataLogging: ${Database__EnableSensitiveDataLogging:-false}
       # ຂໍ້ມູນຜູ້ເບິ່ງແຍງລະບົບເລີ່ມຕົ້ນ: ທາງເລືອກ. ຖ້າບໍ່ໄດ້ລະບຸ, ການສ້າງບັນຊີນີ້ຈະຖືກຂ້າມໄປ
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
       SEED_ADMIN_FIRST_NAME: ${SEED_ADMIN_FIRST_NAME:-}
       SEED_ADMIN_LAST_NAME: ${SEED_ADMIN_LAST_NAME:-}
     ports:
-      - "${API_HTTP_PORT:-8080}:8080"
+      - "127.0.0.1:${API_HTTP_PORT:-8081}:8080"
     volumes:
       - dormflow-api-logs:/app/logs
     healthcheck:

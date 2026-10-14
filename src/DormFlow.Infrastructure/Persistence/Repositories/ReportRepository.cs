@@ -55,13 +55,19 @@ public sealed class ReportRepository(DormFlowDbContext dbContext) : IReportRepos
     {
         ArgumentNullException.ThrowIfNull(filter);
 
-        return await ApplyRevenueFilter(_dbContext.Invoices.AsNoTracking(), filter)
+        var rows = await ApplyRevenueFilter(_dbContext.Invoices.AsNoTracking(), filter)
             .GroupBy(invoice => invoice.PeriodMonth)
-            .Select(group => new RevenueTrendSummary(
-                group.Key,
-                group.Sum(invoice => invoice.PaidAmount)))
+            .Select(group => new
+            {
+                PeriodMonth = group.Key,
+                TotalCollected = group.Sum(invoice => invoice.PaidAmount),
+            })
             .OrderBy(summary => summary.PeriodMonth)
             .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(row => new RevenueTrendSummary(row.PeriodMonth, row.TotalCollected))
+            .ToList();
     }
 
     /// <inheritdoc />
