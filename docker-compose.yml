@@ -44,6 +44,7 @@ services:
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?ຕ້ອງໄດ້ຮັບການກໍານົດ Connection String ໃນໄຟລ໌ .env}
       Cors__AllowedOrigins__0: ${Cors__AllowedOrigins__0:-http://localhost:3000}
       Cors__AllowedOrigins__1: ${Cors__AllowedOrigins__1:-}
+      Cors__AllowedOrigins__2: ${Cors__AllowedOrigins__2:-}
       RateLimiting__Enabled: ${RateLimiting__Enabled:-true}
       RateLimiting__PermitLimit: ${RateLimiting__PermitLimit:-100}
       RateLimiting__WindowSeconds: ${RateLimiting__WindowSeconds:-60}
