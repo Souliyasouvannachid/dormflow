@@ -3,6 +3,10 @@ namespace DormFlow.Contracts.Maintenance;
 /// <summary>ລາຍການໜຶ່ງຂອງຂໍ້ມູນວຽກບຳລຸງຮັກສາ</summary>
 public class MaintenanceRequestResponse
 {
+    public Guid? TenantId { get; init; }
+    public string Category { get; init; } = "General";
+    public decimal ActualCost { get; init; }
+
     /// <summary>ສ້ອມແປງລະຫັດອ້າງອີງ</summary>
     public Guid Id { get; init; }
 

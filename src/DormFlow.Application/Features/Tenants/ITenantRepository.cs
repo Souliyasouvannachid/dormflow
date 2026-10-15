@@ -6,7 +6,7 @@ using DormFlow.Domain.Enums;
 namespace DormFlow.Application.Features.Tenants;
 
 /// <summary>ການກັ່ນຕອງສໍາລັບການດຶງບັນຊີລາຍຊື່ paginated ຂອງຜູ້ເຊົ່າ</summary>
-public sealed record TenantListFilter(Guid? OrganizationId, TenantStatus? Status);
+public sealed record TenantListFilter(Guid? OrganizationId, TenantStatus? Status, bool CurrentOnly = false, Guid? DormitoryId = null, IReadOnlyCollection<Guid>? RestrictToDormitoryIds = null);
 
 /// <summary>ເຂົ້າເຖິງຂໍ້ມູນຜູ້ເຊົ່າໃນຖານຂໍ້ມູນ</summary>
 public interface ITenantRepository

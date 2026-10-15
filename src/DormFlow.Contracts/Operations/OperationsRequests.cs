@@ -1,0 +1,20 @@
+namespace DormFlow.Contracts.Operations;
+
+public record RenewLeaseRequest(DateOnly EndDate, decimal? MonthlyRent, decimal? WaterRatePerUnit, decimal? ElectricityRatePerUnit);
+public record InvoiceChargeRequest(string Description, decimal Amount);
+public record OpenBillingPeriodRequest(Guid DormitoryId, DateOnly Month);
+public record MaintenanceCostRequest(decimal Amount, string Description);
+public record TimelineNoteRequest(string Note);
+public record AllocationItem(Guid InvoiceId, decimal Amount);
+public record AllocatePaymentRequest(string IdempotencyKey, decimal Amount, string Method, DateTimeOffset PaymentDate, string? ReferenceNumber, IReadOnlyList<AllocationItem> Allocations);
+public record PaymentAllocationResult(string IdempotencyKey, IReadOnlyList<Guid> PaymentIds);
+public record NotificationCountResponse(int UnreadCount);
+public record RenewalResponse(Guid Id, DateOnly PreviousEndDate, DateOnly NewEndDate, decimal PreviousRent, decimal NewRent, DateTimeOffset CreatedAt);
+public record TimelineResponse(Guid Id, string Status, string Note, Guid? CreatedBy, DateTimeOffset CreatedAt);
+public record BillingPeriodResponse(Guid Id, Guid? DormitoryId, DateOnly Month, bool IsClosed, DateTimeOffset? ClosedAt);
+public record ChargeResponse(Guid Id, string Description, decimal Amount);
+public record HistoryResponse(Guid ContractId, Guid RoomId, string ContractNumber, string Status, DateOnly StartDate, DateOnly EndDate, DateTimeOffset? MoveInAt, DateTimeOffset? MoveOutAt);
+public record AnalyticsRequest(DateOnly From, DateOnly To, Guid? DormitoryId = null);
+public record ReportRow(string Label, decimal Amount, int Count = 0);
+public record ReportTable(IReadOnlyList<string> Columns, IReadOnlyList<IReadOnlyList<string>> Rows);
+public record AnalyticsResponse(decimal Revenue, decimal Expenses, decimal NetOperatingCash, decimal Outstanding, int ExpiringContracts, IReadOnlyList<ReportRow> MonthlyRevenue, IReadOnlyList<ReportRow> MonthlyExpenses, IReadOnlyList<ReportRow> PaymentMethods, IReadOnlyList<ReportRow> RoomStatuses, IReadOnlyList<ReportRow> ExpenseCategories, int OutstandingCount = 0);

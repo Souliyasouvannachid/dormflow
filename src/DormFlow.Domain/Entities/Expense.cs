@@ -12,6 +12,8 @@ namespace DormFlow.Domain.Entities;
 /// </remarks>
 public class Expense : TenantEntity
 {
+    public Guid? MaintenanceRequestId { get; set; }
+
     /// <summary>ປະເພດຂອງຄ່າໃຊ້ຈ່າຍ</summary>
     public ExpenseCategory Category { get; set; }
 

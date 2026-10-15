@@ -3,6 +3,8 @@ namespace DormFlow.Contracts.Expenses;
 /// <summary>ຄໍາຮ້ອງສະຝັກບັນທຶກລາຍຈ່າຍ</summary>
 public class CreateExpenseRequest
 {
+    public Guid? MaintenanceRequestId { get; set; }
+
     /// <summary>ຫໍພັກທີ່ກ່ຽວຂ້ອງກັບຄ່າໃຊ້ຈ່າຍນີ້</summary>
     public Guid DormitoryId { get; set; }
 

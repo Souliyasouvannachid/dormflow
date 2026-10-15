@@ -12,6 +12,7 @@ namespace DormFlow.Domain.Entities;
 /// </remarks>
 public class Reservation : TenantEntity
 {
+    public DateTimeOffset? ConfirmedAt { get; set; }
     /// <summary>ຫ້ອງສະຫງວນ</summary>
     public Guid RoomId { get; set; }
 

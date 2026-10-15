@@ -12,6 +12,10 @@ namespace DormFlow.Domain.Entities;
 /// </remarks>
 public class MaintenanceRequest : TenantEntity
 {
+    public Guid? TenantId { get; set; }
+    public string Category { get; set; } = "General";
+    public decimal ActualCost { get; set; }
+
     /// <summary>ລາຍງານຫ້ອງສໍາລັບການສ້ອມແປງ</summary>
     public Guid RoomId { get; set; }
 

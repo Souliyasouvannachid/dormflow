@@ -106,9 +106,9 @@ public sealed class InvoiceService(
             : null;
 
         decimal waterAmount = await CalculateUtilityAmountAsync(
-            contract.RoomId, MeterType.Water, periodMonth, dormitory?.WaterRatePerUnit ?? 0, cancellationToken);
+            contract.RoomId, MeterType.Water, periodMonth, contract.WaterRatePerUnit ?? dormitory?.WaterRatePerUnit ?? 0, cancellationToken);
         decimal electricityAmount = await CalculateUtilityAmountAsync(
-            contract.RoomId, MeterType.Electricity, periodMonth, dormitory?.ElectricityRatePerUnit ?? 0, cancellationToken);
+            contract.RoomId, MeterType.Electricity, periodMonth, contract.ElectricityRatePerUnit ?? dormitory?.ElectricityRatePerUnit ?? 0, cancellationToken);
 
         DateOnly issueDate = request.IssueDate ?? DateOnly.FromDateTime(_dateTimeProvider.UtcNow.UtcDateTime);
         DateOnly dueDate = ComputeDueDate(issueDate, dormitory?.PaymentDueDay ?? 5);

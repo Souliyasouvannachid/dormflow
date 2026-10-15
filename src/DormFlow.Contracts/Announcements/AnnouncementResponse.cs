@@ -3,6 +3,9 @@ namespace DormFlow.Contracts.Announcements;
 /// <summary>ຂໍ້ມູນປະກາດຜຶ່ງ</summary>
 public class AnnouncementResponse
 {
+    public string Priority { get; init; } = "Normal";
+    public string[] TargetRoles { get; init; } = [];
+
     /// <summary>ລະຫັດອ້າງອິງປະກາດ</summary>
     public Guid Id { get; init; }
 

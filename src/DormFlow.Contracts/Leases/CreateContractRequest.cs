@@ -3,6 +3,10 @@ namespace DormFlow.Contracts.Leases;
 /// <summary>ຮ້ອງຂໍສ້າງສັນຍາເຊົ່າໃຝ່</summary>
 public class CreateContractRequest
 {
+    public decimal? WaterRatePerUnit { get; set; }
+    public decimal? ElectricityRatePerUnit { get; set; }
+    public Guid[] CoTenantIds { get; set; } = [];
+
     /// <summary>ຫ້ອງເພື່ອເຮັດສັນຍາ</summary>
     public Guid RoomId { get; set; }
 

@@ -127,6 +127,18 @@ public sealed class ContractService(
             room.Status = RoomStatus.Reserved;
         }
 
+        if (request.WaterRatePerUnit < 0 || request.ElectricityRatePerUnit < 0)
+            throw new ValidationFailedException("Utility rates must not be negative.");
+        if (request.CoTenantIds.Distinct().Count() + 1 > room.MaximumOccupants)
+            throw new ValidationFailedException("Occupants exceed room capacity.");
+        foreach (Guid coTenantId in request.CoTenantIds.Distinct())
+        {
+            Tenant? coTenant = await _tenantRepository.GetByIdAsync(coTenantId, cancellationToken);
+            if (coTenant is null || coTenant.OrganizationId != room.OrganizationId)
+                throw new NotFoundException("Co-tenant not found.");
+            if (coTenant.Status == TenantStatus.Blacklisted || coTenantId == tenant.Id)
+                throw new ValidationFailedException("Invalid co-tenant.");
+        }
         string contractNumber = await GenerateUniqueContractNumberAsync(room.OrganizationId, cancellationToken);
 
         Contract contract = new()
@@ -141,6 +153,9 @@ public sealed class ContractService(
             EndDate = request.EndDate,
             MonthlyRent = request.MonthlyRent ?? room.MonthlyRent,
             DepositAmount = request.DepositAmount ?? room.DepositAmount,
+            WaterRatePerUnit = request.WaterRatePerUnit,
+            ElectricityRatePerUnit = request.ElectricityRatePerUnit,
+            CoTenantIds = request.CoTenantIds.Distinct().ToArray(),
             Notes = request.Notes,
         };
 
@@ -311,6 +326,9 @@ public sealed class ContractService(
         EndDate = contract.EndDate,
         MonthlyRent = contract.MonthlyRent,
         DepositAmount = contract.DepositAmount,
+        WaterRatePerUnit = contract.WaterRatePerUnit,
+        ElectricityRatePerUnit = contract.ElectricityRatePerUnit,
+        CoTenantIds = contract.CoTenantIds,
         Status = contract.Status.ToString(),
         SignedAt = contract.SignedAt,
         TerminatedAt = contract.TerminatedAt,

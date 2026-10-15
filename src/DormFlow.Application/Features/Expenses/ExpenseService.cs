@@ -75,6 +75,7 @@ public sealed class ExpenseService(
         {
             OrganizationId = dormitory.OrganizationId,
             DormitoryId = dormitory.Id,
+            MaintenanceRequestId = request.MaintenanceRequestId,
             Category = Enum.Parse<ExpenseCategory>(request.Category, ignoreCase: true),
             Amount = request.Amount,
             ExpenseDate = request.ExpenseDate,
@@ -120,6 +121,7 @@ public sealed class ExpenseService(
         Id = expense.Id,
         OrganizationId = expense.OrganizationId,
         DormitoryId = expense.DormitoryId.GetValueOrDefault(),
+        MaintenanceRequestId = expense.MaintenanceRequestId,
         Category = expense.Category.ToString(),
         Amount = expense.Amount,
         ExpenseDate = expense.ExpenseDate,

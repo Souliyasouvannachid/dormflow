@@ -11,4 +11,5 @@ public enum AnnouncementStatus
 
     /// <summary>ເກັບໄວ້ແລ້ວ, ບໍ່ໄດ້ສະແດງອີກຕໍ່ໄປ</summary>
     Archived = 3,
+    Cancelled = 4,
 }

@@ -12,6 +12,9 @@ namespace DormFlow.Contracts.Dashboard;
 /// </remarks>
 public class DashboardSummaryResponse
 {
+    public decimal? ExpensesThisMonth { get; init; }
+    public decimal? NetOperatingCashThisMonth { get; init; }
+    public int ExpiringContractsCount { get; init; }
     /// <summary>ຈໍານວນຂອງຫ້ອງທີ່ແຍກໂດຍສະຖານະການທີ່ສໍາຄັນແມ່ນຊື່ສະຖານະ (Available/Reserved/Occupied/Cleaning/Maintenance/Inactive)</summary>
     public IReadOnlyDictionary<string, int>? RoomStatusCounts { get; init; }
 

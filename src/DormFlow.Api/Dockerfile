@@ -26,6 +26,13 @@ RUN dotnet publish src/DormFlow.Api/DormFlow.Api.csproj \
     --configuration Release \
     --output /app/publish
 
+FROM node:24-alpine AS web-build
+WORKDIR /web
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+COPY web/ ./
+RUN npm run build
+
 # ---------- ຮູບພາບການແລ່ນຕົວຈິງ ----------
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
@@ -44,6 +51,7 @@ RUN apt-get update \
 RUN mkdir -p /app/logs && chown -R $APP_UID:$APP_UID /app
 
 COPY --from=publish --chown=$APP_UID:$APP_UID /app/publish .
+COPY --from=web-build --chown=$APP_UID:$APP_UID /web/dist ./wwwroot
 
 # ດໍາເນີນການກັບຜູ້ໃຊ້ທີ່ບໍ່ມີສິດພິເສດ root ອີງຕາມຄ່າມາດຕະຖານຂອງຮູບພາບ .NET
 USER $APP_UID

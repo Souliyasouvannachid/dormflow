@@ -16,6 +16,10 @@ namespace DormFlow.Domain.Entities;
 /// </remarks>
 public class Contract : TenantEntity
 {
+    public decimal? WaterRatePerUnit { get; set; }
+    public decimal? ElectricityRatePerUnit { get; set; }
+    public Guid[] CoTenantIds { get; set; } = [];
+
     /// <summary>ຫ້ອງສັນຍາ</summary>
     public Guid RoomId { get; set; }
 

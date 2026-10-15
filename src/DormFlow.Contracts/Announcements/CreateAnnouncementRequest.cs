@@ -3,6 +3,9 @@ namespace DormFlow.Contracts.Announcements;
 /// <summary>ຮ້ອງຂໍເພື່ອສ້າງການປະກາດໃຝ່ (ສ້າງຢູ່ໃນສະຖານະສະບັບຮ່າງສະເໝີ)</summary>
 public class CreateAnnouncementRequest
 {
+    public string Priority { get; set; } = "Normal";
+    public string[] TargetRoles { get; set; } = [];
+
     /// <summary>ຫໍພັກທີ່ປະກາດນີ້ກ່ຽວຂ້ອງ</summary>
     public Guid DormitoryId { get; set; }
 

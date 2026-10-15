@@ -148,6 +148,8 @@ public static class DependencyInjection
         services.AddScoped<ISettingRepository, SettingRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        services.AddScoped<DormFlow.Application.Features.Operations.IOperationsService, DormFlow.Infrastructure.Services.OperationsService>();
+        services.AddScoped<DormFlow.Application.Features.Operations.IAnalyticsService, DormFlow.Infrastructure.Services.AnalyticsService>();
         services.AddScoped<DatabaseSeeder>();
         services.AddScoped<DatabaseInitializer>();
 

@@ -3,6 +3,10 @@ namespace DormFlow.Contracts.Leases;
 /// <summary>ຂໍ້ມູນການເຊົ່າຜຶ່ງ</summary>
 public class ContractResponse
 {
+    public decimal? WaterRatePerUnit { get; init; }
+    public decimal? ElectricityRatePerUnit { get; init; }
+    public Guid[] CoTenantIds { get; init; } = [];
+
     /// <summary>ລະຫັດອ້າງອີງສັນຍາ</summary>
     public Guid Id { get; init; }
 

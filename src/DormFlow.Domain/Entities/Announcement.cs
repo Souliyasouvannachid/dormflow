@@ -12,6 +12,9 @@ namespace DormFlow.Domain.Entities;
 /// </remarks>
 public class Announcement : TenantEntity
 {
+    public string Priority { get; set; } = "Normal";
+    public string[] TargetRoles { get; set; } = [];
+
     /// <summary>ຫົວຂໍ້ປະກາດ</summary>
     public required string Title { get; set; }
 

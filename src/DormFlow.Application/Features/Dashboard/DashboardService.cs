@@ -1,4 +1,5 @@
 using DormFlow.Application.Common.Abstractions;
+using DormFlow.Application.Common.Authorization;
 using DormFlow.Application.Features.AuditLogs;
 using DormFlow.Application.Features.Maintenance;
 using DormFlow.Application.Features.Parcels;
@@ -28,8 +29,8 @@ namespace DormFlow.Application.Features.Dashboard;
 /// DbContext ອັນດຽວກັນທີ່ຜູກມັດກັບຂອບເຂດຂອງການຮ້ອງຂໍນີ້. ເຊິ່ງບໍ່ຮອງຮັບການປະຕິບັດຄຳສັ່ງຫຼາຍອັນພ້ອມກັນ
 /// </remarks>
 public sealed class DashboardService(
+    DormFlow.Application.Features.Operations.IAnalyticsService analyticsService,
     IRoomService roomService,
-    IReportService reportService,
     IMaintenanceRequestService maintenanceService,
     IReservationService reservationService,
     IParcelService parcelService,
@@ -43,16 +44,7 @@ public sealed class DashboardService(
     private const int RecentActivityCount = 8;
     private const int ExpiringReservationWindowHours = 24;
 
-    /// <summary>
-    /// ຈໍານວນປີທີ່ຜ່ານມາໃຊ້ເພື່ອປະເມີນຈໍານວນໃບແຈ້ງໜີ້ທີ່ຍັງຄ້າງຢູ່ "ທັງໝົດ" ຂອງ dashboard ໄດ້
-    /// ເນື່ອງຈາກວ່າ IReportService ຄິດໄລ່ຕາມໄລຍະ PeriodMonth ເທົ່ານັ້ນ, ບໍ່ Endpoint ທີ່ສົ່ງຄືນຍອດຄົງຄ້າງ
-    /// ໄລຍະເວລາບໍ່ຈໍາກັດຄ່ານີ້ແມ່ນການປະມານທີ່ສົມບູນແບບສໍາລັບສະພາບລວມທີ່ສົມບູນແບບຢູ່ໃນ dashboard. ມັນບໍ່ແມ່ນຕົວເລກທີ່ຖືກຕ້ອງ 100%
-    /// ສໍາລັບຈໍານວນທັງຝົດທີ່ຖືກຕ້ອງໃຊ້ຜ້າລາຍງານ (/reports/outstanding-invoices) ແທນ
-    /// </summary>
-    private const int OutstandingLookbackYears = 2;
-
     private readonly IRoomService _roomService = roomService;
-    private readonly IReportService _reportService = reportService;
     private readonly IMaintenanceRequestService _maintenanceService = maintenanceService;
     private readonly IReservationService _reservationService = reservationService;
     private readonly IParcelService _parcelService = parcelService;
@@ -66,23 +58,11 @@ public sealed class DashboardService(
     public async Task<DashboardSummaryResponse> GetSummaryAsync(CancellationToken cancellationToken = default)
     {
         DateTimeOffset now = _dateTimeProvider.UtcNow;
-        DateOnly today = DateOnly.FromDateTime(now.UtcDateTime);
+        DateOnly today = DateOnly.FromDateTime(now.ToOffset(TimeSpan.FromHours(7)).DateTime);
         DateOnly currentMonth = new(today.Year, today.Month, 1);
 
         RoomSummaryResponse roomSummary = await _roomService.GetSummaryAsync(
             new RoomSummaryRequest(), cancellationToken);
-
-        IReadOnlyList<RevenueTrendPointResponse> revenueTrend = await GetRevenueTrendAsync(
-            currentMonth, cancellationToken);
-        decimal revenueThisMonth = revenueTrend.Count > 0 ? revenueTrend[^1].Amount : 0m;
-
-        RevenueReportResponse outstandingSummary = await _reportService.GetRevenueSummaryAsync(
-            new RevenueReportRequest
-            {
-                PeriodFrom = currentMonth.AddYears(-OutstandingLookbackYears),
-                PeriodTo = currentMonth,
-            },
-            cancellationToken);
 
         int openMaintenanceCount = await GetOpenMaintenanceCountAsync(cancellationToken);
 
@@ -99,6 +79,9 @@ public sealed class DashboardService(
 
         IReadOnlyList<DashboardActivityItemResponse> recentActivity = await GetRecentActivityAsync(cancellationToken);
 
+        var analytics = await analyticsService.GetAsync(new DormFlow.Contracts.Operations.AnalyticsRequest(currentMonth, today), cancellationToken);
+        bool canViewFinance = _currentUser.HasPermission(PermissionCodes.Reports.View);
+        var trendAnalytics = canViewFinance ? await analyticsService.GetAsync(new DormFlow.Contracts.Operations.AnalyticsRequest(currentMonth.AddMonths(-(RevenueTrendMonths - 1)), today), cancellationToken) : null;
         return new DashboardSummaryResponse
         {
             RoomStatusCounts = BuildRoomStatusCounts(roomSummary),
@@ -106,10 +89,13 @@ public sealed class DashboardService(
             OccupancyRate = roomSummary.TotalRooms > 0
                 ? Math.Round(roomSummary.Occupied * 100d / roomSummary.TotalRooms, 1)
                 : null,
-            OutstandingInvoicesTotal = outstandingSummary.TotalOutstanding,
-            OutstandingInvoicesCount = outstandingSummary.InvoiceCount - outstandingSummary.PaidInvoiceCount,
-            RevenueThisMonth = revenueThisMonth,
-            RevenueTrend = revenueTrend,
+            ExpensesThisMonth = canViewFinance ? analytics.Expenses : null,
+            NetOperatingCashThisMonth = canViewFinance ? analytics.NetOperatingCash : null,
+            ExpiringContractsCount = analytics.ExpiringContracts,
+            OutstandingInvoicesTotal = canViewFinance ? analytics.Outstanding : null,
+            OutstandingInvoicesCount = canViewFinance ? analytics.OutstandingCount : null,
+            RevenueThisMonth = canViewFinance ? analytics.Revenue : null,
+            RevenueTrend = trendAnalytics?.MonthlyRevenue.Select(x => new RevenueTrendPointResponse { Label = x.Label, Amount = x.Amount }).ToArray(),
             PendingPaymentConfirmations = pendingPayments,
             OpenMaintenanceCount = openMaintenanceCount,
             MyAssignedMaintenance = myAssignedMaintenance,
@@ -119,13 +105,6 @@ public sealed class DashboardService(
             RecentActivity = recentActivity,
         };
     }
-
-    private async Task<IReadOnlyList<RevenueTrendPointResponse>> GetRevenueTrendAsync(
-        DateOnly currentMonth, CancellationToken cancellationToken)
-        => await _reportService.GetRevenueTrendAsync(
-            currentMonth.AddMonths(-(RevenueTrendMonths - 1)),
-            currentMonth,
-            cancellationToken);
 
     private async Task<int> GetOpenMaintenanceCountAsync(CancellationToken cancellationToken)
     {

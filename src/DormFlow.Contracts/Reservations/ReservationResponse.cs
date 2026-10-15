@@ -3,6 +3,7 @@ namespace DormFlow.Contracts.Reservations;
 /// <summary>ຂໍ້ມູນການຈອງຜຶ່ງ</summary>
 public class ReservationResponse
 {
+    public DateTimeOffset? ConfirmedAt { get; init; }
     /// <summary>ລະຫັດອ້າງອີງການຈອງ</summary>
     public Guid Id { get; init; }
 

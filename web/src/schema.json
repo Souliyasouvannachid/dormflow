@@ -1,0 +1,1497 @@
+[
+  {
+    "key": "organizations",
+    "title": "องค์กร",
+    "group": "องค์กร",
+    "columns": [
+      "name",
+      "code",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "taxId",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "taxId",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "dormitories",
+    "title": "หอพัก",
+    "group": "ห้องพัก",
+    "columns": [
+      "name",
+      "code",
+      "phone",
+      "waterRatePerUnit",
+      "electricityRatePerUnit"
+    ],
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "province",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "district",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "subdistrict",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "postalCode",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "latitude",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "longitude",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "billingDay",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "paymentDueDay",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lateFeeType",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lateFeeAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "waterRatePerUnit",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "electricityRatePerUnit",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "province",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "district",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "subdistrict",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "postalCode",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "latitude",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "longitude",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "billingDay",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "paymentDueDay",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lateFeeType",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lateFeeAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "waterRatePerUnit",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "electricityRatePerUnit",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "buildings",
+    "title": "อาคาร",
+    "group": "ห้องพัก",
+    "columns": [
+      "name",
+      "code",
+      "totalFloors",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "dormitoryId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "totalFloors",
+        "type": "int",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "totalFloors",
+        "type": "int",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "floors",
+    "title": "ชั้น",
+    "group": "ห้องพัก",
+    "columns": [
+      "name",
+      "floorNumber",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "buildingId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "floorNumber",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "floorNumber",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "room-types",
+    "title": "ประเภทห้อง",
+    "group": "ห้องพัก",
+    "columns": [
+      "name",
+      "monthlyRent",
+      "depositAmount",
+      "maximumOccupants"
+    ],
+    "fields": [
+      {
+        "key": "dormitoryId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "monthlyRent",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "dailyRent",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "depositAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "maximumOccupants",
+        "type": "int",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "code",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "monthlyRent",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "dailyRent",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "depositAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "maximumOccupants",
+        "type": "int",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "rooms",
+    "title": "Room Center",
+    "group": "ห้องพัก",
+    "columns": [
+      "roomNumber",
+      "buildingName",
+      "floorName",
+      "roomTypeName",
+      "monthlyRent",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "buildingId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "floorId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "roomTypeId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "roomNumber",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "monthlyRent",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "depositAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "maximumOccupants",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "floorId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "roomTypeId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "roomNumber",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "monthlyRent",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "depositAmount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "maximumOccupants",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "tenants",
+    "title": "ผู้เช่า",
+    "group": "การเข้าพัก",
+    "columns": [
+      "fullName",
+      "phone",
+      "email",
+      "emergencyContactName",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "firstName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lastName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "nationalId",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "dateOfBirth",
+        "type": "DateOnly?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "emergencyContactName",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "emergencyContactPhone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "firstName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lastName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "nationalId",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "dateOfBirth",
+        "type": "DateOnly?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "address",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "emergencyContactName",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "emergencyContactPhone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "reservations",
+    "title": "จองห้อง",
+    "group": "การเข้าพัก",
+    "columns": [
+      "roomId",
+      "tenantId",
+      "moveInDate",
+      "expiresAt",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "roomId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "tenantId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "moveInDate",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "holdDays",
+        "type": "int",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "reservationFee",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "contracts",
+    "title": "สัญญาเช่า",
+    "group": "การเข้าพัก",
+    "columns": [
+      "contractNumber",
+      "roomId",
+      "tenantId",
+      "startDate",
+      "endDate",
+      "monthlyRent",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "waterRatePerUnit",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "electricityRatePerUnit",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "coTenantIds",
+        "type": "Guid[]",
+        "optional": false,
+        "array": true
+      },
+      {
+        "key": "roomId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "tenantId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "reservationId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "startDate",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "endDate",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "monthlyRent",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "depositAmount",
+        "type": "decimal?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "meter-readings",
+    "title": "จดมิเตอร์",
+    "group": "การเงิน",
+    "columns": [
+      "roomId",
+      "meterType",
+      "periodMonth",
+      "previousReading",
+      "currentReading",
+      "unitsUsed"
+    ],
+    "fields": [
+      {
+        "key": "roomId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "meterType",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "periodMonth",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "readingDate",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "currentReading",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "billing-periods",
+    "title": "รอบบิล",
+    "group": "การเงิน",
+    "columns": [
+      "month",
+      "dormitoryId",
+      "isClosed"
+    ],
+    "fields": [],
+    "updateFields": [],
+    "canCreate": false,
+    "canUpdate": false
+  },
+  {
+    "key": "invoices",
+    "title": "ใบแจ้งหนี้",
+    "group": "การเงิน",
+    "columns": [
+      "invoiceNumber",
+      "periodMonth",
+      "totalAmount",
+      "paidAmount",
+      "remainingBalance",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "contractId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "periodMonth",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "issueDate",
+        "type": "DateOnly?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "payments",
+    "title": "รับชำระเงิน",
+    "group": "การเงิน",
+    "columns": [
+      "invoiceId",
+      "amount",
+      "method",
+      "paymentDate",
+      "status"
+    ],
+    "fields": [
+      {
+        "key": "invoiceId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "amount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "paymentDate",
+        "type": "DateTimeOffset?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "method",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "referenceNumber",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "receipts",
+    "title": "ใบเสร็จ",
+    "group": "การเงิน",
+    "columns": [
+      "receiptNumber",
+      "amount",
+      "issuedAt",
+      "paymentId"
+    ],
+    "fields": [],
+    "updateFields": [],
+    "canCreate": false,
+    "canUpdate": false
+  },
+  {
+    "key": "expenses",
+    "title": "ค่าใช้จ่าย",
+    "group": "การเงิน",
+    "columns": [
+      "expenseDate",
+      "category",
+      "description",
+      "amount",
+      "paidTo"
+    ],
+    "fields": [
+      {
+        "key": "maintenanceRequestId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "dormitoryId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "category",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "amount",
+        "type": "decimal",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "expenseDate",
+        "type": "DateOnly",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "paidTo",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "maintenance-requests",
+    "title": "งานซ่อม",
+    "group": "งานประจำวัน",
+    "columns": [
+      "title",
+      "roomId",
+      "category",
+      "priority",
+      "status",
+      "actualCost"
+    ],
+    "fields": [
+      {
+        "key": "tenantId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "category",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "roomId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "title",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "priority",
+        "type": "string",
+        "optional": false,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "parcels",
+    "title": "พัสดุ",
+    "group": "งานประจำวัน",
+    "columns": [
+      "trackingNumber",
+      "courierName",
+      "roomId",
+      "status",
+      "receivedAt"
+    ],
+    "fields": [
+      {
+        "key": "roomId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "tenantId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "courierName",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "trackingNumber",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "announcements",
+    "title": "ประกาศ",
+    "group": "งานประจำวัน",
+    "columns": [
+      "title",
+      "priority",
+      "status",
+      "publishedAt"
+    ],
+    "fields": [
+      {
+        "key": "priority",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "targetRoles",
+        "type": "string[]",
+        "optional": false,
+        "array": true
+      },
+      {
+        "key": "dormitoryId",
+        "type": "Guid",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "title",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "content",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "expiresAt",
+        "type": "DateTimeOffset?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "notes",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [],
+    "canCreate": true,
+    "canUpdate": false
+  },
+  {
+    "key": "notifications",
+    "title": "การแจ้งเตือน",
+    "group": "งานประจำวัน",
+    "columns": [
+      "title",
+      "message",
+      "isRead",
+      "createdAt"
+    ],
+    "fields": [],
+    "updateFields": [],
+    "canCreate": false,
+    "canUpdate": false
+  },
+  {
+    "key": "users",
+    "title": "ผู้ใช้งาน",
+    "group": "ตั้งค่า",
+    "columns": [
+      "fullName",
+      "email",
+      "status",
+      "roles"
+    ],
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "Guid?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "email",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "password",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "firstName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lastName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "firstName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "lastName",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "phone",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      },
+      {
+        "key": "profileImage",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "roles",
+    "title": "บทบาทและสิทธิ์",
+    "group": "ตั้งค่า",
+    "columns": [
+      "name",
+      "description"
+    ],
+    "fields": [
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "updateFields": [
+      {
+        "key": "name",
+        "type": "string",
+        "optional": false,
+        "array": false
+      },
+      {
+        "key": "description",
+        "type": "string?",
+        "optional": true,
+        "array": false
+      }
+    ],
+    "canCreate": true,
+    "canUpdate": true
+  },
+  {
+    "key": "settings",
+    "title": "ตั้งค่าระบบ",
+    "group": "ตั้งค่า",
+    "columns": [
+      "key",
+      "value"
+    ],
+    "fields": [],
+    "updateFields": [],
+    "canCreate": false,
+    "canUpdate": false
+  }
+]

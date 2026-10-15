@@ -8,4 +8,5 @@ public enum ParcelStatus
 
     /// <summary>ຜູ້ເຊົ່າໄດ້ຮັບຊຸດແລ້ວ</summary>
     PickedUp = 2,
+    Returned = 3,
 }

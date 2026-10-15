@@ -67,6 +67,10 @@ try
 
     app.UseDormFlowRequestLogging();
 
+    // Docker builds place the React bundle here; hash routes share the API origin.
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+
     if (!app.Environment.IsDevelopment())
     {
         app.UseHsts();

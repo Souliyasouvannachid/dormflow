@@ -37,6 +37,14 @@ public sealed class TenantRepository(DormFlowDbContext dbContext) : ITenantRepos
         ArgumentNullException.ThrowIfNull(filter);
 
         IQueryable<Tenant> tenants = _dbContext.Tenants.AsNoTracking();
+        if (filter.CurrentOnly)
+        {
+            tenants = tenants.Where(t => _dbContext.Contracts.Any(c =>
+                c.Status == DormFlow.Domain.Enums.ContractStatus.Active
+                && (c.TenantId == t.Id || c.CoTenantIds.Contains(t.Id))
+                && (!filter.DormitoryId.HasValue || c.DormitoryId == filter.DormitoryId)
+                && (filter.RestrictToDormitoryIds == null || (c.DormitoryId.HasValue && filter.RestrictToDormitoryIds.Contains(c.DormitoryId.Value)))));
+        }
 
         if (filter.OrganizationId.HasValue)
         {

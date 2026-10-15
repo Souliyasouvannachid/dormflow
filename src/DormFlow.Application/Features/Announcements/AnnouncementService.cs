@@ -75,6 +75,8 @@ public sealed class AnnouncementService(
         {
             OrganizationId = dormitory.OrganizationId,
             DormitoryId = dormitory.Id,
+            Priority = request.Priority,
+            TargetRoles = request.TargetRoles,
             Title = request.Title.Trim(),
             Content = request.Content.Trim(),
             ExpiresAt = request.ExpiresAt,
@@ -169,6 +171,8 @@ public sealed class AnnouncementService(
         Id = announcement.Id,
         OrganizationId = announcement.OrganizationId,
         DormitoryId = announcement.DormitoryId.GetValueOrDefault(),
+        Priority = announcement.Priority,
+        TargetRoles = announcement.TargetRoles,
         Title = announcement.Title,
         Content = announcement.Content,
         Status = announcement.Status.ToString(),

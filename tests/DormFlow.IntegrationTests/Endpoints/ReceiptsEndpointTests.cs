@@ -34,14 +34,14 @@ public class ReceiptsEndpointTests(DormFlowApiFactory factory)
 
         PaymentResponse payment = await CreateConfirmedPaymentAsync(client);
 
-        using HttpResponseMessage response = await client.PostAsJsonAsync(
-            new Uri("/api/v1/receipts", UriKind.Relative),
-            new IssueReceiptRequest { PaymentId = payment.Id },
+        // Confirmation now issues the receipt atomically; retrieve it instead of issuing twice.
+        using HttpResponseMessage response = await client.GetAsync(
+            new Uri($"/api/v1/receipts?paymentId={payment.Id}", UriKind.Relative),
             TestContext.Current.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         ReceiptResponse receipt = (await response.Content
-            .ReadFromJsonAsync<ApiResponse<ReceiptResponse>>(TestContext.Current.CancellationToken))!.Data!;
+            .ReadFromJsonAsync<ApiResponse<PagedResult<ReceiptResponse>>>(TestContext.Current.CancellationToken))!.Data!.Items.Single();
 
         receipt.PaymentId.Should().Be(payment.Id);
         receipt.Amount.Should().Be(payment.Amount);

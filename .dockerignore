@@ -5,6 +5,10 @@
 **/publish/
 **/TestResults/
 **/logs/
+**/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
 
 # ໄຟລ໌ຂອງ IDE
 .vs/

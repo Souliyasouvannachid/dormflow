@@ -45,3 +45,9 @@ secrets.json
 
 ## Local deployment backups (may include credentials and database contents)
 .deployment-backups/
+
+## Web build and browser test artifacts
+node_modules/
+web/dist/
+web/playwright-report/
+web/test-results/

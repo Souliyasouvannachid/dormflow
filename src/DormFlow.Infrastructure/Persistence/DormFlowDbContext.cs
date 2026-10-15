@@ -114,6 +114,18 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
     /// <summary>ການຕັ້ງຄ່າທັງຝົດໃນລະບົບ</summary>
     public DbSet<Setting> Settings => Set<Setting>();
 
+    public DbSet<BillingPeriod> BillingPeriods => Set<BillingPeriod>();
+    public DbSet<InvoiceCharge> InvoiceCharges => Set<InvoiceCharge>();
+    public DbSet<ContractRenewal> ContractRenewals => Set<ContractRenewal>();
+    public DbSet<MaintenanceEvent> MaintenanceEvents => Set<MaintenanceEvent>();
+
+    /// <inheritdoc />
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await WorkflowEffects.ApplyAsync(this, cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -122,6 +134,17 @@ public class DormFlowDbContext(DbContextOptions<DormFlowDbContext> options)
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(InfrastructureAssembly);
+        builder.Entity<BillingPeriod>().ToTable("billing_periods");
+        builder.Entity<BillingPeriod>().HasIndex(x => new { x.DormitoryId, x.Month }).IsUnique();
+        builder.Entity<InvoiceCharge>().ToTable("invoice_charges");
+        builder.Entity<InvoiceCharge>().HasOne<Invoice>().WithMany().HasForeignKey(x => x.InvoiceId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<ContractRenewal>().ToTable("contract_renewals");
+        builder.Entity<ContractRenewal>().HasOne<Contract>().WithMany().HasForeignKey(x => x.ContractId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<MaintenanceEvent>().ToTable("maintenance_events");
+        builder.Entity<MaintenanceEvent>().Property(x => x.Note).HasMaxLength(2000);
+        builder.Entity<MaintenanceEvent>().HasOne<MaintenanceRequest>().WithMany().HasForeignKey(x => x.MaintenanceRequestId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Expense>().HasOne<MaintenanceRequest>().WithMany().HasForeignKey(x => x.MaintenanceRequestId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<MaintenanceRequest>().HasOne<Tenant>().WithMany().HasForeignKey(x => x.TenantId).OnDelete(DeleteBehavior.Restrict);
 
         // ຕ້ອງໂທຫາພາຍຫຼັງ ApplyConfigurationsFromAssembly ເພື່ອອະນຸຍາດໃຫ້ສັນຍາລວມເພື່ອ override ມູນຄ່າທີ່ຍັງບໍ່ທັນໄດ້ປັບແຕ່ງ
         builder.ApplyDormFlowConventions();

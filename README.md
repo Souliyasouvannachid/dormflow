@@ -3,11 +3,11 @@
 ລະບົບການຄຸ້ມຄອງຫໍພັກ ແລະອາພາດເມັນຫຼາຍອົງກອນ (Multi-Organization SaaS)
 ສ້າງດ້ວຍ ASP.NET Core Web API ສຸດ .NET 10 ອີງຕາມຄໍາແນະນໍາ **Modular Monolith + Clean Architecture**
 
-> ສະຖານະປັດຈຸບັນ: **Phase 1 ສຳເລັດແລ້ວ** ແລະ **Phase 2 ສຳເລັດແລ້ວ**
+> ສະຖານະປັດຈຸບັນ: API ແລະລະບົບງານຫໍພັກຫຼັກພ້ອມໃຊ້ງານພັດທະນາ; ມີໜ້າເວັບ React ໃນ `web/` ແລະເວີກໂຟລໃໝ່ສຳລັບບິນ, ຊຳລະເງິນ, ງານຊ່ອມ ແລະລາຍງານ.
 > Phase 1 ສໍາເລັດ Identity, JWT, Refresh Token, Roles & Permissions ແລະ Endpoint ຈັດການ
 > Organizations, Dormitories, Buildings, Floors, Room Types, Rooms, Users, User-Dormitory
 > Assignment, Roles/Permissions ແລະ Audit Logs
-> Phase 2 ສໍາເລັດ Tenants, Reservations, Contracts (ລວມເຊັກອິນ/ກວດເບິ່ງ), Meter Readings,
+> Phase 2 API ມີ Tenants, Reservations, Contracts (ລວມເຊັກອິນ/ກວດເບິ່ງ), Meter Readings,
 > Invoices, Payments, Maintenance (ວຽກງານແຈ້ງການບໍາລຸງຮັກສາ), Reports (ບົດລາຍງານລາຍຮັບ/ໃບແຈ້ງໜີ້ເກີນກຳນົດ),
 > Deposits (ຝາກ), Receipts (ໃບຮັບເງິນ), Expenses (ຄ່າໃຊ້ຈ່າຍໃນການດໍາເນີນງານ),
 > Parcels (ພັດສະດຸ), Visitors (ນັກທ່ອງທ່ຽວ), Parking (ບ່ອນຈອດລົດ), Announcements (ປະກາດ),
@@ -20,6 +20,8 @@
 > [ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ](#ການແກ້ໄຂຊ່ອງໂຫວ່ໃນການຮົ່ວໄຫຼຂອງຂໍ້ມູນໃນທົ່ວອົງກອນ-owner-ໃນ-list-endpoint)
 > ເບິ່ງລາຍລະອຽດໃນຫົວຂໍ້ [ຂອບເຂດຂອງຂັ້ນຕອນ 1](#ຂອບເຂດຂອງຂັ້ນຕອນ-1)
 > ແລະ [Phase 2 — ໂມດູນເສັ້ນ Contracts](#phase-2--ໂມດູນເສັ້ນ-contracts)
+
+Frontend setup and test instructions: [web/README.md](web/README.md). Product workflow and integration limits: [PRODUCT.md](PRODUCT.md).
 
 ---
 
@@ -933,7 +935,7 @@ Notifications ຕາມລໍາດັບດ້ວຍການສົມມຸດ
 
 ### ຍັງບໍ່ແລ້ວ
 
-ບໍ່ມີສ່ວນຜຶ່ງຂອງ Phase 2 ຍັງເຫຼືອ — ໂມດູນທັງຝົດທີ່ມີຊື່ໃນເອກະສານຕົ້ນສະບັບແມ່ນຖືກສ້າງຂຶ້ນຢ່າງເຕັມສ່ວນ
+API, web client, and the dormitory workflows are implemented. Before production use, configure hosting, property currency and payment integrations, and review assumed business rules with the property owner. The Phase 1 two-factor verification endpoint is still listed as outstanding above. See [web/README.md](web/README.md) for run and test instructions and [PRODUCT.md](PRODUCT.md) for current scope and integration limits.
 ລາຍການທັງໝົດທີ່ຍັງບໍ່ທັນສຳເລັດໃນລະບົບແມ່ນ: Endpoint ຢືນຢັນລະຫັດ Two-Factor Authentication ຂອງ Phase 1
 (ເບິ່ງຫົວຂໍ້ [ຂອບເຂດຂອງຂັ້ນຕອນ 1](#ຂອບເຂດຂອງຂັ້ນຕອນ-1)) ແລະທົບທວນຄືນສົມມຸດຕິຖານທຸລະກິດທັງຝົດ
 Phase 2 ກັບເຈົ້າຂອງລະບົບຕົວຈິງກ່ອນທີ່ຈະໃຊ້ມັນ (ເບິ່ງບັນຊີລາຍຊື່ເຕັມຢູ່ໃນພາກຂ້າງເທິງ)

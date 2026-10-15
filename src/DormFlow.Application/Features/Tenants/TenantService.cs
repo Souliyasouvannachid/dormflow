@@ -44,7 +44,7 @@ public sealed class TenantService(
         PagedQuery query = PagedQueryNormalizer.Normalize(request, AllowedSortFields, defaultSortBy: "firstName");
 
         Guid? organizationId = _currentUser.IsSuperAdmin ? request.OrganizationId : _currentUser.OrganizationId;
-        TenantListFilter filter = new(organizationId, ParseStatusOrNull(request.Status));
+        TenantListFilter filter = new(organizationId, ParseStatusOrNull(request.Status), request.CurrentOnly, request.DormitoryId, TenantScope.GetDormitoryRestrictionForListing(_currentUser));
 
         PagedResult<Tenant> result = await _repository.GetPagedAsync(filter, query, cancellationToken);
 

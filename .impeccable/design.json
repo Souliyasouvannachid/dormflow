@@ -1,0 +1,424 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T03:53:41.038Z",
+  "title": "Design System: DormFlow",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Forest Green",
+        "tonalRamp": [
+          "oklch(15% 0.0778 168.3)",
+          "oklch(26% 0.0778 168.3)",
+          "oklch(38% 0.0778 168.3)",
+          "oklch(49% 0.0778 168.3)",
+          "oklch(61% 0.0778 168.3)",
+          "oklch(72% 0.0778 168.3)",
+          "oklch(84% 0.0778 168.3)",
+          "oklch(95% 0.0778 168.3)"
+        ]
+      },
+      "primary-deep": {
+        "role": "primary",
+        "displayName": "Deep Forest",
+        "tonalRamp": [
+          "oklch(15% 0.0597 170.1)",
+          "oklch(26% 0.0597 170.1)",
+          "oklch(38% 0.0597 170.1)",
+          "oklch(49% 0.0597 170.1)",
+          "oklch(61% 0.0597 170.1)",
+          "oklch(72% 0.0597 170.1)",
+          "oklch(84% 0.0597 170.1)",
+          "oklch(95% 0.0597 170.1)"
+        ]
+      },
+      "navigation": {
+        "role": "primary",
+        "displayName": "Forest Shade",
+        "tonalRamp": [
+          "oklch(15% 0.0471 173.7)",
+          "oklch(26% 0.0471 173.7)",
+          "oklch(38% 0.0471 173.7)",
+          "oklch(49% 0.0471 173.7)",
+          "oklch(61% 0.0471 173.7)",
+          "oklch(72% 0.0471 173.7)",
+          "oklch(84% 0.0471 173.7)",
+          "oklch(95% 0.0471 173.7)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0054 117.9)",
+          "oklch(26% 0.0054 117.9)",
+          "oklch(38% 0.0054 117.9)",
+          "oklch(49% 0.0054 117.9)",
+          "oklch(61% 0.0054 117.9)",
+          "oklch(72% 0.0054 117.9)",
+          "oklch(84% 0.0054 117.9)",
+          "oklch(95% 0.0054 117.9)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.9)",
+          "oklch(26% 0.0000 89.9)",
+          "oklch(38% 0.0000 89.9)",
+          "oklch(49% 0.0000 89.9)",
+          "oklch(61% 0.0000 89.9)",
+          "oklch(72% 0.0000 89.9)",
+          "oklch(84% 0.0000 89.9)",
+          "oklch(95% 0.0000 89.9)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Deep Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0251 170.6)",
+          "oklch(26% 0.0251 170.6)",
+          "oklch(38% 0.0251 170.6)",
+          "oklch(49% 0.0251 170.6)",
+          "oklch(61% 0.0251 170.6)",
+          "oklch(72% 0.0251 170.6)",
+          "oklch(84% 0.0251 170.6)",
+          "oklch(95% 0.0251 170.6)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Quiet Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0240 165.4)",
+          "oklch(26% 0.0240 165.4)",
+          "oklch(38% 0.0240 165.4)",
+          "oklch(49% 0.0240 165.4)",
+          "oklch(61% 0.0240 165.4)",
+          "oklch(72% 0.0240 165.4)",
+          "oklch(84% 0.0240 165.4)",
+          "oklch(95% 0.0240 165.4)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Panel Rule",
+        "tonalRamp": [
+          "oklch(15% 0.0137 134.9)",
+          "oklch(26% 0.0137 134.9)",
+          "oklch(38% 0.0137 134.9)",
+          "oklch(49% 0.0137 134.9)",
+          "oklch(61% 0.0137 134.9)",
+          "oklch(72% 0.0137 134.9)",
+          "oklch(84% 0.0137 134.9)",
+          "oklch(95% 0.0137 134.9)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "Field Rule",
+        "tonalRamp": [
+          "oklch(15% 0.0162 154.4)",
+          "oklch(26% 0.0162 154.4)",
+          "oklch(38% 0.0162 154.4)",
+          "oklch(49% 0.0162 154.4)",
+          "oklch(61% 0.0162 154.4)",
+          "oklch(72% 0.0162 154.4)",
+          "oklch(84% 0.0162 154.4)",
+          "oklch(95% 0.0162 154.4)"
+        ]
+      },
+      "focus": {
+        "role": "secondary",
+        "displayName": "Focus Copper",
+        "tonalRamp": [
+          "oklch(15% 0.1316 59.1)",
+          "oklch(26% 0.1316 59.1)",
+          "oklch(38% 0.1316 59.1)",
+          "oklch(49% 0.1316 59.1)",
+          "oklch(61% 0.1316 59.1)",
+          "oklch(72% 0.1316 59.1)",
+          "oklch(84% 0.1316 59.1)",
+          "oklch(95% 0.1316 59.1)"
+        ]
+      },
+      "positive": {
+        "role": "tertiary",
+        "displayName": "Positive Green",
+        "tonalRamp": [
+          "oklch(15% 0.0951 158.0)",
+          "oklch(26% 0.0951 158.0)",
+          "oklch(38% 0.0951 158.0)",
+          "oklch(49% 0.0951 158.0)",
+          "oklch(61% 0.0951 158.0)",
+          "oklch(72% 0.0951 158.0)",
+          "oklch(84% 0.0951 158.0)",
+          "oklch(95% 0.0951 158.0)"
+        ]
+      },
+      "pending": {
+        "role": "tertiary",
+        "displayName": "Pending Amber",
+        "tonalRamp": [
+          "oklch(15% 0.1156 75.0)",
+          "oklch(26% 0.1156 75.0)",
+          "oklch(38% 0.1156 75.0)",
+          "oklch(49% 0.1156 75.0)",
+          "oklch(61% 0.1156 75.0)",
+          "oklch(72% 0.1156 75.0)",
+          "oklch(84% 0.1156 75.0)",
+          "oklch(95% 0.1156 75.0)"
+        ]
+      },
+      "occupied": {
+        "role": "tertiary",
+        "displayName": "Occupied Green",
+        "tonalRamp": [
+          "oklch(15% 0.0658 168.8)",
+          "oklch(26% 0.0658 168.8)",
+          "oklch(38% 0.0658 168.8)",
+          "oklch(49% 0.0658 168.8)",
+          "oklch(61% 0.0658 168.8)",
+          "oklch(72% 0.0658 168.8)",
+          "oklch(84% 0.0658 168.8)",
+          "oklch(95% 0.0658 168.8)"
+        ]
+      },
+      "urgent": {
+        "role": "tertiary",
+        "displayName": "Urgent Rust",
+        "tonalRamp": [
+          "oklch(15% 0.1375 32.4)",
+          "oklch(26% 0.1375 32.4)",
+          "oklch(38% 0.1375 32.4)",
+          "oklch(49% 0.1375 32.4)",
+          "oklch(61% 0.1375 32.4)",
+          "oklch(72% 0.1375 32.4)",
+          "oklch(84% 0.1375 32.4)",
+          "oklch(95% 0.1375 32.4)"
+        ]
+      },
+      "maintenance": {
+        "role": "tertiary",
+        "displayName": "Maintenance Brown",
+        "tonalRamp": [
+          "oklch(15% 0.0884 53.7)",
+          "oklch(26% 0.0884 53.7)",
+          "oklch(38% 0.0884 53.7)",
+          "oklch(49% 0.0884 53.7)",
+          "oklch(61% 0.0884 53.7)",
+          "oklch(72% 0.0884 53.7)",
+          "oklch(84% 0.0884 53.7)",
+          "oklch(95% 0.0884 53.7)"
+        ]
+      },
+      "status-neutral": {
+        "role": "tertiary",
+        "displayName": "Neutral Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0277 157.9)",
+          "oklch(26% 0.0277 157.9)",
+          "oklch(38% 0.0277 157.9)",
+          "oklch(49% 0.0277 157.9)",
+          "oklch(61% 0.0277 157.9)",
+          "oklch(72% 0.0277 157.9)",
+          "oklch(84% 0.0277 157.9)",
+          "oklch(95% 0.0277 157.9)"
+        ]
+      },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Error Red",
+        "tonalRamp": [
+          "oklch(15% 0.1527 29.7)",
+          "oklch(26% 0.1527 29.7)",
+          "oklch(38% 0.1527 29.7)",
+          "oklch(49% 0.1527 29.7)",
+          "oklch(61% 0.1527 29.7)",
+          "oklch(72% 0.1527 29.7)",
+          "oklch(84% 0.1527 29.7)",
+          "oklch(95% 0.1527 29.7)"
+        ]
+      },
+      "chart-expense": {
+        "role": "secondary",
+        "displayName": "Harvest Amber",
+        "tonalRamp": [
+          "oklch(15% 0.1100 75.8)",
+          "oklch(26% 0.1100 75.8)",
+          "oklch(38% 0.1100 75.8)",
+          "oklch(49% 0.1100 75.8)",
+          "oklch(61% 0.1100 75.8)",
+          "oklch(72% 0.1100 75.8)",
+          "oklch(84% 0.1100 75.8)",
+          "oklch(95% 0.1100 75.8)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page title with a smaller mobile variant."
+      },
+      "title": {
+        "displayName": "Panel Title",
+        "purpose": "Working panel heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Thai interface copy."
+      },
+      "label": {
+        "displayName": "Form Label",
+        "purpose": "Visible field labels."
+      },
+      "metric": {
+        "displayName": "Financial Metric",
+        "purpose": "Prominent financial values."
+      }
+    },
+    "shadows": [
+      {
+        "name": "field-focus",
+        "value": "0 0 0 3px #2166501a",
+        "purpose": "Focused field indicator; panels remain flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "mobile-sidebar",
+        "value": "transform .2s ease-out",
+        "purpose": "Mobile navigation reveal; disabled by reduced-motion preference."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation:none!important;transition:none!important;scroll-behavior:auto!important",
+        "purpose": "Honor the reduced-motion media query."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-desktop",
+        "value": "1150px"
+      },
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "wide",
+        "value": "1600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main save or create action.",
+      "html": "<button class=\"ds-primary\">บันทึก</button>",
+      "css": ".ds-primary{font:500 15px/1.5 'Noto Sans Thai',sans-serif;border-radius:7px;padding:10px 16px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;background:var(--bs-primary,#216650);color:#fff;border:1px solid #216650}.ds-primary:hover,.ds-primary:active{background:#194b3c;border-color:#194b3c}.ds-primary:disabled{background:#78998b;border-color:#78998b;opacity:.65;cursor:default}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Primary Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline-primary",
+      "description": "Record actions and report export.",
+      "html": "<button class=\"ds-outline-primary\">ส่งออก CSV</button>",
+      "css": ".ds-outline-primary{font:500 15px/1.5 'Noto Sans Thai',sans-serif;border-radius:7px;padding:10px 16px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;color:var(--bs-primary,#216650);background:transparent;border:1px solid #9ab9a9}.ds-outline-primary:hover,.ds-outline-primary:active{color:#fff;background:#216650;border-color:#216650}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Secondary Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline-secondary",
+      "description": "Cancel, refresh and secondary actions.",
+      "html": "<button class=\"ds-outline-secondary\">ยกเลิก</button>",
+      "css": ".ds-outline-secondary{font:500 15px/1.5 'Noto Sans Thai',sans-serif;border-radius:7px;padding:10px 16px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;color:#53665b;background:transparent;border:1px solid #cbd5cd}.ds-outline-secondary:hover{background:#e9eeea;color:#1f302a;border-color:#afc0b3}.ds-outline-secondary:active{background:#6c757d;color:#fff;border-color:#6c757d}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Link Button",
+      "kind": "button",
+      "refersTo": "button-link",
+      "description": "Quiet back and contextual navigation action.",
+      "html": "<button class=\"ds-link\">กลับไปที่รายการ</button>",
+      "css": ".ds-link{font:500 15px/1.5 'Noto Sans Thai',sans-serif;border-radius:7px;padding:10px 16px;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;padding-left:0;padding-right:0;background:transparent;border:1px solid transparent;color:var(--bs-primary,#216650);text-decoration:none}.ds-link:hover{color:#0a58ca}.ds-link:active{color:#0a58ca}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Visible label and white field for editing data.",
+      "html": "<label class=\"ds-label\" for=\"ds-room\">ชื่อห้อง</label><input class=\"ds-field\" id=\"ds-room\" placeholder=\"ระบุชื่อห้อง\">",
+      "css": ".ds-label{display:block;font:500 14px/1.5 'Noto Sans Thai',sans-serif;color:#1f302a;margin-bottom:8px}.ds-field{font:400 14px/1.5 'Noto Sans Thai',sans-serif;min-height:44px;padding:6px 12px;border:1px solid #c7d2ca;border-radius:7px;background:#fff;color:var(--bs-body-color,#1f302a);caret-color:#216650}.ds-field::placeholder{color:#65766b}.ds-field:focus{border-color:#216650;box-shadow:0 0 0 3px #2166501a}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-item",
+      "description": "Grouped forest navigation with a reversed active item.",
+      "html": "<nav class=\"ds-sidebar\" aria-label=\"เมนูหลัก\"><button class=\"ds-nav ds-active\">ภาพรวม</button><button class=\"ds-nav\">ห้องพัก</button></nav>",
+      "css": ".ds-sidebar{background:#193f35;padding:12px;width:214px}.ds-nav{width:100%;background:none;border:0;color:#e0eae3;display:flex;gap:12px;padding:11px 14px;text-align:left;border-radius:6px;font:400 14px/1.5 'Noto Sans Thai',sans-serif;margin:2px 0;cursor:pointer}.ds-nav:hover{background:#285548}.ds-nav.ds-active{background:#f5f6f2;color:#193f35;font-weight:600}.ds-primary:focus-visible,.ds-outline-primary:focus-visible,.ds-outline-secondary:focus-visible,.ds-link:focus-visible,.ds-field:focus-visible,.ds-nav:focus-visible{outline:3px solid #bc6d20;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Status Indicator",
+      "kind": "chip",
+      "refersTo": "status",
+      "description": "Text plus a colored dot; never a filled pill.",
+      "html": "<span class=\"ds-status\">ว่าง</span>",
+      "css": ".ds-status{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:#50625a;font:400 12px/1.5 'Noto Sans Thai',sans-serif}.ds-status:before{content:'';width:7px;height:7px;flex:none;background:#347d57;border-radius:50%}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    },
+    {
+      "name": "Working Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat white bordered working surface.",
+      "html": "<section class=\"ds-panel\"><h2>รายละเอียดห้องพัก</h2><p>ข้อมูลห้องและการเข้าพัก</p></section>",
+      "css": ".ds-panel{background:#fff;border:1px solid #dde3da;border-radius:12px;padding:24px;color:#1f302a;font:400 15px/1.5 'Noto Sans Thai',sans-serif}.ds-panel h2{font-size:18px;font-weight:600;line-height:1.5;margin:0 0 18px}.ds-panel p{line-height:1.8;margin:0}@media(max-width:700px){.ds-panel{padding:20px 16px;border-radius:10px}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Desk",
+    "overview": "DormFlow uses the working-desk direction already established for daily administration. Warm off-white surroundings, forest-green navigation and white working surfaces support dense, readable Thai forms and tables. The interface is quiet and practical, with clear actions and restrained visual emphasis.\n\nPersistent desktop navigation and a compact expandable mobile menu preserve the same operational structure. Figures use a distinct numeral face, while status text accompanies colored dots. This document records the implemented system in web/src/styles.css, Forms.jsx and App.jsx; frontmatter is normative for the reusable values it contains.",
+    "keyCharacteristics": [
+      "Thai-first labels and self-hosted interface fonts.",
+      "Forest-green navigation with warm white working surfaces.",
+      "Bordered panels and precise table dividers without decorative shadows.",
+      "Text-backed status colors and conspicuous keyboard focus.",
+      "Responsive layouts, reduced-motion support and printable details."
+    ],
+    "rules": [
+      {
+        "name": "The Text and Color Rule",
+        "body": "Status indicators always retain a readable state label beside the colored dot.",
+        "section": "colors"
+      },
+      {
+        "name": "The Comparable Figures Rule",
+        "body": "Financial metrics and table values use tabular numerals so amounts remain easy to compare.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Surface Rule",
+        "body": "Use borders and tonal surfaces for ordinary containers; preserve shadow emphasis for the existing field-focus treatment.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** retain Thai labels, visible field labels and the established font pairing.",
+      "**Do** accompany status colors with readable text.",
+      "**Do** keep financial figures tabular and operational surfaces flat.",
+      "**Do** preserve keyboard focus, reduced-motion behavior and horizontally scrollable tables.",
+      "**Do** reuse the shared panel, field and button patterns before adding visual variants."
+    ],
+    "donts": [
+      "**Don't** invent business figures or imply unavailable payment integrations.",
+      "**Don't** add a currency symbol until the product establishes the currency.",
+      "**Don't** replace quiet status dots with color-only signals.",
+      "**Don't** add decorative elevation to ordinary working panels.",
+      "**Don't** treat chart-specific color arrays as a universal mapping of room status to color."
+    ]
+  }
+}

@@ -272,6 +272,7 @@ public sealed class ReservationService(
         MoveInDate = reservation.MoveInDate,
         ExpiresAt = reservation.ExpiresAt,
         ReservationFee = reservation.ReservationFee,
+        ConfirmedAt = reservation.ConfirmedAt,
         Status = reservation.Status.ToString(),
         Notes = reservation.Notes,
         CreatedAt = reservation.CreatedAt,

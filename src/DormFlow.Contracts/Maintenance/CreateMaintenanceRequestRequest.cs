@@ -3,6 +3,9 @@ namespace DormFlow.Contracts.Maintenance;
 /// <summary>ຮ້ອງຂໍໃຫ້ມີການແຈ້ງເຕືອນການບໍາລຸງຮັກສາ</summary>
 public class CreateMaintenanceRequestRequest
 {
+    public Guid? TenantId { get; set; }
+    public string Category { get; set; } = "General";
+
     /// <summary>ລາຍງານຫ້ອງສໍາລັບການສ້ອມແປງ</summary>
     public Guid RoomId { get; set; }
 
