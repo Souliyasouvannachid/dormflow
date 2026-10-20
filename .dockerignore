@@ -21,6 +21,7 @@ web/playwright-report/
 .git/
 .gitignore
 .gitattributes
+.deployment-backups/
 
 # ໄຟລ໌ລັບ ແລະການຕັ້ງຄ່າເຄື່ອງ
 .env

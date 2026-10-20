@@ -32,6 +32,8 @@ services:
     build:
       context: .
       dockerfile: src/DormFlow.Api/Dockerfile
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-/api/v1}
     depends_on:
       dormflow-postgres:
         condition: service_healthy

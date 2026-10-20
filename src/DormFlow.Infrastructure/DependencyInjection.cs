@@ -248,10 +248,14 @@ public static class DependencyInjection
         {
             services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>();
         }
+        else if (string.Equals(emailProvider, "Disabled", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IEmailSender, DisabledEmailSender>();
+        }
         else
         {
             throw new InvalidOperationException(
-                $"ບໍ່ຮອງຮັບ Email:Provider '{emailProvider}'. ກະລຸນາໃຊ້ 'Smtp' ຫຼື 'PickupDirectory'.");
+                $"Unsupported Email:Provider '{emailProvider}'. Use 'Smtp', 'PickupDirectory', or 'Disabled'.");
         }
 
         return services;

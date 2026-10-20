@@ -1,0 +1,35 @@
+# One free Docker service serves both public hostnames.
+# PostgreSQL is hosted separately on Neon; never use an expiring free Render DB.
+services:
+  - type: web
+    name: dormflow
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./src/DormFlow.Api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    domains:
+      - test.flowerdev.online
+      - api.flowerdev.online
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_HTTP_PORTS
+        value: "8080"
+      - key: Https__EnableRedirection
+        value: "false"
+      - key: VITE_API_BASE
+        value: https://api.flowerdev.online/api/v1
+      - key: Cors__AllowedOrigins__0
+        value: https://test.flowerdev.online
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__SigningKey
+        generateValue: true
+      - key: Database__AutoMigrate
+        value: "true"
+      - key: Database__EnableSensitiveDataLogging
+        value: "false"
+      - key: Email__Provider
+        value: Disabled

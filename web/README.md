@@ -10,6 +10,8 @@ React 19 + Vite interface in Thai for the DormFlow API. The UI uses the signed-i
 
 For a single-origin deployment, `src/DormFlow.Api/Dockerfile` builds this app and copies its static bundle into the API image. Configure the repository's `.env` as documented in the root README, then use `docker compose up --build`. The UI and API are served together at `http://localhost:8081` by default.
 
+For separate public domains, set `VITE_API_BASE=https://api.flowerdev.online/api/v1` in the repository's `.env`, allow `https://test.flowerdev.online` in the API's `Cors__AllowedOrigins__0`, and rebuild with `docker compose up -d --build dormflow-api`. The API URL is embedded in the frontend bundle, so changing it requires rebuilding. Local development keeps using `/api/v1` unless `VITE_API_BASE` is set in the web environment.
+
 ## Verify
 
 - `npm test` runs the UI unit tests.

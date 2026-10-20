@@ -108,6 +108,9 @@ public sealed class GlobalExceptionHandlingMiddleware(
             case ConflictException conflict:
                 return (StatusCodes.Status409Conflict, ApiResponse.Fail(conflict.Message, traceId));
 
+            case ServiceUnavailableException unavailable:
+                return (StatusCodes.Status503ServiceUnavailable, ApiResponse.Fail(unavailable.Message, traceId));
+
             case DbUpdateConcurrencyException:
                 return (StatusCodes.Status409Conflict, ApiResponse.Fail(ApiMessages.ConcurrencyConflict, traceId));
 

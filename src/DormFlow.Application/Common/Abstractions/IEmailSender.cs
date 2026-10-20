@@ -5,6 +5,9 @@ namespace DormFlow.Application.Common.Abstractions;
 /// <summary>ສົ່ງອີເມວຈາກລະບົບ</summary>
 public interface IEmailSender
 {
+    /// <summary>Whether outbound email is available in this deployment.</summary>
+    bool IsEnabled => true;
+
     /// <summary>ສົ່ງອີເມວຜຶ່ງ</summary>
     /// <param name="message">ຂໍ້ຄວາມທີ່ທ່ານຕ້ອງການສົ່ງ</param>
     /// <param name="cancellationToken">Token ສໍາລັບການຍົກເລີກຄໍາສັ່ງ</param>

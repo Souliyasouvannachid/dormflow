@@ -43,7 +43,10 @@ public static class OpenApiConfiguration
             return app;
         }
 
-        app.MapGet("/", () => Results.Redirect("/scalar/")).AllowAnonymous();
+        if (!app.Environment.WebRootFileProvider.GetFileInfo("index.html").Exists)
+        {
+            app.MapGet("/", () => Results.Redirect("/scalar/")).AllowAnonymous();
+        }
         app.MapOpenApi().WithDocumentPerVersion();
 
         ApiOptions apiOptions = app.Services

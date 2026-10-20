@@ -31,6 +31,8 @@ WORKDIR /web
 COPY web/package.json web/package-lock.json ./
 RUN npm ci
 COPY web/ ./
+ARG VITE_API_BASE=/api/v1
+ENV VITE_API_BASE=$VITE_API_BASE
 RUN npm run build
 
 # ---------- ຮູບພາບການແລ່ນຕົວຈິງ ----------

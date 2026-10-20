@@ -191,6 +191,12 @@ public sealed class AuthenticationService(
         ArgumentNullException.ThrowIfNull(request);
         await _forgotPasswordValidator.ValidateAndThrowAsync(request, cancellationToken);
 
+        // Check before account lookup so disabled mail cannot reveal registered emails.
+        if (!_emailSender.IsEnabled)
+        {
+            throw new ServiceUnavailableException("ระบบส่งอีเมลยังไม่เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบ");
+        }
+
         string email = request.Email.Trim();
         string? token = await _userAccountService.GeneratePasswordResetTokenAsync(email, cancellationToken);
 

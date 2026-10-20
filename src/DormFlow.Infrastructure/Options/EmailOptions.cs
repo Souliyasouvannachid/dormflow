@@ -8,7 +8,7 @@ public sealed class EmailOptions
     /// <summary>ຊື່ section ໃນ appsettings</summary>
     public const string SectionName = "Email";
 
-    /// <summary>ຜູ້ສົ່ງອີເມວ: PickupDirectory ສຳລັບ Development/Testing ຫຼື Smtp ສຳລັບ Production</summary>
+    /// <summary>Email provider: Smtp, Disabled, or PickupDirectory for development only.</summary>
     public string Provider { get; set; } = "PickupDirectory";
 
     /// <summary>ສົ່ງອີເມວ</summary>
