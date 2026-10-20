@@ -32,5 +32,7 @@ services:
         value: "false"
       - key: Email__Provider
         value: Disabled
+      - key: Api__EnableDocumentation
+        value: "true"
       - key: BackgroundJobs__Enabled
         value: "true"

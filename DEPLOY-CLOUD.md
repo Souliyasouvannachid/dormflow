@@ -9,6 +9,12 @@ Cloud deployment was provisioned on 20 October 2026 from branch
 - Pages fallback URL: `https://dormflow-flowerdev.pages.dev`.
 - Neon project: `cool-dew-33787110`, PostgreSQL 17, Singapore, free organization.
 
+Frontend integration uses `https://api.flowerdev.online/api/v1`. API reference:
+`https://api.flowerdev.online/scalar/v1`; downloadable schema:
+`https://api.flowerdev.online/openapi/v1.json`. The deployment explicitly sets
+`Api__EnableDocumentation=true` to publish API metadata in Production. Data
+endpoints continue to require their existing JWT and permission checks.
+
 The original 78 application tables were backed up and restored to Neon. Every
 application table's row count matched before cloud traffic was enabled. Private
 backups and connection settings are in the Git-ignored `.deployment-backups/`.

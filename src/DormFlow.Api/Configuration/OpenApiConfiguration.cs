@@ -31,14 +31,18 @@ public static class OpenApiConfiguration
     /// </summary>
     /// <param name="app">ແອັບພລິເຄຊັນທີ່ສ້າງຂຶ້ນ</param>
     /// <remarks>
-    /// ສະພາບແວດລ້ອມເປີດເທົ່ານັ້ນທີ່ບໍ່ມີ Production
-    /// ເພື່ອເປີດໃນ Production ປົກປ້ອງຕົນເອງສະເໝີໂດຍການຢັ້ງຢືນຕົວຕົນຂອງທ່ານກ່ອນ
+    /// Production documentation requires Api:EnableDocumentation=true.
+    /// This publishes endpoint metadata; API authorization remains in force.
     /// </remarks>
     public static WebApplication UseDormFlowOpenApi(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        if (app.Environment.IsProduction())
+        ApiOptions apiOptions = app.Services
+            .GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiOptions>>()
+            .Value;
+
+        if (!(apiOptions.EnableDocumentation ?? !app.Environment.IsProduction()))
         {
             return app;
         }
@@ -48,10 +52,6 @@ public static class OpenApiConfiguration
             app.MapGet("/", () => Results.Redirect("/scalar/")).AllowAnonymous();
         }
         app.MapOpenApi().WithDocumentPerVersion();
-
-        ApiOptions apiOptions = app.Services
-            .GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiOptions>>()
-            .Value;
 
         app.MapScalarApiReference(options =>
         {
