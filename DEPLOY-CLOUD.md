@@ -1,18 +1,32 @@
 # Deploy DormFlow on a free cloud plan
 
-Deployment is prepared but has not been provisioned. Keep the existing local
-Cloudflare Tunnel routes until the cloud service and database pass verification.
+Cloud deployment was provisioned on 20 October 2026 from branch
+`codex/cloud-deploy`. The current provider resources are:
+
+- Render service: `srv-dbbd19e7bikc7383ssm0`, free, Singapore.
+- Render fallback URL: `https://dormflow-flowerdev.onrender.com`.
+- Cloudflare Pages project: `dormflow-flowerdev`.
+- Pages fallback URL: `https://dormflow-flowerdev.pages.dev`.
+- Neon project: `cool-dew-33787110`, PostgreSQL 17, Singapore, free organization.
+
+The original 78 application tables were backed up and restored to Neon. Every
+application table's row count matched before cloud traffic was enabled. Private
+backups and connection settings are in the Git-ignored `.deployment-backups/`.
 
 ## Layout
 
 - `test.flowerdev.online`: the React website.
 - `api.flowerdev.online`: API calls, using `/api/v1` as the prefix.
-- Render: one free Docker web service, with both custom domains attached.
+- Cloudflare Pages: free static hosting for `test.flowerdev.online`.
+- Render: one free Docker web service for `api.flowerdev.online`.
 - Neon: PostgreSQL, independent of the local computer.
 
-The same container serves both hostnames. The frontend bundle calls the API
-hostname explicitly. One service avoids dividing Render's free instance hours
-between two running web services. `render.yaml` contains no secret values.
+The frontend bundle calls the API hostname explicitly. Pages hosts the frontend
+without using another Render custom-domain slot. This workspace already has
+`api.kindee.online`, so adding both DormFlow hostnames on Render would exceed its
+two included custom domains. `render.yaml` contains no secret values and is a
+reproducible template; the existing Render service was created directly and is
+not linked to a Blueprint sync.
 
 ## Accounts and database
 
@@ -55,13 +69,24 @@ between two running web services. `render.yaml` contains no secret values.
    Verify the website, login, a permitted data read, and the API's CORS response
    for `https://test.flowerdev.online`.
 
+## Frontend updates
+
+Build from `web/` with `VITE_API_BASE=https://api.flowerdev.online/api/v1` set in
+the environment, then zip the *contents* of `web/dist/` with `index.html` at the
+archive root. In Cloudflare Pages, open project `dormflow-flowerdev` and create
+a production deployment by uploading the zip. This project uses Direct Upload;
+Git commits do not automatically deploy the frontend. Do not upload `.env`,
+source database backups, or private deployment settings.
+
 ## Cut over the existing subdomains
 
-1. In Render, add/verify both custom domains. Use the exact DNS target and any
+1. In Render, add/verify the API custom domain. Use the exact DNS target and any
    verification records shown in that service's dashboard.
 2. Save the current Cloudflare CNAME values and Tunnel routes for rollback.
-3. Change only `test` and `api` records under `flowerdev.online` to the assigned
-   Render hostname. Do not change `kindee.online` or other applications' records.
+3. Point `api.flowerdev.online` to `dormflow-flowerdev.onrender.com` (DNS-only)
+   and associate `test.flowerdev.online` with the Pages project. Pages updates
+   its CNAME to `dormflow-flowerdev.pages.dev`. Do not change `kindee.online` or
+   other applications' records.
 4. Use DNS-only mode while Render verifies the domain and issues its certificate.
    Verify HTTPS before enabling any Cloudflare proxy feature. Retain Full
    (strict) TLS if using the proxy; do not use Flexible TLS.
