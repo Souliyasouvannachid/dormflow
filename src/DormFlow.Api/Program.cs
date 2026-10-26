@@ -62,10 +62,10 @@ try
 
     app.UseForwardedHeaders();
 
-    // ຕ້ອງເປັນຄັ້ງທໍາອິດໃນທໍ່. ເພື່ອປົກປິດຄວາມຜິດພາດຂອງ Middleware ສ່ວນທີ່ເຫຼືອທັງຝົດ
-    app.UseGlobalExceptionHandling();
-
+    // ຢູ່ດ້ານນອກ GlobalExceptionHandling ເພື່ອໃຫ້ log ເຫັນ HTTP status ສຸດທ້າຍຫຼັງຈາກ exception ຖືກ map ແລ້ວ.
     app.UseDormFlowRequestLogging();
+    // ຄຸ້ມຄອງ exception ຈາກ middleware ແລະ endpoint ທັງໝົດທີ່ຢູ່ດ້ານໃນ.
+    app.UseGlobalExceptionHandling();
 
     // Docker builds place the React bundle here; hash routes share the API origin.
     app.UseDefaultFiles();

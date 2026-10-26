@@ -110,11 +110,16 @@ export function Editor({
     resource = "",
     submitLabel = "บันทึก",
 }) {
-    const fields = providedFields.filter(
-        (f) =>
-            f.key !== "organizationId" ||
-            session()?.user.roles.includes("SuperAdmin"),
-    );
+    const isSuperAdmin = session()?.user?.roles?.includes("SuperAdmin") === true;
+    const fields = providedFields
+        .filter(
+            (f) => f.key !== "organizationId" || isSuperAdmin,
+        )
+        .map((f) =>
+            f.key === "organizationId" && isSuperAdmin
+                ? { ...f, optional: false }
+                : f,
+        );
     const [values, setValues] = useState(() =>
         Object.fromEntries(
             fields.map((f) => [
